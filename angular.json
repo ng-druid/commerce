@@ -1,7 +1,141 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "sso-webapp": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/sso-webapp",
+      "sourceRoot": "apps/sso-webapp/src",
+      "prefix": "classifieds-ui",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/sso-webapp",
+            "index": "apps/sso-webapp/src/index.html",
+            "main": "apps/sso-webapp/src/main.ts",
+            "polyfills": "apps/sso-webapp/src/polyfills.ts",
+            "tsConfig": "apps/sso-webapp/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/sso-webapp/src/favicon.ico",
+              "apps/sso-webapp/src/assets"
+            ],
+            "styles": ["apps/sso-webapp/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/sso-webapp/src/environments/environment.ts",
+                  "with": "apps/sso-webapp/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "sso-webapp:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "sso-webapp:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "sso-webapp:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/sso-webapp/tsconfig.app.json",
+              "apps/sso-webapp/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/sso-webapp/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/sso-webapp/jest.config.js",
+            "tsConfig": "apps/sso-webapp/tsconfig.spec.json",
+            "setupFile": "apps/sso-webapp/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "sso-webapp-e2e": {
+      "root": "apps/sso-webapp-e2e",
+      "sourceRoot": "apps/sso-webapp-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/sso-webapp-e2e/cypress.json",
+            "tsConfig": "apps/sso-webapp-e2e/tsconfig.e2e.json",
+            "devServerTarget": "sso-webapp:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "sso-webapp:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/sso-webapp-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/sso-webapp-e2e/**"]
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
-  }
+    "defaultCollection": "@nrwl/angular"
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
+    }
+  },
+  "defaultProject": "sso-webapp"
 }

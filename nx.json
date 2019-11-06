@@ -7,5 +7,12 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "sso-webapp-e2e": {
+      "tags": []
+    },
+    "sso-webapp": {
+      "tags": []
+    }
+  }
 }
