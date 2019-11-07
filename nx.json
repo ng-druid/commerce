@@ -8,10 +8,10 @@
     "nx.json": "*"
   },
   "projects": {
-    "sso-webapp-e2e": {
+    "classifieds-e2e": {
       "tags": []
     },
-    "sso-webapp": {
+    "classifieds": {
       "tags": []
     }
   }

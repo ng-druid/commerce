@@ -1,9 +1,9 @@
 import { getGreeting } from '../support/app.po';
 
-describe('sso-webapp', () => {
+describe('classifieds', () => {
   beforeEach(() => cy.visit('/'));
 
   it('should display welcome message', () => {
-    getGreeting().contains('Welcome to sso-webapp!');
+    getGreeting().contains('Welcome to classifieds!');
   });
 });
