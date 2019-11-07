@@ -3,7 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  clientSettings: {
+    authority: 'http://localhost:5000',
+    client_id: 'classifieds_spa',
+    redirect_uri: 'http://localhost:4200/auth-callback',
+    response_type:"id_token token",
+    scope:"openid profile email ads_api media_api"
+  }
 };
 
 /*
