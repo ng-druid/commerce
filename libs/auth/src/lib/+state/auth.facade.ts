@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 
 import { AuthPartialState } from './auth.reducer';
 import { authQuery } from './auth.selectors';
-import { LoadAuth } from './auth.actions';
+import { CompleteAuthentication, Login } from './auth.actions';
 
 @Injectable()
 export class AuthFacade {
@@ -14,7 +14,11 @@ export class AuthFacade {
 
   constructor(private store: Store<AuthPartialState>) {}
 
-  loadAll() {
-    this.store.dispatch(new LoadAuth());
+  login() {
+    this.store.dispatch(new Login());
+  }
+
+  completeAuthentication() {
+    this.store.dispatch(new CompleteAuthentication());
   }
 }

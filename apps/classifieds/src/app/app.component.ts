@@ -1,21 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 
-import { AuthService } from './services/auth.service';
+import { AuthFacade } from '@classifieds-ui/auth';
 
 @Component({
   selector: 'classifieds-ui-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'classifieds';
-  authenticated$: Observable<boolean>;
-  constructor(private authService: AuthService) {}
-  ngOnInit() {
-    this.authenticated$ = this.authService.authNavStatus$;
-  }
+  constructor(private authFacade: AuthFacade) {}
   login() {
-    this.authService.login();
+    this.authFacade.login();
   }
 }

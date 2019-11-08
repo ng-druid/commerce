@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NxModule } from '@nrwl/angular';
-import { AuthModule } from '@classifieds-ui/auth';
+import { AuthModule, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -13,8 +13,8 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { AuthService } from './services/auth.service';
-import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
+// import { AuthService } from './services/auth.service';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent }
@@ -47,7 +47,9 @@ const routes = [
     AuthModule,
     NxModule.forRoot()
   ],
-  providers: [AuthService],
+  providers: [
+    { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

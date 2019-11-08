@@ -4,3 +4,5 @@ import * as AuthSelectors from './lib/+state/auth.selectors';
 export { AuthActions, AuthFeature, AuthSelectors };
 export * from './lib/+state/auth.facade';
 export * from './lib/auth.module';
+export * from './lib/auth.tokens';
+export * from './lib/models/auth.models';

@@ -1,31 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
+import { createEffect, Effect, Actions, ofType } from '@ngrx/effects';
 import { DataPersistence } from '@nrwl/angular';
+import { UserManager } from 'oidc-client';
+import { tap } from 'rxjs/operators';
 
 import { AuthPartialState } from './auth.reducer';
 import {
-  LoadAuth,
-  AuthLoaded,
-  AuthLoadError,
+  Login,
+  CompleteAuthentication,
   AuthActionTypes
 } from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  @Effect() loadAuth$ = this.dataPersistence.fetch(AuthActionTypes.LoadAuth, {
-    run: (action: LoadAuth, state: AuthPartialState) => {
-      // Your custom REST 'load' logic goes here. For now just return an empty list...
-      return new AuthLoaded([]);
-    },
 
-    onError: (action: LoadAuth, error) => {
-      console.error('Error', error);
-      return new AuthLoadError(error);
-    }
-  });
+  login$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActionTypes.Login),
+      tap(() => {
+        this.userManager.signinRedirect();
+      })
+    ),
+    { dispatch: false }
+  );
 
   constructor(
     private actions$: Actions,
-    private dataPersistence: DataPersistence<AuthPartialState>
+    private dataPersistence: DataPersistence<AuthPartialState>,
+    private userManager: UserManager
   ) {}
 }

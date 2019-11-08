@@ -33,14 +33,14 @@ export function reducer(
   action: AuthAction
 ): AuthState {
   switch (action.type) {
-    case AuthActionTypes.AuthLoaded: {
+    /*case AuthActionTypes.AuthLoaded: {
       state = {
         ...state,
         list: action.payload,
         loaded: true
       };
       break;
-    }
+    }*/
   }
   return state;
 }
