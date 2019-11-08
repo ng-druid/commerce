@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { createEffect, Effect, Actions, ofType } from '@ngrx/effects';
-import { DataPersistence } from '@nrwl/angular';
+import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { UserManager } from 'oidc-client';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
-import { AuthPartialState } from './auth.reducer';
 import {
-  Login,
-  CompleteAuthentication,
+  SetUser,
   AuthActionTypes
 } from './auth.actions';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthEffects {
@@ -24,9 +22,18 @@ export class AuthEffects {
     { dispatch: false }
   );
 
+  completeAuthentication$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActionTypes.CompleteAuthentication),
+      switchMap(() => new Observable<SetUser>(sub => {
+          this.userManager.signinRedirectCallback().then(user => sub.next(new SetUser(user)));
+        })
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions,
-    private dataPersistence: DataPersistence<AuthPartialState>,
     private userManager: UserManager
   ) {}
 }

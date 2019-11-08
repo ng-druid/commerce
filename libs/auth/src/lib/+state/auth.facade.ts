@@ -8,9 +8,7 @@ import { CompleteAuthentication, Login } from './auth.actions';
 
 @Injectable()
 export class AuthFacade {
-  loaded$ = this.store.pipe(select(authQuery.getLoaded));
-  allAuth$ = this.store.pipe(select(authQuery.getAllAuth));
-  selectedAuth$ = this.store.pipe(select(authQuery.getSelectedAuth));
+  getUser$ = this.store.pipe(select(authQuery.getUser));
 
   constructor(private store: Store<AuthPartialState>) {}
 
@@ -21,4 +19,5 @@ export class AuthFacade {
   completeAuthentication() {
     this.store.dispatch(new CompleteAuthentication());
   }
+
 }

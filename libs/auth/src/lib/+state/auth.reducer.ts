@@ -1,4 +1,5 @@
 import { AuthAction, AuthActionTypes } from './auth.actions';
+import { User } from 'oidc-client';
 
 export const AUTH_FEATURE_KEY = 'auth';
 
@@ -13,10 +14,7 @@ export const AUTH_FEATURE_KEY = 'auth';
 export interface Entity {}
 
 export interface AuthState {
-  list: Entity[]; // list of Auth; analogous to a sql normalized table
-  selectedId?: string | number; // which Auth record has been selected
-  loaded: boolean; // has the Auth list been loaded
-  error?: any; // last none error (if any)
+  user: User;
 }
 
 export interface AuthPartialState {
@@ -24,8 +22,7 @@ export interface AuthPartialState {
 }
 
 export const initialState: AuthState = {
-  list: [],
-  loaded: false
+  user: undefined
 };
 
 export function reducer(
@@ -33,14 +30,13 @@ export function reducer(
   action: AuthAction
 ): AuthState {
   switch (action.type) {
-    /*case AuthActionTypes.AuthLoaded: {
+    case AuthActionTypes.SetUser: {
       state = {
         ...state,
-        list: action.payload,
-        loaded: true
+        user: action.payload
       };
       break;
-    }*/
+    }
   }
   return state;
 }

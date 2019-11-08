@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthFacade } from '@classifieds-ui/auth';
 
 @Component({
   selector: 'classifieds-ui-auth-callback',
@@ -12,7 +12,7 @@ export class AuthCallbackComponent implements OnInit {
 
   error: boolean;
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
+  constructor(private authFacade: AuthFacade, private router: Router, private route: ActivatedRoute) {}
 
   async ngOnInit() {
 
@@ -22,7 +22,7 @@ export class AuthCallbackComponent implements OnInit {
        return;
      }
 
-    await this.authService.completeAuthentication();
+    await this.authFacade.completeAuthentication();
     this.router.navigate(['/']);
   }
 
