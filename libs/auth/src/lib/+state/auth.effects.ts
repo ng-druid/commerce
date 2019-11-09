@@ -26,7 +26,10 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActionTypes.CompleteAuthentication),
       switchMap(() => new Observable<SetUser>(sub => {
-          this.userManager.signinRedirectCallback().then(user => sub.next(new SetUser(user)));
+          this.userManager.signinRedirectCallback().then(user => {
+            sub.next(new SetUser(user));
+            sub.complete();
+          });
         })
       )
     )
