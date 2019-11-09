@@ -4,15 +4,15 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ADS_SETTINGS } from '../ads.tokens';
-import { Ad, AdDetail, AdsSettings } from '../models/ads.models';
+import { Ad, AdDetail, AdsSettings, SearchConfig } from '../models/ads.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdsService {
   constructor(@Inject(ADS_SETTINGS) private settings: AdsSettings, private http: HttpClient) { }
-  getAds(): Observable<Ad[]> {
-    return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads`).pipe(map(ads => ads.map(a => new Ad(a))));
+  getAds(searchConfig?: SearchConfig): Observable<Ad[]> {
+    return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads`, { params: { ...searchConfig } }).pipe(map(ads => ads.map(a => new Ad(a))));
   }
   createAd(ad: AdDetail) {
     return this.http.post(`${this.settings.endpointUrl}/ads`, ad);

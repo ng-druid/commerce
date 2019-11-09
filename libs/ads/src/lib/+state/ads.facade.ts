@@ -6,6 +6,8 @@ import { AdsPartialState } from './ads.reducer';
 import { adsQuery } from './ads.selectors';
 import { LoadAds, LoadAd } from './ads.actions';
 
+import { SearchConfig } from '../models/ads.models';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,8 +19,8 @@ export class AdsFacade {
 
   constructor(private store: Store<AdsPartialState>) {}
 
-  loadAll() {
-    this.store.dispatch(new LoadAds());
+  loadAll(searchConfig?: SearchConfig) {
+    this.store.dispatch(new LoadAds(searchConfig));
   }
 
   loadAd(id: string) {

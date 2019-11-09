@@ -1,6 +1,8 @@
-<p>Classifieds</p>
-<ul>
-  <li *ngFor="let ad of ads">
-    <a [routerLink]="['/ad', ad.id]">{{ ad.title }}</a>
-  </li>
-</ul>
+<div>
+  <p>Classifieds</p>
+  <ul>
+    <li *ngFor="let ad of ads">
+      <a [routerLink]="['/ad', ad.id]">{{ ad.title }}</a>
+    </li>
+  </ul>
+</div>

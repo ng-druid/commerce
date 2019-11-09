@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Ad, AdDetail, AdsFacade } from '@classifieds-ui/ads';
+import { Ad, AdDetail, AdsFacade, SearchConfig } from '@classifieds-ui/ads';
 
 @Component({
   selector: 'classifieds-ui-ad-browser',
@@ -18,5 +18,8 @@ export class AdBrowserComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.adsFacade.loadAd(params.get('adId'));
     });
+  }
+  onSearchChange(searchString: string) {
+    this.adsFacade.loadAll(new SearchConfig({ searchString }));
   }
 }

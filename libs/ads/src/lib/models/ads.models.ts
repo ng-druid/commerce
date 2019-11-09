@@ -7,6 +7,15 @@ export class AdsSettings {
   }
 }
 
+export class SearchConfig {
+  searchString: string;
+  constructor(data: SearchConfig) {
+    if(data) {
+      this.searchString = data.searchString;
+    }
+  }
+}
+
 export class Ad {
   id: string;
   title: string;

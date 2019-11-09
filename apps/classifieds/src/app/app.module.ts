@@ -23,6 +23,7 @@ import { AdBrowserComponent } from './components/ad-browser/ad-browser.component
 import { AdDetailComponent } from './components/ad-detail/ad-detail.component';
 import { CreateAdComponent } from './components/create-ad/create-ad.component';
 import { AdMasterComponent } from './components/ad-master/ad-master.component';
+import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -39,7 +40,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent],
   imports: [
     BrowserModule,
     CommonModule,

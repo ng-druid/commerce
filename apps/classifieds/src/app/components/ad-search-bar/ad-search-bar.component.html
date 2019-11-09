@@ -1,0 +1,7 @@
+<form (ngSubmit)="onSubmit()" #searchBarForm="ngForm">
+  <div>
+    <label for="search">Search</label>
+    <input #searchField type="text" name="search" [(ngModel)]="searchString">
+  </div>
+  <button type="submit">Submit</button>
+</form>

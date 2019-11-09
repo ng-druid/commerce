@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ClassifiedsComponent } from './ad-browser.component';
+import { AdSearchBarComponent } from './ad-search-bar.component';
 
-describe('ClassifiedsComponent', () => {
-  let component: ClassifiedsComponent;
-  let fixture: ComponentFixture<ClassifiedsComponent>;
+describe('AdSearchBarComponent', () => {
+  let component: AdSearchBarComponent;
+  let fixture: ComponentFixture<AdSearchBarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ClassifiedsComponent ]
+      declarations: [ AdSearchBarComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ClassifiedsComponent);
+    fixture = TestBed.createComponent(AdSearchBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

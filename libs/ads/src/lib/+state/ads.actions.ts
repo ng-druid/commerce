@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { Ad, AdDetail } from '../models/ads.models';
+import { Ad, AdDetail, SearchConfig } from '../models/ads.models';
 
 export enum AdsActionTypes {
   LoadAds = '[Ads] Load Ads',
@@ -13,6 +13,7 @@ export enum AdsActionTypes {
 
 export class LoadAds implements Action {
   readonly type = AdsActionTypes.LoadAds;
+  constructor(public payload?: SearchConfig) {}
 }
 
 export class AdsLoadError implements Action {
