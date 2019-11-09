@@ -8,6 +8,9 @@ import {
   LoadAds,
   AdsLoaded,
   AdsLoadError,
+  LoadAd,
+  AdLoaded,
+  AdLoadError,
   AdsActionTypes
 } from './ads.actions';
 
@@ -24,6 +27,18 @@ export class AdsEffects {
     onError: (action: LoadAds, error) => {
       console.error('Error', error);
       return new AdsLoadError(error);
+    }
+  });
+
+  @Effect() loadAd$ = this.dataPersistence.fetch(AdsActionTypes.LoadAd, {
+    run: (action: LoadAd, state: AdsPartialState) => {
+      // Your custom REST 'load' logic goes here. For now just return an empty list...
+      return this.adsService.getAd(action.payload).pipe(map(ad => new AdLoaded(ad)));
+    },
+
+    onError: (action: LoadAd, error) => {
+      console.error('Error', error);
+      return new AdLoadError(error);
     }
   });
 

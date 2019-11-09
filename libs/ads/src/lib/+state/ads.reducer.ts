@@ -1,5 +1,5 @@
 import { AdsAction, AdsActionTypes } from './ads.actions';
-import { Ad } from '../models/ads.models';
+import { Ad, AdDetail } from '../models/ads.models';
 
 export const ADS_FEATURE_KEY = 'ads';
 
@@ -12,6 +12,7 @@ export const ADS_FEATURE_KEY = 'ads';
 
 export interface AdsState {
   list: Ad[]; // list of Ads; analogous to a sql normalized table
+  detail: AdDetail;
   selectedId?: string | number; // which Ads record has been selected
   loaded: boolean; // has the Ads list been loaded
   error?: any; // last none error (if any)
@@ -23,6 +24,7 @@ export interface AdsPartialState {
 
 export const initialState: AdsState = {
   list: [],
+  detail: undefined,
   loaded: false
 };
 
@@ -36,6 +38,13 @@ export function reducer(
         ...state,
         list: action.payload,
         loaded: true
+      };
+      break;
+    }
+    case AdsActionTypes.AdLoaded: {
+      state = {
+        ...state,
+        detail: action.payload,
       };
       break;
     }

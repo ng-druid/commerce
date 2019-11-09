@@ -1,11 +1,14 @@
 import { Action } from '@ngrx/store';
 
-import { Ad } from '../models/ads.models';
+import { Ad, AdDetail } from '../models/ads.models';
 
 export enum AdsActionTypes {
   LoadAds = '[Ads] Load Ads',
   AdsLoaded = '[Ads] Ads Loaded',
-  AdsLoadError = '[Ads] Ads Load Error'
+  AdsLoadError = '[Ads] Ads Load Error',
+  LoadAd = '[Ads] Load Ad',
+  AdLoaded = '[Ads] Ad Loaded',
+  AdLoadError = '[Ads] Ad Load Error'
 }
 
 export class LoadAds implements Action {
@@ -22,10 +25,28 @@ export class AdsLoaded implements Action {
   constructor(public payload: Ad[]) {}
 }
 
-export type AdsAction = LoadAds | AdsLoaded | AdsLoadError;
+export class LoadAd implements Action {
+  readonly type = AdsActionTypes.LoadAd;
+  constructor(public payload: string) {}
+}
+
+export class AdLoadError implements Action {
+  readonly type = AdsActionTypes.AdLoadError;
+  constructor(public payload: any) {}
+}
+
+export class AdLoaded implements Action {
+  readonly type = AdsActionTypes.AdLoaded;
+  constructor(public payload: AdDetail) {}
+}
+
+export type AdsAction = LoadAds | AdsLoaded | AdsLoadError | LoadAd | AdLoaded | AdLoadError;
 
 export const fromAdsActions = {
   LoadAds,
   AdsLoaded,
-  AdsLoadError
+  AdsLoadError,
+  LoadAd,
+  AdLoaded,
+  AdLoadError
 };

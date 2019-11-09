@@ -9,7 +9,7 @@ import { Ad, AdsFacade } from '@classifieds-ui/ads';
 })
 export class ClassifiedsComponent implements OnInit {
 
-  ads$: Observable<Array<Ad>>;
+  ads$: Observable<Ad[]>;
   constructor(private adsFacade: AdsFacade) { }
 
   ngOnInit() {

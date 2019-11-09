@@ -18,6 +18,7 @@ import { localStorageSync } from 'ngrx-store-localstorage';
 // import { AuthService } from './services/auth.service';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { ClassifiedsComponent } from './components/classifieds/classifieds.component';
+import { AdDetailComponent } from './components/ad-detail/ad-detail.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -27,11 +28,12 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
+  { path: 'ad/:adId', component: AdDetailComponent },
   { path: '', component: ClassifiedsComponent }
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, ClassifiedsComponent],
+  declarations: [AppComponent, AuthCallbackComponent, ClassifiedsComponent, AdDetailComponent],
   imports: [
     BrowserModule,
     CommonModule,

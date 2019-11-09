@@ -32,10 +32,15 @@ const getSelectedAds = createSelector(
     return result ? Object.assign({}, result) : undefined;
   }
 );
+const getAdDetail = createSelector(
+  getAdsState,
+  (state: AdsState) => state.detail
+);
 
 export const adsQuery = {
   getLoaded,
   getError,
   getAllAds,
-  getSelectedAds
+  getSelectedAds,
+  getAdDetail
 };

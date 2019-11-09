@@ -19,3 +19,6 @@ export class Ad {
     }
   }
 }
+
+export class AdDetail extends Ad {
+}
