@@ -1,4 +1,4 @@
 <button *ngIf="!(user$ | async) as u" class="btn btn-lg btn-primary" (click)="login()">Login with IdentityServer</button>
-<p *ngIf="(user$ | async) as u">User ID: {{ u.profile.sub }}</p>
+<a *ngIf="(user$ | async) as u" routerLink="/create-ad">Create Ad</a>
 
 <router-outlet></router-outlet>
