@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 
 import { select, Store } from '@ngrx/store';
 
@@ -11,6 +12,7 @@ import { CompleteAuthentication, Login } from './auth.actions';
 })
 export class AuthFacade {
   getUser$ = this.store.pipe(select(authQuery.getUser));
+  token$ = this.store.pipe(select(authQuery.getUser), map(u => u ? `${u.token_type} ${u.access_token}` : undefined));
 
   constructor(private store: Store<AuthPartialState>) {}
 
