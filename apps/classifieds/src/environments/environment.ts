@@ -4,6 +4,9 @@
 
 export const environment = {
   production: false,
+  adsSettings: {
+    endpointUrl: 'http://localhost:5001'
+  },
   clientSettings: {
     authority: 'http://localhost:5000',
     client_id: 'classifieds_spa',

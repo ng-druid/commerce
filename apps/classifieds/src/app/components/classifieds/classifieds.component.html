@@ -1,0 +1,6 @@
+<p>Classifieds</p>
+<ul>
+  <li *ngFor="let ad of (ads$ | async)">
+    <a [routerLink]="['ad', ad.id]">{{ ad.title }}</a>
+  </li>
+</ul>

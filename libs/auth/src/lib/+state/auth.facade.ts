@@ -6,7 +6,9 @@ import { AuthPartialState } from './auth.reducer';
 import { authQuery } from './auth.selectors';
 import { CompleteAuthentication, Login } from './auth.actions';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthFacade {
   getUser$ = this.store.pipe(select(authQuery.getUser));
 

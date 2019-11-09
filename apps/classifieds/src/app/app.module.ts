@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NxModule } from '@nrwl/angular';
 import { AuthModule, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
+import { AdsModule, AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -16,6 +17,7 @@ import { localStorageSync } from 'ngrx-store-localstorage';
 
 // import { AuthService } from './services/auth.service';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { ClassifiedsComponent } from './components/classifieds/classifieds.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -24,11 +26,12 @@ const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any
 const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 const routes = [
-  { path: 'auth-callback', component: AuthCallbackComponent }
+  { path: 'auth-callback', component: AuthCallbackComponent },
+  { path: '', component: ClassifiedsComponent }
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent],
+  declarations: [AppComponent, AuthCallbackComponent, ClassifiedsComponent],
   imports: [
     BrowserModule,
     CommonModule,
@@ -52,10 +55,12 @@ const routes = [
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     AuthModule,
+    AdsModule,
     NxModule.forRoot()
   ],
   providers: [
-    { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) }
+    { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
+    { provide: ADS_SETTINGS, useValue: new AdsSettings(environment.adsSettings) }
   ],
   bootstrap: [AppComponent]
 })

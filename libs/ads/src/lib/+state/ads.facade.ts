@@ -6,7 +6,9 @@ import { AdsPartialState } from './ads.reducer';
 import { adsQuery } from './ads.selectors';
 import { LoadAds } from './ads.actions';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AdsFacade {
   loaded$ = this.store.pipe(select(adsQuery.getLoaded));
   allAds$ = this.store.pipe(select(adsQuery.getAllAds));

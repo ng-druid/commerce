@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
-import { Entity } from './ads.reducer';
+
+import { Ad } from '../models/ads.models';
 
 export enum AdsActionTypes {
   LoadAds = '[Ads] Load Ads',
@@ -18,7 +19,7 @@ export class AdsLoadError implements Action {
 
 export class AdsLoaded implements Action {
   readonly type = AdsActionTypes.AdsLoaded;
-  constructor(public payload: Entity[]) {}
+  constructor(public payload: Ad[]) {}
 }
 
 export type AdsAction = LoadAds | AdsLoaded | AdsLoadError;
