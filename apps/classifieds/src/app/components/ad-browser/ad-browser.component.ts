@@ -20,6 +20,7 @@ export class AdBrowserComponent implements OnInit {
     });
   }
   onSearchChange(searchString: string) {
+    alert(`search: ${searchString}`);
     this.adsFacade.loadAll(new SearchConfig({ searchString }));
   }
 }

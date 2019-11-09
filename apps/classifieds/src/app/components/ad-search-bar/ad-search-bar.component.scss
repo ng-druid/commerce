@@ -1,0 +1,16 @@
+:host > div {
+  border-bottom: 1px solid black;
+  padding: 1em;
+}
+
+label {
+  margin-right: .5em;
+}
+
+button {
+  display: none;
+}
+
+a, .login {
+  float: right;
+}

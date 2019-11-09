@@ -1,7 +1,11 @@
-<form (ngSubmit)="onSubmit()" #searchBarForm="ngForm">
-  <div>
-    <label for="search">Search</label>
-    <input #searchField type="text" name="search" [(ngModel)]="searchString">
-  </div>
-  <button type="submit">Submit</button>
-</form>
+<div>
+  <button class="login" *ngIf="!(user$ | async) as u" class="btn btn-lg btn-primary" (click)="login()">Login with IdentityServer</button>
+  <a *ngIf="(user$ | async) as u" routerLink="/create-ad">Create Ad</a>
+  <form (ngSubmit)="onSubmit()" #searchBarForm="ngForm">
+      <div>
+        <label for="search">Search</label>
+        <input #searchField type="text" name="search" [(ngModel)]="searchString">
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+</div>
