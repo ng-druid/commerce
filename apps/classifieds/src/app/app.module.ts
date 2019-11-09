@@ -10,11 +10,18 @@ import { RouterModule } from '@angular/router';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import { StoreModule } from '@ngrx/store';
+import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { localStorageSync } from 'ngrx-store-localstorage';
 
 // import { AuthService } from './services/auth.service';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+
+// @todo: for now
+const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
+  return localStorageSync({keys: ['auth'], rehydrate: true })(reducer);
+}
+const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent }
@@ -35,7 +42,7 @@ const routes = [
     StoreModule.forRoot(
       {},
       {
-        metaReducers: !environment.production ? [] : [],
+        metaReducers: metaReducers,
         runtimeChecks: {
           strictActionImmutability: true,
           strictStateImmutability: true
