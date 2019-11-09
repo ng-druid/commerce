@@ -19,9 +19,10 @@ import { localStorageSync } from 'ngrx-store-localstorage';
 
 // import { AuthService } from './services/auth.service';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
-import { ClassifiedsComponent } from './components/classifieds/classifieds.component';
+import { AdBrowserComponent } from './components/ad-browser/ad-browser.component';
 import { AdDetailComponent } from './components/ad-detail/ad-detail.component';
 import { CreateAdComponent } from './components/create-ad/create-ad.component';
+import { AdMasterComponent } from './components/ad-master/ad-master.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -32,12 +33,13 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
   { path: 'create-ad', component: CreateAdComponent },
-  { path: 'ad/:adId', component: AdDetailComponent },
-  { path: '', component: ClassifiedsComponent }
+  // { path: 'ad/:adId', component: AdDetailComponent },
+  { path: 'ad/:adId', component: AdBrowserComponent },
+  { path: '', component: AdBrowserComponent }
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, ClassifiedsComponent, AdDetailComponent, CreateAdComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent],
   imports: [
     BrowserModule,
     CommonModule,
