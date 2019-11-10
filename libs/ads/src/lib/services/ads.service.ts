@@ -11,8 +11,11 @@ import { Ad, AdDetail, AdsSettings, SearchConfig } from '../models/ads.models';
 })
 export class AdsService {
   constructor(@Inject(ADS_SETTINGS) private settings: AdsSettings, private http: HttpClient) { }
-  getAds(searchConfig?: SearchConfig): Observable<Ad[]> {
-    return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads`, { params: { ...searchConfig } }).pipe(map(ads => ads.map(a => new Ad(a))));
+  getAds(): Observable<Ad[]> {
+    return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads`).pipe(map(ads => ads.map(a => new Ad(a))));
+  }
+  searchAds(searchConfig?: SearchConfig): Observable<Ad[]> {
+    return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads/search`, { params: { ...searchConfig } }).pipe(map(ads => ads.map(a => new Ad(a))));
   }
   createAd(ad: AdDetail) {
     return this.http.post(`${this.settings.endpointUrl}/ads`, ad);
