@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Ad, AdDetail, AdsFacade, SearchConfig } from '@classifieds-ui/ads';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-ad-browser',
@@ -15,8 +16,11 @@ export class AdBrowserComponent implements OnInit {
     this.adsFacade.detail$.subscribe(ad => this.ad = ad);
     this.adsFacade.allAds$.subscribe(ads => this.ads = ads);
     this.adsFacade.loadAll();
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.adsFacade.loadAd(params.get('adId'));
+    this.route.paramMap.pipe(
+      map(p => p.get('adId')),
+      filter(adId => typeof(adId) === 'string')
+    ).subscribe((adId: string) => {
+      this.adsFacade.loadAd(adId);
     });
   }
   onSearchChange(searchString: string) {

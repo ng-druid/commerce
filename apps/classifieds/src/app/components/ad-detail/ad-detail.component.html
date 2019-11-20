@@ -1,4 +1,7 @@
 <div *ngIf="ad">
   <h1>{{ ad.title }}</h1>
   <div>{{ ad.description }}</div>
+  <ul>
+    <li><img width="500" *ngFor="let i of ad.images" src="http://localhost:5002/files/{{i.path}}" /></li>
+  </ul>
 </div>

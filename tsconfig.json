@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@classifieds-ui/ads": ["libs/ads/src/index.ts"],
-      "@classifieds-ui/auth": ["libs/auth/src/index.ts"]
+      "@classifieds-ui/auth": ["libs/auth/src/index.ts"],
+      "@classifieds-ui/media": ["libs/media/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

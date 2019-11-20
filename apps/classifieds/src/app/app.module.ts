@@ -7,6 +7,7 @@ import { NxModule } from '@nrwl/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AuthModule, AuthInterceptor, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
 import { AdsModule, AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
+import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -16,6 +17,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { localStorageSync } from 'ngrx-store-localstorage';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 // import { AuthService } from './services/auth.service';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
@@ -47,6 +49,7 @@ const routes = [
     HttpClientModule,
     FormsModule,
     FlexLayoutModule,
+    NgxDropzoneModule,
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
@@ -67,11 +70,13 @@ const routes = [
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     AuthModule,
     AdsModule,
+    MediaModule,
     NxModule.forRoot()
   ],
   providers: [
     { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
     { provide: ADS_SETTINGS, useValue: new AdsSettings(environment.adsSettings) },
+    { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

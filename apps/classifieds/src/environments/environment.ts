@@ -7,6 +7,9 @@ export const environment = {
   adsSettings: {
     endpointUrl: 'http://localhost:5001'
   },
+  mediaSettings: {
+    endpointUrl: 'http://localhost:5002'
+  },
   clientSettings: {
     authority: 'http://localhost:5000',
     client_id: 'classifieds_spa',
