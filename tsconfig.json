@@ -18,7 +18,8 @@
     "paths": {
       "@classifieds-ui/ads": ["libs/ads/src/index.ts"],
       "@classifieds-ui/auth": ["libs/auth/src/index.ts"],
-      "@classifieds-ui/media": ["libs/media/src/index.ts"]
+      "@classifieds-ui/media": ["libs/media/src/index.ts"],
+      "@classifieds-ui/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

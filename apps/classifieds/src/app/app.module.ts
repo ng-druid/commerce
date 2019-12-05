@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AuthModule, AuthInterceptor, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
 import { AdsModule, AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
 import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
+import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -68,6 +69,7 @@ const routes = [
     ),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
+    UtilsModule,
     AuthModule,
     AdsModule,
     MediaModule,
@@ -77,6 +79,7 @@ const routes = [
     { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
     { provide: ADS_SETTINGS, useValue: new AdsSettings(environment.adsSettings) },
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
+    { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
