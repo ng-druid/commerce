@@ -5,13 +5,13 @@
 export const environment = {
   production: false,
   adsSettings: {
-    endpointUrl: 'http://localhost:5001'
+    endpointUrl: 'https://localhost:44342'
   },
   mediaSettings: {
-    endpointUrl: 'http://localhost:5002'
+    endpointUrl: 'https://localhost:44328'
   },
   clientSettings: {
-    authority: 'http://localhost:5000',
+    authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
     redirect_uri: 'http://localhost:4200/auth-callback',
     response_type:"id_token token",
