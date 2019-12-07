@@ -11,6 +11,8 @@ import { Ad} from '@classifieds-ui/ads';
 export class AdMasterComponent {
   @Input()
   ads: Ad[] = [];
+  @Input()
+  displayOverlay = true;
   constructor(private router: Router) { }
   viewAd(id: string) {
     this.router.navigateByUrl(`/ad/${id}`);

@@ -3,3 +3,4 @@
     <a [routerLink]="['/ad', ad.id]">{{ ad.title }}</a>
   </div>
 </cdk-virtual-scroll-viewport>
+<div *ngIf="displayOverlay" class="loader-overlay"></div>
