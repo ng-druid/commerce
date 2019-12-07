@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AdDetail } from '@classifieds-ui/ads';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AdDetail, AdsFacade } from '@classifieds-ui/ads';
+import { map, filter } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -8,12 +10,22 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./ad-detail.component.scss']
 })
 export class AdDetailComponent implements OnInit {
-  @Input()
   ad: AdDetail;
-  @Input()
   displayOverlay = true;
   mediaBaseUrl: string;
+  constructor(private route: ActivatedRoute, private adsFacade: AdsFacade) { }
   ngOnInit() {
     this.mediaBaseUrl = environment.mediaSettings.endpointUrl;
+    this.adsFacade.detail$.subscribe(ad => {
+      this.displayOverlay = false;
+      this.ad = ad
+    });
+    this.route.paramMap.pipe(
+      map(p => p.get('adId')),
+      filter(adId => typeof(adId) === 'string')
+    ).subscribe((adId: string) => {
+      this.displayOverlay = true;
+      this.adsFacade.loadAd(adId);
+    });
   }
 }

@@ -39,10 +39,10 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
-  { path: 'create-ad', component: CreateAdComponent },
-  // { path: 'ad/:adId', component: AdDetailComponent },
-  { path: 'ad/:adId', component: AdBrowserComponent },
-  { path: '', component: AdBrowserComponent }
+  { path: '', component: AdBrowserComponent, children: [
+    { path: 'ad/:adId', component: AdDetailComponent },
+    { path: 'create-ad', component: CreateAdComponent },
+  ] }
 ];
 
 @NgModule({
