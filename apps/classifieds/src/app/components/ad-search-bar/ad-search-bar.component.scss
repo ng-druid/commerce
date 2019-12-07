@@ -1,13 +1,9 @@
 form {
-  padding-top: 1em;
-}
-
-form > div:last-child {
-  // border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid black;
 }
 
 .search-field {
-  padding: 0 .5em;
+  padding: 1em;
 }
 
 input[type=text] {
@@ -16,31 +12,14 @@ input[type=text] {
   font-size: 1em;
   border: none;
   outline: none;
-  border-bottom: 1px solid lightgray;
-  padding: 0 1em 1em 1em;
+  border: 1px solid #ccc;
+  padding: .5em;
 }
 
 label {
   display: none;
 }
 
-form > button {
+form button {
   display: none;
-}
-
-a, .login {
-  float: right;
-  background-color: #ccc;
-  padding: .5em 1.25em;
-  text-decoration: none;
-  color: #666;
-  position: relative;
-  top: -.5em;
-  right: .5em;
-  cursor: pointer;
-
-  &:hover {
-    color: black;
-  }
-
 }

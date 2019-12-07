@@ -4,13 +4,8 @@
   position: relative;
 }
 
-.ad-images {
-  padding: 0;
-  margin: 0;
-}
-
-.ad-images li {
-  margin-top: 1em;
+:host > div {
+  padding-right: 1em;
 }
 
 .loader-overlay {
@@ -20,4 +15,13 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+img:not(:first-child) {
+  margin-top: 1em;
 }
