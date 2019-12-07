@@ -9,6 +9,7 @@ import { AuthModule, AuthInterceptor, CLIENT_SETTINGS, ClientSettings } from '@c
 import { AdsModule, AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
 import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
+import { ClassifiedsMaterialModule } from '@classifieds-ui/classifieds-material';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -27,6 +28,8 @@ import { AdDetailComponent } from './components/ad-detail/ad-detail.component';
 import { CreateAdComponent } from './components/create-ad/create-ad.component';
 import { AdMasterComponent } from './components/ad-master/ad-master.component';
 import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.component';
+import { AppHeaderComponent } from './components/app-header/app-header.component';
+import { AppFooterComponent } from './components/app-footer/app-footer.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -43,7 +46,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AppHeaderComponent, AppFooterComponent],
   imports: [
     BrowserModule,
     CommonModule,
@@ -69,6 +72,7 @@ const routes = [
     ),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
+    ClassifiedsMaterialModule,
     UtilsModule,
     AuthModule,
     AdsModule,

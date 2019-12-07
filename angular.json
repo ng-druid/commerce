@@ -25,7 +25,10 @@
               "apps/classifieds/src/favicon.ico",
               "apps/classifieds/src/assets"
             ],
-            "styles": ["apps/classifieds/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/classifieds/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -235,6 +238,37 @@
             "jestConfig": "libs/utils/jest.config.js",
             "tsConfig": "libs/utils/tsconfig.spec.json",
             "setupFile": "libs/utils/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "classifieds-material": {
+      "projectType": "library",
+      "root": "libs/classifieds-material",
+      "sourceRoot": "libs/classifieds-material/src",
+      "prefix": "classifieds-ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/classifieds-material/tsconfig.lib.json",
+              "libs/classifieds-material/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/classifieds-material/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/classifieds-material/jest.config.js",
+            "tsConfig": "libs/classifieds-material/tsconfig.spec.json",
+            "setupFile": "libs/classifieds-material/src/test-setup.ts"
           }
         }
       },

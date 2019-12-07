@@ -1,3 +1,19 @@
-:host > div {
+.ads-viewport {
+  height: 100%;
+  width: 100%;
   border-right: 1px solid black;
+}
+
+.ad-item {
+  height: 75px;
+  box-sizing: border-box;
+  border-bottom: 1px solid gray;
+  line-height: 75px;
+  padding: 0 1em;
+  cursor: pointer;
+
+  &:hover {
+    background-color:  azure;
+  }
+
 }

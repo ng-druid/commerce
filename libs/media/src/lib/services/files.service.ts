@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
-import { Observable, forkJoin, NEVER } from 'rxjs';
+import { Observable, forkJoin, NEVER, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MEDIA_SETTINGS } from '../media.tokens';
 import { MediaSettings, MediaFile } from '../models/media.models';
@@ -22,6 +22,6 @@ export class FilesService {
         })
       ));
     });
-    return forkJoin(requests$);
+    return requests$.length > 0 ? forkJoin(requests$) : of([]);
   }
 }

@@ -1,8 +1,5 @@
-<div>
-  <p>Classifieds</p>
-  <ul>
-    <li *ngFor="let ad of ads">
-      <a [routerLink]="['/ad', ad.id]">{{ ad.title }}</a>
-    </li>
-  </ul>
-</div>
+<cdk-virtual-scroll-viewport itemSize="50" class="ads-viewport">
+  <div *cdkVirtualFor="let ad of ads" class="ad-item" (click)="viewAd(ad.id)">
+    <a [routerLink]="['/ad', ad.id]">{{ ad.title }}</a>
+  </div>
+</cdk-virtual-scroll-viewport>

@@ -1,9 +1,7 @@
-<classifieds-ui-ad-search-bar (searchChange)="onSearchChange($event)"></classifieds-ui-ad-search-bar>
-<div fxLayout="row" fxLayoutGap="1em">
-  <div fxFlex="30">
-    <classifieds-ui-ad-master [ads]="ads"></classifieds-ui-ad-master>
-  </div>
-  <div fxFlex fxFlexFill>
-    <classifieds-ui-ad-detail [ad]="ad"></classifieds-ui-ad-detail>
-  </div>
+<div fxLayout="column" fxFill>
+    <classifieds-ui-ad-search-bar fxFlex (searchChange)="onSearchChange($event)"></classifieds-ui-ad-search-bar>
+    <div fxFlex="95" fxLayout="row" fxLayoutGap="1em" fxFill>
+      <classifieds-ui-ad-master fxFlex="30" [ads]="ads"></classifieds-ui-ad-master>
+      <classifieds-ui-ad-detail fxFlex="70" [ad]="ad"></classifieds-ui-ad-detail>
+    </div>
 </div>
