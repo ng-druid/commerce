@@ -1,11 +1,13 @@
-<div>
-  <button *ngIf="!(user$ | async) as u" class="login btn btn-lg btn-primary" (click)="login()">Login with IdentityServer</button>
-  <a *ngIf="(user$ | async) as u" routerLink="/create-ad">Create Ad</a>
-  <form (ngSubmit)="onSubmit()" #searchBarForm="ngForm">
-      <div>
-        <label for="search">Search</label>
-        <input #searchField type="text" name="search" [(ngModel)]="searchString">
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-</div>
+<form (ngSubmit)="onSubmit()" #searchBarForm="ngForm" fxLayout="row" fxFill>
+  <div fxFlex="30" class="search-field">
+    <label for="search">Search</label>
+    <input #searchField type="text" placeholder="Search" [(ngModel)]="searchString" name="search">
+  </div>
+  <div fxFlex="60">
+  </div>
+  <button type="submit">Submit</button>
+  <div fxFlex="10">
+    <button *ngIf="!(user$ | async) as u" class="login" (click)="login()">Login with IdentityServer</button>
+    <a class="create-ad" *ngIf="(user$ | async) as u" routerLink="/create-ad">Create Ad</a>
+  </div>
+</form>

@@ -1,7 +1,8 @@
 <div *ngIf="ad">
   <h1>{{ ad.title }}</h1>
   <div>{{ ad.description }}</div>
-  <ul>
-    <li><img width="500" *ngFor="let i of ad.images" src="{{mediaBaseUrl}}/files/{{i.path}}" /></li>
+  <ul class="ad-images">
+    <li *ngFor="let i of ad.images"><img width="500" src="{{mediaBaseUrl}}/files/{{i.path}}"></li>
   </ul>
 </div>
+<div *ngIf="displayOverlay" class="loader-overlay"></div>
