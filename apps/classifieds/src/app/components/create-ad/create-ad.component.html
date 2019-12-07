@@ -1,17 +1,24 @@
 <form (ngSubmit)="onSubmit()" #createAdForm="ngForm">
-    <div>
-      <label for="title">Title</label>
-      <input type="text" name="title" required [(ngModel)]="ad.title">
+    <div fxLayout="row" fxLayoutGap="1.25em">
+      <div fxFlex="50">
+        <div class="form-field">
+            <label for="title">Title</label>
+            <input type="text" name="title" required [(ngModel)]="ad.title">
+          </div>
+          <div class="form-field">
+            <label for="description">Description</label>
+            <textarea name="description" required [(ngModel)]="ad.description"></textarea>
+         </div>
+         <button type="submit">Submit</button>
+      </div>
+      <div fxFlex="50">
+        <ngx-dropzone (change)="onSelect($event)">
+            <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
+            <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+          </ngx-dropzone>
+      </div>
     </div>
-    <div>
-      <label for="description">Description</label>
-      <textarea name="description" required [(ngModel)]="ad.description"></textarea>
-    </div>
-    <ngx-dropzone (change)="onSelect($event)">
-      <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
-      <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-      </ngx-dropzone-preview>
-    </ngx-dropzone>
-    <button type="submit">Submit</button>
   </form>
+  <div *ngIf="displayOverlay" class="loader-overlay"></div>

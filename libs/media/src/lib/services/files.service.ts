@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { HttpClient, HttpRequest } from '@angular/common/http';
-import { Observable, forkJoin, NEVER, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MEDIA_SETTINGS } from '../media.tokens';
 import { MediaSettings, MediaFile } from '../models/media.models';
@@ -17,8 +17,7 @@ export class FilesService {
       formData.append('File', f, f.name);
       requests$.push(this.http.post(`${this.settings.endpointUrl}/files`, formData).pipe(
         catchError(e => {
-          console.log(e);
-          return NEVER;
+          return throwError(new Error("Error uploading images."));
         })
       ));
     });

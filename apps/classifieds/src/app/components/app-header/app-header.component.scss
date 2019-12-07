@@ -9,9 +9,13 @@ a, .login {
   color: white;
   font-size: small;
   text-decoration: none;
+  background-color: black;
+  border: none;
   border-bottom: 1px solid white;
+  padding: 0;
   &:hover {
     border-bottom: none;
+    cursor: pointer;
   }
 }
 

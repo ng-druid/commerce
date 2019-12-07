@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { switchMap, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { NEVER } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { AdImage, AdDetail, AdsService } from '@classifieds-ui/ads';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 
@@ -12,28 +14,34 @@ export class CreateAdComponent {
 
   files: Array<File> = [];
   ad: AdDetail = new AdDetail();
+  displayOverlay = false;
 
-  constructor(private adsService: AdsService, private filesService: FilesService) { }
+  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService) { }
 
   onSubmit() {
-    console.log('create ad');
+    this.displayOverlay = true;
     this.filesService.bulkUpload(this.files).pipe(
+      catchError(e => {
+        this.displayOverlay = false;
+        alert(e.error);
+        return NEVER;
+      }),
       tap((files: Array<MediaFile>) => {
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
       }),
       switchMap(f => {
         return this.adsService.createAd(this.ad);
       })
-    ).subscribe();
+    ).subscribe((ad: AdDetail) => {
+      this.router.navigateByUrl(`/ad/${ad.id}`);
+    });
   }
 
   onSelect(event) {
-    console.log(event);
     this.files.push(...event.addedFiles);
   }
 
   onRemove(event) {
-    console.log(event);
     this.files.splice(this.files.indexOf(event), 1);
   }
 
