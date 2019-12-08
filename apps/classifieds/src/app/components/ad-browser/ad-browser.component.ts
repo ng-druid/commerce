@@ -19,6 +19,10 @@ export class AdBrowserComponent implements OnInit {
   }
   onSearchChange(searchString: string) {
     this.displayMasterOverlay = true;
-    this.adsFacade.loadAll(new SearchConfig({ searchString }));
+    if(searchString === '') {
+      this.adsFacade.loadAll();
+    } else {
+      this.adsFacade.loadAll(new SearchConfig({ searchString }));
+    }
   }
 }
