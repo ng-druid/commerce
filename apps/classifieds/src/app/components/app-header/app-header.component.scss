@@ -4,3 +4,12 @@
      Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
+
+.brand {
+  color: white;
+  padding-right: 1em;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  font-weight: lighter;
+  font-style: serif;
+}

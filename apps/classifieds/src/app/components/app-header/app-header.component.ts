@@ -22,4 +22,7 @@ export class AppHeaderComponent implements OnInit {
   createAd() {
     this.router.navigateByUrl('/create-ad');
   }
+  browseAds() {
+    this.router.navigateByUrl('/');
+  }
 }
