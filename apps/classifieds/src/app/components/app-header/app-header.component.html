@@ -1,3 +1,6 @@
 <mat-toolbar color="primary">
     <span>Classifieds</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" *ngIf="!(user$ | async) as u" (click)="login()">Login with IdentityServer</button>
+    <button mat-raised-button color="accent" *ngIf="(user$ | async) as u" (click)="createAd()">Create Ad</button>
 </mat-toolbar>

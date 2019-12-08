@@ -24,3 +24,11 @@ textarea {
   top: 0;
   left: 0;
 }
+
+ngx-dropzone {
+  margin: .5em 0;
+}
+
+button + button {
+  margin-left: .25em;
+}

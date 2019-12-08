@@ -1,24 +1,45 @@
-<form (ngSubmit)="onSubmit()" #createAdForm="ngForm">
-    <div fxLayout="row" fxLayoutGap="1.25em">
-      <div fxFlex="50">
-        <div class="form-field">
-            <label for="title">Title</label>
-            <input type="text" name="title" required [(ngModel)]="ad.title">
-          </div>
-          <div class="form-field">
-            <label for="description">Description</label>
-            <textarea name="description" required [(ngModel)]="ad.description"></textarea>
-         </div>
-         <button type="submit">Submit</button>
+<mat-horizontal-stepper [linear]="true" #stepper>
+    <mat-step [stepControl]="detailsFormGroup">
+      <form [formGroup]="detailsFormGroup">
+        <ng-template matStepLabel>Fill out ad details</ng-template>
+        <mat-form-field>
+          <input matInput placeholder="Title" formControlName="title" required>
+        </mat-form-field>
+        <div>
+          <label for="description">Description *</label>
+          <textarea formControlName="description" name="description" required></textarea>
+        </div>
+        <div>
+          <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Add photos</ng-template>
+      <ngx-dropzone (change)="onSelect($event)">
+        <ngx-dropzone-label>Drag and Drop photos here</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+      <div>
+        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" (click)="createAd()">Create Ad</button>
       </div>
-      <div fxFlex="50">
-        <ngx-dropzone (change)="onSelect($event)">
-            <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
-            <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-            </ngx-dropzone-preview>
-          </ngx-dropzone>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Creating Ad</ng-template>
+      <div>
+        <mat-spinner></mat-spinner>
       </div>
-    </div>
-  </form>
+      <div>
+        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" (click)="stepper.reset()">Try Again</button>
+      </div>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Ad Created</ng-template>
+        Ad has been created.
+      </mat-step>
+  </mat-horizontal-stepper>
   <div *ngIf="displayOverlay" class="loader-overlay"></div>
