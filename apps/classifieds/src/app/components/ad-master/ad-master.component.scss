@@ -1,6 +1,8 @@
 :host {
   position: relative;
-  border-right: 1px solid rgba(0,0,0,.42);
+  // border-right: 2px solid rgba(0,0,0,.42);
+  /*border-right: 1px solid #3f51b5;*/
+  // border-bottom: 2px solid rgba(0,0,0,.42);
 }
 
 .ads-viewport {
@@ -9,12 +11,13 @@
 }
 
 a {
-  color: black;
+  color: #3f51b5;
   text-decoration: none;
 }
 
 mat-list-item:hover {
   cursor: pointer;
+  background-color: rgba(63, 81, 181, .05);
 }
 
 .loader-overlay {
