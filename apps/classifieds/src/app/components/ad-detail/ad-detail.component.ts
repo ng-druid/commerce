@@ -13,10 +13,12 @@ export class AdDetailComponent implements OnInit {
   ad: AdDetail;
   displayOverlay = true;
   mediaBaseUrl: string;
+  selectedTabIndex = 0;
   constructor(private route: ActivatedRoute, private adsFacade: AdsFacade) { }
   ngOnInit() {
     this.mediaBaseUrl = environment.mediaSettings.endpointUrl;
     this.adsFacade.detail$.subscribe(ad => {
+      this.selectedTabIndex = 0;
       this.displayOverlay = false;
       this.ad = ad
     });

@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { NxModule } from '@nrwl/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -30,6 +31,8 @@ import { AdMasterComponent } from './components/ad-master/ad-master.component';
 import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
+import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
+import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -46,12 +49,13 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AppHeaderComponent, AppFooterComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AppHeaderComponent, AppFooterComponent, AdDetailTabComponent, AdGalleryTabComponent],
   imports: [
     BrowserModule,
     CommonModule,
     HttpClientModule,
     FormsModule,
+    BrowserAnimationsModule,
     FlexLayoutModule,
     NgxDropzoneModule,
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),

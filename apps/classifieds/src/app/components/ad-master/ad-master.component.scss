@@ -1,11 +1,11 @@
 :host {
   position: relative;
+  border-right: 1px solid rgba(0,0,0,.42);
 }
 
 .ads-viewport {
   height: 100%;
   width: 100%;
-  border-right: 1px solid black;
 }
 
 a {
@@ -13,19 +13,8 @@ a {
   text-decoration: none;
 }
 
-.ad-item {
-  height: 75px;
-  margin: 0 .5em;
-  box-sizing: border-box;
-  border-bottom: 1px solid gray;
-  line-height: 75px;
-  padding: 0 1em;
+mat-list-item:hover {
   cursor: pointer;
-
-  &:hover {
-    background-color:  azure;
-  }
-
 }
 
 .loader-overlay {

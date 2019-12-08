@@ -1,7 +1,3 @@
-<nav>
-  <ul>
-    <li *ngIf="!(user$ | async) as u"><button class="login" (click)="login()">Login</button></li>
-    <li *ngIf="(user$ | async) as u"><a class="create-ad" routerLink="/create-ad">Create Ad</a></li>
-  </ul>
-</nav>
-Classifieds
+<mat-toolbar color="primary">
+    <span>Classifieds</span>
+</mat-toolbar>
