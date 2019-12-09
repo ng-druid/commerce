@@ -1,5 +1,5 @@
 <cdk-virtual-scroll-viewport itemSize="50" class="ads-viewport">
-  <mat-list *cdkVirtualFor="let ad of ads" class="ad-item" (click)="viewAd(ad.id)">
+  <mat-list *cdkVirtualFor="let ad of adsDataSource" class="ad-item" (click)="viewAd(ad.id)">
     <mat-list-item>
       <a [routerLink]="['/ad', ad.id]">{{ ad.title }}</a>
       <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
