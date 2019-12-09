@@ -21,11 +21,7 @@ export class AdsEffects {
   @Effect() loadAds$ = this.dataPersistence.fetch(AdsActionTypes.LoadAds, {
     run: (action: LoadAds, state: AdsPartialState) => {
       // Your custom REST 'load' logic goes here. For now just return an empty list...
-      if(action.payload) {
-        return this.adsService.searchAds(action.payload).pipe(map(ads => new AdsLoaded(ads)));
-      } else {
-        return this.adsService.getAds().pipe(map(ads => new AdsLoaded(ads)));
-      }
+      return this.adsService.getAds(action.payload).pipe(map(ads => new AdsLoaded(ads)));
     },
 
     onError: (action: LoadAds, error) => {

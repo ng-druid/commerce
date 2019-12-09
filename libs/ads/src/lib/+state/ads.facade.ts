@@ -19,7 +19,7 @@ export class AdsFacade {
 
   constructor(private store: Store<AdsPartialState>) {}
 
-  loadAll(searchConfig?: SearchConfig) {
+  loadAll(searchConfig: SearchConfig) {
     this.store.dispatch(new LoadAds(searchConfig));
   }
 

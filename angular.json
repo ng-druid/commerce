@@ -248,28 +248,28 @@
         }
       }
     },
-    "classifieds-material": {
+    "material": {
       "projectType": "library",
-      "root": "libs/classifieds-material",
-      "sourceRoot": "libs/classifieds-material/src",
+      "root": "libs/material",
+      "sourceRoot": "libs/material/src",
       "prefix": "classifieds-ui",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/classifieds-material/tsconfig.lib.json",
-              "libs/classifieds-material/tsconfig.spec.json"
+              "libs/material/tsconfig.lib.json",
+              "libs/material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/classifieds-material/**"]
+            "exclude": ["**/node_modules/**", "!libs/material/**"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/classifieds-material/jest.config.js",
-            "tsConfig": "libs/classifieds-material/tsconfig.spec.json",
-            "setupFile": "libs/classifieds-material/src/test-setup.ts"
+            "jestConfig": "libs/material/jest.config.js",
+            "tsConfig": "libs/material/tsconfig.spec.json",
+            "setupFile": "libs/material/src/test-setup.ts"
           }
         }
       },
@@ -278,6 +278,33 @@
           "styleext": "scss"
         }
       }
+    },
+    "logging": {
+      "projectType": "library",
+      "root": "libs/logging",
+      "sourceRoot": "libs/logging/src",
+      "prefix": "classifieds-ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/logging/tsconfig.lib.json",
+              "libs/logging/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/logging/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/logging/jest.config.js",
+            "tsConfig": "libs/logging/tsconfig.spec.json",
+            "setupFile": "libs/logging/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

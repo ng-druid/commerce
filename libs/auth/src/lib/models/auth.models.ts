@@ -14,3 +14,12 @@ export class ClientSettings {
     }
   }
 }
+
+export class UserInfo {
+  sub: string;
+  constructor(data?: UserInfo) {
+    if(data) {
+      this.sub = data.sub;
+    }
+  }
+}

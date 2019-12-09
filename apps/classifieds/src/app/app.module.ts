@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,7 +10,8 @@ import { AuthModule, AuthInterceptor, CLIENT_SETTINGS, ClientSettings } from '@c
 import { AdsModule, AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
 import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
-import { ClassifiedsMaterialModule } from '@classifieds-ui/classifieds-material';
+import { MaterialModule } from '@classifieds-ui/material';
+import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor } from '@classifieds-ui/logging';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -23,6 +24,7 @@ import { localStorageSync } from 'ngrx-store-localstorage';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 
 // import { AuthService } from './services/auth.service';
+import { GlobalErrorHandler } from './services/global-error-handler';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { AdBrowserComponent } from './components/ad-browser/ad-browser.component';
 import { AdDetailComponent } from './components/ad-detail/ad-detail.component';
@@ -77,19 +79,23 @@ const routes = [
     ),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    ClassifiedsMaterialModule,
+    MaterialModule,
     UtilsModule,
+    LoggingModule,
     AuthModule,
     AdsModule,
     MediaModule,
     NxModule.forRoot()
   ],
   providers: [
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
     { provide: ADS_SETTINGS, useValue: new AdsSettings(environment.adsSettings) },
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
+    { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

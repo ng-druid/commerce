@@ -53,6 +53,7 @@
     "ngx-dropzone": "^2.1.2",
     "oidc-client": "^1.9.1",
     "rxjs": "~6.4.0",
+    "stacktrace-js": "^2.0.1",
     "zone.js": "^0.9.1"
   },
   "devDependencies": {

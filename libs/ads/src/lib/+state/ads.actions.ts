@@ -13,7 +13,7 @@ export enum AdsActionTypes {
 
 export class LoadAds implements Action {
   readonly type = AdsActionTypes.LoadAds;
-  constructor(public payload?: SearchConfig) {}
+  constructor(public payload: SearchConfig) {}
 }
 
 export class AdsLoadError implements Action {

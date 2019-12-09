@@ -10,6 +10,9 @@ export const environment = {
   mediaSettings: {
     endpointUrl: 'https://localhost:44328'
   },
+  loggingSettings: {
+    endpointUrl: "https://localhost:44375"
+  },
   clientSettings: {
     authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
