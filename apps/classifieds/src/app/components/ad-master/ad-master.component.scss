@@ -32,3 +32,13 @@ mat-list-item:hover {
   left: 0;
   display: none;
 }
+
+.spinner {
+  padding: .5em 0;
+}
+
+mat-spinner {
+  position: relative;
+  margin-left: 50%;
+  left: -15px;
+}

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 
 import { ADS_SETTINGS } from '../ads.tokens';
 import { Ad, AdDetail, AdsSettings, SearchConfig } from '../models/ads.models';
@@ -15,7 +15,7 @@ export class AdsService {
     return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads`).pipe(map(ads => ads.map(a => new Ad(a))));
   }
   searchAds(searchConfig?: SearchConfig): Observable<Ad[]> {
-    return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads/search`, { params: { ...searchConfig } }).pipe(map(ads => ads.map(a => new Ad(a))));
+    return this.http.get<Ad[]>(`${this.settings.endpointUrl}/ads/search`, { params: { ...searchConfig } }).pipe(delay(2000), map(ads => ads.map(a => new Ad(a))));
   }
   createAd(ad: AdDetail) {
     return this.http.post(`${this.settings.endpointUrl}/ads`, ad);
