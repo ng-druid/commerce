@@ -2,32 +2,27 @@
     <mat-step [stepControl]="detailsFormGroup">
       <form [formGroup]="detailsFormGroup">
         <ng-template matStepLabel>Fill out ad details</ng-template>
-        <mat-form-field>
-          <input matInput placeholder="Title" formControlName="title" required>
-        </mat-form-field>
+        <div fxLayout="row" fxLayoutGap="2em">
+          <mat-form-field fxFlex="65">
+            <input matInput placeholder="Title" formControlName="title" required>
+            <mat-icon matSuffix>title</mat-icon>
+          </mat-form-field>
+          <mat-form-field fxFlex="45">
+              <input matInput placeholder="Location" [matAutocomplete]="auto" formControlName="location">
+              <mat-icon matSuffix>location_city</mat-icon>
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity">
+                <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
+                <ng-container *ngIf="!isLoadingCities">
+                  <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }}</mat-option>
+                </ng-container>
+              </mat-autocomplete>
+          </mat-form-field>
+        </div>
         <div>
           <label for="description">Description *</label>
           <textarea formControlName="description" name="description" required></textarea>
         </div>
         <div>
-          <button mat-raised-button color="primary" matStepperNext>Next</button>
-        </div>
-      </form>
-    </mat-step>
-    <mat-step>
-      <form [formGroup]="locationFormGroup">
-        <ng-template matStepLabel>Fill out location</ng-template>
-        <mat-form-field>
-            <input matInput placeholder="Location" [matAutocomplete]="auto" formControlName="location">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity">
-              <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
-              <ng-container *ngIf="!isLoadingCities">
-                <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }}</mat-option>
-              </ng-container>
-            </mat-autocomplete>
-          </mat-form-field>
-        <div>
-          <button mat-raised-button color="primary" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" matStepperNext>Next</button>
         </div>
       </form>

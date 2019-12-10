@@ -21,7 +21,6 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   isLoadingCities = false;
 
   detailsFormGroup: FormGroup;
-  locationFormGroup: FormGroup;
 
   private componentDestroyed = new Subject();
 
@@ -33,12 +32,10 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
       title: ['', Validators.required],
+      location: ['', Validators.required],
       description: ['', Validators.required]
     });
-    this.locationFormGroup = this.fb.group({
-      location: ['', Validators.required]
-    });
-    this.locationFormGroup.get('location').valueChanges.pipe(
+    this.detailsFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),
       tap(() => {
         this.cities = [];
@@ -71,7 +68,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         return NEVER;
       }),
       tap((files: Array<MediaFile>) => {
-        const city = this.locationFormGroup.get('location').value
+        const city = this.detailsFormGroup.get('location').value
         this.ad.title = this.detailsFormGroup.get('title').value;
         this.ad.description = this.detailsFormGroup.get('description').value;
         this.ad.location = city ? city.location : [];
