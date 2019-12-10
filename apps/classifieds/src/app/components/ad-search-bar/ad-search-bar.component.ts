@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, tap, switchMap, takeUntil, finalize } from 'rxjs/operators';
 import { City , CitiesService } from '@classifieds-ui/cities';
+import { AdSearchBarForm } from '../../models/form.models';
 
 @Component({
   selector: 'classifieds-ui-ad-search-bar',
@@ -12,7 +13,7 @@ import { City , CitiesService } from '@classifieds-ui/cities';
 export class AdSearchBarComponent implements OnInit, OnDestroy {
 
   @Output()
-  searchChange = new EventEmitter<string>();
+  formSubmit = new EventEmitter<AdSearchBarForm>();
 
   cities: Array<City> = [];
   isLoadingCities = false;
@@ -60,7 +61,10 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.searchChange.emit(this.searchFormGroup.get('searchString').value);
+    const searchString = this.searchFormGroup.get('searchString').value;
+    const city = this.searchFormGroup.get('location').value;
+    const location =  city ? city.location: undefined;
+    this.formSubmit.emit(new AdSearchBarForm({ searchString, location }));
   }
 
   displayCity(city?: City): string | undefined {

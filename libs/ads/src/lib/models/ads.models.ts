@@ -9,10 +9,12 @@ export class AdsSettings {
 
 export class SearchConfig {
   searchString: string;
+  location: string;
   page: string;
   constructor(data: SearchConfig) {
     if(data) {
       this.searchString = data.searchString;
+      this.location = data.location;
       this.page = data.page;
     }
   }

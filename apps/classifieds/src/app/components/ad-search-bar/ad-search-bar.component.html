@@ -6,7 +6,7 @@
   <mat-form-field appearance="standard" fxFlex="50">
       <input matInput placeholder="Location" [matAutocomplete]="auto" formControlName="location">
       <mat-icon matSuffix>location_city</mat-icon>
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity" (optionSelected)="onSubmit()">
         <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
         <ng-container *ngIf="!isLoadingCities">
           <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }}</mat-option>

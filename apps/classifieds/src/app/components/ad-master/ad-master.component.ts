@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Ad} from '@classifieds-ui/ads';
+import { AdSearchBarForm } from '../../models/form.models';
 
 import { AdsDataSourceService } from '../../services/ads-data-source.service';
 
@@ -13,12 +14,12 @@ import { AdsDataSourceService } from '../../services/ads-data-source.service';
 })
 export class AdMasterComponent implements OnChanges {
   @Input()
-  searchString;
+  searchForm: AdSearchBarForm;
   displayOverlay = true;
   constructor(private router: Router, public adsDataSource: AdsDataSourceService) { }
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.searchString.previousValue !== changes.searchString.currentValue) {
-      this.adsDataSource.searchString = changes.searchString.currentValue;
+    if(changes.searchForm.previousValue !== changes.searchForm.currentValue) {
+      this.adsDataSource.searchForm = changes.searchForm.currentValue;
     }
   }
   viewAd(id: string) {

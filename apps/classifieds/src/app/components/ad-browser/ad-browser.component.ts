@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AdsFacade } from '@classifieds-ui/ads';
+import { AdSearchBarForm } from '../../models/form.models';
 
 @Component({
   selector: 'classifieds-ui-ad-browser',
@@ -7,9 +8,9 @@ import { AdsFacade } from '@classifieds-ui/ads';
   styleUrls: ['./ad-browser.component.scss']
 })
 export class AdBrowserComponent {
-  searchString;
+  searchForm: AdSearchBarForm;
   constructor(private adsFacade: AdsFacade) { }
-  onSearchChange(searchString: string) {
-    this.searchString = searchString;
+  onFormSubmit(searchForm: AdSearchBarForm) {
+    this.searchForm = searchForm;
   }
 }

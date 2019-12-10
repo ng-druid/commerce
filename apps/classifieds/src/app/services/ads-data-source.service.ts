@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Ad, AdsFacade, SearchConfig } from '@classifieds-ui/ads';
+import { AdSearchBarForm } from '../models/form.models';
 
 @Injectable()
 export class AdsDataSourceService extends DataSource<Ad> {
@@ -10,7 +11,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   private cachedData: Array<Ad> = [];
   private pageSize = 25;
   private lastPage = 0;
-  private searchConfig = new SearchConfig({ searchString: '', page: '1' });
+  private searchConfig = new SearchConfig({ searchString: '', page: '1', location: undefined });
   constructor(private adsFacade: AdsFacade) {
     super();
     this.adsFacade.loadAll(this.searchConfig);
@@ -20,10 +21,12 @@ export class AdsDataSourceService extends DataSource<Ad> {
     });
   }
 
-  set searchString(searchString: string | undefined) {
+  set searchForm(searchForm: AdSearchBarForm | undefined) {
     this.cachedData = [];
     this.lastPage = 0;
-    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString });
+    const location = searchForm.location === undefined ? undefined : searchForm.location.join(",");
+    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location });
+    console.log(this.searchConfig);
     this.adsFacade.loadAll(this.searchConfig);
   }
 
