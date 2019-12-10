@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { debounceTime, tap, switchMap, takeUntil, finalize } from 'rxjs/operators';
+import { Subject, } from 'rxjs';
+import { debounceTime, tap, switchMap, takeUntil, finalize, filter } from 'rxjs/operators';
 import { City , CitiesService } from '@classifieds-ui/cities';
 import { AdSearchBarForm } from '../../models/form.models';
 
@@ -37,9 +37,16 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
     });
     this.searchFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),
-      tap(() => {
+      tap(v => {
+        if(v === "") {
+          this.onSubmit();
+        }
+      }),
+      filter(value => !(value instanceof City) && value !== ""),
+      tap(value => {
         this.cities = [];
         this.isLoadingCities = true;
+        console.log(`value: "${value}"`);
       }),
       switchMap(value => this.citiesService.getCities(value)
         .pipe(
