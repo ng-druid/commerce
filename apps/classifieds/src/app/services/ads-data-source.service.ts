@@ -11,7 +11,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   private cachedData: Array<Ad> = [];
   private pageSize = 25;
   private lastPage = 0;
-  private searchConfig = new SearchConfig({ searchString: '', page: '1', location: undefined });
+  private searchConfig = new SearchConfig({ searchString: '', page: '1', location: '' });
   constructor(private adsFacade: AdsFacade) {
     super();
     this.adsFacade.loadAll(this.searchConfig);
@@ -24,7 +24,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   set searchForm(searchForm: AdSearchBarForm | undefined) {
     this.cachedData = [];
     this.lastPage = 0;
-    const location = searchForm.location === undefined ? undefined : searchForm.location.join(",");
+    const location = searchForm.location === undefined || searchForm.location.length !== 2 ? '' : searchForm.location.join(",");
     this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location });
     console.log(this.searchConfig);
     this.adsFacade.loadAll(this.searchConfig);
