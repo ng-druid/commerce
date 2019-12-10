@@ -1,6 +1,16 @@
-<form (ngSubmit)="onSubmit()" #searchBarForm="ngForm" fxLayout="row" fxLayoutGap="1em">
-  <mat-form-field appearance="standard" fxFlex="100">
-    <input matInput #searchField type="text" placeholder="Search" [(ngModel)]="searchString" name="search">
+<form (ngSubmit)="onSubmit()" [formGroup]="searchFormGroup" fxLayout="row" fxLayoutGap="1em">
+  <mat-form-field appearance="standard" fxFlex="50">
+    <input matInput type="text" placeholder="Search" formControlName="searchString">
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
+  <mat-form-field appearance="standard" fxFlex="50">
+      <input matInput placeholder="Location" [matAutocomplete]="auto" formControlName="location">
+      <mat-icon matSuffix>location_city</mat-icon>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity">
+        <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
+        <ng-container *ngIf="!isLoadingCities">
+          <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }}</mat-option>
+        </ng-container>
+      </mat-autocomplete>
+    </mat-form-field>
 </form>

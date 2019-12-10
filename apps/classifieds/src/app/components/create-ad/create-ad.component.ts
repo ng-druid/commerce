@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NEVER } from 'rxjs';
-import { catchError, switchMap, tap, debounceTime, finalize } from 'rxjs/operators';
+import { NEVER, Subject } from 'rxjs';
+import { catchError, switchMap, tap, debounceTime, finalize, takeUntil } from 'rxjs/operators';
 import { AdImage, AdDetail, AdsService } from '@classifieds-ui/ads';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CitiesService, City } from '@classifieds-ui/cities';
@@ -13,7 +13,7 @@ import { MatHorizontalStepper } from '@angular/material/stepper';
   templateUrl: './create-ad.component.html',
   styleUrls: ['./create-ad.component.scss']
 })
-export class CreateAdComponent implements OnInit {
+export class CreateAdComponent implements OnInit, OnDestroy {
 
   files: Array<File> = [];
   cities: Array<City> = [];
@@ -23,10 +23,12 @@ export class CreateAdComponent implements OnInit {
   detailsFormGroup: FormGroup;
   locationFormGroup: FormGroup;
 
+  private componentDestroyed = new Subject();
+
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private cititesService: CitiesService, private fb: FormBuilder) { }
+  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private citiesService: CitiesService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
@@ -42,17 +44,23 @@ export class CreateAdComponent implements OnInit {
         this.cities = [];
         this.isLoadingCities = true;
       }),
-      switchMap(value => this.cititesService.getCities(value)
+      switchMap(value => this.citiesService.getCities(value)
         .pipe(
           finalize(() => {
             this.isLoadingCities = false
           }),
         )
-      )
+      ),
+      takeUntil(this.componentDestroyed)
     )
     .subscribe((cities: Array<City>) => {
       this.cities = cities;
     });
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed.next();
+    this.componentDestroyed.complete();
   }
 
   createAd() {
