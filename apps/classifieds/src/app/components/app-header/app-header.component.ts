@@ -25,4 +25,7 @@ export class AppHeaderComponent implements OnInit {
   browseAds() {
     this.router.navigateByUrl('/');
   }
+  account() {
+    this.router.navigateByUrl('/account');
+  }
 }

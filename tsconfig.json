@@ -20,10 +20,9 @@
       "@classifieds-ui/auth": ["libs/auth/src/index.ts"],
       "@classifieds-ui/media": ["libs/media/src/index.ts"],
       "@classifieds-ui/utils": ["libs/utils/src/index.ts"],
-      "@classifieds-ui/material": [
-        "libs/material/src/index.ts"
-      ],
-      "@classifieds-ui/logging": ["libs/logging/src/index.ts"]
+      "@classifieds-ui/material": ["libs/material/src/index.ts"],
+      "@classifieds-ui/logging": ["libs/logging/src/index.ts"],
+      "@classifieds-ui/cities": ["libs/cities/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

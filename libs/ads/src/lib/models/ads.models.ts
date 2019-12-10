@@ -22,12 +22,14 @@ export class Ad {
   id: string;
   title: string;
   description: string;
+  location: Array<number>;
   images: Array<AdImage> = [];
   constructor(data?: Ad) {
     if (data) {
       this.id = data.id;
       this.title = data.title;
       this.description = data.description;
+      this.location = data.location;
       if(data.images) {
         this.images = data.images.map(i => new AdImage(i));
       }

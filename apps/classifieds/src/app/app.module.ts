@@ -12,6 +12,7 @@ import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/medi
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor } from '@classifieds-ui/logging';
+import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -35,6 +36,7 @@ import { AppHeaderComponent } from './components/app-header/app-header.component
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
 import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
+import { AccountDashboardComponent } from './components/account-dashboard/account-dashboard.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -44,6 +46,7 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
+  { path: 'account', component: AccountDashboardComponent },
   { path: '', component: AdBrowserComponent, children: [
     { path: 'ad/:adId', component: AdDetailComponent },
     { path: 'create-ad', component: CreateAdComponent },
@@ -51,7 +54,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AppHeaderComponent, AppFooterComponent, AdDetailTabComponent, AdGalleryTabComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AppHeaderComponent, AppFooterComponent, AdDetailTabComponent, AdGalleryTabComponent, AccountDashboardComponent],
   imports: [
     BrowserModule,
     CommonModule,
@@ -93,6 +96,7 @@ const routes = [
     { provide: ADS_SETTINGS, useValue: new AdsSettings(environment.adsSettings) },
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
+    { provide: CITIES_SETTINGS, useValue: new CitiesSettings(environment.citiesSettings) },
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

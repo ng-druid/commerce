@@ -13,6 +13,9 @@ export const environment = {
   loggingSettings: {
     endpointUrl: "https://localhost:44375"
   },
+  citiesSettings: {
+    endpointUrl: "https://localhost:44369"
+  },
   clientSettings: {
     authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
