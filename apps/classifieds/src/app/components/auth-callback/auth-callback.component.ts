@@ -17,10 +17,10 @@ export class AuthCallbackComponent implements OnInit {
   async ngOnInit() {
 
     // check for error
-    if (this.route.snapshot.fragment.indexOf('error') >= 0) {
+    /*if (this.route.snapshot.fragment.indexOf('error') >= 0) {
        this.error=true;
        return;
-     }
+     }*/
 
     this.authFacade.completeAuthentication();
     this.router.navigate(['/']);

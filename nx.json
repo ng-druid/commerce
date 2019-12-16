@@ -26,13 +26,16 @@
     "utils": {
       "tags": []
     },
-    "classifieds-material": {
+    "material": {
       "tags": []
     },
     "logging": {
       "tags": []
     },
     "cities": {
+      "tags": []
+    },
+    "chat": {
       "tags": []
     }
   }

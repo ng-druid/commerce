@@ -4,6 +4,8 @@ export class ClientSettings {
   redirect_uri: string;
   response_type: string;
   scope: string;
+  filterProtocolClaims: boolean;
+  loadUserInfo: boolean;
   constructor(data?: ClientSettings) {
     if(data) {
       this.authority = data.authority;
@@ -11,6 +13,8 @@ export class ClientSettings {
       this.redirect_uri = data.redirect_uri;
       this.response_type = data.response_type;
       this.scope = data.scope;
+      this.filterProtocolClaims = data.filterProtocolClaims;
+      this.loadUserInfo = data.loadUserInfo;
     }
   }
 }

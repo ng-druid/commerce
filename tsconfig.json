@@ -22,7 +22,8 @@
       "@classifieds-ui/utils": ["libs/utils/src/index.ts"],
       "@classifieds-ui/material": ["libs/material/src/index.ts"],
       "@classifieds-ui/logging": ["libs/logging/src/index.ts"],
-      "@classifieds-ui/cities": ["libs/cities/src/index.ts"]
+      "@classifieds-ui/cities": ["libs/cities/src/index.ts"],
+      "@classifieds-ui/chat": ["libs/chat/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

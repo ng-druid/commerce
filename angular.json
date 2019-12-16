@@ -26,7 +26,8 @@
               "apps/classifieds/src/assets"
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/@nebular/theme/styles/prebuilt/default.css",
               "apps/classifieds/src/styles.scss",
               "apps/classifieds/src/theme.scss"
             ],
@@ -332,6 +333,37 @@
         }
       },
       "schematics": {}
+    },
+    "chat": {
+      "projectType": "library",
+      "root": "libs/chat",
+      "sourceRoot": "libs/chat/src",
+      "prefix": "classifieds-ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/chat/tsconfig.lib.json",
+              "libs/chat/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/chat/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/chat/jest.config.js",
+            "tsConfig": "libs/chat/tsconfig.spec.json",
+            "setupFile": "libs/chat/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {

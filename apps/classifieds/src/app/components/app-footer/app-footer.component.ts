@@ -6,4 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app-footer.component.scss']
 })
 export class AppFooterComponent {
+  messages = [];
+  sendMessage(event) {
+    console.log(event);
+  }
 }

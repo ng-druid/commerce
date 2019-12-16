@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NxModule } from '@nrwl/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NbChatModule } from '@nebular/theme';
 import { AuthModule, AuthInterceptor, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
 import { AdsModule, AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
 import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
@@ -83,6 +84,7 @@ const routes = [
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     MaterialModule,
+    NbChatModule,
     UtilsModule,
     LoggingModule,
     AuthModule,

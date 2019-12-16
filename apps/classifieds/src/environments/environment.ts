@@ -20,8 +20,10 @@ export const environment = {
     authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
     redirect_uri: 'http://localhost:4200/auth-callback',
-    response_type:"id_token token",
-    scope:"openid profile email ads_api media_api"
+    response_type: "code",
+    scope:"openid profile ads_api media_api",
+    filterProtocolClaims: true,
+    loadUserInfo: true
   }
 };
 
