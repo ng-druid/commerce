@@ -5,6 +5,15 @@ export enum ChatTypes {
   QUOTE = 'quote'
 }
 
+export class ChatSettings {
+  endpointUrl: string;
+  constructor(data?: ChatSettings) {
+    if(data) {
+      this.endpointUrl = data.endpointUrl;
+    }
+  }
+}
+
 export class ChatMessage {
   date: Date;
   files: Array<ChatFile>;

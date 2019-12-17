@@ -13,7 +13,7 @@ import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor } from '@classifieds-ui/logging';
 import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
-import { ChatModule } from '@classifieds-ui/chat';
+import { CHAT_SETTINGS, ChatSettings, ChatModule } from '@classifieds-ui/chat';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -99,6 +99,7 @@ const routes = [
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
     { provide: CITIES_SETTINGS, useValue: new CitiesSettings(environment.citiesSettings) },
+    { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
