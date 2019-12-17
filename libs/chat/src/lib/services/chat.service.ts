@@ -32,11 +32,20 @@ export class ChatService {
       .then(() => {
         // this.joinRoom();
         console.log('connected to chat hub');
-        // this.initializeListeners();
+        this.initializeListeners();
+        setTimeout(() => this.hubConnection.invoke('send', 'whatever', 'the message is here!'), 2000)
       })
       .catch(err => {
         console.log(`Error while starting SignalR connection: ${err}`);
         this.logService.log(err);
       });
+  }
+
+  initializeListeners(): void {
+    this.hubConnection.on('broadcastMessage', function (name, message) {
+      console.log('called broadcastMessage!');
+      console.log(name);
+      console.log(message);
+    });
   }
 }
