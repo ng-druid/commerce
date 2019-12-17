@@ -16,12 +16,15 @@ export const environment = {
   citiesSettings: {
     endpointUrl: "https://localhost:44369"
   },
+  chatSettings: {
+    endpointUrl: "https://localhost:44383"
+  },
   clientSettings: {
     authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
     redirect_uri: 'http://localhost:4200/auth-callback',
     response_type: "code",
-    scope:"openid profile ads_api media_api",
+    scope:"openid profile ads_api media_api chat",
     filterProtocolClaims: true,
     loadUserInfo: true
   }
