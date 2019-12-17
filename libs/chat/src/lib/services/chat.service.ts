@@ -4,7 +4,7 @@ import { LogService } from '@classifieds-ui/logging';
 import { take, map } from 'rxjs/operators';
 import * as signalR from "@aspnet/signalr";
 
-import { ChatSettings } from '../models/chat.models';
+import { ChatSettings, ChatMessage } from '../models/chat.models';
 
 import { CHAT_SETTINGS } from '../chat.tokens';
 
@@ -33,7 +33,7 @@ export class ChatService {
         // this.joinRoom();
         console.log('connected to chat hub');
         this.initializeListeners();
-        setTimeout(() => this.hubConnection.invoke('send', 'whatever', 'the message is here!'), 2000)
+        // setTimeout(() => this.hubConnection.invoke('send', 'whatever', 'the message is here!'), 2000)
       })
       .catch(err => {
         console.log(`Error while starting SignalR connection: ${err}`);
@@ -41,11 +41,14 @@ export class ChatService {
       });
   }
 
+  send(chatMessage: ChatMessage): void {
+    this.hubConnection.invoke('send', chatMessage)
+  }
+
   initializeListeners(): void {
-    this.hubConnection.on('broadcastMessage', function (name, message) {
+    this.hubConnection.on('broadcastMessage', (chatMessage: ChatMessage) => {
       console.log('called broadcastMessage!');
-      console.log(name);
-      console.log(message);
+      console.log(chatMessage);
     });
   }
 }
