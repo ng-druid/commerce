@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
     <span><small>&copy; 2019</small></span>
     <div class="chat-wrapper">
-        <classifieds-ui-chat-box></classifieds-ui-chat-box>
+        <classifieds-ui-chat-box *ngIf="recipientId" [recipientId]="recipientId"></classifieds-ui-chat-box>
     </div>
 </mat-toolbar>

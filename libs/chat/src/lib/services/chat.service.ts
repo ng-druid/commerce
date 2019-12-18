@@ -65,8 +65,8 @@ export class ChatService {
     this.hubConnection.on('connected', (recipientId: string, chatMessages) => {
       this.conversations.get(recipientId).next(chatMessages);
     });
-    this.hubConnection.on('broadcastMessage', (chatMessage: ChatMessage) => {
-      this.conversations.get(chatMessage.recipientId).next([chatMessage]);
+    this.hubConnection.on('broadcastMessage', (chatMessage: ChatMessage, reply: boolean) => {
+      this.conversations.get(reply ? chatMessage.senderId : chatMessage.recipientId).next([chatMessage]);
     });
   }
 
