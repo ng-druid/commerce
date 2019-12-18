@@ -1,6 +1,7 @@
 <nb-chat title="Nebular Conversational UI" size="large">
   <nb-chat-message *ngFor="let msg of messages"
                      type="text"
+                     [reply]="msg.senderId !== userId"
                      [message]="msg.message"
                      [sender]="msg.senderId"
                      [date]="msg.createdAt">

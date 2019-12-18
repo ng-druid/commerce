@@ -12,6 +12,8 @@ import { ChatMessage } from '../../models/chat.models';
 })
 export class ChatBoxComponent implements OnInit, OnDestroy {
   @Input()
+  userId: string;
+  @Input()
   recipientId: string;
   messages: Array<ChatMessage> = [];
   private componentDestroyed$ = new Subject();
