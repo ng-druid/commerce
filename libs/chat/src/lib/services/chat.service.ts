@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
+import { Subject, ReplaySubject } from 'rxjs';
 import { AuthFacade } from '@classifieds-ui/auth';
 import { LogService } from '@classifieds-ui/logging';
 import { take, map } from 'rxjs/operators';
@@ -12,7 +13,10 @@ import { CHAT_SETTINGS } from '../chat.tokens';
   providedIn: 'root'
 })
 export class ChatService {
-  private hubConnection: signalR.HubConnection
+  started$ = new ReplaySubject();
+  connected$ = new Subject<Array<ChatMessage>>();
+  broadcasted$ = new Subject<ChatMessage>();
+  private hubConnection: signalR.HubConnection;
 
   constructor(@Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade) {
     setTimeout(() => this.initializeConnection(), 1);
@@ -30,10 +34,8 @@ export class ChatService {
     this.hubConnection
       .start()
       .then(() => {
-        // this.joinRoom();
-        console.log('connected to chat hub');
+        this.started$.next();
         this.initializeListeners();
-        // setTimeout(() => this.hubConnection.invoke('send', 'whatever', 'the message is here!'), 2000)
       })
       .catch(err => {
         console.log(`Error while starting SignalR connection: ${err}`);
@@ -41,14 +43,21 @@ export class ChatService {
       });
   }
 
+  connect(userId: string) {
+    this.hubConnection.invoke('connect', userId);
+  }
+
   send(chatMessage: ChatMessage): void {
     this.hubConnection.invoke('send', chatMessage)
   }
 
-  initializeListeners(): void {
+  private initializeListeners(): void {
+    this.hubConnection.on('connected', chatMessages => {
+      this.connected$.next(chatMessages);
+    });
     this.hubConnection.on('broadcastMessage', (chatMessage: ChatMessage) => {
-      console.log('called broadcastMessage!');
-      console.log(chatMessage);
+      this.broadcasted$.next(chatMessage);
     });
   }
+
 }

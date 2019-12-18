@@ -12,9 +12,18 @@ export class ChatBoxComponent implements OnInit {
   messages: Array<ChatMessage> = [];
   constructor(private chatService: ChatService) { }
   sendMessage(event) {
-    this.chatService.send(new ChatMessage({ id: undefined, message: event.message, senderId: '123', recipientId: '456', createdAt: new Date() }));
+    this.chatService.send(new ChatMessage({ id: undefined, message: event.message, senderId: undefined, recipientId: "c3ef274c-b900-45dc-8755-52a4fb378f07", createdAt: new Date() }));
   }
   ngOnInit() {
+    this.chatService.started$.subscribe(() => {
+      this.chatService.connect("c3ef274c-b900-45dc-8755-52a4fb378f07");
+    });
+    this.chatService.connected$.subscribe(chatMessages => {
+      this.messages = chatMessages;
+    });
+    this.chatService.broadcasted$.subscribe(chatMessage => {
+      this.messages.push(chatMessage);
+    });
   }
 
 }
