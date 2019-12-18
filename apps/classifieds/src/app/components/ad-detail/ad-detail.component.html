@@ -1,5 +1,5 @@
 <div *ngIf="ad" fxLayout="column" fxFill>
-  <h1>{{ ad.title }}</h1>
+  <h1>{{ ad.title }}</h1><button (onclick)="chat()">Contact</button>
   <mat-tab-group [selectedIndex]="selectedTabIndex">
     <mat-tab label="Detail">
       <ng-template matTabContent>
@@ -11,7 +11,6 @@
         <classifieds-ui-ad-gallery-tab *ngIf="ad" [ad]="ad" [mediaBaseUrl]="mediaBaseUrl"></classifieds-ui-ad-gallery-tab>
       </ng-template>
     </mat-tab>
-    <mat-tab label="Contact">Contact User</mat-tab>
   </mat-tab-group>
   <div *ngIf="displayOverlay" class="loader-overlay"></div>
 </div>

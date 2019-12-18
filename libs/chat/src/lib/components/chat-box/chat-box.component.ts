@@ -12,13 +12,12 @@ import { ChatMessage } from '../../models/chat.models';
 })
 export class ChatBoxComponent implements OnInit, OnDestroy {
   @Input()
-  recipientId = "c3ef274c-b900-45dc-8755-52a4fb378f07";
-  // userId = "c3ef274c-b900-45dc-8755-52a4fb378f07";
+  recipientId: string;
   messages: Array<ChatMessage> = [];
   private componentDestroyed$ = new Subject();
   constructor(private chatService: ChatService) { }
   sendMessage(event) {
-    this.chatService.send(new ChatMessage({ id: undefined, message: event.message, senderId: undefined, recipientId: "c3ef274c-b900-45dc-8755-52a4fb378f07", createdAt: new Date() }));
+    this.chatService.send(new ChatMessage({ id: undefined, message: event.message, senderId: undefined, recipientId: this.recipientId, createdAt: new Date() }));
   }
   ngOnInit() {
     this.chatService.started$.pipe(
@@ -28,7 +27,6 @@ export class ChatBoxComponent implements OnInit, OnDestroy {
       this.messages = this.messages.concat(chatMessages);
     });
   }
-
   ngOnDestroy() {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
