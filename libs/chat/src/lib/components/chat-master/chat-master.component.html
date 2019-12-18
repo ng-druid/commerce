@@ -1,0 +1,8 @@
+<cdk-virtual-scroll-viewport itemSize="50" class="chats-viewport">
+    <mat-list *cdkVirtualFor="let chat of chats" class="chat-item" (click)="viewChat(chat.recipientId)">
+      <mat-list-item>
+        <a [routerLink]="['/chat', chat.recipientId]">{{ chat.recipientId }}</a>
+        <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </cdk-virtual-scroll-viewport>

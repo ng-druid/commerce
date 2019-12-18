@@ -30,4 +30,7 @@ export class AdDetailComponent implements OnInit {
       this.adsFacade.loadAd(adId);
     });
   }
+  chat() {
+
+  }
 }

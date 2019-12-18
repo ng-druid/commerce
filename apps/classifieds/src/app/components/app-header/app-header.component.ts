@@ -28,4 +28,7 @@ export class AppHeaderComponent implements OnInit {
   account() {
     this.router.navigateByUrl('/account');
   }
+  chat() {
+    this.router.navigateByUrl('/chat');
+  }
 }

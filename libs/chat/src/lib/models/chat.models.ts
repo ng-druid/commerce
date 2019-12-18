@@ -30,3 +30,12 @@ export class ChatMessage {
     }
   }
 }
+
+export class ChatConversation {
+  recipientId: string;
+  constructor(data?: ChatConversation) {
+    if(data) {
+      this.recipientId = data.recipientId;
+    }
+  }
+}

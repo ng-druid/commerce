@@ -1,0 +1,8 @@
+:host {
+  height: 100%;
+}
+
+.router-outlet {
+  overflow: scroll;
+  position: relative;
+}

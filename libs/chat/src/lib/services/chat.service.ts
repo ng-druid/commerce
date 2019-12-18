@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { tap, take, map, switchMap } from 'rxjs/operators';
 import * as signalR from "@aspnet/signalr";
 
-import { ChatSettings, ChatMessage } from '../models/chat.models';
+import { ChatSettings, ChatMessage, ChatConversation } from '../models/chat.models';
 
 import { CHAT_SETTINGS } from '../chat.tokens';
 
@@ -59,6 +59,19 @@ export class ChatService {
 
   send(chatMessage: ChatMessage): void {
     this.hubConnection.invoke('send', chatMessage)
+  }
+
+  getConversations(): Observable<Array<ChatConversation>> {
+    return new Observable(obs => {
+      this.hubConnection.invoke('getconversations').then(chats => {
+        obs.next(chats.map(c => new ChatConversation(c)));
+        obs.complete();
+      }).catch(err => {
+        this.logService.log(err);
+        obs.error(err);
+        obs.complete();
+      })
+    });
   }
 
   private initializeListeners(): void {

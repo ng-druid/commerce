@@ -13,7 +13,7 @@ import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor } from '@classifieds-ui/logging';
 import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
-import { CHAT_SETTINGS, ChatSettings, ChatModule } from '@classifieds-ui/chat';
+import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -48,10 +48,11 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
   { path: 'account', component: AccountDashboardComponent },
+  { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
   { path: '', component: AdBrowserComponent, children: [
     { path: 'ad/:adId', component: AdDetailComponent },
     { path: 'create-ad', component: CreateAdComponent },
-  ] }
+  ] },
 ];
 
 @NgModule({
@@ -89,7 +90,6 @@ const routes = [
     AuthModule,
     AdsModule,
     MediaModule,
-    ChatModule,
     NxModule.forRoot()
   ],
   providers: [
