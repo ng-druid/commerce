@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { map, filter, take, switchMap, withLatestFrom } from 'rxjs/operators';
 import { AuthFacade, IdentityService, PublicUserProfile } from '@classifieds-ui/auth';
 
@@ -18,12 +19,14 @@ export class ChatDetailComponent implements OnInit {
     this.route.paramMap.pipe(
       map(p => p.get('recipientId')),
       filter(recipientId => typeof(recipientId) === 'string'),
-      switchMap(recipientId => this.identityService.getPublicUserProfile(recipientId)),
       withLatestFrom(this.authFacade.getUser$.pipe(
         filter(u => u !== undefined),
         map(u => u.profile.sub),
-        switchMap(sub => this.identityService.getPublicUserProfile(sub)),
         take(1)
+      )),
+      switchMap(([recipientId, userId]) => forkJoin(
+        this.identityService.getPublicUserProfile(recipientId),
+        this.identityService.getPublicUserProfile(userId)
       ))
     ).subscribe(([recipient, user]) => {
       this.userId =  user.id;
