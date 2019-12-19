@@ -14,7 +14,11 @@ export class ChatBoxComponent implements OnInit, OnDestroy {
   @Input()
   userId: string;
   @Input()
+  userLabel: string;
+  @Input()
   recipientId: string;
+  @Input()
+  recipientLabel;
   messages: Array<ChatMessage> = [];
   private componentDestroyed$ = new Subject();
   constructor(private chatService: ChatService) { }

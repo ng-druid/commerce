@@ -27,3 +27,14 @@ export class UserInfo {
     }
   }
 }
+
+export class PublicUserProfile {
+  id: string;
+  userName: string;
+  constructor(data?: PublicUserProfile) {
+    if(data) {
+      this.id = data.id;
+      this.userName = data.userName;
+    }
+  }
+}

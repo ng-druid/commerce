@@ -24,7 +24,7 @@ export const environment = {
     client_id: 'classifieds_spa',
     redirect_uri: 'http://localhost:4200/auth-callback',
     response_type: "code",
-    scope:"openid profile ads_api media_api chat",
+    scope:"openid profile ads_api media_api chat IdentityServerApi",
     filterProtocolClaims: true,
     loadUserInfo: true
   }
