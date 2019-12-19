@@ -1,7 +1,8 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { LogService } from '@classifieds-ui/logging';
 import * as StackTrace from 'stacktrace-js';
+
+import { LogService } from '../services/log.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {

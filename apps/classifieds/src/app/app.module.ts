@@ -11,7 +11,7 @@ import { AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
 import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
-import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor } from '@classifieds-ui/logging';
+import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
 import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 
@@ -25,7 +25,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { localStorageSync } from 'ngrx-store-localstorage';
 
 // import { AuthService } from './services/auth.service';
-import { GlobalErrorHandler } from './services/global-error-handler';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
