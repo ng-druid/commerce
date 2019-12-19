@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { AdDetail } from '@classifieds-ui/ads';
+
+import { AdDetail } from '../../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-detail-tab',

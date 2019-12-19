@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { Ad} from '@classifieds-ui/ads';
-import { AdSearchBarForm } from '../../models/form.models';
 
+import { AdSearchBarForm } from '../../models/form.models';
 import { AdsDataSourceService } from '../../services/ads-data-source.service';
 
 @Component({
@@ -23,6 +22,6 @@ export class AdMasterComponent implements OnChanges {
     }
   }
   viewAd(id: string) {
-    this.router.navigateByUrl(`/ad/${id}`);
+    this.router.navigateByUrl(`/ads/ad/${id}`);
   }
 }

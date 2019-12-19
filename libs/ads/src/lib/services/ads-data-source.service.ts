@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { Ad, AdsFacade, SearchConfig } from '@classifieds-ui/ads';
+import { Ad, SearchConfig } from '../models/ads.models';
+import { AdsFacade } from '../+state/ads.facade';
 import { AdSearchBarForm } from '../models/form.models';
 
 @Injectable()

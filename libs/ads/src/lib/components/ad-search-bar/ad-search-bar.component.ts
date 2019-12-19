@@ -1,8 +1,9 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subject, } from 'rxjs';
 import { debounceTime, tap, switchMap, takeUntil, finalize, filter } from 'rxjs/operators';
 import { City , CitiesService } from '@classifieds-ui/cities';
+
 import { AdSearchBarForm } from '../../models/form.models';
 
 @Component({

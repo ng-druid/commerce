@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AdsFacade } from '@classifieds-ui/ads';
+
+import { AdsFacade } from '../../+state/ads.facade';
 import { AdSearchBarForm } from '../../models/form.models';
 
 @Component({

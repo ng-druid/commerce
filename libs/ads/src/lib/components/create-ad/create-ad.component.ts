@@ -3,10 +3,12 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NEVER, Subject } from 'rxjs';
 import { catchError, switchMap, tap, debounceTime, finalize, takeUntil } from 'rxjs/operators';
-import { AdImage, AdDetail, AdsService } from '@classifieds-ui/ads';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CitiesService, City } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
+
+import { AdsService } from '../../services/ads.service';
+import { AdImage, AdDetail } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-create-ad',
@@ -80,7 +82,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     ).subscribe((ad: AdDetail) => {
       this.stepper.next();
       setTimeout(() => {
-        this.router.navigateByUrl(`/ad/${ad.id}`);
+        this.router.navigateByUrl(`/ads/ad/${ad.id}`);
       }, 2000)
     });
   }

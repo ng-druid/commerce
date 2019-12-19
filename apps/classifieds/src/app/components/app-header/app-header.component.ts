@@ -20,10 +20,10 @@ export class AppHeaderComponent implements OnInit {
     this.authFacade.login();
   }
   createAd() {
-    this.router.navigateByUrl('/create-ad');
+    this.router.navigateByUrl('/ads/create-ad');
   }
   browseAds() {
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/ads');
   }
   account() {
     this.router.navigateByUrl('/account');

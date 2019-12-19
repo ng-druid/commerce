@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AdDetail, AdsFacade } from '@classifieds-ui/ads';
 import { map, filter } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+// import { environment } from '../../../environments/environment';
+
+import { AdDetail } from '../../models/ads.models';
+import { AdsFacade } from '../../+state/ads.facade';
 
 @Component({
   selector: 'classifieds-ui-ad-detail',
@@ -16,7 +18,7 @@ export class AdDetailComponent implements OnInit {
   selectedTabIndex = 0;
   constructor(private route: ActivatedRoute, private adsFacade: AdsFacade) { }
   ngOnInit() {
-    this.mediaBaseUrl = environment.mediaSettings.endpointUrl;
+    this.mediaBaseUrl = '';
     this.adsFacade.detail$.subscribe(ad => {
       this.selectedTabIndex = 0;
       this.displayOverlay = false;

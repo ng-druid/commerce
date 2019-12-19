@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NxModule } from '@nrwl/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AuthModule, AuthInterceptor, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
-import { AdsModule, AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
+import { AdsSettings, ADS_SETTINGS } from '@classifieds-ui/ads';
 import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
@@ -23,21 +23,14 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { localStorageSync } from 'ngrx-store-localstorage';
-import { NgxDropzoneModule } from 'ngx-dropzone';
 
 // import { AuthService } from './services/auth.service';
 import { GlobalErrorHandler } from './services/global-error-handler';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
-import { AdBrowserComponent } from './components/ad-browser/ad-browser.component';
-import { AdDetailComponent } from './components/ad-detail/ad-detail.component';
-import { CreateAdComponent } from './components/create-ad/create-ad.component';
-import { AdMasterComponent } from './components/ad-master/ad-master.component';
-import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
-import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
-import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
 import { AccountDashboardComponent } from './components/account-dashboard/account-dashboard.component';
+import { HomeComponent } from './components/home/home.component';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -49,14 +42,12 @@ const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
   { path: 'account', component: AccountDashboardComponent },
   { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
-  { path: '', component: AdBrowserComponent, children: [
-    { path: 'ad/:adId', component: AdDetailComponent },
-    { path: 'create-ad', component: CreateAdComponent },
-  ] },
+  { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
+  { path: '', component: HomeComponent }
 ];
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, AdBrowserComponent, AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AppHeaderComponent, AppFooterComponent, AdDetailTabComponent, AdGalleryTabComponent, AccountDashboardComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AppHeaderComponent, AppFooterComponent, AccountDashboardComponent, HomeComponent],
   imports: [
     BrowserModule,
     CommonModule,
@@ -65,7 +56,6 @@ const routes = [
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
-    NgxDropzoneModule,
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
@@ -88,7 +78,6 @@ const routes = [
     UtilsModule,
     LoggingModule,
     AuthModule,
-    AdsModule,
     MediaModule,
     NxModule.forRoot()
   ],
