@@ -37,6 +37,9 @@
     },
     "chat": {
       "tags": []
+    },
+    "taxonomy": {
+      "tags": []
     }
   }
 }

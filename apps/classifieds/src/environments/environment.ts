@@ -19,6 +19,9 @@ export const environment = {
   chatSettings: {
     endpointUrl: "https://localhost:44383"
   },
+  taxonomySettings: {
+    endpointUrl: "https://localhost:44327"
+  },
   clientSettings: {
     authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
