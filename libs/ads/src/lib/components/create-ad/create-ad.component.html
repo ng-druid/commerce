@@ -37,6 +37,14 @@
       </ngx-dropzone>
       <div>
         <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Features</ng-template>
+      <classifieds-ui-taxonomy-selector [vocabulary]="vocabulary"></classifieds-ui-taxonomy-selector>
+      <div>
+        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
         <button mat-raised-button color="primary" (click)="createAd()">Create Ad</button>
       </div>
     </mat-step>

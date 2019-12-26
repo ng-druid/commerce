@@ -14,7 +14,7 @@ import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
 import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
-import { TAXONOMY_SETTINGS, TaxonomySettings } from '@classifieds-ui/taxonomy';
+import { TAXONOMY_SETTINGS, TaxonomySettings, TaxonomyModule } from '@classifieds-ui/taxonomy';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -79,6 +79,7 @@ const routes = [
     LoggingModule,
     AuthModule,
     MediaModule,
+    TaxonomyModule,
     NxModule.forRoot()
   ],
   providers: [

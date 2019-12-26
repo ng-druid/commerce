@@ -6,6 +6,7 @@ import { catchError, switchMap, tap, debounceTime, finalize, takeUntil } from 'r
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CitiesService, City } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
+import { VocabularyService, Term, Vocabulary } from '@classifieds-ui/taxonomy';
 
 import { AdsService } from '../../services/ads.service';
 import { AdImage, AdDetail } from '../../models/ads.models';
@@ -19,6 +20,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   files: Array<File> = [];
   cities: Array<City> = [];
+  vocabulary: Vocabulary;
   ad: AdDetail = new AdDetail();
   isLoadingCities = false;
 
@@ -29,13 +31,16 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private citiesService: CitiesService, private fb: FormBuilder) { }
+  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private citiesService: CitiesService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
       title: ['', Validators.required],
       location: ['', Validators.required],
       description: ['', Validators.required]
+    });
+    this.vocabularyService.getVocabulary("5dfd097acb38b113cc858508").subscribe(vocab => {
+      this.vocabulary = vocab;
     });
     this.detailsFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),

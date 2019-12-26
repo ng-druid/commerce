@@ -32,6 +32,7 @@ export class Term {
   humanName: string;
   weight: number;
   group: boolean;
+  level: number;
   children: Array<Term> = [];
   constructor(data?: Term) {
     if(data) {
@@ -42,9 +43,23 @@ export class Term {
       this.humanName = data.humanName;
       this.weight = data.weight;
       this.group = data.group;
+      this.level = data.level;
       if(data.children) {
         this.children = data.children.map(t => new Term(t));
       }
+    }
+  }
+}
+
+export class FlatTermNode {
+  item: string;
+  expandable: boolean;
+  level: number;
+  constructor(data?: FlatTermNode) {
+    if(data) {
+      this.item = data.item;
+      this.expandable = data.expandable;
+      this.level = data.level;
     }
   }
 }

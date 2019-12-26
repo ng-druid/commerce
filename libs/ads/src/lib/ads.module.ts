@@ -20,6 +20,7 @@ import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.c
 import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
 import { AdFeaturesTabComponent } from './components/ad-detail/ad-features-tab/ad-features-tab.component';
+import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 
 const routes = [
   { path: '', component: AdBrowserComponent, children: [
@@ -39,7 +40,8 @@ const routes = [
     EffectsModule.forFeature([AdsEffects]),
     MaterialModule,
     FlexLayoutModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    TaxonomyModule
   ],
   providers: [AdsFacade]
 })
