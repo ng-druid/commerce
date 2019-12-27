@@ -1,4 +1,4 @@
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+<mat-tree [dataSource]="terms" [treeControl]="treeControl">
   <!-- This is the tree node template for leaf nodes -->
   <mat-tree-node *matTreeNodeDef="let node">
       <!-- use a disabled button to provide padding for tree leaf -->
@@ -6,6 +6,7 @@
       <mat-checkbox *ngIf="!readonly" [checked]="checklistSelection.isSelected(node.id)" (change)="toggleSelected(node)">{{node.humanName}}</mat-checkbox>
       <span *ngIf="readonly">{{node.humanName}}</span>
   </mat-tree-node>
+  <mat-tree-node *matTreeNodeDef="let node; when: isHidden" [ngStyle]="{ height: 0, minHeight: 0 }"></mat-tree-node>
   <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent">
     <button mat-icon-button disabled></button>
     <mat-form-field>

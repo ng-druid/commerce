@@ -1,9 +1,7 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
-import { Vocabulary, Term } from '../../models/taxonomy.models';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { Term } from '../../models/taxonomy.models';
 import { ObjectId } from 'bson';
 
 @Component({
@@ -11,10 +9,13 @@ import { ObjectId } from 'bson';
   templateUrl: './taxonomy-selector.component.html',
   styleUrls: ['./taxonomy-selector.component.scss']
 })
-export class TaxonomySelectorComponent implements OnInit, OnChanges {
+export class TaxonomySelectorComponent implements OnInit {
 
   @Input()
-  vocabulary: Vocabulary;
+  terms: Array<Term> = [];
+
+  @Output()
+  termsChange = new EventEmitter();
 
   @Input()
   readonly = false;
@@ -22,40 +23,22 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   @Input()
   hideUnselected = false;
 
-  dataChange$ = new BehaviorSubject<Vocabulary>(new Vocabulary());
-
   treeControl = new NestedTreeControl<Term>(t => t.children);
-  dataSource = new MatTreeNestedDataSource<Term>();
-
   checklistSelection = new SelectionModel<string>(true);
 
-  constructor() {
-  }
+  constructor() { }
 
   ngOnInit() {
     this.checklistSelection.changed.subscribe((evt: SelectionChange<string>) => {
       evt.added.forEach(id => {
-        const term = this.matchTerm(id, this.vocabulary.terms);
+        const term = this.matchTerm(id, this.terms);
         term.selected = true;
       });
       evt.removed.forEach(id => {
-        const term = this.matchTerm(id, this.vocabulary.terms);
+        const term = this.matchTerm(id, this.terms);
         term.selected = false;
       });
     });
-    this.dataChange$.subscribe(vocabulary => {
-      this.vocabulary = vocabulary;
-      this.dataSource.data = vocabulary.terms;
-    });
-    if(this.vocabulary) {
-      this.dataChange$.next(this.vocabulary);
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if(changes.vocabulary.previousValue !== changes.vocabulary.currentValue) {
-      this.dataChange$.next(changes.vocabulary.currentValue);
-    }
   }
 
   hasChild = (_: number, term: Term): boolean => {
@@ -66,21 +49,27 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
     return term.humanName === '';
   }
 
+  isHidden = (_: number, term: Term): boolean => {
+    return this.hideUnselected && !term.selected;
+  }
+
   addNewTerm(node: Term) {
-    const vocab = new Vocabulary(this.vocabulary);
-    const term = this.matchTerm(node.id, vocab.terms);
+    const terms = this.terms.map(t => new Term(t));
+    const term = this.matchTerm(node.id, terms);
     term.children.push(this.createTerm(term.vocabularyId, term.id, term.level + 1, term.children.length + 1));
-    this.dataChange$.next(vocab);
+    this.terms = terms;
+    this.termsChange.emit(this.terms);
   }
 
   saveNewTerm(node: Term, humanName: string) {
-    const term = this.matchTerm(node.id, this.vocabulary.terms);
+    const term = this.matchTerm(node.id, this.terms);
     term.selected = true;
     term.humanName = humanName;
     term.machineName  = humanName;
-    const vocab = new Vocabulary(this.vocabulary);
-    this.dataChange$.next(vocab);
-    const newNode = this.matchTerm(node.id, this.vocabulary.terms);
+    const terms = this.terms.map(t => new Term(t));
+    this.terms = terms;
+    this.termsChange.emit(this.terms);
+    const newNode = this.matchTerm(node.id, this.terms);
     this.toggleSelected(newNode);
   }
 
@@ -99,10 +88,10 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   }
 
   checkAllParentsSelection(term: Term): void {
-    let parent = this.matchTerm(term.parentId, this.vocabulary.terms);
+    let parent = this.matchTerm(term.parentId, this.terms);
     while (parent) {
       this.checklistSelection.select(parent.id);
-      parent = this.matchTerm(parent.parentId, this.vocabulary.terms);
+      parent = this.matchTerm(parent.parentId, this.terms);
     }
   }
 

@@ -21,6 +21,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   files: Array<File> = [];
   cities: Array<City> = [];
   vocabulary: Vocabulary;
+  terms: Array<Term> = [];
   ad: AdDetail = new AdDetail();
   isLoadingCities = false;
 
@@ -41,6 +42,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     });
     this.vocabularyService.getVocabulary("5dfd097acb38b113cc858508").subscribe(vocab => {
       this.vocabulary = vocab;
+      this.terms = vocab.terms;
     });
     this.detailsFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),
@@ -80,7 +82,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.description = this.detailsFormGroup.get('description').value;
         this.ad.location = city ? city.location : [];
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
-        this.ad.featureSets = [new Vocabulary(this.vocabulary)];
+        this.ad.featureSets = [new Vocabulary({ ...this.vocabulary, terms: this.terms.map(t => new Term(t)) })];
       }),
       switchMap(f => {
         return this.adsService.createAd(this.ad);
