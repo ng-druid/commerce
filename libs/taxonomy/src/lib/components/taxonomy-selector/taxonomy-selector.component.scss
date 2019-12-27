@@ -1,3 +1,13 @@
 .tree-invisible {
   display: none;
 }
+
+mat-tree {
+  column-count: 3;
+  column-gap: 0;
+}
+
+mat-nested-tree-node {
+  break-inside: avoid;
+  padding: 5px;
+}

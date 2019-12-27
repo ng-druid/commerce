@@ -19,7 +19,6 @@ import { AdMasterComponent } from './components/ad-master/ad-master.component';
 import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.component';
 import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
-import { AdFeaturesTabComponent } from './components/ad-detail/ad-features-tab/ad-features-tab.component';
 import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 
 const routes = [
@@ -30,7 +29,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesTabComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent ],
   imports: [
     CommonModule,
     HttpClientModule,
