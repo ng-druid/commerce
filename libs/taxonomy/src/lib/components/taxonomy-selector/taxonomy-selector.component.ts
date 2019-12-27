@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FlatTreeControl } from '@angular/cdk/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
-import { Vocabulary, Term, FlatTermNode } from '../../models/taxonomy.models';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { Vocabulary, Term } from '../../models/taxonomy.models';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 @Component({
   selector: 'classifieds-ui-taxonomy-selector',
@@ -20,25 +20,18 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   @Input()
   hideUnselected = false;
 
-  flatNodeMap = new Map<FlatTermNode, Term>();
-  nestedNodeMap = new Map<Term, FlatTermNode>();
+  treeControl = new NestedTreeControl<Term>(t => t.children);
+  dataSource = new MatTreeNestedDataSource<Term>();
 
-  treeFlattener: MatTreeFlattener<Term, FlatTermNode>;
-  treeControl: FlatTreeControl<FlatTermNode>;
-  dataSource: MatTreeFlatDataSource<Term, FlatTermNode>;
-
-  checklistSelection = new SelectionModel<FlatTermNode>(true);
+  checklistSelection = new SelectionModel<Term>(true);
 
   constructor() {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<FlatTermNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   }
 
   ngOnInit() {
-    this.checklistSelection.changed.subscribe((evt: SelectionChange<FlatTermNode>) => {
-      evt.added.forEach(n => this.flatNodeMap.get(n).selected = true);
-      evt.removed.forEach(n => this.flatNodeMap.get(n).selected = false);
+    this.checklistSelection.changed.subscribe((evt: SelectionChange<Term>) => {
+      evt.added.forEach(t => t.selected = true);
+      evt.removed.forEach(t => t.selected = false);
     });
     if(this.vocabulary) {
       this.dataSource.data = this.vocabulary.terms;
@@ -52,81 +45,53 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
     }
   }
 
-  transformer = (term: Term, level: number): FlatTermNode => {
-    const existingNode = this.nestedNodeMap.get(term);
-    const flatNode = existingNode && existingNode.item === term.humanName
-        ? existingNode
-        : new FlatTermNode({ item: term.humanName, level: !term.parentId ? 0 : term.level + 1, expandable: term.children.length > 0, visible: !this.hideUnselected || term.selected });
-    this.flatNodeMap.set(flatNode, term);
-    this.nestedNodeMap.set(term, flatNode);
-    return flatNode;
+  hasChild = (_: number, term: Term): boolean => {
+    return !!term.children && term.children.length > 0;
   }
 
-  getChildren = (term: Term): Array<Term> => {
-    return term.children;
-  }
-
-  getLevel = (termNode: FlatTermNode): number => {
-    return termNode.level;
-  }
-
-  isExpandable = (termNode: FlatTermNode): boolean => {
-    return termNode.expandable;
-  }
-
-  hasChild = (_: number, termNode: FlatTermNode): boolean => {
-    return termNode.expandable;
-  }
-
-  hasNoContent = (_: number, termNode: FlatTermNode): boolean => {
-    return termNode.item === '';
-  }
-
-  isHidden = (_: number, termNode: FlatTermNode): boolean => {
-    return !termNode.visible;
-  }
-
-  addNewTerm(node: FlatTermNode) {
-    const parentTerm = this.flatNodeMap.get(node);
-    parentTerm.children.push(this.createTerm(parentTerm.vocabularyId, parentTerm.id, parentTerm.level + 1, parentTerm.children.length + 1));
-    this.treeControl.expand(node);
+  addNewTerm(term: Term) {
+    term.children.push(this.createTerm(term.vocabularyId, term.id, term.level + 1, term.children.length + 1));
+    this.treeControl.expand(term);
   }
 
   createTerm(vocabularyId: string, parentId: string, level: number, weight: number) {
     return new Term({ id: undefined, vocabularyId, parentId, humanName: '', machineName: '', level, group: false, children: [], weight, selected: true });
   }
 
-  toggleSelected(node: FlatTermNode) {
-    this.checklistSelection.toggle(node);
-    const descendants = this.treeControl.getDescendants(node);
-    this.checklistSelection.isSelected(node) ? this.checklistSelection.select(...descendants) : this.checklistSelection.deselect(...descendants);
+  toggleSelected(term: Term) {
+    this.checklistSelection.toggle(term);
+    const descendants = this.treeControl.getDescendants(term);
+    this.checklistSelection.isSelected(term) ? this.checklistSelection.select(...descendants) : this.checklistSelection.deselect(...descendants);
     descendants.every(child =>
       this.checklistSelection.isSelected(child)
     );
-    this.checkAllParentsSelection(node);
+    this.checkAllParentsSelection(term);
   }
 
-  checkAllParentsSelection(node: FlatTermNode): void {
-    let parent: FlatTermNode | null = this.getParentNode(node);
+  checkAllParentsSelection(term: Term): void {
+    let parent = this.matchTerm(term.parentId);
     while (parent) {
       this.checklistSelection.select(parent);
-      parent = this.getParentNode(parent);
+      parent = this.matchTerm(parent.parentId);
     }
   }
 
-  getParentNode(node: FlatTermNode): FlatTermNode | null {
-    const currentLevel = this.getLevel(node);
-    if (currentLevel < 1) {
-      return null;
+  matchTerm(id: string): Term | null {
+    const len = this.dataSource.data.length;
+    if(!id) {
+      return;
     }
-    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
-    for (let i = startIndex; i >= 0; i--) {
-      const currentNode = this.treeControl.dataNodes[i];
-      if (this.getLevel(currentNode) < currentLevel) {
-        return currentNode;
+    for(let i = 0; i < len; i++) {
+      if(this.dataSource.data[i].id === id) {
+        return this.dataSource.data[i];
+      }
+      if(this.dataSource.data[i].children.length > 0) {
+        const term = this.matchTerm(id);
+        if(term) {
+          return term;
+        }
       }
     }
-    return null;
   }
 
 }

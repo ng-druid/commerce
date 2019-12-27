@@ -1,26 +1,26 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-    <button *ngIf="!readonly" mat-icon-button disabled></button>
-    <mat-checkbox *ngIf="!readonly" class="checklist-leaf-node" [checked]="checklistSelection.isSelected(node)" (change)="toggleSelected(node)">{{node.item}}</mat-checkbox>
-    <span *ngIf="readonly">{{node.item}}</span>
+  <!-- This is the tree node template for leaf nodes -->
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+      <!-- use a disabled button to provide padding for tree leaf -->
+      <button mat-icon-button disabled></button>
+      <mat-checkbox *ngIf="!readonly" [checked]="checklistSelection.isSelected(node)" (change)="toggleSelected(node)">{{node.humanName}}</mat-checkbox>
+      <span *ngIf="readonly">{{node.humanName}}</span>
   </mat-tree-node>
-  <mat-tree-node *matTreeNodeDef="let node; when: isHidden" [ngStyle]="{height: 0, minHeight: 0}"></mat-tree-node>
-  <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-    <button mat-icon-button disabled></button>
-    <mat-form-field>
-      <input matInput #itemValue placeholder="New item...">
-    </mat-form-field>
-    <button mat-button>Save</button>
-  </mat-tree-node>
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-    <button mat-icon-button matTreeNodeToggle
-            [attr.aria-label]="'toggle ' + node.filename">
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-      </mat-icon>
-    </button>
-    <mat-checkbox *ngIf="!readonly" [checked]="checklistSelection.isSelected(node)" (change)="toggleSelected(node)">{{node.item}}</mat-checkbox>
-    <button *ngIf="!readonly" mat-icon-button (click)="addNewTerm(node)"><mat-icon>add</mat-icon></button>
-    <span *ngIf="readonly">{{node.item}}</span>
-  </mat-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+      <div class="mat-tree-node">
+        <button mat-icon-button matTreeNodeToggle
+                [attr.aria-label]="'toggle ' + node.machineName">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        <mat-checkbox *ngIf="!readonly" [checked]="checklistSelection.isSelected(node)" (change)="toggleSelected(node)">{{node.humanName}}</mat-checkbox>
+        <button *ngIf="!readonly" mat-icon-button (click)="addNewTerm(node)"><mat-icon>add</mat-icon></button>
+        <span *ngIf="readonly">{{node.humanName}}</span>
+      </div>
+      <div [class.tree-invisible]="!treeControl.isExpanded(node)">
+        <ng-container matTreeNodeOutlet></ng-container>
+      </div>
+  </mat-nested-tree-node>
 </mat-tree>
