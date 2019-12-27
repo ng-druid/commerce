@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
-import { Term } from '../../models/taxonomy.models';
+import { Term, Vocabulary } from '../../models/taxonomy.models';
 import { ObjectId } from 'bson';
 
 @Component({
@@ -23,6 +23,9 @@ export class TaxonomySelectorComponent implements OnInit {
   @Input()
   hideUnselected = false;
 
+  @Input()
+  vocabulary: Vocabulary;
+
   treeControl = new NestedTreeControl<Term>(t => t.children);
   checklistSelection = new SelectionModel<string>(true);
 
@@ -42,21 +45,32 @@ export class TaxonomySelectorComponent implements OnInit {
   }
 
   hasChild = (_: number, term: Term): boolean => {
-    return !!term.children && term.children.length > 0;
+    return (!!term.children && term.children.length > 0) || !term.parentId;
   }
 
-  hasNoContent = (_: number, term: Term): boolean => {
-    return term.humanName === '';
+  hasNoContentNotRoot = (_: number, term: Term): boolean => {
+    return term.parentId && term.humanName === '';
+  }
+
+  hasNoContentRoot = (_: number, term: Term): boolean => {
+    return !term.parentId && term.humanName === '';
   }
 
   isHidden = (_: number, term: Term): boolean => {
     return this.hideUnselected && !term.selected;
   }
 
+  addNewRootTerm(node?: Term) {
+    const terms = this.terms.map(t => new Term(t));
+    terms.push(this.createTerm(undefined, 0, terms.length + 1));
+    this.terms = terms;
+    this.termsChange.emit(this.terms);
+  }
+
   addNewTerm(node: Term) {
     const terms = this.terms.map(t => new Term(t));
     const term = this.matchTerm(node.id, terms);
-    term.children.push(this.createTerm(term.vocabularyId, term.id, term.level + 1, term.children.length + 1));
+    term.children.push(this.createTerm(term.id, term.level + 1, term.children.length + 1));
     this.terms = terms;
     this.termsChange.emit(this.terms);
   }
@@ -73,8 +87,8 @@ export class TaxonomySelectorComponent implements OnInit {
     this.toggleSelected(newNode);
   }
 
-  createTerm(vocabularyId: string, parentId: string, level: number, weight: number) {
-    return new Term({ id: new ObjectId().toHexString(), vocabularyId, parentId, humanName: '', machineName: '', level, group: false, children: [], weight, selected: true });
+  createTerm(parentId: string, level: number, weight: number) {
+    return new Term({ id: new ObjectId().toHexString(), vocabularyId: this.vocabulary.id, parentId, humanName: '', machineName: '', level, group: false, children: [], weight, selected: true });
   }
 
   toggleSelected(term: Term) {

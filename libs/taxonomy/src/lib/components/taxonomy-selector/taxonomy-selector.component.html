@@ -1,3 +1,4 @@
+<button *ngIf="!readonly" mat-icon-button (click)="addNewRootTerm()"><mat-icon>add</mat-icon></button>
 <mat-tree [dataSource]="terms" [treeControl]="treeControl">
   <!-- This is the tree node template for leaf nodes -->
   <mat-tree-node *matTreeNodeDef="let node">
@@ -7,14 +8,25 @@
       <span *ngIf="readonly">{{node.humanName}}</span>
   </mat-tree-node>
   <mat-tree-node *matTreeNodeDef="let node; when: isHidden" [ngStyle]="{ height: 0, minHeight: 0 }"></mat-tree-node>
-  <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent">
+  <mat-tree-node *matTreeNodeDef="let node; when: hasNoContentNotRoot">
     <button mat-icon-button disabled></button>
     <mat-form-field>
       <input matInput #itemValue placeholder="New item..." [(ngModel)]="node.machineName">
     </mat-form-field>
     <button mat-button (click)="saveNewTerm(node, itemValue.value)">Save</button>
   </mat-tree-node>
-  <!-- This is the tree node template for expandable nodes -->
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNoContentRoot">
+    <div class="mat-tree-node">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.machineName">
+        <mat-icon class="mat-icon-rtl-mirror">chevron_right</mat-icon>
+      </button>
+      <mat-form-field>
+        <input matInput #itemValue placeholder="New item..." [(ngModel)]="node.machineName">
+      </mat-form-field>
+      <button mat-button (click)="saveNewTerm(node, itemValue.value)">Save</button>
+    </div>
+    <ng-container matTreeNodeOutlet></ng-container>
+  </mat-nested-tree-node>
   <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
       <div class="mat-tree-node">
         <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.machineName">
