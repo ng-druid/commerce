@@ -14,6 +14,12 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   @Input()
   vocabulary: Vocabulary;
 
+  @Input()
+  readonly = false;
+
+  @Input()
+  hideUnselected = false;
+
   flatNodeMap = new Map<FlatTermNode, Term>();
   nestedNodeMap = new Map<Term, FlatTermNode>();
 
@@ -50,7 +56,7 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
     const existingNode = this.nestedNodeMap.get(term);
     const flatNode = existingNode && existingNode.item === term.humanName
         ? existingNode
-        : new FlatTermNode({ item: term.humanName, level: !term.parentId ? 0 : term.level + 1, expandable: term.children.length > 0 });
+        : new FlatTermNode({ item: term.humanName, level: !term.parentId ? 0 : term.level + 1, expandable: term.children.length > 0, visible: !this.hideUnselected || term.selected });
     this.flatNodeMap.set(flatNode, term);
     this.nestedNodeMap.set(term, flatNode);
     return flatNode;
@@ -74,6 +80,10 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
 
   hasNoContent = (_: number, termNode: FlatTermNode): boolean => {
     return termNode.item === '';
+  }
+
+  isHidden = (_: number, termNode: FlatTermNode): boolean => {
+    return !termNode.visible;
   }
 
   addNewTerm(node: FlatTermNode) {

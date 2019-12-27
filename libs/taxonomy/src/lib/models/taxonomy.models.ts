@@ -57,11 +57,13 @@ export class FlatTermNode {
   item: string;
   expandable: boolean;
   level: number;
+  visible: boolean;
   constructor(data?: FlatTermNode) {
     if(data) {
       this.item = data.item;
       this.expandable = data.expandable;
       this.level = data.level;
+      this.visible = data.visible;
     }
   }
 }
