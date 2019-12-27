@@ -9,7 +9,7 @@
   <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent">
     <button mat-icon-button disabled></button>
     <mat-form-field>
-      <input matInput #itemValue placeholder="New item...">
+      <input matInput #itemValue placeholder="New item..." [(ngModel)]="node.machineName">
     </mat-form-field>
     <button mat-button (click)="saveNewTerm(node, itemValue.value)">Save</button>
   </mat-tree-node>
