@@ -62,7 +62,7 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   }
 
   hasNoContent = (_: number, term: Term): boolean => {
-    return !term.id;
+    return term.humanName === '';
   }
 
   addNewTerm(node: Term) {
@@ -73,19 +73,18 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   }
 
   saveNewTerm(node: Term, humanName: string) {
-    const term = this.matchTerm(node, this.vocabulary.terms);
-    term.id = 'xxx';
+    const term = this.matchTerm(node.id, this.vocabulary.terms);
     term.selected = true;
     term.humanName = humanName;
     term.machineName  = humanName;
     const vocab = new Vocabulary(this.vocabulary);
     this.dataChange$.next(vocab);
-    const newNode = this.matchTerm(term.id, this.vocabulary.terms);
+    const newNode = this.matchTerm(node.id, this.vocabulary.terms);
     this.toggleSelected(newNode);
   }
 
   createTerm(vocabularyId: string, parentId: string, level: number, weight: number) {
-    return new Term({ id: undefined, vocabularyId, parentId, humanName: '', machineName: '', level, group: false, children: [], weight, selected: true });
+    return new Term({ id: 'xxx', vocabularyId, parentId, humanName: '', machineName: '', level, group: false, children: [], weight, selected: true });
   }
 
   toggleSelected(term: Term) {
@@ -112,7 +111,7 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
       return;
     }
     for(let i = 0; i < len; i++) {
-      if((typeof(id) === 'string' && terms[i].id === id) || terms[i] === id) {
+      if(terms[i].id === id) {
         return terms[i];
       }
       if(terms[i].children.length > 0) {
