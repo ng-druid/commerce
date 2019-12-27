@@ -80,6 +80,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.description = this.detailsFormGroup.get('description').value;
         this.ad.location = city ? city.location : [];
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
+        this.ad.featureSets = [new Vocabulary(this.vocabulary)];
       }),
       switchMap(f => {
         return this.adsService.createAd(this.ad);

@@ -1,3 +1,5 @@
+import { Vocabulary } from '@classifieds-ui/taxonomy';
+
 export class AdsSettings {
   endpointUrl: string;
   constructor(data?: AdsSettings) {
@@ -26,6 +28,7 @@ export class Ad {
   description: string;
   location: Array<number>;
   images: Array<AdImage> = [];
+  featureSets: Array<Vocabulary> = [];
   constructor(data?: Ad) {
     if (data) {
       this.id = data.id;
@@ -34,6 +37,9 @@ export class Ad {
       this.location = data.location;
       if(data.images) {
         this.images = data.images.map(i => new AdImage(i));
+      }
+      if(data.featureSets) {
+        this.featureSets = data.featureSets.map(v => new Vocabulary(v));
       }
     }
   }

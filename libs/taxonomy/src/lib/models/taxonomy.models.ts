@@ -33,6 +33,7 @@ export class Term {
   weight: number;
   group: boolean;
   level: number;
+  selected: boolean;
   children: Array<Term> = [];
   constructor(data?: Term) {
     if(data) {
@@ -44,6 +45,7 @@ export class Term {
       this.weight = data.weight;
       this.group = data.group;
       this.level = data.level;
+      this.selected = data.selected;
       if(data.children) {
         this.children = data.children.map(t => new Term(t));
       }
