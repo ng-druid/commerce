@@ -4,6 +4,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
 import { Vocabulary, Term } from '../../models/taxonomy.models';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { ObjectId } from 'bson';
 
 @Component({
   selector: 'classifieds-ui-taxonomy-selector',
@@ -84,7 +85,7 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   }
 
   createTerm(vocabularyId: string, parentId: string, level: number, weight: number) {
-    return new Term({ id: 'xxx', vocabularyId, parentId, humanName: '', machineName: '', level, group: false, children: [], weight, selected: true });
+    return new Term({ id: new ObjectId().toHexString(), vocabularyId, parentId, humanName: '', machineName: '', level, group: false, children: [], weight, selected: true });
   }
 
   toggleSelected(term: Term) {
