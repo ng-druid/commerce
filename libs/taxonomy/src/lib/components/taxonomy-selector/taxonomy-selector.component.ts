@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
 import { Vocabulary, Term } from '../../models/taxonomy.models';
@@ -20,6 +21,8 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   @Input()
   hideUnselected = false;
 
+  dataChange$ = new BehaviorSubject<Vocabulary>(new Vocabulary());
+
   treeControl = new NestedTreeControl<Term>(t => t.children);
   dataSource = new MatTreeNestedDataSource<Term>();
 
@@ -33,15 +36,18 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
       evt.added.forEach(t => t.selected = true);
       evt.removed.forEach(t => t.selected = false);
     });
+    this.dataChange$.subscribe(vocabulary => {
+      this.vocabulary = vocabulary;
+      this.dataSource.data = vocabulary.terms;
+    });
     if(this.vocabulary) {
-      this.dataSource.data = this.vocabulary.terms;
+      this.dataChange$.next(this.vocabulary);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.vocabulary.previousValue !== changes.vocabulary.currentValue) {
-      this.vocabulary = changes.vocabulary.currentValue;
-      this.dataSource.data = this.vocabulary.terms;
+      this.dataChange$.next(changes.vocabulary.currentValue);
     }
   }
 
@@ -49,9 +55,15 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
     return !!term.children && term.children.length > 0;
   }
 
-  addNewTerm(term: Term) {
+  hasNoContent = (_: number, term: Term): boolean => {
+    return term.humanName === '';
+  }
+
+  addNewTerm(node: Term) {
+    const vocab = new Vocabulary(this.vocabulary);
+    const term = this.matchTerm(node.id, vocab.terms);
     term.children.push(this.createTerm(term.vocabularyId, term.id, term.level + 1, term.children.length + 1));
-    this.treeControl.expand(term);
+    this.dataChange$.next(vocab);
   }
 
   createTerm(vocabularyId: string, parentId: string, level: number, weight: number) {
@@ -69,24 +81,24 @@ export class TaxonomySelectorComponent implements OnInit, OnChanges {
   }
 
   checkAllParentsSelection(term: Term): void {
-    let parent = this.matchTerm(term.parentId);
+    let parent = this.matchTerm(term.parentId, this.vocabulary.terms);
     while (parent) {
       this.checklistSelection.select(parent);
-      parent = this.matchTerm(parent.parentId);
+      parent = this.matchTerm(parent.parentId, this.vocabulary.terms);
     }
   }
 
-  matchTerm(id: string): Term | null {
+  matchTerm(id: string, terms: Array<Term>): Term {
     const len = this.dataSource.data.length;
     if(!id) {
       return;
     }
     for(let i = 0; i < len; i++) {
-      if(this.dataSource.data[i].id === id) {
-        return this.dataSource.data[i];
+      if(terms[i].id === id) {
+        return terms[i];
       }
-      if(this.dataSource.data[i].children.length > 0) {
-        const term = this.matchTerm(id);
+      if(terms[i].children.length > 0) {
+        const term = this.matchTerm(id, terms[i].children);
         if(term) {
           return term;
         }

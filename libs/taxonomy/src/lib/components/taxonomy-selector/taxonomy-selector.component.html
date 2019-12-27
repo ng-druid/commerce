@@ -1,26 +1,28 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <!-- This is the tree node template for leaf nodes -->
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+  <mat-tree-node *matTreeNodeDef="let node">
       <!-- use a disabled button to provide padding for tree leaf -->
       <button mat-icon-button disabled></button>
       <mat-checkbox *ngIf="!readonly" [checked]="checklistSelection.isSelected(node)" (change)="toggleSelected(node)">{{node.humanName}}</mat-checkbox>
       <span *ngIf="readonly">{{node.humanName}}</span>
   </mat-tree-node>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent">
+    <button mat-icon-button disabled></button>
+    <mat-form-field>
+      <input matInput #itemValue placeholder="New item...">
+    </mat-form-field>
+    <button mat-button>Save</button>
+  </mat-tree-node>
   <!-- This is the tree node template for expandable nodes -->
   <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
       <div class="mat-tree-node">
-        <button mat-icon-button matTreeNodeToggle
-                [attr.aria-label]="'toggle ' + node.machineName">
-          <mat-icon class="mat-icon-rtl-mirror">
-            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-          </mat-icon>
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.machineName">
+          <mat-icon class="mat-icon-rtl-mirror">chevron_right</mat-icon>
         </button>
         <mat-checkbox *ngIf="!readonly" [checked]="checklistSelection.isSelected(node)" (change)="toggleSelected(node)">{{node.humanName}}</mat-checkbox>
         <button *ngIf="!readonly" mat-icon-button (click)="addNewTerm(node)"><mat-icon>add</mat-icon></button>
         <span *ngIf="readonly">{{node.humanName}}</span>
       </div>
-      <div [class.tree-invisible]="!treeControl.isExpanded(node)">
-        <ng-container matTreeNodeOutlet></ng-container>
-      </div>
+      <ng-container matTreeNodeOutlet></ng-container>
   </mat-nested-tree-node>
 </mat-tree>
