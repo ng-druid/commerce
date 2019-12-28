@@ -14,7 +14,8 @@ import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
 import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
-import { TAXONOMY_SETTINGS, TaxonomySettings, TaxonomyModule } from '@classifieds-ui/taxonomy';
+import { TAXONOMY_SETTINGS, TaxonomySettings } from '@classifieds-ui/taxonomy';
+import { VocabularyModule } from '@classifieds-ui/vocabulary';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -43,6 +44,7 @@ const routes = [
   { path: 'account', component: AccountDashboardComponent },
   { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
   { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
+  { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
   { path: '', component: HomeComponent }
 ];
 
@@ -79,7 +81,6 @@ const routes = [
     LoggingModule,
     AuthModule,
     MediaModule,
-    TaxonomyModule,
     NxModule.forRoot()
   ],
   providers: [

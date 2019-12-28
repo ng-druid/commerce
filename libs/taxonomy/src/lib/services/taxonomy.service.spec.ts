@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { VocabularyService } from './vocabulary.service';
+import { TaxonomyService } from './taxonomy.service';
 
-describe('VocabularyService', () => {
+describe('TaxonomyService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: VocabularyService = TestBed.get(VocabularyService);
+    const service: TaxonomyService = TestBed.get(TaxonomyService);
     expect(service).toBeTruthy();
   });
 });

@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { MaterialModule } from '@classifieds-ui/material';
+import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 
@@ -19,7 +20,6 @@ import { AdMasterComponent } from './components/ad-master/ad-master.component';
 import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.component';
 import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
-import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 
 const routes = [
   { path: '', component: AdBrowserComponent, children: [

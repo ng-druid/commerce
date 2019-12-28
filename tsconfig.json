@@ -24,7 +24,8 @@
       "@classifieds-ui/logging": ["libs/logging/src/index.ts"],
       "@classifieds-ui/cities": ["libs/cities/src/index.ts"],
       "@classifieds-ui/chat": ["libs/chat/src/index.ts"],
-      "@classifieds-ui/taxonomy": ["libs/taxonomy/src/index.ts"]
+      "@classifieds-ui/taxonomy": ["libs/taxonomy/src/index.ts"],
+      "@classifieds-ui/vocabulary": ["libs/vocabulary/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

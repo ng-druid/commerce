@@ -9,7 +9,7 @@ import { TaxonomySettings, Vocabulary } from '../models/taxonomy.models';
 @Injectable({
   providedIn: 'root'
 })
-export class VocabularyService {
+export class TaxonomyService {
   constructor(@Inject(TAXONOMY_SETTINGS) private settings: TaxonomySettings, private http: HttpClient) { }
   getVocabulary(vocabId: string): Observable<Vocabulary > {
     return this.http.get<Vocabulary>(`${this.settings.endpointUrl}/vocabularies/${vocabId}`).pipe(map(v => new Vocabulary(v)));
