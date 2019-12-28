@@ -11,7 +11,10 @@ import { TaxonomySettings, Vocabulary } from '../models/taxonomy.models';
 })
 export class TaxonomyService {
   constructor(@Inject(TAXONOMY_SETTINGS) private settings: TaxonomySettings, private http: HttpClient) { }
-  getVocabulary(vocabId: string): Observable<Vocabulary > {
+  getVocabulary(vocabId: string): Observable<Vocabulary> {
     return this.http.get<Vocabulary>(`${this.settings.endpointUrl}/vocabularies/${vocabId}`).pipe(map(v => new Vocabulary(v)));
+  }
+  getVocabularies(): Observable<Array<Vocabulary>> {
+    return this.http.get<Array<Vocabulary>>(`${this.settings.endpointUrl}/vocabularies`).pipe(map(r => r.map(v => new Vocabulary(v))));
   }
 }
