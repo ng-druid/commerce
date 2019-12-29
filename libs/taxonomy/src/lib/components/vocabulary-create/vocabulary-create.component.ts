@@ -9,7 +9,7 @@ import { Vocabulary } from '../../models/taxonomy.models';
 })
 export class VocabularyCreateComponent implements OnInit {
 
-  vocabulary: Vocabulary = new Vocabulary();
+  vocabulary: Vocabulary = new Vocabulary({ humanName: '', machineName: '', id: undefined, terms: [] });
 
   constructor(private vocabularyFacade: VocabularyFacade) { }
 

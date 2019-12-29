@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { Vocabulary, Term } from '../../models/taxonomy.models';
@@ -8,7 +8,7 @@ import { Vocabulary, Term } from '../../models/taxonomy.models';
   templateUrl: './vocabulary-form.component.html',
   styleUrls: ['./vocabulary-form.component.scss']
 })
-export class VocabularyFormComponent implements OnInit {
+export class VocabularyFormComponent implements OnInit, OnChanges {
 
   @Input()
   vocabulary: Vocabulary;
@@ -23,14 +23,25 @@ export class VocabularyFormComponent implements OnInit {
 
   vocabularyFormGroup: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+    this.vocabularyFormGroup = fb.group({
+      humanName: [ '' , Validators.required],
+      machineName: [ '' , Validators.required]
+    });
+  }
 
   ngOnInit() {
     this.terms = this.vocabulary.terms;
-    this.vocabularyFormGroup = this.fb.group({
-      humanName: [ this.vocabulary.humanName , Validators.required],
-      machineName: [ this.vocabulary.machineName , Validators.required]
-    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.vocabulary.previousValue !== changes.vocabulary.currentValue) {
+      this.terms = this.vocabulary.terms;
+      this.vocabularyFormGroup.setValue({
+        humanName: this.vocabulary.humanName,
+        machineName: this.vocabulary.machineName
+      });
+    }
   }
 
   submit() {
