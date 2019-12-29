@@ -17,4 +17,10 @@ export class TaxonomyService {
   getVocabularies(): Observable<Array<Vocabulary>> {
     return this.http.get<Array<Vocabulary>>(`${this.settings.endpointUrl}/vocabularies`).pipe(map(r => r.map(v => new Vocabulary(v))));
   }
+  createVocabulary(vocabulary: Vocabulary): Observable<Vocabulary> {
+    return this.http.post<Vocabulary>(`${this.settings.endpointUrl}/vocabularies`, vocabulary).pipe(map(v => new Vocabulary(v)));
+  }
+  updateVocabulary(vocabulary: Vocabulary): Observable<Vocabulary> {
+    return this.http.put<Vocabulary>(`${this.settings.endpointUrl}/vocabularies`, vocabulary).pipe(map(v => new Vocabulary(v)));
+  }
 }

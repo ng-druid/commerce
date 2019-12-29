@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '@classifieds-ui/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -11,6 +11,8 @@ import { EffectsModule } from '@ngrx/effects';
 import * as fromVocabulary from './+state/vocabulary/vocabulary.reducer';
 import { VocabularyEffects } from './+state/vocabulary/vocabulary.effects';
 import { VocabularyEditComponent } from './components/vocabulary-edit/vocabulary-edit.component';
+import { VocabularyFormComponent } from './components/vocabulary-form/vocabulary-form.component';
+import { VocabularyCreateComponent } from './components/vocabulary-create/vocabulary-create.component';
 
 @NgModule({
   imports: [
@@ -20,13 +22,14 @@ import { VocabularyEditComponent } from './components/vocabulary-edit/vocabulary
     FormsModule,
     FlexLayoutModule,
     RouterModule,
+    ReactiveFormsModule,
     StoreModule.forFeature(
       fromVocabulary.VOCABULARY_FEATURE_KEY,
       fromVocabulary.reducer
     ),
     EffectsModule.forFeature([VocabularyEffects])
   ],
-  declarations: [TaxonomySelectorComponent, VocabularyEditComponent],
-  exports: [TaxonomySelectorComponent, VocabularyEditComponent]
+  declarations: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyFormComponent, VocabularyCreateComponent],
+  exports: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyCreateComponent]
 })
 export class TaxonomyModule {}

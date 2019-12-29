@@ -28,6 +28,14 @@ export class VocabularyFacade {
     this.store.dispatch(VocabularyActions.loadVocabulary({ id }));
   }
 
+  updateVocabulary(vocabulary: Vocabulary) {
+    this.store.dispatch(VocabularyActions.updateVocabulary({ vocabulary }));
+  }
+
+  createVocabulary(vocabulary: Vocabulary) {
+    this.store.dispatch(VocabularyActions.createVocabulary({ vocabulary }));
+  }
+
   getVocabulary(id: string): Observable<Vocabulary> {
     return this.allVocabulary$.pipe(map(vocabs => vocabs.find(v => v.id === id)));
   }

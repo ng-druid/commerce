@@ -36,6 +36,9 @@ const vocabularyReducer = createReducer(
   on(VocabularyActions.loadVocabularySuccess, (state, { vocabulary }) =>
     vocabularyAdapter.upsertOne(vocabulary, { ...state, loaded: true })
   ),
+  on(VocabularyActions.updateVocabularySuccess, (state, { vocabulary }) =>
+    vocabularyAdapter.upsertOne(vocabulary, { ...state, loaded: true })
+  ),
   on(VocabularyActions.loadVocabularyFailure, (state, { error }) => ({
     ...state,
     error

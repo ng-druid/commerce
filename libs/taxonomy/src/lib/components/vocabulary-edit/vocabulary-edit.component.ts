@@ -27,4 +27,8 @@ export class VocabularyEditComponent implements OnInit {
     });
   }
 
+  submitted() {
+    this.vocabularyFacade.updateVocabulary(this.vocabulary);
+  }
+
 }

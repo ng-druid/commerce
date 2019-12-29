@@ -1,0 +1,14 @@
+<form [formGroup]="vocabularyFormGroup">
+  <div fxLayout="row" fxLayoutGap="2em">
+    <mat-form-field fxFlex="50">
+      <input matInput placeholder="Human Name" formControlName="humanName" required>
+    </mat-form-field>
+    <mat-form-field fxFlex="50">
+      <input matInput placeholder="Machine Name" formControlName="machineName" required>
+    </mat-form-field>
+  </div>
+  <div class="taxonomy-selector-wrapper">
+    <classifieds-ui-taxonomy-selector [vocabulary]="vocabulary" [(terms)]="terms"></classifieds-ui-taxonomy-selector>
+  </div>
+  <button mat-raised-button color="primary" (click)="submit()">Save Vocabulary</button>
+</form>

@@ -34,19 +34,59 @@ export class VocabularyEffects {
   );
 
   loadVocabularyByRoute$ = createEffect(() =>
-  this.dataPersistence.navigation(VocabularyEditComponent, {
-    run: (a: ActivatedRouteSnapshot, state: fromVocabulary.VocabularyPartialState) => {
-      return this.taxonomyService.getVocabulary(a.params['vocabularyId']).pipe(
-        map(v => VocabularyActions.loadVocabularySuccess({
-          vocabulary: v
-        }))
-      );
-    },
-    onError: () => {
+    this.dataPersistence.navigation(VocabularyEditComponent, {
+      run: (a: ActivatedRouteSnapshot, state: fromVocabulary.VocabularyPartialState) => {
+        return this.taxonomyService.getVocabulary(a.params['vocabularyId']).pipe(
+          map(v => VocabularyActions.loadVocabularySuccess({
+            vocabulary: v
+          }))
+        );
+      },
+      onError: () => {
 
-    }
-  })
-);
+      }
+    })
+  );
+
+  updateVocabulary$ = createEffect(() =>
+    this.dataPersistence.pessimisticUpdate(VocabularyActions.updateVocabulary, {
+      run: (
+        a: ReturnType<typeof VocabularyActions.updateVocabulary>,
+        state: fromVocabulary.VocabularyPartialState
+      ) => {
+        return this.taxonomyService.updateVocabulary(a.vocabulary).pipe(
+          map(v => VocabularyActions.updateVocabularySuccess({
+            vocabulary: v
+          }))
+        );
+      },
+      onError: (
+        a: ReturnType<typeof VocabularyActions.updateVocabulary>,
+        e: any
+      ) => {
+      }
+    })
+  );
+
+  createVocabulary$ = createEffect(() =>
+    this.dataPersistence.pessimisticUpdate(VocabularyActions.createVocabulary, {
+      run: (
+        a: ReturnType<typeof VocabularyActions.createVocabulary>,
+        state: fromVocabulary.VocabularyPartialState
+      ) => {
+        return this.taxonomyService.createVocabulary(a.vocabulary).pipe(
+          map(v => VocabularyActions.createVocabularySuccess({
+            vocabulary: v
+          }))
+        );
+      },
+      onError: (
+        a: ReturnType<typeof VocabularyActions.createVocabulary>,
+        e: any
+      ) => {
+      }
+    })
+  );
 
   constructor(
     private actions$: Actions,
