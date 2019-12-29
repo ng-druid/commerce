@@ -2,11 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TaxonomyModule } from '@classifieds-ui/taxonomy';
+import { TaxonomyModule, VocabularyEditComponent } from '@classifieds-ui/taxonomy';
 import { MaterialModule } from '@classifieds-ui/material';
 import { VocabularyBrowserComponent } from './components/vocabulary-browser/vocabulary-browser.component';
 import { VocabularyMasterComponent } from './components/vocabulary-master/vocabulary-master.component';
-import { CreateVocabularyComponent } from './components/create-vocabulary/create-vocabulary.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import * as fromVocabularies from './+state/vocabularies/vocabularies.reducer';
@@ -18,7 +17,7 @@ const routes = [
     path: '',
     component: VocabularyBrowserComponent,
     children: [
-      { path: 'create-vocabulary', component: CreateVocabularyComponent }
+      { path: 'vocabulary/:vocabularyId', component: VocabularyEditComponent }
     ]
   }
 ];
@@ -38,8 +37,7 @@ const routes = [
   ],
   declarations: [
     VocabularyBrowserComponent,
-    VocabularyMasterComponent,
-    CreateVocabularyComponent
+    VocabularyMasterComponent
   ],
   providers: [VocabulariesFacade]
 })
