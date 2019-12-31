@@ -6,13 +6,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '@classifieds-ui/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TaxonomySelectorComponent } from './components/taxonomy-selector/taxonomy-selector.component';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import * as fromVocabulary from './+state/vocabulary/vocabulary.reducer';
-import { VocabularyEffects } from './+state/vocabulary/vocabulary.effects';
+import { EntityDefinitionService } from '@ngrx/data';
 import { VocabularyEditComponent } from './components/vocabulary-edit/vocabulary-edit.component';
 import { VocabularyFormComponent } from './components/vocabulary-form/vocabulary-form.component';
 import { VocabularyCreateComponent } from './components/vocabulary-create/vocabulary-create.component';
+import { entityMetadata } from './entity-metadata';
 
 @NgModule({
   imports: [
@@ -23,13 +21,12 @@ import { VocabularyCreateComponent } from './components/vocabulary-create/vocabu
     FlexLayoutModule,
     RouterModule,
     ReactiveFormsModule,
-    StoreModule.forFeature(
-      fromVocabulary.VOCABULARY_FEATURE_KEY,
-      fromVocabulary.reducer
-    ),
-    EffectsModule.forFeature([VocabularyEffects])
   ],
   declarations: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyFormComponent, VocabularyCreateComponent],
   exports: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyCreateComponent]
 })
-export class TaxonomyModule {}
+export class TaxonomyModule {
+  constructor(eds: EntityDefinitionService) {
+    eds.registerMetadataMap(entityMetadata);
+  }
+}

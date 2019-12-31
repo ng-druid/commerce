@@ -32,6 +32,7 @@ import { AppHeaderComponent } from './components/app-header/app-header.component
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
 import { AccountDashboardComponent } from './components/account-dashboard/account-dashboard.component';
 import { HomeComponent } from './components/home/home.component';
+import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 
 // @todo: for now
 const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
@@ -47,6 +48,12 @@ const routes = [
   { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
   { path: '', component: HomeComponent }
 ];
+
+// @todo: just get this to work for now deal with actual endpoints later.
+const defaultDataServiceConfig: DefaultDataServiceConfig = {
+  root: 'https://localhost:44327', // hard coded to taxonomy for now -- api gateway will prevent the need for custom code to change this per entity.
+  timeout: 3000, // request timeout
+}
 
 @NgModule({
   declarations: [AppComponent, AuthCallbackComponent, AppHeaderComponent, AppFooterComponent, AccountDashboardComponent, HomeComponent],
@@ -81,7 +88,8 @@ const routes = [
     LoggingModule,
     AuthModule,
     MediaModule,
-    NxModule.forRoot()
+    NxModule.forRoot(),
+    EntityDataModule.forRoot({})
   ],
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
@@ -94,7 +102,8 @@ const routes = [
     { provide: TAXONOMY_SETTINGS, useValue: new TaxonomySettings(environment.taxonomySettings) },
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig }
   ],
   bootstrap: [AppComponent]
 })

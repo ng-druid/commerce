@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { VocabularyFacade } from '../../+state/vocabulary/vocabulary.facade';
 import { Vocabulary } from '../../models/taxonomy.models';
+import { VocabularyService } from '../../services/vocabulary.service';
 
 @Component({
   selector: 'classifieds-ui-vocabulary-create',
@@ -11,13 +11,15 @@ export class VocabularyCreateComponent implements OnInit {
 
   vocabulary: Vocabulary = new Vocabulary({ humanName: '', machineName: '', id: undefined, terms: [] });
 
-  constructor(private vocabularyFacade: VocabularyFacade) { }
+  constructor(private vocabularyService: VocabularyService) { }
 
   ngOnInit() {
   }
 
   submitted() {
-    this.vocabularyFacade.createVocabulary(this.vocabulary);
+    this.vocabularyService.add(this.vocabulary).subscribe(v => {
+      console.log(v);
+    });
   }
 
 }
