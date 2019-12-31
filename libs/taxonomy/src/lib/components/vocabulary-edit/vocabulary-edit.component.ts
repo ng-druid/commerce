@@ -1,9 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EntityCollectionServiceBase } from '@ngrx/data';
 import { filter, map, switchMap } from 'rxjs/operators';
 
-import { VocabularyFacade } from '../../+state/vocabulary/vocabulary.facade';
 import { Vocabulary } from '../../models/taxonomy.models';
 import { VocabularyService } from '../../services/vocabulary.service';
 
@@ -25,7 +23,7 @@ export class VocabularyEditComponent implements OnInit {
       switchMap(vocabularyId => this.vocabularyService.getByKey(vocabularyId)),
       filter(v => v !== undefined)
     ).subscribe((vocabulary: Vocabulary) => {
-      this.vocabulary = vocabulary;
+      this.vocabulary = new Vocabulary(vocabulary);
     });
   }
 
