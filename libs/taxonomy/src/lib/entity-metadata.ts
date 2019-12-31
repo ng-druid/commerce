@@ -1,7 +1,9 @@
 import { EntityMetadataMap, EntityDataModuleConfig } from '@ngrx/data';
 
 export const entityMetadata: EntityMetadataMap = {
-  Vocabulary: {}
+  Vocabulary: {
+    entityName: 'Vocabulary'
+  }
 };
 
 /*const pluralNames = {  };

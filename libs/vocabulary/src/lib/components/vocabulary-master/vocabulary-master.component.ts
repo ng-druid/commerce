@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Vocabulary } from '@classifieds-ui/taxonomy';
-import { VocabulariesFacade } from '../../+state/vocabularies/vocabularies.facade';
+import { VocabularyListItem } from '@classifieds-ui/taxonomy';
 import { Observable } from 'rxjs';
+import { VocabularyListItemService } from '../../services/vocabulary-list-item.service';
 
 @Component({
   selector: 'classifieds-ui-vocabulary-master',
@@ -9,14 +9,13 @@ import { Observable } from 'rxjs';
   styleUrls: ['./vocabulary-master.component.scss']
 })
 export class VocabularyMasterComponent implements OnInit {
-  vocabularies$: Observable<Array<Vocabulary>>;
+  vocabularies$: Observable<Array<VocabularyListItem>>;
   displayOverlay = false;
 
-  constructor(private vocabulariesFacade: VocabulariesFacade) { }
+  constructor(private vocabularyListItemService: VocabularyListItemService) { }
 
   ngOnInit() {
-    this.vocabularies$ = this.vocabulariesFacade.allVocabularies$;
-    this.vocabulariesFacade.loadVocabularies();
+    this.vocabularies$ = this.vocabularyListItemService.getAll();
   }
 
 }

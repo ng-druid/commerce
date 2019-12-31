@@ -1,11 +1,7 @@
-import * as VocabularyActions from './lib/+state/vocabulary/vocabulary.actions';
-import * as VocabularyFeature from './lib/+state/vocabulary/vocabulary.reducer';
-import * as VocabularySelectors from './lib/+state/vocabulary/vocabulary.selectors';
-export { VocabularyActions, VocabularyFeature, VocabularySelectors };
-export * from './lib/+state/vocabulary/vocabulary.facade';
 export * from './lib/taxonomy.module';
 export * from './lib/models/taxonomy.models';
 export * from './lib/taxonomy.tokens';
 export * from './lib/services/taxonomy.service';
 export * from './lib/components/vocabulary-edit/vocabulary-edit.component';
 export * from './lib/components/vocabulary-create/vocabulary-create.component';
+export * from './lib/services/vocabulary.service';

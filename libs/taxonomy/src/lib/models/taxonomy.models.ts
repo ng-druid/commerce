@@ -24,6 +24,19 @@ export class Vocabulary {
   }
 }
 
+export class VocabularyListItem {
+  id: string;
+  machineName: string;
+  humanName: string;
+  constructor(data?: Vocabulary) {
+    if(data) {
+      this.id = data.id;
+      this.machineName = data.machineName;
+      this.humanName = data.humanName;
+    }
+  }
+}
+
 export class Term {
   id: string;
   vocabularyId: string;
