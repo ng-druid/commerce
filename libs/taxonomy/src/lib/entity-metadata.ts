@@ -5,10 +5,3 @@ export const entityMetadata: EntityMetadataMap = {
     entityName: 'Vocabulary'
   }
 };
-
-/*const pluralNames = {  };
-
-export const entityConfig: EntityDataModuleConfig = {
-  entityMetadata,
-  pluralNames
-};*/

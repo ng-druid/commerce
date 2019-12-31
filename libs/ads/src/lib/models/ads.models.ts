@@ -45,6 +45,9 @@ export class Ad {
   }
 }
 
+export class AdListItem extends Ad {
+}
+
 export class AdDetail extends Ad {
 }
 

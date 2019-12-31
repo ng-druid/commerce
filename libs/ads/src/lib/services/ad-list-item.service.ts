@@ -3,11 +3,11 @@ import {
   EntityCollectionServiceBase,
   EntityCollectionServiceElementsFactory
 } from '@ngrx/data';
-import { Ad } from '../models/ads.models';
+import { AdListItem } from '../models/ads.models';
 
 @Injectable({ providedIn: 'root' })
-export class AdsService extends EntityCollectionServiceBase<Ad> {
+export class AdListItemService extends EntityCollectionServiceBase<AdListItem> {
   constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
-    super('Ad', serviceElementsFactory);
+    super('AdListItem', serviceElementsFactory);
   }
 }

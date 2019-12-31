@@ -71,7 +71,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   createAd() {
     this.stepper.next();
-    this.filesService.bulkUpload(this.files).pipe(
+    /*this.filesService.bulkUpload(this.files).pipe(
       catchError(e => {
         alert(e.error);
         return NEVER;
@@ -92,7 +92,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.router.navigateByUrl(`/ads/ad/${ad.id}`);
       }, 2000)
-    });
+    });*/
   }
 
   onSelect(event) {
