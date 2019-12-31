@@ -1,4 +1,4 @@
-import { Injectable, } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { QueryParams } from '@ngrx/data';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
