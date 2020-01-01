@@ -15,16 +15,14 @@ import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor,
 import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 import { TAXONOMY_SETTINGS, TaxonomySettings } from '@classifieds-ui/taxonomy';
-import { VocabularyModule } from '@classifieds-ui/vocabulary';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreRouterConnectingModule, MinimalRouterStateSerializer } from '@ngrx/router-store';
-import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { localStorageSync } from 'ngrx-store-localstorage';
 
 // import { AuthService } from './services/auth.service';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
@@ -33,12 +31,7 @@ import { AppFooterComponent } from './components/app-footer/app-footer.component
 import { AccountDashboardComponent } from './components/account-dashboard/account-dashboard.component';
 import { HomeComponent } from './components/home/home.component';
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
-
-// @todo: for now
-const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
-  return localStorageSync({keys: ['auth'], rehydrate: true })(reducer);
-}
-const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
+import { reducers, metaReducers } from './reducers';
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
@@ -74,7 +67,7 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
       serializer: MinimalRouterStateSerializer
     }),
     StoreModule.forRoot(
-      {},
+      reducers,
       {
         metaReducers: metaReducers,
         runtimeChecks: {
