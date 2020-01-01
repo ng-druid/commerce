@@ -10,9 +10,6 @@ export const environment = {
   loggingSettings: {
     endpointUrl: "https://localhost:44340/logging"
   },
-  citiesSettings: {
-    endpointUrl: "https://localhost:44340/cities"
-  },
   chatSettings: {
     endpointUrl: "https://localhost:44340/chat"
   },
