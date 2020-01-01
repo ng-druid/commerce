@@ -1,7 +1,8 @@
 import { EntityMetadataMap } from '@ngrx/data';
 
-export const entityMetadata: EntityMetadataMap = {
+export const entityMetadata: EntityMetadataMap= {
   CityListItem: {
-    entityName: 'CityListItem'
+    selectId: (m) => m.sourceId,
+    entityName: 'CityListItem',
   }
 };
