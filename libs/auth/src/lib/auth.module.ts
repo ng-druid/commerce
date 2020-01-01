@@ -9,6 +9,9 @@ import { AuthEffects } from './+state/auth.effects';
 import { AuthFacade } from './+state/auth.facade';
 import { userManagerFactory } from './auth.factories';
 import { CLIENT_SETTINGS } from './auth.tokens';
+import { EntityDefinitionService } from '@ngrx/data';
+
+import { entityMetadata } from './entity-metadata';
 
 @NgModule({
   imports: [
@@ -23,4 +26,8 @@ import { CLIENT_SETTINGS } from './auth.tokens';
     { provide: UserManager, useFactory: userManagerFactory, deps: [CLIENT_SETTINGS] }
   ]
 })
-export class AuthModule {}
+export class AuthModule {
+  constructor(eds: EntityDefinitionService) {
+    eds.registerMetadataMap(entityMetadata);
+  }
+}
