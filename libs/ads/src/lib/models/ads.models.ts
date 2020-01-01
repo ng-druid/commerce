@@ -1,14 +1,5 @@
 import { Vocabulary } from '@classifieds-ui/taxonomy';
 
-export class AdsSettings {
-  endpointUrl: string;
-  constructor(data?: AdsSettings) {
-    if(data) {
-      this.endpointUrl = data.endpointUrl;
-    }
-  }
-}
-
 export class SearchConfig {
   searchString: string;
   location: string;

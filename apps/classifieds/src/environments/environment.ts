@@ -4,9 +4,6 @@
 
 export const environment = {
   production: false,
-  adsSettings: {
-    endpointUrl: 'https://localhost:44340/ads'
-  },
   mediaSettings: {
     endpointUrl: 'https://localhost:44340/media'
   },
@@ -18,9 +15,6 @@ export const environment = {
   },
   chatSettings: {
     endpointUrl: "https://localhost:44340/chat"
-  },
-  taxonomySettings: {
-    endpointUrl: "https://localhost:44340/taxonomy"
   },
   clientSettings: {
     authority: 'https://localhost:44392',

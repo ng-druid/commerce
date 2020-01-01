@@ -1,12 +1,3 @@
-export class TaxonomySettings {
-  endpointUrl: string;
-  constructor(data?: TaxonomySettings) {
-    if(data) {
-      this.endpointUrl = data.endpointUrl;
-    }
-  }
-}
-
 export class Vocabulary {
   id: string;
   machineName: string;
