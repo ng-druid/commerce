@@ -48,7 +48,7 @@ export class VocabularyFormComponent implements OnInit, OnChanges {
     this.vocabulary = new Vocabulary({
       ...this.vocabulary,
       humanName: this.vocabularyFormGroup.controls.humanName.value,
-      machineName: this.vocabularyFormGroup.controls.humanName.value,
+      machineName: this.vocabularyFormGroup.controls.machineName.value,
       terms: this.terms
     });
     this.vocabularyChange.emit(this.vocabulary);

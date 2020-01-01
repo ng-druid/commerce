@@ -18,8 +18,6 @@ import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.c
 import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
 import { entityMetadata } from './entity-metadata';
-import { AdDataService } from './services/ad-data.service';
-import { AdListItemDataService } from './services/ad-list-item-data.service';
 
 const routes = [
   { path: '', component: AdBrowserComponent, children: [
@@ -42,9 +40,7 @@ const routes = [
   ]
 })
 export class AdsModule {
-  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService, adDataService: AdDataService, adListItemDataService: AdListItemDataService) {
+  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService) {
     eds.registerMetadataMap(entityMetadata);
-    entityDataService.registerService('Ad', adDataService);
-    entityDataService.registerService('AdListItem', adListItemDataService);
   }
 }
