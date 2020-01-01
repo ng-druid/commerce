@@ -21,7 +21,7 @@ import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreRouterConnectingModule, MinimalRouterStateSerializer } from '@ngrx/router-store';
 import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { localStorageSync } from 'ngrx-store-localstorage';
@@ -70,7 +70,9 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
       maxAge: 25,
       logOnly: environment.production
     }),
-    StoreRouterConnectingModule.forRoot(),
+    StoreRouterConnectingModule.forRoot({
+      serializer: MinimalRouterStateSerializer
+    }),
     StoreModule.forRoot(
       {},
       {

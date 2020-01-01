@@ -6,10 +6,10 @@ import { catchError, switchMap, tap, debounceTime, finalize, takeUntil } from 'r
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CitiesService, City } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { TaxonomyService, Term, Vocabulary } from '@classifieds-ui/taxonomy';
+import { VocabularyService, Term, Vocabulary } from '@classifieds-ui/taxonomy';
 
 import { AdsService } from '../../services/ads.service';
-import { AdImage, AdDetail } from '../../models/ads.models';
+import { AdImage, Ad } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-create-ad',
@@ -22,7 +22,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   cities: Array<City> = [];
   vocabulary: Vocabulary;
   terms: Array<Term> = [];
-  ad: AdDetail = new AdDetail();
+  ad: Ad = new Ad();
   isLoadingCities = false;
 
   detailsFormGroup: FormGroup;
@@ -32,7 +32,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private citiesService: CitiesService, private fb: FormBuilder, private taxonomyService: TaxonomyService) { }
+  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private citiesService: CitiesService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
@@ -40,8 +40,8 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       location: ['', Validators.required],
       description: ['', Validators.required]
     });
-    this.taxonomyService.getVocabulary("5dfd097acb38b113cc858508").subscribe(vocab => {
-      this.vocabulary = vocab;
+    this.vocabularyService.getByKey('5dfd097acb38b113cc858508').subscribe(vocab => {
+      this.vocabulary = new Vocabulary(vocab);
       this.terms = vocab.terms;
     });
     this.detailsFormGroup.get('location').valueChanges.pipe(
@@ -71,7 +71,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   createAd() {
     this.stepper.next();
-    /*this.filesService.bulkUpload(this.files).pipe(
+    this.filesService.bulkUpload(this.files).pipe(
       catchError(e => {
         alert(e.error);
         return NEVER;
@@ -85,14 +85,14 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.featureSets = [new Vocabulary({ ...this.vocabulary, terms: this.terms.map(t => new Term(t)) })];
       }),
       switchMap(f => {
-        return this.adsService.createAd(this.ad);
+        return this.adsService.add(new Ad(this.ad));
       })
-    ).subscribe((ad: AdDetail) => {
+    ).subscribe((ad: Ad) => {
       this.stepper.next();
       setTimeout(() => {
         this.router.navigateByUrl(`/ads/ad/${ad.id}`);
       }, 2000)
-    });*/
+    });
   }
 
   onSelect(event) {
