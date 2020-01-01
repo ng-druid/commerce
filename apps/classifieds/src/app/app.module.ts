@@ -11,7 +11,6 @@ import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/medi
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
-import { CITIES_SETTINGS, CitiesSettings } from '@classifieds-ui/cities';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 
 import { AppComponent } from './app.component';
@@ -89,7 +88,6 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
     { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
-    { provide: CITIES_SETTINGS, useValue: new CitiesSettings(environment.citiesSettings) },
     { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
     { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

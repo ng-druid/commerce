@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NEVER, Subject } from 'rxjs';
 import { catchError, switchMap, tap, debounceTime, finalize, takeUntil } from 'rxjs/operators';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
-import { CitiesService, City } from '@classifieds-ui/cities';
+import { CityListItemsService, CityListItem } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { VocabularyService, Term, Vocabulary } from '@classifieds-ui/taxonomy';
 
@@ -19,7 +19,7 @@ import { AdImage, Ad } from '../../models/ads.models';
 export class CreateAdComponent implements OnInit, OnDestroy {
 
   files: Array<File> = [];
-  cities: Array<City> = [];
+  cities: Array<CityListItem> = [];
   vocabulary: Vocabulary;
   terms: Array<Term> = [];
   ad: Ad = new Ad();
@@ -32,7 +32,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private citiesService: CitiesService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
+  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
@@ -50,7 +50,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.cities = [];
         this.isLoadingCities = true;
       }),
-      switchMap(value => this.citiesService.getCities(value)
+      switchMap(value => this.cityListItemsService.getWithQuery({ searchString: value })
         .pipe(
           finalize(() => {
             this.isLoadingCities = false
@@ -59,7 +59,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       ),
       takeUntil(this.componentDestroyed)
     )
-    .subscribe((cities: Array<City>) => {
+    .subscribe((cities: Array<CityListItem>) => {
       this.cities = cities;
     });
   }
@@ -103,7 +103,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     this.files.splice(this.files.indexOf(event), 1);
   }
 
-  displayCity(city?: City): string | undefined {
+  displayCity(city?: CityListItem): string | undefined {
     return city ? `${city.city}, ${city.stateId}` : undefined;
   }
 

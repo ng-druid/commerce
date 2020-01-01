@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/cor
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subject, } from 'rxjs';
 import { debounceTime, tap, switchMap, takeUntil, finalize, filter } from 'rxjs/operators';
-import { City , CitiesService } from '@classifieds-ui/cities';
+import { CityListItem , CityListItemsService } from '@classifieds-ui/cities';
 
 import { AdSearchBarForm } from '../../models/form.models';
 
@@ -16,14 +16,14 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
   @Output()
   formSubmit = new EventEmitter<AdSearchBarForm>();
 
-  cities: Array<City> = [];
+  cities: Array<CityListItem> = [];
   isLoadingCities = false;
 
   searchFormGroup: FormGroup;
 
   private componentDestroyed = new Subject();
 
-  constructor(private fb: FormBuilder, private citiesService: CitiesService) { }
+  constructor(private fb: FormBuilder, private citiesListService: CityListItemsService) { }
 
   ngOnInit() {
     this.searchFormGroup = this.fb.group({
@@ -43,13 +43,13 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
           this.onSubmit();
         }
       }),
-      filter(value => !(value instanceof City) && value !== ""),
+      filter(value => !(value instanceof CityListItem) && value !== ""),
       tap(value => {
         this.cities = [];
         this.isLoadingCities = true;
         console.log(`value: "${value}"`);
       }),
-      switchMap(value => this.citiesService.getCities(value)
+      switchMap(value => this.citiesListService.getWithQuery({ searchString: value })
         .pipe(
           finalize(() => {
             this.isLoadingCities = false
@@ -58,7 +58,7 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
       ),
       takeUntil(this.componentDestroyed)
     )
-    .subscribe((cities: Array<City>) => {
+    .subscribe((cities: Array<CityListItem>) => {
       this.cities = cities;
     });
   }
@@ -75,7 +75,7 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
     this.formSubmit.emit(new AdSearchBarForm({ searchString, location }));
   }
 
-  displayCity(city?: City): string | undefined {
+  displayCity(city?: CityListItem): string | undefined {
     return city ? `${city.city}, ${city.stateId}` : undefined;
   }
 

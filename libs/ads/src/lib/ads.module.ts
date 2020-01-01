@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EntityDefinitionService, EntityDataService } from '@ngrx/data';
 import { MaterialModule } from '@classifieds-ui/material';
 import { TaxonomyModule } from '@classifieds-ui/taxonomy';
+import { CitiesModule } from '@classifieds-ui/cities';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 
@@ -36,7 +37,8 @@ const routes = [
     MaterialModule,
     FlexLayoutModule,
     NgxDropzoneModule,
-    TaxonomyModule
+    TaxonomyModule,
+    CitiesModule
   ]
 })
 export class AdsModule {

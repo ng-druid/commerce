@@ -7,7 +7,7 @@ export class CitiesSettings {
   }
 }
 
-export class City {
+export class CityListItem {
   sourceId: string;
   city: string;
   stateId: string;
@@ -15,7 +15,7 @@ export class City {
   countyName: string;
   population: number;
   location: Array<number>;
-  constructor(data?: City) {
+  constructor(data?: CityListItem) {
     if (data) {
       this.sourceId = data.sourceId;
       this.city = data.city;
