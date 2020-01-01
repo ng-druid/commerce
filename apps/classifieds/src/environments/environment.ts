@@ -5,22 +5,22 @@
 export const environment = {
   production: false,
   adsSettings: {
-    endpointUrl: 'https://localhost:44342'
+    endpointUrl: 'https://localhost:44340/ads'
   },
   mediaSettings: {
-    endpointUrl: 'https://localhost:44328'
+    endpointUrl: 'https://localhost:44340/media'
   },
   loggingSettings: {
-    endpointUrl: "https://localhost:44375"
+    endpointUrl: "https://localhost:44340/logging"
   },
   citiesSettings: {
-    endpointUrl: "https://localhost:44369"
+    endpointUrl: "https://localhost:44340/cities"
   },
   chatSettings: {
-    endpointUrl: "https://localhost:44383"
+    endpointUrl: "https://localhost:44340/chat"
   },
   taxonomySettings: {
-    endpointUrl: "https://localhost:44327"
+    endpointUrl: "https://localhost:44340/taxonomy"
   },
   clientSettings: {
     authority: 'https://localhost:44392',
