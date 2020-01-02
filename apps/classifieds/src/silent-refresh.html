@@ -1,0 +1,13 @@
+<head>
+  <title>slint refresh</title>
+</head>
+<body>
+<script src="/oidc-client.js"></script>
+<script>
+  new UserManager().signinSilentCallback()
+      .catch((err) => {
+          console.log(err);
+      });
+</script>
+<p>slient refresh</p>
+</body>
