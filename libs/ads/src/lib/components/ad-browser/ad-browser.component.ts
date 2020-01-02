@@ -16,6 +16,7 @@ export class AdBrowserComponent implements OnInit {
   searchForm: AdSearchBarForm;
   hideMasterComponent = false;
   hideRouterOutlet = false;
+  hideSearchBar = false;
   refreshViewport = true;
   constructor(private mo: MediaObserver, private store: Store<RouterReducerState> ) { }
   ngOnInit() {
@@ -30,12 +31,15 @@ export class AdBrowserComponent implements OnInit {
       if(desktop) {
         this.hideMasterComponent = false;
         this.hideRouterOutlet = false;
+        this.hideSearchBar = false;
       } else if(r.routeConfig.path === 'ad/:adId' || r.routeConfig.path === 'create-ad') {
         this.hideMasterComponent = true;
         this.hideRouterOutlet = false;
+        this.hideSearchBar = r.routeConfig.path === 'create-ad';
       } else {
         this.hideMasterComponent = false;
         this.hideRouterOutlet = true;
+        this.hideSearchBar = false;
       }
     });
   }

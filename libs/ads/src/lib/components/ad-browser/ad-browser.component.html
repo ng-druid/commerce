@@ -1,5 +1,5 @@
 <div fxLayout="column" fxFill>
-    <classifieds-ui-ad-search-bar (formSubmit)="onFormSubmit($event)"></classifieds-ui-ad-search-bar>
+    <classifieds-ui-ad-search-bar [hidden]="hideSearchBar" (formSubmit)="onFormSubmit($event)"></classifieds-ui-ad-search-bar>
     <div fxFlex fxLayout="row" fxFill>
       <classifieds-ui-ad-master [fxFlex]="hideRouterOutlet ? 100 : 30" [hidden]="hideMasterComponent" [searchForm]="searchForm"></classifieds-ui-ad-master>
       <div class="router-outlet" [fxFlex]="hideMasterComponent ? 100 : 70" [hidden]="hideRouterOutlet"><router-outlet></router-outlet></div>
