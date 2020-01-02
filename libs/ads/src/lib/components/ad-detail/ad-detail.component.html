@@ -1,6 +1,6 @@
 <div *ngIf="ad" fxLayout="column" fxFill>
   <h1>{{ ad.title }}</h1>
-  <mat-tab-group [selectedIndex]="selectedTabIndex">
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" [dynamicHeight]="true">
     <mat-tab label="Detail">
       <ng-template matTabContent>
         <classifieds-ui-ad-detail-tab *ngIf="ad" [ad]="ad"></classifieds-ui-ad-detail-tab>

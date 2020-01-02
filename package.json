@@ -41,6 +41,7 @@
     "@angular/platform-browser-dynamic": "^8.2.0",
     "@angular/router": "^8.2.0",
     "@aspnet/signalr": "^1.1.4",
+    "@kolkov/ngx-gallery": "^1.0.9",
     "@nebular/eva-icons": "^4.6.0",
     "@nebular/theme": "^4.6.0",
     "@ngrx/data": "^8.5.0",

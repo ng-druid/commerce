@@ -9,6 +9,7 @@ import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 import { CitiesModule } from '@classifieds-ui/cities';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 
 
 import { AdBrowserComponent } from './components/ad-browser/ad-browser.component';
@@ -36,6 +37,7 @@ const routes = [
     RouterModule.forChild(routes),
     MaterialModule,
     FlexLayoutModule,
+    NgxGalleryModule,
     NgxDropzoneModule,
     TaxonomyModule,
     CitiesModule
