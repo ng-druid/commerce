@@ -15,7 +15,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   private searchConfig = new SearchConfig({ searchString: '', page: '1', location: '' });
   constructor(private adListItemService: AdListItemService) {
     super();
-    this.adListItemService.getWithQuery(this.searchConfig as Object as QueryParams);
+    this.query();
     this.adListItemService.entities$.subscribe(ads => {
       this.dataStream.next(ads);
     });
@@ -26,7 +26,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
     const location = searchForm.location === undefined || searchForm.location.length !== 2 ? '' : searchForm.location.join(",");
     this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location });
     this.adListItemService.clearCache();
-    this.adListItemService.getWithQuery(this.searchConfig as Object as QueryParams);
+    this.query();
   }
 
   connect(collectionViewer: CollectionViewer): Observable<Array<Ad>> {
@@ -35,10 +35,14 @@ export class AdsDataSourceService extends DataSource<Ad> {
       if (currentPage > this.lastPage) {
         this.lastPage = currentPage;
         this.searchConfig = new SearchConfig({ ...this.searchConfig, page: `${currentPage}` });
-        this.adListItemService.getWithQuery(this.searchConfig as Object as QueryParams);
+        this.query();
       }
     }));
     return this.dataStream;
+  }
+
+  query() {
+    this.adListItemService.getWithQuery(this.searchConfig as Object as QueryParams);
   }
 
   disconnect(collectionViewer: CollectionViewer): void {

@@ -30,7 +30,4 @@ export class AdDetailComponent implements OnInit {
       this.ad = new Ad(ad);
     });
   }
-  chat() {
-
-  }
 }
