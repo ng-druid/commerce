@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {NgModule} from '@angular/core';
 import {A11yModule} from '@angular/cdk/a11y';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -40,8 +41,10 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
+import { ResponsiveStepperComponent } from './components/responsive-stepper/responsive-stepper.component';
 
 @NgModule({
+  imports: [CommonModule, CdkStepperModule, MatStepperModule],
   exports: [
     A11yModule,
     CdkStepperModule,
@@ -85,7 +88,9 @@ import {MatTreeModule} from '@angular/material/tree';
     MatTreeModule,
     PortalModule,
     ScrollingModule,
-  ]
+    ResponsiveStepperComponent
+  ],
+  declarations: [ResponsiveStepperComponent]
 })
 export class MaterialModule {}
 

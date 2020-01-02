@@ -30,7 +30,7 @@ export class AdBrowserComponent implements OnInit {
       if(desktop) {
         this.hideMasterComponent = false;
         this.hideRouterOutlet = false;
-      } else if(r.routeConfig.path === 'ad/:adId') {
+      } else if(r.routeConfig.path === 'ad/:adId' || r.routeConfig.path === 'create-ad') {
         this.hideMasterComponent = true;
         this.hideRouterOutlet = false;
       } else {

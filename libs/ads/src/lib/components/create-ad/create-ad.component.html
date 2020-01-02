@@ -1,7 +1,7 @@
-<mat-horizontal-stepper [linear]="true" #stepper>
+<responsive-stepper [linear]="true" [orientation]="orientation" #stepper>
     <mat-step [stepControl]="detailsFormGroup">
       <form [formGroup]="detailsFormGroup">
-        <ng-template matStepLabel>Fill out ad details</ng-template>
+        <ng-template matStepLabel>Details</ng-template>
         <div fxLayout="row" fxLayoutGap="2em">
           <mat-form-field fxFlex="65">
             <input matInput placeholder="Title" formControlName="title" required>
@@ -28,7 +28,7 @@
       </form>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Add photos</ng-template>
+      <ng-template matStepLabel>Photos</ng-template>
       <ngx-dropzone (change)="onSelect($event)">
         <ngx-dropzone-label>Drag and Drop photos here</ngx-dropzone-label>
         <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
@@ -62,4 +62,4 @@
         <ng-template matStepLabel>Ad Created</ng-template>
         Ad has been created.
       </mat-step>
-  </mat-horizontal-stepper>
+  </responsive-stepper>

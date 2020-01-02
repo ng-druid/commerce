@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MediaObserver } from '@angular/flex-layout';
 import { NEVER, Subject } from 'rxjs';
-import { catchError, switchMap, tap, debounceTime, finalize, takeUntil } from 'rxjs/operators';
+import { catchError, switchMap, tap, debounceTime, finalize, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CityListItemsService, CityListItem } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
@@ -24,6 +25,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   terms: Array<Term> = [];
   ad: Ad = new Ad();
   isLoadingCities = false;
+  orientation = 'horizontal';
 
   detailsFormGroup: FormGroup;
 
@@ -32,7 +34,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
+  constructor(private router: Router, private mo: MediaObserver, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
@@ -61,6 +63,13 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     )
     .subscribe((cities: Array<CityListItem>) => {
       this.cities = cities;
+    });
+    this.mo.asObservable().pipe(
+      map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1),
+      distinctUntilChanged(),
+      debounceTime(250)
+    ).subscribe(desktop => {
+      this.orientation = desktop ? 'horizontal' : 'vertical';
     });
   }
 
