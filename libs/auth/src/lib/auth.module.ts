@@ -18,8 +18,7 @@ import { entityMetadata } from './entity-metadata';
     CommonModule,
     HttpClientModule,
     StoreModule.forFeature(fromAuth.AUTH_FEATURE_KEY, fromAuth.reducer),
-    EffectsModule.forFeature([AuthEffects]),
-    StoreModule.forFeature(fromAuth.AUTH_FEATURE_KEY, fromAuth.reducer)
+    EffectsModule.forFeature([AuthEffects])
   ],
   providers: [
     AuthFacade,

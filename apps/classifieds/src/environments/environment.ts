@@ -17,10 +17,12 @@ export const environment = {
     authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
     redirect_uri: 'http://localhost:4200/auth-callback',
+    silent_redirect_uri: 'http://localhost:4200/silent-refresh.html',
     response_type: "code",
     scope:"openid profile ads_api media_api chat IdentityServerApi taxonomy_api api_gateway",
     filterProtocolClaims: true,
-    loadUserInfo: true
+    loadUserInfo: true,
+    automaticSilentRenew: true
   }
 };
 

@@ -1,5 +1,5 @@
-<button *ngIf="!readonly" mat-icon-button (click)="addNewRootTerm()"><mat-icon>add</mat-icon></button>
-<mat-tree [dataSource]="terms" [treeControl]="treeControl">
+<button *ngIf="!readonly" mat-icon-button (click)="addNewRootTerm()"><mat-icon>add</mat-icon> Add Term</button>
+<mat-tree fxLayout="row wrap" [dataSource]="terms" [treeControl]="treeControl">
   <!-- This is the tree node template for leaf nodes -->
   <mat-tree-node *matTreeNodeDef="let node">
       <!-- use a disabled button to provide padding for tree leaf -->
@@ -15,7 +15,7 @@
     </mat-form-field>
     <button mat-button (click)="saveNewTerm(node, itemValue.value)">Save</button>
   </mat-tree-node>
-  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNoContentRoot">
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNoContentRoot" fxFlex="32%">
     <div class="mat-tree-node">
       <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.machineName">
         <mat-icon class="mat-icon-rtl-mirror">chevron_right</mat-icon>
@@ -27,7 +27,7 @@
     </div>
     <ng-container matTreeNodeOutlet></ng-container>
   </mat-nested-tree-node>
-  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" fxFlex="32%">
       <div class="mat-tree-node">
         <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.machineName">
           <mat-icon class="mat-icon-rtl-mirror">chevron_right</mat-icon>
