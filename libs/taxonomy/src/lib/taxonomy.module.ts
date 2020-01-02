@@ -11,6 +11,7 @@ import { VocabularyEditComponent } from './components/vocabulary-edit/vocabulary
 import { VocabularyFormComponent } from './components/vocabulary-form/vocabulary-form.component';
 import { VocabularyCreateComponent } from './components/vocabulary-create/vocabulary-create.component';
 import { entityMetadata } from './entity-metadata';
+import { VocabularySelectorComponent } from './components/vocabulary-selector/vocabulary-selector.component';
 
 @NgModule({
   imports: [
@@ -22,8 +23,9 @@ import { entityMetadata } from './entity-metadata';
     RouterModule,
     ReactiveFormsModule,
   ],
-  declarations: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyFormComponent, VocabularyCreateComponent],
-  exports: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyCreateComponent]
+  declarations: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyFormComponent, VocabularyCreateComponent, VocabularySelectorComponent],
+  exports: [TaxonomySelectorComponent, VocabularyEditComponent, VocabularyCreateComponent],
+  entryComponents: [ VocabularySelectorComponent ]
 })
 export class TaxonomyModule {
   constructor(eds: EntityDefinitionService) {

@@ -1,0 +1,5 @@
+<mat-nav-list>
+  <a *ngFor="let vocab of vocabs$ | async" mat-list-item (click)="openLink($event, vocab.id)">
+  <span mat-line>{{ vocab.humanName }}</span>
+  </a>
+</mat-nav-list>

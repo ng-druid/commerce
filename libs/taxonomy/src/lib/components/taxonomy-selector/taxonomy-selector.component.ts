@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
 import { Term, Vocabulary } from '../../models/taxonomy.models';
@@ -9,7 +9,7 @@ import { ObjectId } from 'bson';
   templateUrl: './taxonomy-selector.component.html',
   styleUrls: ['./taxonomy-selector.component.scss']
 })
-export class TaxonomySelectorComponent implements OnInit {
+export class TaxonomySelectorComponent implements OnInit, OnChanges {
 
   @Input()
   terms: Array<Term> = [];
@@ -32,6 +32,7 @@ export class TaxonomySelectorComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.syncSelected();
     this.checklistSelection.changed.subscribe((evt: SelectionChange<string>) => {
       evt.added.forEach(id => {
         const term = this.matchTerm(id, this.terms);
@@ -42,6 +43,12 @@ export class TaxonomySelectorComponent implements OnInit {
         term.selected = false;
       });
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.terms.previousValue !== changes.terms.currentValue) {
+      this.syncSelected();
+    }
   }
 
   hasChild = (_: number, term: Term): boolean => {
@@ -125,6 +132,26 @@ export class TaxonomySelectorComponent implements OnInit {
         }
       }
     }
+
+  }
+
+  visitEachTerm(terms: Array<Term>, callback: (t: Term) => void) {
+    const len = terms.length;
+    for(let i = 0; i < len; i++) {
+      callback(terms[i]);
+      if(terms[i].children.length > 0) {
+        const term = this.visitEachTerm(terms[i].children, callback);
+      }
+    }
+
+  }
+
+  syncSelected() {
+    this.visitEachTerm(this.terms, (t) => {
+      if(t.selected) {
+        this.checklistSelection.select(t.id);
+      }
+    });
   }
 
 }

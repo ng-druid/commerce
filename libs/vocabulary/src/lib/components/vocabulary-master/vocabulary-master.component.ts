@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { VocabularyListItem } from '@classifieds-ui/taxonomy';
+import { VocabularyListItem, VocabularyListItemService } from '@classifieds-ui/taxonomy';
 import { Observable } from 'rxjs';
-import { VocabularyListItemService } from '../../services/vocabulary-list-item.service';
 
 @Component({
   selector: 'classifieds-ui-vocabulary-master',

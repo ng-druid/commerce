@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MediaObserver } from '@angular/flex-layout';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { NEVER, Subject } from 'rxjs';
 import { catchError, switchMap, tap, debounceTime, finalize, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CityListItemsService, CityListItem } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { VocabularyService, Term, Vocabulary } from '@classifieds-ui/taxonomy';
+import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
 
 import { AdsService } from '../../services/ads.service';
 import { AdImage, Ad } from '../../models/ads.models';
@@ -21,11 +22,13 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   files: Array<File> = [];
   cities: Array<CityListItem> = [];
-  vocabulary: Vocabulary;
-  terms: Array<Term> = [];
   ad: Ad = new Ad();
+
   isLoadingCities = false;
   orientation = 'horizontal';
+
+  featuresSheetData: { selectedId: string; } = { selectedId: undefined };
+  featureSets: Array<Vocabulary> = [];
 
   detailsFormGroup: FormGroup;
 
@@ -34,17 +37,13 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private mo: MediaObserver, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
+  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
       title: ['', Validators.required],
       location: ['', Validators.required],
       description: ['', Validators.required]
-    });
-    this.vocabularyService.getByKey('5dfd097acb38b113cc858508').subscribe(vocab => {
-      this.vocabulary = new Vocabulary(vocab);
-      this.terms = vocab.terms;
     });
     this.detailsFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),
@@ -91,7 +90,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.description = this.detailsFormGroup.get('description').value;
         this.ad.location = city ? city.location : [];
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
-        this.ad.featureSets = [new Vocabulary({ ...this.vocabulary, terms: this.terms.map(t => new Term(t)) })];
+        this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
       }),
       switchMap(f => {
         return this.adsService.add(new Ad(this.ad));
@@ -110,6 +109,15 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   onRemove(event) {
     this.files.splice(this.files.indexOf(event), 1);
+  }
+
+  onAddFeatureSet() {
+    const sheet = this.bs.open(VocabularySelectorComponent, { data: this.featuresSheetData });
+    sheet.afterDismissed().pipe(
+      switchMap(() => this.vocabularyService.getByKey(this.featuresSheetData.selectedId))
+    ).subscribe((v) => {
+      this.featureSets = [ ...this.featureSets, new Vocabulary(v) ];
+    });
   }
 
   displayCity(city?: CityListItem): string | undefined {

@@ -42,7 +42,17 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Features</ng-template>
-      <classifieds-ui-taxonomy-selector [vocabulary]="vocabulary" [(terms)]="terms"></classifieds-ui-taxonomy-selector>
+      <button mat-raised-button color="warning" (click)="onAddFeatureSet()">Add Feature Set</button>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let vocab of featureSets">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ vocab.humanName }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <classifieds-ui-taxonomy-selector [vocabulary]="vocab" [(terms)]="vocab.terms"></classifieds-ui-taxonomy-selector>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
       <div>
         <button mat-raised-button color="primary" matStepperPrevious>Back</button>
         <button mat-raised-button color="primary" (click)="createAd()">Create Ad</button>
