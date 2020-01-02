@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { select, Store } from '@ngrx/store';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
-import { debounceTime, map, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
 
@@ -19,11 +20,12 @@ export class AdBrowserComponent implements OnInit {
   constructor(private mo: MediaObserver, private store: Store<RouterReducerState> ) { }
   ngOnInit() {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
-    this.mo.asObservable().pipe(
-      map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1),
-      withLatestFrom(this.store.pipe(select(selectCurrentRoute))),
+    combineLatest(
+      this.mo.asObservable().pipe(map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)),
+      this.store.pipe(select(selectCurrentRoute))
+    ).pipe(
       distinctUntilChanged(),
-      debounceTime(500)
+      debounceTime(250)
     ).subscribe(([desktop, r]) => {
       if(desktop) {
         this.hideMasterComponent = false;
