@@ -18,7 +18,7 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
   @Input()
   recipientId: string;
   @Input()
-  recipientLabel;
+  recipientLabel: string;
   messages: Array<ChatMessage> = [];
   private subscription$: Subscription;
   private componentDestroyed$ = new Subject();

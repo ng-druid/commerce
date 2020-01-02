@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { select, Store } from '@ngrx/store';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
-import { filter, map, withLatestFrom } from 'rxjs/operators';
+import { debounceTime, map, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
 
@@ -15,15 +15,16 @@ export class AdBrowserComponent implements OnInit {
   searchForm: AdSearchBarForm;
   hideMasterComponent = false;
   hideRouterOutlet = false;
+  refreshViewport = true;
   constructor(private mo: MediaObserver, private store: Store<RouterReducerState> ) { }
   ngOnInit() {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
-    // @todo: Implement logic to handle response layout
-    /*this.store.pipe(
-      select(selectCurrentRoute),
-      filter(v => v && v.routeConfig),
-      withLatestFrom(this.mo.asObservable().pipe(map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)))
-    ).subscribe(([r, desktop]) => {
+    this.mo.asObservable().pipe(
+      map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1),
+      withLatestFrom(this.store.pipe(select(selectCurrentRoute))),
+      distinctUntilChanged(),
+      debounceTime(500)
+    ).subscribe(([desktop, r]) => {
       if(desktop) {
         this.hideMasterComponent = false;
         this.hideRouterOutlet = false;
@@ -34,7 +35,7 @@ export class AdBrowserComponent implements OnInit {
         this.hideMasterComponent = false;
         this.hideRouterOutlet = true;
       }
-    });*/
+    });
   }
   onFormSubmit(searchForm: AdSearchBarForm) {
     this.searchForm = searchForm;
