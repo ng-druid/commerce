@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges, SimpleCha
 import { Router } from '@angular/router';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MediaObserver } from '@angular/flex-layout';
-import { Observable } from 'rxjs';
-import { filter, debounceTime } from 'rxjs/operators';
+import { select, Store } from '@ngrx/store';
+import { getSelectors, RouterReducerState } from '@ngrx/router-store';
+import { Observable, combineLatest } from 'rxjs';
+import { filter, debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
 import { AdsDataSourceService } from '../../services/ads-data-source.service';
@@ -22,9 +24,21 @@ export class AdMasterComponent implements OnInit, OnChanges {
   @Input()
   searchForm: AdSearchBarForm;
   loading$: Observable<boolean>;
-  constructor(private router: Router, private mo: MediaObserver, private adListItemService: AdListItemService, public adsDataSource: AdsDataSourceService) { }
+  constructor(private router: Router, private mo: MediaObserver, private store: Store<RouterReducerState>, private adListItemService: AdListItemService, public adsDataSource: AdsDataSourceService) { }
   ngOnInit() {
     this.loading$ = this.adListItemService.loading$;
+    const { selectCurrentRoute } = getSelectors((state: any) => state.router);
+    combineLatest(
+      this.mo.asObservable().pipe(map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)),
+      this.store.pipe(select(selectCurrentRoute))
+    ).pipe(
+      distinctUntilChanged(),
+      debounceTime(250)
+    ).subscribe(() => {
+      this.viewport.checkViewportSize();
+    });
+
+
     this.mo.asObservable().pipe(filter(() => !!this.viewport), debounceTime(500)).subscribe(() => {
       this.viewport.checkViewportSize();
     });

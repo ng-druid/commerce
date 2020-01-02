@@ -48,18 +48,4 @@
         <button mat-raised-button color="primary" (click)="createAd()">Create Ad</button>
       </div>
     </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Creating Ad</ng-template>
-      <div>
-        <mat-spinner></mat-spinner>
-      </div>
-      <div>
-        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
-        <button mat-raised-button color="primary" (click)="stepper.reset()">Try Again</button>
-      </div>
-    </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Ad Created</ng-template>
-        Ad has been created.
-      </mat-step>
   </responsive-stepper>
