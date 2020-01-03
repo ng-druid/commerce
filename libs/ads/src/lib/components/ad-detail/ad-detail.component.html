@@ -3,17 +3,17 @@
   <mat-tab-group [(selectedIndex)]="selectedTabIndex" [dynamicHeight]="true">
     <mat-tab label="Detail">
       <ng-template matTabContent>
-        <classifieds-ui-ad-detail-tab *ngIf="ad" [ad]="ad"></classifieds-ui-ad-detail-tab>
+        <classifieds-ui-ad-detail-tab *ngIf="ad" [ad]="ad" [mediaBaseUrl]="mediaBaseUrl"></classifieds-ui-ad-detail-tab>
+      </ng-template>
+    </mat-tab>
+    <mat-tab *ngIf="displayGalleryTab" label="Gallery">
+      <ng-template matTabContent>
+        <classifieds-ui-ad-gallery-tab *ngIf="ad" [ad]="ad" [mediaBaseUrl]="mediaBaseUrl"></classifieds-ui-ad-gallery-tab>
       </ng-template>
     </mat-tab>
     <mat-tab *ngFor="let featureSet of ad.featureSets" [label]="featureSet.humanName">
       <ng-template matTabContent>
         <classifieds-ui-taxonomy-selector [terms]="featureSet.terms" [readonly]="true" [hideUnselected]="true"></classifieds-ui-taxonomy-selector>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Gallery">
-      <ng-template matTabContent>
-        <classifieds-ui-ad-gallery-tab *ngIf="ad" [ad]="ad" [mediaBaseUrl]="mediaBaseUrl"></classifieds-ui-ad-gallery-tab>
       </ng-template>
     </mat-tab>
   </mat-tab-group>

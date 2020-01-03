@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MediaObserver } from '@angular/flex-layout';
 import { map, filter, switchMap, tap } from 'rxjs/operators';
 import { MEDIA_SETTINGS, MediaSettings } from '@classifieds-ui/media';
 
@@ -14,9 +15,10 @@ import { AdsService } from '../../services/ads.service';
 export class AdDetailComponent implements OnInit {
   ad: Ad;
   displayOverlay = true;
+  displayGalleryTab = false;
   mediaBaseUrl: string;
   selectedTabIndex = 0;
-  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private route: ActivatedRoute, private adsService: AdsService) { }
+  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private adsService: AdsService) { }
   ngOnInit() {
     this.mediaBaseUrl = this.mediaSettings.endpointUrl;
     this.route.paramMap.pipe(
@@ -28,6 +30,11 @@ export class AdDetailComponent implements OnInit {
       this.displayOverlay = false;
       this.selectedTabIndex = 0;
       this.ad = new Ad(ad);
+    });
+    this.mo.asObservable().pipe(
+      map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)
+    ).subscribe(desktop => {
+      this.displayGalleryTab = !desktop;
     });
   }
 }

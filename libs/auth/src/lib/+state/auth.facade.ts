@@ -5,7 +5,7 @@ import { select, Store } from '@ngrx/store';
 
 import { AuthPartialState } from './auth.reducer';
 import { authQuery } from './auth.selectors';
-import { CompleteAuthentication, Login } from './auth.actions';
+import { CompleteAuthentication, Login, Logout } from './auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,10 @@ export class AuthFacade {
 
   login() {
     this.store.dispatch(new Login());
+  }
+
+  logout() {
+    this.store.dispatch(new Logout());
   }
 
   completeAuthentication() {

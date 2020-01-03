@@ -10,4 +10,6 @@ import { AdDetail } from '../../../models/ads.models';
 export class AdDetailTabComponent {
   @Input()
   ad: AdDetail;
+  @Input()
+  mediaBaseUrl: string;
 }

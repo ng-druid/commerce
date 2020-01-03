@@ -37,6 +37,13 @@ export function reducer(
       };
       break;
     }
+    case AuthActionTypes.Logout: {
+      state = {
+        ...state,
+        user: undefined
+      }
+      break;
+    }
   }
   return state;
 }

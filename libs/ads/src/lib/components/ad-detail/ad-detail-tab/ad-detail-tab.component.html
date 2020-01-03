@@ -1,1 +1,4 @@
-<div class="description">{{ ad.description }}</div>
+<div fxLayout="row">
+  <div fxFlex="50" fxFlex.sm="100" class="description">{{ ad.description }}</div>
+  <classifieds-ui-ad-gallery-tab fxFlex="50" fxFlex.sm="0"  [ad]="ad" [mediaBaseUrl]="mediaBaseUrl"></classifieds-ui-ad-gallery-tab>
+</div>
