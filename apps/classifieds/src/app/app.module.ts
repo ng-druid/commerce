@@ -24,14 +24,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
-import { AccountDashboardComponent } from './components/account-dashboard/account-dashboard.component';
 import { HomeComponent } from './components/home/home.component';
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import { reducers, metaReducers } from './reducers';
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
-  { path: 'account', component: AccountDashboardComponent },
   { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
   { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
   { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
@@ -45,7 +43,7 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
 }
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, AppHeaderComponent, AppFooterComponent, AccountDashboardComponent, HomeComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AppHeaderComponent, AppFooterComponent, HomeComponent],
   imports: [
     BrowserModule,
     CommonModule,

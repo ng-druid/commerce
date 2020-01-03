@@ -2,7 +2,6 @@
     <span class="brand">Classifieds</span>
     <button mat-button (click)="home()">home</button>
     <button mat-button (click)="browseAds()">browse ads</button>
-    <button mat-button *ngIf="(user$ | async) as u" (click)="account()">my account</button>
     <button mat-button *ngIf="(user$ | async) as u" (click)="chat()">conversations</button>
     <button mat-button *ngIf="(user$ | async) as u" (click)="vocabularies()">vocabularies</button>
     <span class="spacer"></span>

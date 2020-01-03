@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NEVER, Subject } from 'rxjs';
 import { catchError, switchMap, tap, debounceTime, finalize, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
@@ -37,7 +38,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
+  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
@@ -97,6 +98,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       })
     ).subscribe((ad: Ad) => {
       // this.stepper.next();
+      this.sb.open(`Ad has been created!`, 'Created', { duration: 3000 });
       setTimeout(() => {
         this.router.navigateByUrl(`/ads/ad/${ad.id}`);
       }, 2000)
