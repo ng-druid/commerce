@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subject, } from 'rxjs';
 import { debounceTime, tap, switchMap, takeUntil, finalize, filter } from 'rxjs/operators';
@@ -13,8 +13,11 @@ import { AdSearchBarForm } from '../../models/form.models';
 })
 export class AdSearchBarComponent implements OnInit, OnDestroy {
 
+  @Input()
+  searchForm: AdSearchBarForm;
+
   @Output()
-  formSubmit = new EventEmitter<AdSearchBarForm>();
+  searchFormChange = new EventEmitter<AdSearchBarForm>();
 
   cities: Array<CityListItem> = [];
   isLoadingCities = false;
@@ -72,7 +75,8 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
     const searchString = this.searchFormGroup.get('searchString').value;
     const city = this.searchFormGroup.get('location').value;
     const location =  city ? city.location: undefined;
-    this.formSubmit.emit(new AdSearchBarForm({ searchString, location }));
+    this.searchForm = new AdSearchBarForm({ ...this.searchForm, searchString, location });
+    this.searchFormChange.emit(this.searchForm);
   }
 
   displayCity(city?: CityListItem): string | undefined {

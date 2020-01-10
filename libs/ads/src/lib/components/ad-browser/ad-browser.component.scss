@@ -6,3 +6,12 @@
   overflow: scroll;
   position: relative;
 }
+
+.mat-drawer-container {
+  background-color: white;
+}
+
+mat-sidenav {
+  width: 500px;
+  border-right: none;
+}
