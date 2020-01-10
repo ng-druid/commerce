@@ -20,6 +20,7 @@ import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.c
 import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
 import { entityMetadata } from './entity-metadata';
+import { AdFeaturesFilterComponent } from './components/ad-features-filter/ad-features-filter.component';
 
 const routes = [
   { path: '', component: AdBrowserComponent, children: [
@@ -29,7 +30,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent ],
   imports: [
     CommonModule,
     HttpClientModule,

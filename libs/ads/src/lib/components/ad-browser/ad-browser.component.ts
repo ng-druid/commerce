@@ -13,7 +13,7 @@ import { AdSearchBarForm } from '../../models/form.models';
   styleUrls: ['./ad-browser.component.scss']
 })
 export class AdBrowserComponent implements OnInit {
-  searchForm: AdSearchBarForm = new AdSearchBarForm();
+  searchForm: AdSearchBarForm = new AdSearchBarForm({ searchString: '', location: [], features: [] });
   hideMasterComponent = false;
   hideRouterOutlet = false;
   hideSearchBar = false;

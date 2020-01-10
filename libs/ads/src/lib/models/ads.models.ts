@@ -4,10 +4,12 @@ export class SearchConfig {
   searchString: string;
   location: string;
   page: string;
+  features: Array<string>;
   constructor(data: SearchConfig) {
     if(data) {
       this.searchString = data.searchString;
       this.location = data.location;
+      this.features = data.features;
       this.page = data.page;
     }
   }

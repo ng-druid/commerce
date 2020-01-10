@@ -12,7 +12,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   private subscription = new Subscription();
   private pageSize = 25;
   private lastPage = 0;
-  private searchConfig = new SearchConfig({ searchString: '', page: '1', location: '' });
+  private searchConfig = new SearchConfig({ searchString: '', page: '1', location: '', features: [] });
   constructor(private adListItemService: AdListItemService) {
     super();
     this.query();
@@ -24,7 +24,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   set searchForm(searchForm: AdSearchBarForm | undefined) {
     this.lastPage = 0;
     const location = searchForm.location === undefined || searchForm.location.length !== 2 ? '' : searchForm.location.join(",");
-    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location });
+    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features });
     this.adListItemService.clearCache();
     this.query();
   }

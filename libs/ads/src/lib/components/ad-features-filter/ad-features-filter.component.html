@@ -1,0 +1,11 @@
+<form [formGroup]="featuresFormGroup" fxLayout="column">
+  <mat-form-field appearance="standard" fxFlex="100">
+    <input matInput type="text" placeholder="Search" formControlName="searchString">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <div fxFlex="100">
+    <div formArrayName="inactiveFeatures" *ngFor="let feature of featuresFormGroup.controls.inactiveFeatures.controls; index as i">
+      <mat-checkbox [formControlName]="i" [checked]="inactiveSelection.isSelected(i)" (change)="toggleInactive(i)">{{ features[i] }}</mat-checkbox>
+    </div>
+  </div>
+</form>
