@@ -1,7 +1,19 @@
-<div fxLayout="column" fxFill>
-    <classifieds-ui-ad-search-bar [hidden]="hideSearchBar" (formSubmit)="onFormSubmit($event)"></classifieds-ui-ad-search-bar>
-    <div fxFlex fxLayout="row" fxFill>
-      <classifieds-ui-ad-master [fxFlex]="hideRouterOutlet ? 100 : 30" [hidden]="hideMasterComponent" [searchForm]="searchForm"></classifieds-ui-ad-master>
-      <div class="router-outlet" [fxFlex]="hideMasterComponent ? 100 : 70" [hidden]="hideRouterOutlet"><router-outlet></router-outlet></div>
+<mat-sidenav-container fxLayout="row" fxFill>
+  <mat-sidenav #sidenav>
+    <p>Sidenav content</p>
+  </mat-sidenav>
+  <mat-sidenav-content fxLayout="row" fxFill>
+    <div fxLayout="column" fxFill>
+      <div>
+          <div fxFlex fxLayout="row" fxFill>
+            <button mat-button (click)="sidenav.toggle()">Features</button>
+            <classifieds-ui-ad-search-bar fxFlex="100" [hidden]="hideSearchBar" (formSubmit)="onFormSubmit($event)"></classifieds-ui-ad-search-bar>
+          </div>
+      </div>
+      <div fxFlex fxLayout="row" fxFill>
+        <classifieds-ui-ad-master [fxFlex]="hideRouterOutlet ? 100 : 30" [hidden]="hideMasterComponent" [searchForm]="searchForm"></classifieds-ui-ad-master>
+        <div class="router-outlet" [fxFlex]="hideMasterComponent ? 100 : 70" [hidden]="hideRouterOutlet"><router-outlet></router-outlet></div>
+      </div>
     </div>
-</div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

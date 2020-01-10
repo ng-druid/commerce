@@ -94,7 +94,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
       }),
       switchMap(f => {
-        return this.adsService.add(new Ad(this.ad));
+        return this.adsService.upsert(new Ad(this.ad));
       })
     ).subscribe((ad: Ad) => {
       // this.stepper.next();
