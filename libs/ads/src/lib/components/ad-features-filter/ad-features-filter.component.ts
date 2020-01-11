@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AdSearchBarForm } from '../../models/form.models';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
-import { FeaturesService } from '../../services/features.service';
+import { FeatureListItemsService } from '../../services/feature-list-items.service';
 import { FeaturesSearchConfig } from '../../models/ads.models';
 
 @Component({
@@ -24,7 +24,7 @@ export class AdFeaturesFilterComponent implements OnInit {
 
   inactiveSelection = new SelectionModel<number>(true);
 
-  constructor(private fb: FormBuilder, private featuresService: FeaturesService) { }
+  constructor(private fb: FormBuilder, private featuresListItemsService: FeatureListItemsService) { }
 
   ngOnInit() {
     this.featuresFormGroup = this.fb.group({
@@ -43,7 +43,7 @@ export class AdFeaturesFilterComponent implements OnInit {
       });
       this.searchFormChange.emit(this.searchForm);
     });
-    this.featuresService.getFeatures(new FeaturesSearchConfig({ searchString: '', location: '', features: [] })).subscribe(
+    this.featuresListItemsService.getAll().subscribe(
       features => {
         this.features = features.map(f => f.humanName);
         this.refresh();

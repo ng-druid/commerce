@@ -6,5 +6,8 @@ export const entityMetadata: EntityMetadataMap = {
   },
   AdListItem: {
     entityName: 'AdListItem'
+  },
+  FeatureListItem: {
+    entityName: 'FeatureListItem'
   }
 };
