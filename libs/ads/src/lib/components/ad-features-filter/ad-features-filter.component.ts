@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AdSearchBarForm } from '../../models/form.models';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
+import { FeaturesService } from '../../services/features.service';
+import { FeaturesSearchConfig } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-features-filter',
@@ -16,13 +18,13 @@ export class AdFeaturesFilterComponent implements OnInit {
   @Output()
   searchFormChange = new EventEmitter<AdSearchBarForm>();
 
-  features = ['Dryer', 'Dish Washer'];
+  features = ['Dryer', 'Dish Washer', 'Microwave', 'Kitchen', "Gas range"];
 
   featuresFormGroup: FormGroup;
 
   inactiveSelection = new SelectionModel<number>(true);
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private featuresService: FeaturesService) { }
 
   ngOnInit() {
     this.featuresFormGroup = this.fb.group({
@@ -41,7 +43,12 @@ export class AdFeaturesFilterComponent implements OnInit {
       });
       this.searchFormChange.emit(this.searchForm);
     });
-    this.refresh();
+    this.featuresService.getFeatures(new FeaturesSearchConfig({ searchString: '', location: '', features: [] })).subscribe(
+      features => {
+        this.features = features.map(f => f.humanName);
+        this.refresh();
+      }
+    )
   }
 
   refresh() {

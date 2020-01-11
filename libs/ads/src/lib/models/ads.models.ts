@@ -15,6 +15,19 @@ export class SearchConfig {
   }
 }
 
+export class FeaturesSearchConfig {
+  searchString: string;
+  location: string;
+  features: Array<string>;
+  constructor(data: FeaturesSearchConfig) {
+    if(data) {
+      this.searchString = data.searchString;
+      this.location = data.location;
+      this.features = data.features;
+    }
+  }
+}
+
 export class Ad {
   id: string;
   title: string;
@@ -53,6 +66,17 @@ export class AdImage {
       this.id = data.id;
       this.path = data.path;
       this.weight = data.weight;
+    }
+  }
+}
+
+export class FeatureListItem {
+  id: string;
+  humanName: string;
+  constructor(data?: FeatureListItem) {
+    if(data) {
+      this.id = data.id;
+      this.humanName = data.humanName;
     }
   }
 }
