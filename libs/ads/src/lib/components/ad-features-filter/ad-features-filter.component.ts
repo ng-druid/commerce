@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AdSearchBarForm } from '../../models/form.models';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
-import { SelectionModel, SelectionChange } from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
+import { QueryParams } from '@ngrx/data';
 import { FeatureListItemsService } from '../../services/feature-list-items.service';
-import { FeaturesSearchConfig } from '../../models/ads.models';
+import { FeaturesSearchConfig, FeatureListItem } from '../../models/ads.models';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-ad-features-filter',
@@ -18,48 +21,66 @@ export class AdFeaturesFilterComponent implements OnInit {
   @Output()
   searchFormChange = new EventEmitter<AdSearchBarForm>();
 
-  features = ['Dryer', 'Dish Washer', 'Microwave', 'Kitchen', "Gas range"];
-
   featuresFormGroup: FormGroup;
 
-  inactiveSelection = new SelectionModel<number>(true);
+  features: Array<string> = [];
+  features$ = new BehaviorSubject<Array<FeatureListItem>>([]);
+  featuresMap = new Map<string, FeatureListItem>();
+
+  featureSelections = new SelectionModel<string>(true);
 
   constructor(private fb: FormBuilder, private featuresListItemsService: FeatureListItemsService) { }
 
   ngOnInit() {
     this.featuresFormGroup = this.fb.group({
       searchString: [''],
-      inactiveFeatures: new FormArray([])
+      features: new FormArray([])
     });
-    this.inactiveSelection.changed.subscribe((evt: SelectionChange<number>) => {
-      evt.added.forEach(i => {
-        this.searchForm = new AdSearchBarForm({ ...this.searchForm, features: [ ...this.searchForm.features, this.features[i]] })
-      });
-      evt.removed.forEach(i => {
-        const index = this.searchForm.features.indexOf(this.features[i]);
-        const features = [ ...this.searchForm.features ];
-        features.splice(index, 1);
-        this.searchForm = new AdSearchBarForm({ ...this.searchForm, features })
-      });
+    this.featuresFormGroup.get('features').valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(v => {
+      this.searchForm = new AdSearchBarForm({ ...this.searchForm, features: this.featureSelections.selected });
       this.searchFormChange.emit(this.searchForm);
     });
-    this.featuresListItemsService.getAll().subscribe(
-      features => {
-        this.features = features.map(f => f.humanName);
-        this.refresh();
-      }
-    )
+    this.featuresFormGroup.get("searchString").valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe((v) => {
+      this.loadFeatures(v);
+    });
+    this.features$.subscribe(features => {
+      this.clearFeatures();
+      this.features = features.map(f => f.humanName);
+      this.populateFeatures();
+    });
+    this.loadFeatures("");
   }
 
-  refresh() {
-    this.features.forEach((v, i) => {
-      this.inactiveSelection.deselect(i);
-      (this.featuresFormGroup.get('inactiveFeatures') as FormArray).push(this.fb.control(false));
+  loadFeatures(searchString: string) {
+    this.featuresListItemsService.clearCache();
+    const location = this.searchForm.location === undefined || this.searchForm.location.length !== 2 ? '' : this.searchForm.location.join(",");
+    const search = new FeaturesSearchConfig({ searchString: searchString, location, features: this.searchForm.features });
+    this.featuresListItemsService.getWithQuery(search as Object as QueryParams).subscribe(features => {
+      this.features$.next(features);
     });
   }
 
-  toggleInactive(i: number) {
-    this.inactiveSelection.toggle(i);
+  toggleInactive(id: string) {
+    this.featureSelections.toggle(id);
+  }
+
+  populateFeatures() {
+    for(let i = 0; i < this.features.length; i++) {
+      (this.featuresFormGroup.get('features') as FormArray).push(this.fb.control(false))
+    }
+  }
+
+  clearFeatures() {
+    let i = 0;
+    while ((this.featuresFormGroup.get('features') as FormArray).length !== 0) {
+      this.featureSelections.deselect(this.features[i]);
+      (this.featuresFormGroup.get('features') as FormArray).removeAt(0);
+      i++;
+    }
   }
 
 }

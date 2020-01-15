@@ -4,8 +4,8 @@
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
   <div fxFlex="100">
-    <div formArrayName="inactiveFeatures" *ngFor="let feature of featuresFormGroup.controls.inactiveFeatures.controls; index as i">
-      <mat-checkbox [formControlName]="i" [checked]="inactiveSelection.isSelected(i)" (change)="toggleInactive(i)">{{ features[i] }}</mat-checkbox>
+    <div formArrayName="features" *ngFor="let feature of featuresFormGroup.controls.features.controls; index as i">
+      <mat-checkbox [formControlName]="i" [checked]="featureSelections.isSelected(features[i])" (change)="toggleInactive(features[i])">{{ features[i] }}</mat-checkbox>
     </div>
   </div>
 </form>
