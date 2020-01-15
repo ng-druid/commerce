@@ -1,0 +1,16 @@
+.features {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  height: 2px;
+  background-color: black;
+  order: 100;
+  margin: 1em 0;
+}
+
+.is-selected {
+  background-color: red;
+  order: 1000;
+}

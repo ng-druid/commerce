@@ -1,19 +1,23 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, AfterViewInit, Renderer2 } from '@angular/core';
 import { AdSearchBarForm } from '../../models/form.models';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, CheckboxControlValueAccessor } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { QueryParams } from '@ngrx/data';
 import { FeatureListItemsService } from '../../services/feature-list-items.service';
 import { FeaturesSearchConfig, FeatureListItem } from '../../models/ads.models';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'classifieds-ui-ad-features-filter',
   templateUrl: './ad-features-filter.component.html',
   styleUrls: ['./ad-features-filter.component.scss']
 })
-export class AdFeaturesFilterComponent implements OnInit {
+export class AdFeaturesFilterComponent implements OnInit, AfterViewInit {
+
+  @ViewChildren(MatCheckbox)
+  featureCheckboxes: QueryList<MatCheckbox>;
 
   @Input()
   searchForm: AdSearchBarForm;
@@ -29,7 +33,7 @@ export class AdFeaturesFilterComponent implements OnInit {
 
   featureSelections = new SelectionModel<string>(true);
 
-  constructor(private fb: FormBuilder, private featuresListItemsService: FeatureListItemsService) { }
+  constructor(private renderer: Renderer2, private fb: FormBuilder, private featuresListItemsService: FeatureListItemsService) { }
 
   ngOnInit() {
     this.featuresFormGroup = this.fb.group({
@@ -53,6 +57,21 @@ export class AdFeaturesFilterComponent implements OnInit {
       this.populateFeatures();
     });
     this.loadFeatures("");
+  }
+
+  ngAfterViewInit() {
+    this.featureCheckboxes.changes.subscribe((checkboxes: QueryList<MatCheckbox>) => {
+      checkboxes.forEach(checkbox => {
+        checkbox.change.subscribe((change: MatCheckboxChange) => {
+          const el = document.getElementById(checkbox.inputId).closest('.feature-wrapper');
+          if(change.checked) {
+            this.renderer.addClass(el, 'is-selected');
+          } else {
+            this.renderer.removeClass(el,'is-selected');
+          }
+        });
+      });
+    });
   }
 
   loadFeatures(searchString: string) {
