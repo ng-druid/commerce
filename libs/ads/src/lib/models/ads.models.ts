@@ -17,11 +17,13 @@ export class SearchConfig {
 
 export class FeaturesSearchConfig {
   searchString: string;
+  adSearchString: string;
   location: string;
   features: Array<string>;
   constructor(data: FeaturesSearchConfig) {
     if(data) {
       this.searchString = data.searchString;
+      this.adSearchString = data.adSearchString;
       this.location = data.location;
       this.features = data.features;
     }

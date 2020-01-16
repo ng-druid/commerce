@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, AfterViewInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, AfterViewInit, Renderer2, OnChanges, SimpleChanges } from '@angular/core';
 import { AdSearchBarForm } from '../../models/form.models';
-import { FormGroup, FormBuilder, FormArray, CheckboxControlValueAccessor } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { QueryParams } from '@ngrx/data';
 import { FeatureListItemsService } from '../../services/feature-list-items.service';
@@ -14,7 +14,7 @@ import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
   templateUrl: './ad-features-filter.component.html',
   styleUrls: ['./ad-features-filter.component.scss']
 })
-export class AdFeaturesFilterComponent implements OnInit, AfterViewInit {
+export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChildren(MatCheckbox)
   featureCheckboxes: QueryList<MatCheckbox>;
@@ -74,10 +74,23 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if(
+      changes.searchForm.previousValue &&
+      (
+        changes.searchForm.previousValue.searchString !== changes.searchForm.currentValue.searchString ||
+        changes.searchForm.previousValue.location !== changes.searchForm.currentValue.location
+      )
+    ) {
+      const searchString = this.featuresFormGroup.get("searchString").value;
+      this.loadFeatures(searchString);
+    }
+  }
+
   loadFeatures(searchString: string) {
     this.featuresListItemsService.clearCache();
     const location = this.searchForm.location === undefined || this.searchForm.location.length !== 2 ? '' : this.searchForm.location.join(",");
-    const search = new FeaturesSearchConfig({ searchString: searchString, location, features: this.searchForm.features });
+    const search = new FeaturesSearchConfig({ searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString });
     this.featuresListItemsService.getWithQuery(search as Object as QueryParams).subscribe(features => {
       this.features$.next(features);
     });
@@ -89,14 +102,14 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit {
 
   populateFeatures() {
     for(let i = 0; i < this.features.length; i++) {
-      (this.featuresFormGroup.get('features') as FormArray).push(this.fb.control(false))
+      const selected = this.featureSelections.isSelected(this.features[i]);
+      (this.featuresFormGroup.get('features') as FormArray).push(this.fb.control(selected))
     }
   }
 
   clearFeatures() {
     let i = 0;
     while ((this.featuresFormGroup.get('features') as FormArray).length !== 0) {
-      this.featureSelections.deselect(this.features[i]);
       (this.featuresFormGroup.get('features') as FormArray).removeAt(0);
       i++;
     }
