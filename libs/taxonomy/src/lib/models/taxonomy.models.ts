@@ -3,11 +3,13 @@ export class Vocabulary {
   machineName: string;
   humanName: string;
   terms: Array<Term> = [];
+  userId: string;
   constructor(data?: Vocabulary) {
     if(data) {
       this.id = data.id;
       this.machineName = data.machineName;
       this.humanName = data.humanName;
+      this.userId = data.userId;
       if(data.terms) {
         this.terms = data.terms.map(t => new Term(t));
       }
@@ -19,11 +21,13 @@ export class VocabularyListItem {
   id: string;
   machineName: string;
   humanName: string;
-  constructor(data?: Vocabulary) {
+  userId: string;
+  constructor(data?: VocabularyListItem) {
     if(data) {
       this.id = data.id;
       this.machineName = data.machineName;
       this.humanName = data.humanName;
+      this.userId = data.userId;
     }
   }
 }
