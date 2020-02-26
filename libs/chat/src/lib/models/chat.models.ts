@@ -33,9 +33,11 @@ export class ChatMessage {
 
 export class ChatConversation {
   recipientId: string;
+  recipientLabel: string;
   constructor(data?: ChatConversation) {
     if(data) {
       this.recipientId = data.recipientId;
+      this.recipientLabel = data.recipientLabel;
     }
   }
 }
