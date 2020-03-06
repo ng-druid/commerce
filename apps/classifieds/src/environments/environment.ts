@@ -5,7 +5,10 @@
 export const environment = {
   production: false,
   mediaSettings: {
-    endpointUrl: 'https://localhost:44340/media'
+    endpointUrl: 'https://localhost:44340/media',
+    cloudinaryUrl: 'https://api.cloudinary.com/v1_1/dj4vvkgzw',
+    uploadPreset: 'i0hm4opm',
+    imageUrl: 'https://res.cloudinary.com/dj4vvkgzw'
   },
   loggingSettings: {
     endpointUrl: "https://localhost:44340/logging"

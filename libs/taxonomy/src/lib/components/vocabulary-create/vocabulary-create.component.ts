@@ -9,7 +9,7 @@ import { VocabularyService } from '../../services/vocabulary.service';
 })
 export class VocabularyCreateComponent implements OnInit {
 
-  vocabulary: Vocabulary = new Vocabulary({ humanName: '', machineName: '', id: undefined, terms: [] });
+  vocabulary: Vocabulary = new Vocabulary({ humanName: '', machineName: '', id: undefined, terms: [], userId: undefined });
 
   constructor(private vocabularyService: VocabularyService) { }
 

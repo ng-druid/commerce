@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return this.authFacade.token$.pipe(
       take(1),
       concatMap(t => {
-        if (t) {
+        if (t && req.url.indexOf('cloudinary') === -1) {
           const authReq = req.clone({
             headers: req.headers.set('Authorization', t)
           });

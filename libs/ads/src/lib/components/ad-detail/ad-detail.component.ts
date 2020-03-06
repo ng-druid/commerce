@@ -23,7 +23,7 @@ export class AdDetailComponent implements OnInit {
   selectedTabIndex = 0;
   constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private adsService: AdsService, private citiesService: CitiesService) { }
   ngOnInit() {
-    this.mediaBaseUrl = this.mediaSettings.endpointUrl;
+    this.mediaBaseUrl = this.mediaSettings.imageUrl;
     this.route.paramMap.pipe(
       map(p => p.get('adId')),
       filter(adId => typeof(adId) === 'string'),
@@ -43,6 +43,7 @@ export class AdDetailComponent implements OnInit {
       this.ad = new Ad(ad as Ad);
       this.city = city ? `${(city as City).city}, ${(city as City).stateName}`: undefined;
     });
+    // this.displayGalleryTab = true;
     this.mo.asObservable().pipe(
       map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)
     ).subscribe(desktop => {
