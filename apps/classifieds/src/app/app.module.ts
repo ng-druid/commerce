@@ -12,6 +12,7 @@ import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
+import { OktaAuthModule, OktaCallbackComponent } from '@okta/okta-angular';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -30,6 +31,7 @@ import { reducers, metaReducers } from './reducers';
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
+  { path: 'implicit/callback', component: OktaCallbackComponent },
   { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
   { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
   { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
@@ -40,6 +42,14 @@ const routes = [
 const defaultDataServiceConfig: DefaultDataServiceConfig = {
   root: 'https://localhost:44340', // hard coded to taxonomy for now -- api gateway will prevent the need for custom code to change this per entity.
   timeout: 3000, // request timeout
+}
+
+const config = {
+  issuer: 'https://dev-585865.okta.com/oauth2/default',
+  redirectUri: 'http://localhost:4200/implicit/callback',
+  clientId: '0oa33yn39XtrnvY774x6',
+  pkce: true,
+  scopes: ['openid', 'profile', 'ads_api', 'chat', 'taxonomy_api', 'api_gateway']
 }
 
 @NgModule({
@@ -78,7 +88,8 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
     AuthModule,
     MediaModule,
     NxModule.forRoot(),
-    EntityDataModule.forRoot({})
+    EntityDataModule.forRoot({}),
+    OktaAuthModule.initAuth(config)
   ],
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },

@@ -52,6 +52,7 @@
     "@ngrx/store": "^8.5.0",
     "@ngrx/store-devtools": "^8.5.0",
     "@nrwl/angular": "^8.7.0",
+    "@okta/okta-angular": "^1.4.0",
     "bson": "^4.0.2",
     "core-js": "^2.5.4",
     "eva-icons": "^1.1.2",

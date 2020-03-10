@@ -2,10 +2,10 @@
     <span class="brand">Classifieds</span>
     <button mat-button (click)="home()">home</button>
     <button mat-button (click)="browseAds()">browse ads</button>
-    <button mat-button *ngIf="(user$ | async) as u" (click)="chat()">conversations</button>
-    <button mat-button *ngIf="(user$ | async) as u" (click)="vocabularies()">vocabularies</button>
+    <button mat-button *ngIf="isAuthenticated" (click)="chat()">conversations</button>
+    <button mat-button *ngIf="isAuthenticated" (click)="vocabularies()">vocabularies</button>
     <span class="spacer"></span>
-    <button mat-button *ngIf="!(user$ | async) as u">register</button>
-    <button mat-raised-button color="accent" *ngIf="!(user$ | async) as u" (click)="login()">login</button>
-    <button mat-raised-button color="accent" *ngIf="(user$ | async) as u" (click)="createAd()">create ad</button>
+    <button mat-button *ngIf="!isAuthenticated">register</button>
+    <button mat-raised-button color="accent" *ngIf="!isAuthenticated" (click)="login()">login</button>
+    <button mat-raised-button color="accent" *ngIf="isAuthenticated" (click)="createAd()">create ad</button>
 </mat-toolbar>
