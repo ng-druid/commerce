@@ -5,6 +5,7 @@ import { LogService } from '@classifieds-ui/logging';
 import { Observable } from 'rxjs';
 import { tap, take, map, switchMap } from 'rxjs/operators';
 import * as signalR from "@aspnet/signalr";
+import { OktaAuthService } from '@okta/okta-angular';
 
 import { ChatSettings, ChatMessage, ChatConversation } from '../models/chat.models';
 
@@ -20,14 +21,15 @@ export class ChatService {
   private hubConnection: signalR.HubConnection;
   private conversations = new Map<string, BehaviorSubject<Array<ChatMessage>>>();
 
-  constructor(@Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade) {
+  constructor(@Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade, private oktaAuth: OktaAuthService) {
     setTimeout(() => this.initializeConnection(), 1);
   }
 
   private initializeConnection(): void {
     this.hubConnection = new signalR.HubConnectionBuilder()
     .withUrl(`${this.chatSettings.endpointUrl}/chat`, {
-      accessTokenFactory: (): Promise<string> => this.authFacade.getUser$.pipe(take(1), map(u => `${u.access_token}` )).toPromise(),
+      // accessTokenFactory: (): Promise<string> => this.authFacade.getUser$.pipe(take(1), map(u => `${u.access_token}` )).toPromise(),
+      accessTokenFactory: (): Promise<string> => this.oktaAuth.getAccessToken(),
       transport: signalR.HttpTransportType.WebSockets,
       skipNegotiation: true
     })
