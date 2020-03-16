@@ -28,7 +28,7 @@ export class AdDetailComponent implements OnInit {
       map(p => p.get('adId')),
       filter(adId => typeof(adId) === 'string'),
       tap(() => this.displayOverlay = true),
-      switchMap(adId => this.adsService.getByKey(adId).pipe(
+      switchMap(adId => this.adsService.getByKey(adId), /*.pipe(
         switchMap(ad =>
           ad.location && ad.location.length === 2 ?
           this.citiesService.getWithQuery({ lat: `${ad.location[1]}`, lng: `${ad.location[0]}`}).pipe(
@@ -36,12 +36,12 @@ export class AdDetailComponent implements OnInit {
             map(city => [ad, city])
           ) : of([ad])
         )
-      ))
-    ).subscribe(([ad, city]) => {
+      )*/)
+    ).subscribe(ad => {
       this.displayOverlay = false;
       this.selectedTabIndex = 0;
       this.ad = new Ad(ad as Ad);
-      this.city = city ? `${(city as City).city}, ${(city as City).stateName}`: undefined;
+      this.city = ad.cityDisplay;
     });
     // this.displayGalleryTab = true;
     this.mo.asObservable().pipe(

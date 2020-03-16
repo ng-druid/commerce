@@ -35,6 +35,7 @@ export class Ad {
   title: string;
   description: string;
   location: Array<number>;
+  cityDisplay: string;
   images: Array<AdImage> = [];
   featureSets: Array<Vocabulary> = [];
   constructor(data?: Ad) {
@@ -43,6 +44,7 @@ export class Ad {
       this.title = data.title;
       this.description = data.description;
       this.location = data.location;
+      this.cityDisplay = data.cityDisplay;
       if(data.images) {
         this.images = data.images.map(i => new AdImage(i));
       }

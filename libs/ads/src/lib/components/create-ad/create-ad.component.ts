@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NEVER, Subject } from 'rxjs';
 import { catchError, switchMap, tap, debounceTime, finalize, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
-import { CityListItemsService, CityListItem } from '@classifieds-ui/cities';
+import { CityListItemsService, CityListItem, ZippoService } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
 
@@ -38,7 +38,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService) { }
+  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService) { }
 
   ngOnInit() {
     this.detailsFormGroup = this.fb.group({
@@ -52,7 +52,14 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.cities = [];
         this.isLoadingCities = true;
       }),
-      switchMap(value => this.cityListItemsService.getWithQuery({ searchString: value })
+      /*switchMap(value => this.cityListItemsService.getWithQuery({ searchString: value })
+        .pipe(
+          finalize(() => {
+            this.isLoadingCities = false
+          }),
+        )
+      ),*/
+      switchMap(value => this.zippoService.getWithQuery({ searchString: value })
         .pipe(
           finalize(() => {
             this.isLoadingCities = false
@@ -92,6 +99,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.location = city ? city.location : [];
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
         this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
+        this.ad.cityDisplay = `${city.city}, ${city.stateName}`
       }),
       switchMap(f => {
         return this.adsService.upsert(new Ad(this.ad));

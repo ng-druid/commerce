@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, OnInit, OnDestroy, Input } from '@angu
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subject, } from 'rxjs';
 import { debounceTime, tap, switchMap, takeUntil, finalize, filter } from 'rxjs/operators';
-import { CityListItem , CityListItemsService } from '@classifieds-ui/cities';
+import { CityListItem , CityListItemsService, ZippoService } from '@classifieds-ui/cities';
 
 import { AdSearchBarForm } from '../../models/form.models';
 
@@ -26,7 +26,7 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
 
   private componentDestroyed = new Subject();
 
-  constructor(private fb: FormBuilder, private citiesListService: CityListItemsService) { }
+  constructor(private fb: FormBuilder, private citiesListService: CityListItemsService, private zippoService: ZippoService) { }
 
   ngOnInit() {
     this.searchFormGroup = this.fb.group({
@@ -52,7 +52,14 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
         this.isLoadingCities = true;
         console.log(`value: "${value}"`);
       }),
-      switchMap(value => this.citiesListService.getWithQuery({ searchString: value })
+      /*switchMap(value => this.citiesListService.getWithQuery({ searchString: value })
+        .pipe(
+          finalize(() => {
+            this.isLoadingCities = false
+          }),
+        )
+      ),*/
+      switchMap(value => this.zippoService.getWithQuery({ searchString: value })
         .pipe(
           finalize(() => {
             this.isLoadingCities = false
