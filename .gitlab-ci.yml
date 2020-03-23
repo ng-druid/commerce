@@ -8,9 +8,10 @@ pages:
   stage: deploy
   script:
   - npm install -g @angular/cli@8.3.6
+  - npm install -g @nrwl/cli
   - npm install
-  - ng build
-  - mv dist/classifieds/* public/
+  - nx build classifieds --prod
+  - mv dist/apps/classifieds/* public/
   artifacts:
     paths:
     - public
