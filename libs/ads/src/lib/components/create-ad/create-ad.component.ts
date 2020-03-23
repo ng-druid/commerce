@@ -12,7 +12,7 @@ import { MatHorizontalStepper } from '@angular/material/stepper';
 import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
 
 import { AdsService } from '../../services/ads.service';
-import { AdImage, Ad } from '../../models/ads.models';
+import { AdImage, Ad, AdTypes, AdStatuses } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-create-ad',
@@ -94,11 +94,14 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       }),
       tap((files: Array<MediaFile>) => {
         const city = this.detailsFormGroup.get('location').value
+        this.ad.adType = AdTypes.General;
+        this.ad.status = AdStatuses.Submitted;
         this.ad.title = this.detailsFormGroup.get('title').value;
         this.ad.description = this.detailsFormGroup.get('description').value;
         this.ad.location = city ? city.location : [];
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
         this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
+        this.ad.attributes = [];
         this.ad.cityDisplay = `${city.city}, ${city.stateName}`
       }),
       switchMap(f => {

@@ -9,5 +9,8 @@ export const entityMetadata: EntityMetadataMap = {
   },
   FeatureListItem: {
     entityName: 'FeatureListItem'
+  },
+  AdType: {
+    entityName: 'AdType'
   }
 };

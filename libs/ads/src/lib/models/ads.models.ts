@@ -1,5 +1,26 @@
 import { Vocabulary } from '@classifieds-ui/taxonomy';
 
+export enum AdTypes {
+  General,
+  RealEstate,
+  Rental,
+  Auto,
+  Job
+}
+
+export enum AdStatuses {
+  Submitted,
+  Approved,
+  Rejected,
+  Expired,
+  Deleted
+}
+
+export enum AdAttributeTypes {
+  Number,
+  Text
+}
+
 export class SearchConfig {
   searchString: string;
   location: string;
@@ -11,6 +32,19 @@ export class SearchConfig {
       this.location = data.location;
       this.features = data.features;
       this.page = data.page;
+    }
+  }
+}
+
+export class AdAttributeValue {
+  name: string;
+  type: AdAttributeTypes;
+  value: string;
+  constructor(data?: AdAttributeValue) {
+    if (data) {
+      this.name = data.name;
+      this.type = data.type;
+      this.value = data.value;
     }
   }
 }
@@ -33,14 +67,19 @@ export class FeaturesSearchConfig {
 export class Ad {
   id: string;
   title: string;
+  adType: AdTypes;
+  status: AdStatuses;
   description: string;
   location: Array<number>;
   cityDisplay: string;
   images: Array<AdImage> = [];
   featureSets: Array<Vocabulary> = [];
+  attributes: Array<AdAttributeValue> = [];
   constructor(data?: Ad) {
     if (data) {
       this.id = data.id;
+      this.adType = data.adType;
+      this.status = data.status;
       this.title = data.title;
       this.description = data.description;
       this.location = data.location;
@@ -50,6 +89,9 @@ export class Ad {
       }
       if(data.featureSets) {
         this.featureSets = data.featureSets.map(v => new Vocabulary(v));
+      }
+      if(data.attributes) {
+        this.attributes = data.attributes.map(v => new AdAttributeValue(v));
       }
     }
   }
