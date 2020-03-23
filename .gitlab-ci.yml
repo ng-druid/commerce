@@ -1,0 +1,20 @@
+image: node:10.16.3
+
+pages:
+  cache:
+    paths:
+    - node_modules/
+
+  stage: deploy
+  script:
+  - npm install -g @angular/cli@8.3.6
+  - npm install -g @nrwl/cli
+  - npm install
+  - nx build classifieds --prod
+  - mv dist/apps/classifieds/* public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+  - pages
