@@ -16,7 +16,7 @@ export const reducers: ActionReducerMap<AppState> = {
 };
 
 // @todo: I would like to put this inside auth.
-export const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> => {
+export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({keys: ['auth'], rehydrate: true })(reducer);
 }
 
