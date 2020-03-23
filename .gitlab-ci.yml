@@ -11,6 +11,7 @@ pages:
   - npm install -g @nrwl/cli
   - npm install
   - nx build classifieds
+  - mkdir public
   - mv dist/apps/classifieds/* public/
   artifacts:
     paths:
