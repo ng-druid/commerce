@@ -8,9 +8,9 @@ pages:
   stage: deploy
   script:
   - npm install -g @angular/cli@8.3.6
-  - npm install -g @nrwl/cli
   - npm install
-  - nx build classifieds --prod
+  - ng build classifieds --baseHref="https://smeskey.gitlab.io/classifieds-ui" --deployUrl="https://smeskey.gitlab.io/classifieds-ui/"
+  - mkdir public
   - mv dist/apps/classifieds/* public/
   artifacts:
     paths:
