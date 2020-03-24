@@ -41,7 +41,7 @@ const routes = [
 // @todo: just get this to work for now deal with actual endpoints later.
 const defaultDataServiceConfig: DefaultDataServiceConfig = {
   // root: 'https://localhost:44340', // hard coded to taxonomy for now -- api gateway will prevent the need for custom code to change this per entity.
-  root: 'http://classifieds-dev.azurewebsites.net',
+  root: 'https://classifieds-dev.azurewebsites.net',
   timeout: 3000, // request timeout
 }
 

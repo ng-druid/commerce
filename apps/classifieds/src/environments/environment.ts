@@ -14,7 +14,7 @@ export const environment = {
     endpointUrl: "https://localhost:44340/logging"
   },
   chatSettings: {
-    endpointUrl: "http://classifieds-dev.azurewebsites.net/chat"
+    endpointUrl: "https://classifieds-dev.azurewebsites.net/chat"
   },
   clientSettings: {
     authority: 'https://localhost:44392',
