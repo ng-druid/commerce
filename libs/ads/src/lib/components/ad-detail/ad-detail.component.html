@@ -1,5 +1,10 @@
 <div *ngIf="ad" fxLayout="column" fxFill>
   <h1>{{ ad.title }}</h1>
+  <ul class="attributes" *ngIf="ad.attributes && ad.attributes.length > 0">
+    <li *ngFor="let attribute of ad.attributes">
+      {{ attribute.name }}: {{ attribute.value ? attribute.value : 'N/A' }}
+    </li>
+  </ul>
   <p *ngIf="city">{{ city }}</p>
   <mat-tab-group [(selectedIndex)]="selectedTabIndex" [dynamicHeight]="true">
     <mat-tab label="Detail">
