@@ -41,12 +41,16 @@ export class AdTypeAttribute {
   type: AdTypes;
   label: string;
   required: boolean;
+  attributes: Array<AdTypeAttribute> = [];
   constructor(data?: AdTypeAttribute) {
     if (data) {
       this.name = data.name;
       this.type = data.type;
       this.label = data.label;
       this.required = data.required;
+      if (data.attributes) {
+        this.attributes = data.attributes.map(a => new AdTypeAttribute(a));
+      }
     }
   }
 }
@@ -71,12 +75,16 @@ export class AdAttributeValue {
   displayName: string;
   type: AdAttributeTypes;
   value: string;
+  attributes: Array<AdAttributeValue> = [];
   constructor(data?: AdAttributeValue) {
     if (data) {
       this.name = data.name;
       this.displayName = data.displayName;
       this.type = data.type;
       this.value = data.value;
+      if (data.attributes) {
+        this.attributes = data.attributes.map(a => new AdAttributeValue(a));
+      }
     }
   }
 }
