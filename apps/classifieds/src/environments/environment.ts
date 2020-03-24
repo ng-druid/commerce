@@ -4,6 +4,9 @@
 
 export const environment = {
   production: false,
+  apiGatewaySettings: {
+    endpointUrl: 'https://localhost:44340',
+  },
   mediaSettings: {
     endpointUrl: 'https://localhost:44340/media',
     cloudinaryUrl: 'https://api.cloudinary.com/v1_1/dj4vvkgzw',
@@ -14,7 +17,7 @@ export const environment = {
     endpointUrl: "https://localhost:44340/logging"
   },
   chatSettings: {
-    endpointUrl: "https://classifieds-dev.azurewebsites.net/chat"
+    endpointUrl: "https://localhost:44340/chat"
   },
   oktaSettings: {
     redirectUri: 'http://localhost:4200/implicit/callback',

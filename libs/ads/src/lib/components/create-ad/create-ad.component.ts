@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,7 +12,8 @@ import { MatHorizontalStepper } from '@angular/material/stepper';
 import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
 
 import { AdsService } from '../../services/ads.service';
-import { AdImage, Ad, AdTypes, AdStatuses } from '../../models/ads.models';
+import { AdTypesService } from '../../services/ad-types.service';
+import { AdImage, Ad, AdTypes, AdStatuses, AdType } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-create-ad',
@@ -23,6 +24,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   files: Array<File> = [];
   cities: Array<CityListItem> = [];
+  adTypes: Array<AdType> = [];
   ad: Ad = new Ad();
 
   isLoadingCities = false;
@@ -31,20 +33,37 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   featuresSheetData: { selectedId: string; } = { selectedId: undefined };
   featureSets: Array<Vocabulary> = [];
 
+  adTypeFormGroup: FormGroup;
   detailsFormGroup: FormGroup;
+  attributesFormGroup: FormGroup;
 
   private componentDestroyed = new Subject();
 
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
 
-  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService) { }
+  get attributes(): FormArray {
+    return this.attributesFormGroup.get('attributes') as FormArray;
+  }
+
+  get adType(): AdType {
+    return this.adTypes[this.adTypeFormGroup.get('adType').value];
+  }
+
+  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adTypesService: AdTypesService) { }
 
   ngOnInit() {
+    this.adTypesService.getAll().subscribe(adTypes => this.adTypes = adTypes);
+    this.adTypeFormGroup = this.fb.group({
+      adType: ['', Validators.required]
+    });
     this.detailsFormGroup = this.fb.group({
       title: ['', Validators.required],
       location: ['', Validators.required],
       description: ['', Validators.required]
+    });
+    this.attributesFormGroup = this.fb.group({
+      attributes: this.fb.array([])
     });
     this.detailsFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),
@@ -71,6 +90,23 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     .subscribe((cities: Array<CityListItem>) => {
       this.cities = cities;
     });
+    this.adTypeFormGroup.get('adType').valueChanges.pipe(
+      map(v => this.adTypes[v]),
+      tap(() => {
+        while (this.attributes.length !== 0) {
+          this.attributes.removeAt(0)
+        }
+      }),
+      takeUntil(this.componentDestroyed)
+    ).subscribe(adType => {
+      adType.attributes.forEach(attr => {
+        this.attributes.push(this.fb.group({
+          name: [attr.name, Validators.required],
+          type: [attr.type, Validators.required],
+          value: ['']
+        }));
+      });
+    });
     this.mo.asObservable().pipe(
       map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1),
       distinctUntilChanged(),
@@ -94,14 +130,14 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       }),
       tap((files: Array<MediaFile>) => {
         const city = this.detailsFormGroup.get('location').value
-        this.ad.adType = AdTypes.General;
+        this.ad.adType = this.adTypes[this.adTypeFormGroup.get('adType').value].id;
         this.ad.status = AdStatuses.Submitted;
         this.ad.title = this.detailsFormGroup.get('title').value;
         this.ad.description = this.detailsFormGroup.get('description').value;
         this.ad.location = city ? city.location : [];
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
         this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
-        this.ad.attributes = [];
+        this.ad.attributes = this.attributesFormGroup.get('attributes').value;
         this.ad.cityDisplay = `${city.city}, ${city.stateName}`
       }),
       switchMap(f => {

@@ -4,6 +4,9 @@
 
 export const environment = {
   production: true,
+  apiGatewaySettings: {
+    endpointUrl: 'https://localhost:44340',
+  },
   mediaSettings: {
     endpointUrl: 'https://localhost:44340/media',
     cloudinaryUrl: 'https://api.cloudinary.com/v1_1/dj4vvkgzw',

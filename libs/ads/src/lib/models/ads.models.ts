@@ -36,6 +36,36 @@ export class SearchConfig {
   }
 }
 
+export class AdTypeAttribute {
+  name: string;
+  type: AdTypes;
+  label: string;
+  required: boolean;
+  constructor(data?: AdTypeAttribute) {
+    if (data) {
+      this.name = data.name;
+      this.type = data.type;
+      this.label = data.label;
+      this.required = data.required;
+    }
+  }
+}
+
+export class AdType {
+  id: AdTypes;
+  name: string;
+  attributes: Array<AdTypeAttribute> = [];
+  constructor(data?: AdType) {
+    if (data) {
+      this.id = data.id;
+      this.name = data.name;
+      if (data.attributes) {
+        this.attributes = data.attributes.map(a => new AdTypeAttribute(a));
+      }
+    }
+  }
+}
+
 export class AdAttributeValue {
   name: string;
   type: AdAttributeTypes;
