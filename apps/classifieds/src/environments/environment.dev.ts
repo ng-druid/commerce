@@ -17,8 +17,8 @@ export const environment = {
     endpointUrl: "https://classifieds-dev.azurewebsites.net/chat"
   },
   oktaSettings: {
-    redirectUri: 'http://localhost:4200/implicit/callback',
-    clientId: '0oa33yn39XtrnvY774x6',
+    redirectUri: 'https://smeskey.gitlab.io/classifieds-ui/implicit/callback',
+    clientId: '0oa4qw6inqps2eUgC4x6',
   },
   clientSettings: {
     authority: 'https://localhost:44392',
