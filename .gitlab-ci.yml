@@ -9,7 +9,7 @@ pages:
   script:
   - npm install -g @angular/cli@8.3.6
   - npm install
-  - ng build classifieds --configuration="dev" --baseHref="/classifieds-ui" --deployUrl="/classifieds-ui/"
+  - ng build classifieds --configuration="dev"
   - mkdir public
   - mv dist/apps/classifieds/* public/
   artifacts:
