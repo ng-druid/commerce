@@ -9,7 +9,7 @@ pages:
   script:
   - npm install -g @angular/cli@8.3.6
   - npm install
-  - ng build classifieds --baseHref="https://smeskey.gitlab.io/classifieds-ui"
+  - ng build classifieds --baseHref="https://smeskey.gitlab.io/classifieds-ui" --deployUrl="https://smeskey.gitlab.io/classifieds-ui"
   - mkdir public
   - mv dist/apps/classifieds/* public/
   artifacts:
