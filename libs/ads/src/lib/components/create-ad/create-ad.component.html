@@ -26,7 +26,7 @@
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity">
                 <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
                 <ng-container *ngIf="!isLoadingCities">
-                  <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }}</mat-option>
+                  <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }} ({{ city.zip }})</mat-option>
                 </ng-container>
               </mat-autocomplete>
           </mat-form-field>

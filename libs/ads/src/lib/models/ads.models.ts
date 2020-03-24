@@ -68,11 +68,13 @@ export class AdType {
 
 export class AdAttributeValue {
   name: string;
+  displayName: string;
   type: AdAttributeTypes;
   value: string;
   constructor(data?: AdAttributeValue) {
     if (data) {
       this.name = data.name;
+      this.displayName = data.displayName;
       this.type = data.type;
       this.value = data.value;
     }

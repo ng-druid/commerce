@@ -103,6 +103,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.attributes.push(this.fb.group({
           name: [attr.name, Validators.required],
           type: [attr.type, Validators.required],
+          displayName: [attr.label, Validators.required],
           value: ['']
         }));
       });
@@ -170,7 +171,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   }
 
   displayCity(city?: CityListItem): string | undefined {
-    return city ? `${city.city}, ${city.stateId}` : undefined;
+    return city ? `${city.city}, ${city.stateId} (${city.zip})` : undefined;
   }
 
 }

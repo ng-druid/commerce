@@ -14,6 +14,7 @@ export class City {
   stateName: string;
   countyName: string;
   population: number;
+  zip: string;
   location: Array<number>;
   constructor(data?: City) {
     if (data) {
@@ -23,6 +24,7 @@ export class City {
       this.stateName = data.stateName;
       this.countyName = data.countyName;
       this.population = data.population;
+      this.zip = data.zip;
       this.location = data.location;
     }
   }

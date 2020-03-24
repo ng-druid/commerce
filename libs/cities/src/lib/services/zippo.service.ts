@@ -29,6 +29,7 @@ export class ZippoService {
         stateName: res['state'],
         countyName: res['country'],
         population: 0,
+        zip: p['post code'],
         location: [parseFloat(p.longitude), parseFloat(p.latitude)]
       })))
     );
