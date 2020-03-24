@@ -1,0 +1,12 @@
+<ng-container [formGroup]="attributesForm">
+  <div formArrayName="attributes">
+    <div *ngFor="let attribute of attributesArray.controls; let i=index" [formGroupName]="i">
+      <mat-form-field>
+        <input matInput [placeholder]="attributes[i].label" formControlName="value">
+      </mat-form-field>
+    </div>
+  </div>
+</ng-container>
+<div *ngIf="attributes.length == 0">
+  <p>No attributes available for ad type. Click next to continue.</p>
+</div>

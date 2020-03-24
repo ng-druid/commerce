@@ -1,4 +1,5 @@
 import { Vocabulary } from '@classifieds-ui/taxonomy';
+import { Attribute, AttributeValue } from '@classifieds-ui/attributes';
 
 export enum AdTypes {
   General,
@@ -16,11 +17,6 @@ export enum AdStatuses {
   Deleted
 }
 
-export enum AdAttributeTypes {
-  Number,
-  Text
-}
-
 export class SearchConfig {
   searchString: string;
   location: string;
@@ -36,54 +32,16 @@ export class SearchConfig {
   }
 }
 
-export class AdTypeAttribute {
-  name: string;
-  type: AdTypes;
-  label: string;
-  required: boolean;
-  attributes: Array<AdTypeAttribute> = [];
-  constructor(data?: AdTypeAttribute) {
-    if (data) {
-      this.name = data.name;
-      this.type = data.type;
-      this.label = data.label;
-      this.required = data.required;
-      if (data.attributes) {
-        this.attributes = data.attributes.map(a => new AdTypeAttribute(a));
-      }
-    }
-  }
-}
-
 export class AdType {
   id: AdTypes;
   name: string;
-  attributes: Array<AdTypeAttribute> = [];
+  attributes: Array<Attribute> = [];
   constructor(data?: AdType) {
     if (data) {
       this.id = data.id;
       this.name = data.name;
       if (data.attributes) {
-        this.attributes = data.attributes.map(a => new AdTypeAttribute(a));
-      }
-    }
-  }
-}
-
-export class AdAttributeValue {
-  name: string;
-  displayName: string;
-  type: AdAttributeTypes;
-  value: string;
-  attributes: Array<AdAttributeValue> = [];
-  constructor(data?: AdAttributeValue) {
-    if (data) {
-      this.name = data.name;
-      this.displayName = data.displayName;
-      this.type = data.type;
-      this.value = data.value;
-      if (data.attributes) {
-        this.attributes = data.attributes.map(a => new AdAttributeValue(a));
+        this.attributes = data.attributes.map(a => new Attribute(a));
       }
     }
   }
@@ -114,7 +72,7 @@ export class Ad {
   cityDisplay: string;
   images: Array<AdImage> = [];
   featureSets: Array<Vocabulary> = [];
-  attributes: Array<AdAttributeValue> = [];
+  attributes: Array<AttributeValue> = [];
   constructor(data?: Ad) {
     if (data) {
       this.id = data.id;
@@ -131,7 +89,7 @@ export class Ad {
         this.featureSets = data.featureSets.map(v => new Vocabulary(v));
       }
       if(data.attributes) {
-        this.attributes = data.attributes.map(v => new AdAttributeValue(v));
+        this.attributes = data.attributes.map(v => new AttributeValue(v));
       }
     }
   }

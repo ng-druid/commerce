@@ -44,16 +44,7 @@
     <mat-step [stepControl]="attributesFormGroup">
       <form [formGroup]="attributesFormGroup">
         <ng-template matStepLabel>Attributes</ng-template>
-        <div formArrayName="attributes">
-          <div *ngFor="let attribute of attributes.controls; let i=index" [formGroupName]="i">
-            <mat-form-field>
-              <input matInput [placeholder]="adType.attributes[i].label" formControlName="value">
-            </mat-form-field>
-          </div>
-        </div>
-        <div *ngIf="attributes.length == 0 && adType">
-          <p>No attributes available for {{ adType.name }} ad. Click next to continue.</p>
-        </div>
+        <classifieds-ui-attributes-builder formControlName="attributes" [attributes]="attributes"></classifieds-ui-attributes-builder>
         <div>
           <button mat-raised-button color="primary" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" matStepperNext [disabled]="!attributesFormGroup.valid">Next</button>

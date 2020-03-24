@@ -33,7 +33,11 @@
               "apps/classifieds/src/theme.scss"
             ],
             "scripts": [
-              { "input": "node_modules/oidc-client/dist/oidc-client.min.js", "inject": false, "bundleName": "oidc-client" }
+              {
+                "input": "node_modules/oidc-client/dist/oidc-client.min.js",
+                "inject": false,
+                "bundleName": "oidc-client"
+              }
             ]
           },
           "configurations": {
@@ -432,6 +436,37 @@
             "jestConfig": "libs/vocabulary/jest.config.js",
             "tsConfig": "libs/vocabulary/tsconfig.spec.json",
             "setupFile": "libs/vocabulary/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "attributes": {
+      "projectType": "library",
+      "root": "libs/attributes",
+      "sourceRoot": "libs/attributes/src",
+      "prefix": "classifieds-ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/attributes/tsconfig.lib.json",
+              "libs/attributes/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/attributes/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/attributes/jest.config.js",
+            "tsConfig": "libs/attributes/tsconfig.spec.json",
+            "setupFile": "libs/attributes/src/test-setup.ts"
           }
         }
       },

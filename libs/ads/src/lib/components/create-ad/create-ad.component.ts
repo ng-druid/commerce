@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,10 +10,11 @@ import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CityListItemsService, CityListItem, ZippoService } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
+import { Attribute } from '@classifieds-ui/attributes';
 
 import { AdsService } from '../../services/ads.service';
 import { AdTypesService } from '../../services/ad-types.service';
-import { AdImage, Ad, AdTypes, AdStatuses, AdType } from '../../models/ads.models';
+import { AdImage, Ad, AdStatuses, AdType } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-create-ad',
@@ -25,6 +26,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   files: Array<File> = [];
   cities: Array<CityListItem> = [];
   adTypes: Array<AdType> = [];
+  attributes: Array<Attribute> = [];
   ad: Ad = new Ad();
 
   isLoadingCities = false;
@@ -41,10 +43,6 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatHorizontalStepper, { static: true })
   stepper: MatHorizontalStepper;
-
-  get attributes(): FormArray {
-    return this.attributesFormGroup.get('attributes') as FormArray;
-  }
 
   get adType(): AdType {
     return this.adTypes[this.adTypeFormGroup.get('adType').value];
@@ -63,7 +61,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       description: ['', Validators.required]
     });
     this.attributesFormGroup = this.fb.group({
-      attributes: this.fb.array([])
+      attributes: new FormControl('')
     });
     this.detailsFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),
@@ -92,21 +90,22 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     });
     this.adTypeFormGroup.get('adType').valueChanges.pipe(
       map(v => this.adTypes[v]),
-      tap(() => {
+      /*tap(() => {
         while (this.attributes.length !== 0) {
           this.attributes.removeAt(0)
         }
-      }),
+      }),*/
       takeUntil(this.componentDestroyed)
     ).subscribe(adType => {
-      adType.attributes.forEach(attr => {
+      this.attributes = adType.attributes.map(a => new Attribute(a));
+      /*adType.attributes.forEach(attr => {
         this.attributes.push(this.fb.group({
           name: [attr.name, Validators.required],
           type: [attr.type, Validators.required],
           displayName: [attr.label, Validators.required],
           value: ['']
         }));
-      });
+      });*/
     });
     this.mo.asObservable().pipe(
       map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1),
