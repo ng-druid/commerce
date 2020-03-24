@@ -47,8 +47,8 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
 
 const config = {
   issuer: 'https://dev-585865.okta.com/oauth2/default',
-  redirectUri: 'http://localhost:4200/implicit/callback',
-  clientId: '0oa33yn39XtrnvY774x6',
+  redirectUri: environment.oktaSettings.redirectUri,
+  clientId: environment.oktaSettings.clientId,
   pkce: true,
   scopes: ['openid', 'profile', 'ads_api', 'chat', 'taxonomy_api', 'api_gateway']
 }

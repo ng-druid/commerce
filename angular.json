@@ -65,6 +65,14 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/classifieds/src/environments/environment.ts",
+                  "with": "apps/classifieds/src/environments/environment.dev.ts"
+                }
+              ]
             }
           }
         },
@@ -76,6 +84,9 @@
           "configurations": {
             "production": {
               "browserTarget": "classifieds:build:production"
+            },
+            "dev": {
+              "browserTarget": "classifieds:build:dev"
             }
           }
         },

@@ -16,6 +16,10 @@ export const environment = {
   chatSettings: {
     endpointUrl: "http://classifieds-dev.azurewebsites.net/chat"
   },
+  oktaSettings: {
+    redirectUri: 'http://localhost:4200/implicit/callback',
+    clientId: '0oa33yn39XtrnvY774x6',
+  },
   clientSettings: {
     authority: 'https://localhost:44392',
     client_id: 'classifieds_spa',
