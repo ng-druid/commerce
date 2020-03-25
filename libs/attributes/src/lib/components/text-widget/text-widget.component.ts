@@ -1,6 +1,6 @@
 
 import { Component, Input, forwardRef } from '@angular/core';
-import { ControlValueAccessor,NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup,FormControl, Validator, AbstractControl, ValidationErrors } from "@angular/forms";
+import { ControlValueAccessor,NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors, ControlContainer } from "@angular/forms";
 import { Attribute, AttributeWidget } from '../../models/attributes.models';
 
 @Component({
@@ -25,22 +25,18 @@ export class TextWidgetComponent implements ControlValueAccessor, Validator {
   @Input()
   attribute: Attribute;
 
-  valueForm = new FormGroup({
-    value: new FormControl('')
-  });
-
-  constructor() { }
+  constructor(public controlContainer: ControlContainer) { }
 
   public onTouched: () => void = () => {};
 
   writeValue(val: any): void {
     if (val) {
-      this.valueForm.setValue(val, { emitEvent: false });
+      this.controlContainer.control.setValue(val, { emitEvent: false });
     }
   }
 
   registerOnChange(fn: any): void {
-    this.valueForm.valueChanges.subscribe(fn);
+    this.controlContainer.control.valueChanges.subscribe(fn);
   }
 
   registerOnTouched(fn: any): void {
@@ -49,14 +45,14 @@ export class TextWidgetComponent implements ControlValueAccessor, Validator {
 
   setDisabledState?(isDisabled: boolean): void {
     if (isDisabled) {
-      this.valueForm.disable()
+      this.controlContainer.control.disable()
     } else {
-      this.valueForm.enable()
+      this.controlContainer.control.enable()
     }
   }
 
   validate(c: AbstractControl): ValidationErrors | null{
-    return this.valueForm.valid ? null : { invalidForm: {valid: false, message: `${this.attribute.label} is invalid` } };
+    return this.controlContainer.control.valid ? null : { invalidForm: {valid: false, message: `${this.attribute.label} is invalid` } };
   }
 
 }

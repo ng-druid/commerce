@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver, forwardRef, SkipSelf } from '@angular/core';
-import { ControlValueAccessor,NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup,FormControl, Validator, Validators, AbstractControl, ValidationErrors, ControlContainer } from "@angular/forms";
+import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver, forwardRef } from '@angular/core';
+import { ControlValueAccessor,NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors, ControlContainer } from "@angular/forms";
 import { AttributeWidget, Attribute } from '../../models/attributes.models';
 import { AttributeWidgetDirective } from '../../directives/attribute-widget.directive';
 
@@ -32,7 +32,7 @@ export class AttributeWidgetComponent implements OnInit, ControlValueAccessor, V
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver, public controlContainer: ControlContainer) { }
 
-  public onTouched: () => void = () => {};
+  // public onTouched: () => void = () => {};
 
   ngOnInit() {
 
@@ -46,29 +46,30 @@ export class AttributeWidgetComponent implements OnInit, ControlValueAccessor, V
   }
 
   writeValue(val: any): void {
-    if (val) {
+    /*if (val) {
       this.controlContainer.control.setValue(val, { emitEvent: false });
-    }
+    }*/
   }
 
   registerOnChange(fn: any): void {
-    this.controlContainer.control.valueChanges.subscribe(fn);
+    // this.controlContainer.control.valueChanges.subscribe(fn);
   }
 
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    // this.onTouched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    if (isDisabled) {
+    /*if (isDisabled) {
       this.controlContainer.control.disable()
     } else {
       this.controlContainer.control.enable()
-    }
+    }*/
   }
 
   validate(c: AbstractControl): ValidationErrors | null {
-    return this.controlContainer.control.valid ? null : { invalidForm: {valid: false, message: `${this.attribute.label} is invalid`}};
+    return null;
+    // return this.controlContainer.control.valid ? null : { invalidForm: {valid: false, message: `${this.attribute.label} is invalid`}};
   }
 
 }
