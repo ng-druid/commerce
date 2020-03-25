@@ -7,7 +7,7 @@ export class CorrelationInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
 
-    if(req.url.indexOf('cloudinary') === -1) {
+    if(req.url.indexOf('cloudinary') === -1 && req.url.indexOf('carquery') === -1) {
       const newReq = req.clone({
         headers: req.headers.set('X-Correlation-ID', uuid.v4())
       });

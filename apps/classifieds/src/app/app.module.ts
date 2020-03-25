@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NxModule } from '@nrwl/angular';
@@ -60,6 +60,7 @@ const config = {
     BrowserModule,
     CommonModule,
     HttpClientModule,
+    HttpClientJsonpModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
