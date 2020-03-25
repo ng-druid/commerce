@@ -1,5 +1,5 @@
-import { Component, Input, forwardRef } from '@angular/core';
-import { ControlValueAccessor,NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors, ControlContainer, FormGroup, FormControl, FormArray, Validators } from "@angular/forms";
+import { Component, Input } from '@angular/core';
+import { ControlContainer, FormArray } from "@angular/forms";
 import { Attribute } from '@classifieds-ui/attributes';
 
 @Component({
