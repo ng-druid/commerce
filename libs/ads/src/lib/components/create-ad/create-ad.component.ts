@@ -5,12 +5,13 @@ import { MediaObserver } from '@angular/flex-layout';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NEVER, Subject } from 'rxjs';
-import { catchError, switchMap, tap, debounceTime, finalize, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, switchMap, tap, debounceTime, finalize, takeUntil, map, distinctUntilChanged, take } from 'rxjs/operators';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CityListItemsService, CityListItem, ZippoService } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
 import { Attribute } from '@classifieds-ui/attributes';
+import { AdBrowserFacade } from '../../features/ad-browser/ad-browser.facade';
 
 import { AdsService } from '../../services/ads.service';
 import { AdTypesService } from '../../services/ad-types.service';
@@ -48,7 +49,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     return this.adTypes[this.adTypeFormGroup.get('adType').value];
   }
 
-  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adTypesService: AdTypesService) { }
+  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adTypesService: AdTypesService, private adBrowserFacade: AdBrowserFacade) { }
 
   ngOnInit() {
     this.adTypesService.getAll().subscribe(adTypes => this.adTypes = adTypes);
@@ -147,7 +148,9 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       // this.stepper.next();
       this.sb.open(`Ad has been created!`, 'Created', { duration: 3000 });
       setTimeout(() => {
-        this.router.navigateByUrl(`/ads/ad/${ad.id}`);
+        this.adBrowserFacade.getAdType$.pipe(take(1)).subscribe(adType => {
+          this.router.navigateByUrl(`/ads/${adType}/ad/${ad.id}`);
+        });
       }, 2000)
     });
   }
