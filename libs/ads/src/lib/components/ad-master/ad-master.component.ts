@@ -23,6 +23,8 @@ export class AdMasterComponent implements OnInit, OnChanges {
   viewport: CdkVirtualScrollViewport;
   @Input()
   searchForm: AdSearchBarForm;
+  @Input()
+  adType: string;
   loading$: Observable<boolean>;
   constructor(private router: Router, private mo: MediaObserver, private store: Store<RouterReducerState>, private adListItemService: AdListItemService, public adsDataSource: AdsDataSourceService) { }
   ngOnInit() {
@@ -44,11 +46,12 @@ export class AdMasterComponent implements OnInit, OnChanges {
     });
   }
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.searchForm.previousValue !== changes.searchForm.currentValue) {
+    // Safe guard against duplicate requests.
+    if(changes.searchForm.previousValue !== changes.searchForm.currentValue && JSON.stringify(changes.searchForm.previousValue) !== JSON.stringify(changes.searchForm.currentValue)) {
       this.adsDataSource.searchForm = changes.searchForm.currentValue;
     }
   }
   viewAd(id: string) {
-    this.router.navigateByUrl(`/ads/ad/${id}`);
+    this.router.navigateByUrl(`/ads/${this.adType}/ad/${id}`);
   }
 }

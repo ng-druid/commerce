@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
 import { select, Store } from '@ngrx/store';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
@@ -13,12 +14,13 @@ import { AdSearchBarForm } from '../../models/form.models';
   styleUrls: ['./ad-browser.component.scss']
 })
 export class AdBrowserComponent implements OnInit {
-  searchForm: AdSearchBarForm = new AdSearchBarForm({ searchString: '', location: [], features: [] });
+  searchForm: AdSearchBarForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType: this.route.snapshot.data.adType });
   hideMasterComponent = false;
   hideRouterOutlet = false;
   hideSearchBar = false;
   refreshViewport = true;
-  constructor(private mo: MediaObserver, private store: Store<RouterReducerState> ) { }
+  adType: string;
+  constructor(private mo: MediaObserver, private store: Store<RouterReducerState>, private route: ActivatedRoute) { }
   ngOnInit() {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
     combineLatest(
@@ -41,6 +43,13 @@ export class AdBrowserComponent implements OnInit {
         this.hideRouterOutlet = true;
         this.hideSearchBar = false;
       }
+    });
+    this.route.paramMap.pipe(
+      map(p => p.get('adType')),
+      distinctUntilChanged()
+    ).subscribe(adType => {
+      this.adType = adType;
+      this.searchForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType });
     });
   }
 }

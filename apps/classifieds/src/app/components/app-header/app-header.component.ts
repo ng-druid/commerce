@@ -30,10 +30,10 @@ export class AppHeaderComponent implements OnInit {
     this.oktaAuth.loginRedirect();
   }
   createAd() {
-    this.router.navigateByUrl('/ads/create-ad');
+    this.router.navigateByUrl('/ads/nop/create-ad');
   }
-  browseAds() {
-    this.router.navigateByUrl('/ads');
+  browseAds(adType: string) {
+    this.router.navigateByUrl(`/ads/${adType}`);
   }
   vocabularies() {
     this.router.navigateByUrl('/vocabularies');

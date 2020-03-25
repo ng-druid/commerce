@@ -1,7 +1,10 @@
 <mat-toolbar color="primary">
     <span class="brand">Classifieds</span>
     <button mat-button (click)="home()">home</button>
-    <button mat-button (click)="browseAds()">browse ads</button>
+    <button mat-button (click)="browseAds('general')">classifieds</button>
+    <button mat-button (click)="browseAds('realestate')">real estate</button>
+    <button mat-button (click)="browseAds('rentals')">rentals</button>
+    <button mat-button (click)="browseAds('autos')">autos</button>
     <button mat-button *ngIf="isAuthenticated" (click)="chat()">conversations</button>
     <button mat-button *ngIf="isAuthenticated" (click)="vocabularies()">vocabularies</button>
     <span class="spacer"></span>

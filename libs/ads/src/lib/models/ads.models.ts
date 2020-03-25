@@ -22,12 +22,14 @@ export class SearchConfig {
   location: string;
   page: string;
   features: Array<string>;
+  adType: string;
   constructor(data: SearchConfig) {
     if(data) {
       this.searchString = data.searchString;
       this.location = data.location;
       this.features = data.features;
       this.page = data.page;
+      this.adType = data.adType;
     }
   }
 }

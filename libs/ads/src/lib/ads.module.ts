@@ -23,11 +23,17 @@ import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-de
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
 import { entityMetadata } from './entity-metadata';
 import { AdFeaturesFilterComponent } from './components/ad-features-filter/ad-features-filter.component';
+import { StoreModule } from '@ngrx/store';
+import * as fromAdBrowser from './features/ad-browser/ad-browser.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AdBrowserEffects } from './features/ad-browser/ad-browser.effects';
+import { CreateAdGuard } from './guards/create-ad.guard';
+import { AdTypeResolver } from './resolvers/ad-type.resolver';
 
 const routes = [
-  { path: '', component: AdBrowserComponent, children: [
+  { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
     { path: 'ad/:adId', component: AdDetailComponent },
-    { path: 'create-ad', component: CreateAdComponent },
+    { path: 'create-ad', component: CreateAdComponent, canActivate: [CreateAdGuard] },
   ] }
 ];
 
@@ -45,7 +51,13 @@ const routes = [
     TaxonomyModule,
     CitiesModule,
     AttributesModule,
-    AutosModule
+    AutosModule,
+    StoreModule.forFeature(fromAdBrowser.adBrowserFeatureKey, fromAdBrowser.reducer),
+    EffectsModule.forFeature([AdBrowserEffects])
+  ],
+  providers: [
+    CreateAdGuard,
+    AdTypeResolver
   ]
 })
 export class AdsModule {

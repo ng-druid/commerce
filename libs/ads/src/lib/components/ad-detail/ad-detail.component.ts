@@ -21,14 +21,17 @@ export class AdDetailComponent implements OnInit {
   displayGalleryTab = false;
   mediaBaseUrl: string;
   selectedTabIndex = 0;
+  adType: string;
   constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private adsService: AdsService, private citiesService: CitiesService) { }
   ngOnInit() {
     this.mediaBaseUrl = this.mediaSettings.imageUrl;
     this.route.paramMap.pipe(
-      map(p => p.get('adId')),
-      filter(adId => typeof(adId) === 'string'),
+      map(p => [p.get('adId'), p.get('adType')]),
+      filter(([adId]) => typeof(adId) === 'string'),
       tap(() => this.displayOverlay = true),
-      switchMap(adId => this.adsService.getByKey(adId), /*.pipe(
+      switchMap(([adId, adType]) => this.adsService.getByKey(adId).pipe(
+        map<Ad, [Ad, string]>(ad => [ad, adType])
+      )), /*.pipe(
         switchMap(ad =>
           ad.location && ad.location.length === 2 ?
           this.citiesService.getWithQuery({ lat: `${ad.location[1]}`, lng: `${ad.location[0]}`}).pipe(
@@ -36,8 +39,9 @@ export class AdDetailComponent implements OnInit {
             map(city => [ad, city])
           ) : of([ad])
         )
-      )*/)
-    ).subscribe(ad => {
+      )*/
+    ).subscribe(([ad, adType]) => {
+      this.adType = adType;
       this.displayOverlay = false;
       this.selectedTabIndex = 0;
       this.ad = new Ad(ad as Ad);
