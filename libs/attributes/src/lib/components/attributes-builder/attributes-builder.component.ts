@@ -44,13 +44,19 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
       while (this.attributesArray.length !== 0) {
         this.attributesArray.removeAt(0);
       }
+      // @todo: Supports 2 levels of nesting currently (no recursion).
       this.attributes.forEach(attr => {
         this.attributesArray.push(new FormGroup({
           name: new FormControl(attr.name, Validators.required),
           type: new FormControl(attr.type, Validators.required),
           displayName: new FormControl(attr.label, Validators.required),
-          value: new FormControl(''),
-          attributes: new FormArray([])
+          value: new FormControl('', attr.required ? Validators.required : []),
+          attributes: new FormArray(!attr.attributes ? [] : attr.attributes.map(attr2 => new FormGroup({
+            name: new FormControl(attr2.name, Validators.required),
+            type: new FormControl(attr2.type, Validators.required),
+            displayName: new FormControl(attr2.label, Validators.required),
+            value: new FormControl('', attr2.required ? Validators.required : []),
+          })))
         }));
       });
     }
