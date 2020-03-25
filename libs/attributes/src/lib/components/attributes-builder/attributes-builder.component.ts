@@ -1,24 +1,26 @@
 
 import { Component, OnChanges, Input, SimpleChanges, forwardRef } from '@angular/core';
 import { ControlValueAccessor,NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup,FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
-import { Attribute } from '../../models/attributes.models';
+import { Attribute, AttributeWidget } from '../../models/attributes.models';
+import { WidgetsService } from '../../services/widgets.service';
 
 @Component({
   selector: 'classifieds-ui-attributes-builder',
   templateUrl: './attributes-builder.component.html',
   styleUrls: ['./attributes-builder.component.scss'],
   providers: [
+    WidgetsService,
     {
-   provide: NG_VALUE_ACCESSOR,
-   useExisting: forwardRef(() => AttributesBuilderComponent),
-   multi: true
- },
-  {
-   provide: NG_VALIDATORS,
-   useExisting: forwardRef(() => AttributesBuilderComponent),
-   multi: true
- }
-]
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => AttributesBuilderComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => AttributesBuilderComponent),
+      multi: true
+    },
+  ]
 })
 export class AttributesBuilderComponent implements OnChanges, ControlValueAccessor, Validator {
 
@@ -33,7 +35,7 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
     return this.attributesForm.get('attributes') as FormArray;
   }
 
-  constructor() { }
+  constructor(private widgetsService: WidgetsService) { }
 
   public onTouched: () => void = () => {};
 
@@ -77,6 +79,10 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
 
   validate(c: AbstractControl): ValidationErrors | null{
     return this.attributesForm.valid ? null : { invalidForm: {valid: false, message: "attributes are invalid"}};
+  }
+
+  discoverWidget(widget: string): AttributeWidget {
+    return this.widgetsService.get(widget);
   }
 
 }

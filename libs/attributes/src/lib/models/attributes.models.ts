@@ -1,6 +1,19 @@
+import { Type } from '@angular/core';
+
 export enum AttributeTypes {
   Number,
   Text
+}
+
+export class AttributeWidget {
+  name: string;
+  component: Type<any>;
+  constructor(data?: AttributeWidget) {
+    if (data) {
+      this.name = data.name;
+      this.component = data.component;
+    }
+  }
 }
 
 export class Attribute {
@@ -8,10 +21,12 @@ export class Attribute {
   type: AttributeTypes;
   label: string;
   required: boolean;
+  widget: string;
   attributes: Array<Attribute> = [];
   constructor(data?: Attribute) {
     if (data) {
       this.name = data.name;
+      this.widget = data.widget ? data.widget : 'text';
       this.type = data.type;
       this.label = data.label;
       this.required = data.required;

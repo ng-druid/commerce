@@ -8,6 +8,7 @@ import { MaterialModule } from '@classifieds-ui/material';
 import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 import { AttributesModule } from '@classifieds-ui/attributes';
 import { CitiesModule } from '@classifieds-ui/cities';
+import { AutosModule } from '@classifieds-ui/autos';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
@@ -43,7 +44,8 @@ const routes = [
     NgxDropzoneModule,
     TaxonomyModule,
     CitiesModule,
-    AttributesModule
+    AttributesModule,
+    AutosModule
   ]
 })
 export class AdsModule {
