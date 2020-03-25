@@ -49,7 +49,8 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
           name: new FormControl(attr.name, Validators.required),
           type: new FormControl(attr.type, Validators.required),
           displayName: new FormControl(attr.label, Validators.required),
-          value: new FormControl('')
+          value: new FormControl(''),
+          attributes: new FormArray([])
         }));
       });
     }
