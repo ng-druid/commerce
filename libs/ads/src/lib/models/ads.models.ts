@@ -38,12 +38,16 @@ export class AdType {
   id: AdTypes;
   name: string;
   attributes: Array<Attribute> = [];
+  filters: Array<Attribute> = [];
   constructor(data?: AdType) {
     if (data) {
       this.id = data.id;
       this.name = data.name;
       if (data.attributes) {
         this.attributes = data.attributes.map(a => new Attribute(a));
+      }
+      if (data.filters) {
+        this.filters = data.filters.map(a => new Attribute(a));
       }
     }
   }

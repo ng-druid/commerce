@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Ad, SearchConfig, AdTypes } from '../models/ads.models';
 import { AdSearchBarForm } from '../models/form.models';
 import { AdListItemService } from './ad-list-item.service';
+import { mapAdType } from '../ad.helpers';
 
 @Injectable()
 export class AdsDataSourceService extends DataSource<Ad> {
@@ -23,7 +24,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   set searchForm(searchForm: AdSearchBarForm | undefined) {
     this.lastPage = 0;
     const location = searchForm.location === undefined || searchForm.location.length !== 2 ? '' : searchForm.location.join(",");
-    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features, adType: this.mapAdType(searchForm.adType) });
+    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features, adType: mapAdType(searchForm.adType) });
     this.adListItemService.clearCache();
     this.query();
   }
@@ -42,22 +43,6 @@ export class AdsDataSourceService extends DataSource<Ad> {
 
   query() {
     this.adListItemService.getWithQuery(this.searchConfig as Object as QueryParams);
-  }
-
-  mapAdType(adType: string): number {
-    // @todo: This should be reusable.
-    switch(adType) {
-      case 'general':
-        return AdTypes.General;
-      case 'realestate':
-        return AdTypes.RealEstate;
-      case 'rentals':
-        return AdTypes.Rental;
-      case 'autos':
-        return AdTypes.Auto;
-      case 'jobs':
-        return AdTypes.Job;
-    }
   }
 
   disconnect(collectionViewer: CollectionViewer): void {

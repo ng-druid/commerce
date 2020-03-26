@@ -97,7 +97,7 @@ export class AdSearchBarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   displayCity(city?: CityListItem): string | undefined {
-    return city ? `${city.city}, ${city.stateId}` : undefined;
+    return city ? `${city.city}, ${city.stateId} (${city.zip})` : undefined;
   }
 
 }

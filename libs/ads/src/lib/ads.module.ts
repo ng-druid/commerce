@@ -29,6 +29,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AdBrowserEffects } from './features/ad-browser/ad-browser.effects';
 import { CreateAdGuard } from './guards/create-ad.guard';
 import { AdTypeResolver } from './resolvers/ad-type.resolver';
+import { AdAttributesFilterComponent } from './components/ad-attributes-filter/ad-attributes-filter.component';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
@@ -38,7 +39,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent ],
   imports: [
     CommonModule,
     HttpClientModule,

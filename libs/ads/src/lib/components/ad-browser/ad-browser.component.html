@@ -1,6 +1,7 @@
 <mat-sidenav-container fxLayout="row" fxFill>
   <mat-sidenav #sidenav mode="side">
     <classifieds-ui-ad-features-filter [(searchForm)]="searchForm" [adType]="adType"></classifieds-ui-ad-features-filter>
+    <classifieds-ui-ad-attributes-filter [(searchForm)]="searchForm" [adType]="adType"></classifieds-ui-ad-attributes-filter>
   </mat-sidenav>
   <mat-sidenav-content fxLayout="row" fxFill>
     <div fxLayout="column" fxFill>
