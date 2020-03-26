@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subject, } from 'rxjs';
 import { debounceTime, tap, switchMap, takeUntil, finalize, filter } from 'rxjs/operators';
@@ -11,10 +11,13 @@ import { AdSearchBarForm } from '../../models/form.models';
   templateUrl: './ad-search-bar.component.html',
   styleUrls: ['./ad-search-bar.component.scss']
 })
-export class AdSearchBarComponent implements OnInit, OnDestroy {
+export class AdSearchBarComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   searchForm: AdSearchBarForm;
+
+  @Input()
+  adType: string;
 
   @Output()
   searchFormChange = new EventEmitter<AdSearchBarForm>();
@@ -22,17 +25,16 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
   cities: Array<CityListItem> = [];
   isLoadingCities = false;
 
-  searchFormGroup: FormGroup;
+  searchFormGroup: FormGroup = this.fb.group({
+    searchString: [''],
+    location: ['']
+  });;
 
   private componentDestroyed = new Subject();
 
   constructor(private fb: FormBuilder, private citiesListService: CityListItemsService, private zippoService: ZippoService) { }
 
   ngOnInit() {
-    this.searchFormGroup = this.fb.group({
-      searchString: [''],
-      location: ['']
-    });
     this.searchFormGroup.get('searchString').valueChanges.pipe(
       debounceTime(1000),
       takeUntil(this.componentDestroyed)
@@ -50,7 +52,6 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
       tap(value => {
         this.cities = [];
         this.isLoadingCities = true;
-        console.log(`value: "${value}"`);
       }),
       /*switchMap(value => this.citiesListService.getWithQuery({ searchString: value })
         .pipe(
@@ -71,6 +72,15 @@ export class AdSearchBarComponent implements OnInit, OnDestroy {
     .subscribe((cities: Array<CityListItem>) => {
       this.cities = cities;
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.adType && changes.adType.previousValue !== changes.adType.currentValue) {
+      this.searchFormGroup.setValue({
+        searchString: '',
+        location: ''
+      }, { emitEvent: false });
+    }
   }
 
   ngOnDestroy() {

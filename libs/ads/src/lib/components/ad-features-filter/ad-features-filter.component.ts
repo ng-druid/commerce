@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { QueryParams } from '@ngrx/data';
 import { FeatureListItemsService } from '../../services/feature-list-items.service';
-import { FeaturesSearchConfig, FeatureListItem } from '../../models/ads.models';
+import { FeaturesSearchConfig, FeatureListItem, AdTypes } from '../../models/ads.models';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
@@ -22,10 +22,16 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   @Input()
   searchForm: AdSearchBarForm;
 
+  @Input()
+  adType: string;
+
   @Output()
   searchFormChange = new EventEmitter<AdSearchBarForm>();
 
-  featuresFormGroup: FormGroup;
+  featuresFormGroup = this.fb.group({
+    searchString: [''],
+    features: new FormArray([])
+  });
 
   features: Array<string> = [];
   features$ = new BehaviorSubject<Array<FeatureListItem>>([]);
@@ -36,10 +42,6 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   constructor(private renderer: Renderer2, private fb: FormBuilder, private featuresListItemsService: FeatureListItemsService) { }
 
   ngOnInit() {
-    this.featuresFormGroup = this.fb.group({
-      searchString: [''],
-      features: new FormArray([])
-    });
     this.featuresFormGroup.get('features').valueChanges.pipe(
       debounceTime(1000)
     ).subscribe(v => {
@@ -85,12 +87,20 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
       const searchString = this.featuresFormGroup.get("searchString").value;
       this.loadFeatures(searchString);
     }
+    if (changes.adType && changes.adType.previousValue !== changes.adType.currentValue) {
+      this.clearFeatures();
+      this.featureSelections.clear();
+      this.featuresFormGroup.setValue({
+        searchString: '',
+        features: []
+      });
+    }
   }
 
   loadFeatures(searchString: string) {
     this.featuresListItemsService.clearCache();
     const location = this.searchForm.location === undefined || this.searchForm.location.length !== 2 ? '' : this.searchForm.location.join(",");
-    const search = new FeaturesSearchConfig({ searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString });
+    const search = new FeaturesSearchConfig({ adType: this.mapAdType(this.searchForm.adType), searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString });
     this.featuresListItemsService.getWithQuery(search as Object as QueryParams).subscribe(features => {
       this.features$.next(features);
     });
@@ -112,6 +122,22 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
     while ((this.featuresFormGroup.get('features') as FormArray).length !== 0) {
       (this.featuresFormGroup.get('features') as FormArray).removeAt(0);
       i++;
+    }
+  }
+
+    mapAdType(adType: string): number {
+    // @todo: This should be reusable.
+    switch(adType) {
+      case 'general':
+        return AdTypes.General;
+      case 'realestate':
+        return AdTypes.RealEstate;
+      case 'rentals':
+        return AdTypes.Rental;
+      case 'autos':
+        return AdTypes.Auto;
+      case 'jobs':
+        return AdTypes.Job;
     }
   }
 

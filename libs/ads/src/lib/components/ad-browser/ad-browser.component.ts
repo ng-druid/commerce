@@ -4,7 +4,7 @@ import { MediaObserver } from '@angular/flex-layout';
 import { select, Store } from '@ngrx/store';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { combineLatest } from 'rxjs';
-import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, map, distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
 
@@ -19,7 +19,7 @@ export class AdBrowserComponent implements OnInit {
   hideRouterOutlet = false;
   hideSearchBar = false;
   refreshViewport = true;
-  adType: string;
+  adType = this.route.snapshot.data.adType;
   constructor(private mo: MediaObserver, private store: Store<RouterReducerState>, private route: ActivatedRoute) { }
   ngOnInit() {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
@@ -46,6 +46,7 @@ export class AdBrowserComponent implements OnInit {
     });
     this.route.paramMap.pipe(
       map(p => p.get('adType')),
+      filter(adType => adType && adType !== this.adType),
       distinctUntilChanged()
     ).subscribe(adType => {
       this.adType = adType;

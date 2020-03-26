@@ -1,13 +1,13 @@
 <mat-sidenav-container fxLayout="row" fxFill>
   <mat-sidenav #sidenav mode="side">
-    <classifieds-ui-ad-features-filter [(searchForm)]="searchForm"></classifieds-ui-ad-features-filter>
+    <classifieds-ui-ad-features-filter [(searchForm)]="searchForm" [adType]="adType"></classifieds-ui-ad-features-filter>
   </mat-sidenav>
   <mat-sidenav-content fxLayout="row" fxFill>
     <div fxLayout="column" fxFill>
       <div>
           <div fxFlex fxLayout="row" fxFill>
             <button mat-button (click)="sidenav.toggle()">Filters</button>
-            <classifieds-ui-ad-search-bar fxFlex="100" [hidden]="hideSearchBar" [(searchForm)]="searchForm"></classifieds-ui-ad-search-bar>
+            <classifieds-ui-ad-search-bar fxFlex="100" [hidden]="hideSearchBar" [(searchForm)]="searchForm" [adType]="adType"></classifieds-ui-ad-search-bar>
           </div>
       </div>
       <div fxFlex fxLayout="row" fxFill>

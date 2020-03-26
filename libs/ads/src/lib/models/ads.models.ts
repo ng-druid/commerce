@@ -22,7 +22,7 @@ export class SearchConfig {
   location: string;
   page: string;
   features: Array<string>;
-  adType: string;
+  adType: number;
   constructor(data: SearchConfig) {
     if(data) {
       this.searchString = data.searchString;
@@ -54,8 +54,10 @@ export class FeaturesSearchConfig {
   adSearchString: string;
   location: string;
   features: Array<string>;
+  adType: number;
   constructor(data: FeaturesSearchConfig) {
     if(data) {
+      this.adType = data.adType;
       this.searchString = data.searchString;
       this.adSearchString = data.adSearchString;
       this.location = data.location;
