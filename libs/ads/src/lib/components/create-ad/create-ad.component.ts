@@ -10,7 +10,7 @@ import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CityListItemsService, CityListItem, ZippoService } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
-import { Attribute } from '@classifieds-ui/attributes';
+import { Attribute, ValueComputerService, AttributeValue } from '@classifieds-ui/attributes';
 import { AdBrowserFacade } from '../../features/ad-browser/ad-browser.facade';
 
 import { AdsService } from '../../services/ads.service';
@@ -49,7 +49,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     return this.adTypes[this.adTypeFormGroup.get('adType').value];
   }
 
-  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adTypesService: AdTypesService, private adBrowserFacade: AdBrowserFacade) { }
+  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adTypesService: AdTypesService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) { }
 
   ngOnInit() {
     this.adTypesService.getAll().subscribe(adTypes => this.adTypes = adTypes);
@@ -79,6 +79,11 @@ export class CreateAdComponent implements OnInit, OnDestroy {
       ),*/
       switchMap(value => this.zippoService.getWithQuery({ searchString: value })
         .pipe(
+          catchError(e => {
+            this.cities = [];
+            this.isLoadingCities = false;
+            return NEVER;
+          }),
           finalize(() => {
             this.isLoadingCities = false
           }),
@@ -130,7 +135,9 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         return NEVER;
       }),
       tap((files: Array<MediaFile>) => {
-        const city = this.detailsFormGroup.get('location').value
+        const attributes = this.attributesFormGroup.get('attributes').value.map(av => new AttributeValue(av));
+        this.valueComputerService.compute(attributes);
+        const city = this.detailsFormGroup.get('location').value;
         this.ad.adType = this.adTypes[this.adTypeFormGroup.get('adType').value].id;
         this.ad.status = AdStatuses.Submitted;
         this.ad.title = this.detailsFormGroup.get('title').value;
@@ -138,7 +145,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.location = city ? city.location : [];
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
         this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
-        this.ad.attributes = this.attributesFormGroup.get('attributes').value;
+        this.ad.attributes = this.valueComputerService.compute(attributes);
         this.ad.cityDisplay = `${city.city}, ${city.stateName}`
       }),
       switchMap(f => {

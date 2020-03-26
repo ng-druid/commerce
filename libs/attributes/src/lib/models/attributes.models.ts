@@ -44,6 +44,7 @@ export class AttributeValue {
   displayName: string;
   type: AttributeTypes;
   value: string;
+  computedValue: string;
   attributes: Array<AttributeValue> = [];
   constructor(data?: AttributeValue) {
     if (data) {
@@ -51,6 +52,7 @@ export class AttributeValue {
       this.displayName = data.displayName;
       this.type = data.type;
       this.value = data.value;
+      this.computedValue = data.computedValue;
       if (data.attributes) {
         this.attributes = data.attributes.map(a => new AttributeValue(a));
       }
