@@ -22,6 +22,7 @@ export class Attribute {
   label: string;
   required: boolean;
   widget: string;
+  options: any;
   attributes: Array<Attribute> = [];
   constructor(data?: Attribute) {
     if (data) {
@@ -30,6 +31,7 @@ export class Attribute {
       this.type = data.type;
       this.label = data.label;
       this.required = data.required;
+      this.options = data.options;
       if (data.attributes) {
         this.attributes = data.attributes.map(a => new Attribute(a));
       }

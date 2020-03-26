@@ -8,16 +8,22 @@ import { AttributeWidgetDirective } from './directives/attribute-widget.directiv
 import { TextWidgetComponent } from './components/text-widget/text-widget.component';
 import { AttributeWidget } from './models/attributes.models';
 import { ATTRIBUTE_WIDGET } from './attribute.tokens';
+import { MinMaxWidgetComponent } from './components/min-max-widget/min-max-widget.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, MaterialModule],
-  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent],
+  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent, MinMaxWidgetComponent],
   exports: [AttributesBuilderComponent],
-  entryComponents: [ TextWidgetComponent ],
+  entryComponents: [ TextWidgetComponent, MinMaxWidgetComponent ],
   providers: [
     {
       provide: ATTRIBUTE_WIDGET,
       useValue: new AttributeWidget({ name: 'text', component: TextWidgetComponent }),
+      multi: true
+    },
+    {
+      provide: ATTRIBUTE_WIDGET,
+      useValue: new AttributeWidget({ name: 'minmax', component: MinMaxWidgetComponent }),
       multi: true
     }
   ]
