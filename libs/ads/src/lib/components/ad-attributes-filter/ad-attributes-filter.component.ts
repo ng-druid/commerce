@@ -1,17 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { EntityCollectionService, EntityServices } from '@ngrx/data';
 import { AdType } from '../../models/ads.models';
 import { AdSearchBarForm } from '../../models/form.models';
 import { mapAdType } from '../../ad.helpers';
 import { Attribute } from '@classifieds-ui/attributes';
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime, map } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-ad-attributes-filter',
   templateUrl: './ad-attributes-filter.component.html',
   styleUrls: ['./ad-attributes-filter.component.scss']
 })
-export class AdAttributesFilterComponent implements OnInit {
+export class AdAttributesFilterComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   adType: string;
@@ -28,6 +30,8 @@ export class AdAttributesFilterComponent implements OnInit {
     attributes: new FormControl('')
   });
 
+  componentDestroyed = new Subject();
+
   private adTypesService: EntityCollectionService<AdType>;
 
   constructor(private fb: FormBuilder, entityServices: EntityServices) {
@@ -35,10 +39,40 @@ export class AdAttributesFilterComponent implements OnInit {
   }
 
   ngOnInit() {
-    const adType = mapAdType(this.adType);
-    this.adTypesService.getByKey(adType).subscribe(t => {
-      this.filters = t.filters;
+    this.filterForm.get('attributes').valueChanges.pipe(
+      debounceTime(1000),
+      map(v => {
+        const values = (this.filterForm.get('attributes') as FormArray).value;
+        const attributes = {};
+        values.forEach(value => {
+          if(value.value && value.value !== '') {
+            attributes[value.name] = [value.value];
+          }
+        });
+        return attributes;
+      }),
+      takeUntil(this.componentDestroyed)
+    ).subscribe(attributes => {
+      this.searchForm = new AdSearchBarForm({ ...this.searchForm, attributes });
+      this.searchFormChange.emit(this.searchForm);
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.adType && changes.adType.previousValue !== changes.adType.currentValue) {
+      const adType = mapAdType(changes.adType.currentValue);
+      this.adTypesService.getByKey(adType).subscribe(t => {
+        this.filters = t.filters;
+      });
+      this.filterForm.setValue({
+        attributes: ''
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed.next();
+    this.componentDestroyed.complete();
   }
 
 }

@@ -6,6 +6,7 @@ import { Ad, SearchConfig, AdTypes } from '../models/ads.models';
 import { AdSearchBarForm } from '../models/form.models';
 import { AdListItemService } from './ad-list-item.service';
 import { mapAdType } from '../ad.helpers';
+import * as qs from 'qs';
 
 @Injectable()
 export class AdsDataSourceService extends DataSource<Ad> {
@@ -13,7 +14,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   private subscription = new Subscription();
   private pageSize = 25;
   private lastPage = 0;
-  private searchConfig;
+  private searchConfig: SearchConfig;
   constructor(private adListItemService: AdListItemService) {
     super();
     this.adListItemService.entities$.subscribe(ads => {
@@ -24,7 +25,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   set searchForm(searchForm: AdSearchBarForm | undefined) {
     this.lastPage = 0;
     const location = searchForm.location === undefined || searchForm.location.length !== 2 ? '' : searchForm.location.join(",");
-    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features, adType: mapAdType(searchForm.adType) });
+    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features, adType: mapAdType(searchForm.adType), attributes: searchForm.attributes });
     this.adListItemService.clearCache();
     this.query();
   }
@@ -42,7 +43,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   }
 
   query() {
-    this.adListItemService.getWithQuery(this.searchConfig as Object as QueryParams);
+    this.adListItemService.getWithQuery(qs.stringify(this.searchConfig as Object));
   }
 
   disconnect(collectionViewer: CollectionViewer): void {

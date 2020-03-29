@@ -14,7 +14,7 @@ import { AdSearchBarForm } from '../../models/form.models';
   styleUrls: ['./ad-browser.component.scss']
 })
 export class AdBrowserComponent implements OnInit {
-  searchForm: AdSearchBarForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType: this.route.snapshot.data.adType });
+  searchForm: AdSearchBarForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType: this.route.snapshot.data.adType, attributes: {} });
   hideMasterComponent = false;
   hideRouterOutlet = false;
   hideSearchBar = false;
@@ -50,7 +50,7 @@ export class AdBrowserComponent implements OnInit {
       distinctUntilChanged()
     ).subscribe(adType => {
       this.adType = adType;
-      this.searchForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType });
+      this.searchForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType, attributes: {} });
     });
   }
 }
