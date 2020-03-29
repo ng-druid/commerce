@@ -146,7 +146,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
         this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
         this.ad.attributes = this.valueComputerService.compute(attributes);
-        this.ad.cityDisplay = `${city.city}, ${city.stateName}`
+        this.ad.cityDisplay = `${city.city}, ${city.stateName} (${city.zip})`
       }),
       switchMap(f => {
         return this.adsService.upsert(new Ad(this.ad));

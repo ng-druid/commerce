@@ -45,8 +45,17 @@ export class AdAttributesFilterComponent implements OnInit, OnChanges, OnDestroy
         const values = (this.filterForm.get('attributes') as FormArray).value;
         const attributes = {};
         values.forEach(value => {
-          if(value.value && value.value !== '') {
-            attributes[value.name] = [value.value];
+          // @todo: Support infinite hierarchy (better recursion handling).
+          if(value.attributes && value.attributes.length > 0) {
+            value.attributes.forEach(value2 => {
+              if(value2.value && value2.value !== '') {
+                attributes[value2.name] = [value2.value];
+              }
+            });
+          } else {
+            if(value.value && value.value !== '') {
+              attributes[value.name] = [value.value];
+            }
           }
         });
         return attributes;
