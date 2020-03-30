@@ -17,7 +17,7 @@ import {
     QueryList,
     ViewChildren
 } from '@angular/core';
-import { MatStep, MatStepper } from '@angular/material';
+import { MatStep, MatStepper } from '@angular/material/stepper';
 import { DOCUMENT } from '@angular/common';
 
 const MAT_STEPPER_PROXY_FACTORY_PROVIDER = {
