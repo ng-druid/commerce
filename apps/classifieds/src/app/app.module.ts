@@ -12,7 +12,7 @@ import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
-import { OktaAuthModule, OktaCallbackComponent } from '@okta/okta-angular';
+import { OktaAuthModule, OktaCallbackComponent, OKTA_CONFIG } from '@okta/okta-angular';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -46,7 +46,7 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
   timeout: 3000, // request timeout
 }
 
-const config = {
+const oktaConfig = {
   issuer: 'https://dev-585865.okta.com/oauth2/default',
   redirectUri: environment.oktaSettings.redirectUri,
   clientId: environment.oktaSettings.clientId,
@@ -92,10 +92,13 @@ const config = {
     MediaModule,
     NxModule.forRoot(),
     EntityDataModule.forRoot({}),
-    OktaAuthModule.initAuth(config)
+    OktaAuthModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+
+    // okta auth
+    { provide: OKTA_CONFIG, useValue: oktaConfig },
 
     { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
