@@ -40,6 +40,10 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
 
   featureSelections = new SelectionModel<string>(true);
 
+  get featuresArray(): FormArray {
+    return this.featuresFormGroup.controls.features as FormArray;
+  }
+
   constructor(private renderer: Renderer2, private fb: FormBuilder, private featuresListItemsService: FeatureListItemsService) { }
 
   ngOnInit() {

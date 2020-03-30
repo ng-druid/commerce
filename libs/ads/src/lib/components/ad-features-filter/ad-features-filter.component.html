@@ -6,7 +6,7 @@
   <div fxFlex="100">
     <div class="features">
       <div class="divider"></div>
-      <div class="feature-wrapper" formArrayName="features" *ngFor="let feature of featuresFormGroup.controls.features.controls; index as i">
+      <div class="feature-wrapper" formArrayName="features" *ngFor="let feature of featuresArray.controls; index as i">
         <mat-checkbox [formControlName]="i" [checked]="featureSelections.isSelected(features[i])" (change)="toggleInactive(features[i])">{{ features[i] }}</mat-checkbox>
       </div>
     </div>

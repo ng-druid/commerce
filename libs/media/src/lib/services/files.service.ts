@@ -11,7 +11,7 @@ import { MediaSettings, MediaFile, CloudinaryUploadResponse } from '../models/me
 export class FilesService {
   constructor(@Inject(MEDIA_SETTINGS) private settings: MediaSettings, private http: HttpClient) {}
   bulkUpload(files: Array<File>): Observable<Array<MediaFile>> {
-    const requests$ = [];
+    const requests$: Array<Observable<MediaFile>> = [];
     files.forEach(f => {
       const formData = new FormData();
       formData.append('file', f, f.name);
