@@ -120,7 +120,8 @@
           "options": {
             "jestConfig": "apps/classifieds/jest.config.js",
             "tsConfig": "apps/classifieds/tsconfig.spec.json",
-            "setupFile": "apps/classifieds/src/test-setup.ts"
+            "setupFile": "apps/classifieds/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -173,7 +174,8 @@
           "options": {
             "jestConfig": "libs/ads/jest.config.js",
             "tsConfig": "libs/ads/tsconfig.spec.json",
-            "setupFile": "libs/ads/src/test-setup.ts"
+            "setupFile": "libs/ads/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -200,7 +202,8 @@
           "options": {
             "jestConfig": "libs/auth/jest.config.js",
             "tsConfig": "libs/auth/tsconfig.spec.json",
-            "setupFile": "libs/auth/src/test-setup.ts"
+            "setupFile": "libs/auth/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -231,7 +234,8 @@
           "options": {
             "jestConfig": "libs/media/jest.config.js",
             "tsConfig": "libs/media/tsconfig.spec.json",
-            "setupFile": "libs/media/src/test-setup.ts"
+            "setupFile": "libs/media/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -262,7 +266,8 @@
           "options": {
             "jestConfig": "libs/utils/jest.config.js",
             "tsConfig": "libs/utils/tsconfig.spec.json",
-            "setupFile": "libs/utils/src/test-setup.ts"
+            "setupFile": "libs/utils/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -293,7 +298,8 @@
           "options": {
             "jestConfig": "libs/material/jest.config.js",
             "tsConfig": "libs/material/tsconfig.spec.json",
-            "setupFile": "libs/material/src/test-setup.ts"
+            "setupFile": "libs/material/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -324,7 +330,8 @@
           "options": {
             "jestConfig": "libs/logging/jest.config.js",
             "tsConfig": "libs/logging/tsconfig.spec.json",
-            "setupFile": "libs/logging/src/test-setup.ts"
+            "setupFile": "libs/logging/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -351,7 +358,8 @@
           "options": {
             "jestConfig": "libs/cities/jest.config.js",
             "tsConfig": "libs/cities/tsconfig.spec.json",
-            "setupFile": "libs/cities/src/test-setup.ts"
+            "setupFile": "libs/cities/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -378,7 +386,8 @@
           "options": {
             "jestConfig": "libs/chat/jest.config.js",
             "tsConfig": "libs/chat/tsconfig.spec.json",
-            "setupFile": "libs/chat/src/test-setup.ts"
+            "setupFile": "libs/chat/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -409,7 +418,8 @@
           "options": {
             "jestConfig": "libs/taxonomy/jest.config.js",
             "tsConfig": "libs/taxonomy/tsconfig.spec.json",
-            "setupFile": "libs/taxonomy/src/test-setup.ts"
+            "setupFile": "libs/taxonomy/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -440,7 +450,8 @@
           "options": {
             "jestConfig": "libs/vocabulary/jest.config.js",
             "tsConfig": "libs/vocabulary/tsconfig.spec.json",
-            "setupFile": "libs/vocabulary/src/test-setup.ts"
+            "setupFile": "libs/vocabulary/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -471,7 +482,8 @@
           "options": {
             "jestConfig": "libs/attributes/jest.config.js",
             "tsConfig": "libs/attributes/tsconfig.spec.json",
-            "setupFile": "libs/attributes/src/test-setup.ts"
+            "setupFile": "libs/attributes/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -502,7 +514,8 @@
           "options": {
             "jestConfig": "libs/autos/jest.config.js",
             "tsConfig": "libs/autos/tsconfig.spec.json",
-            "setupFile": "libs/autos/src/test-setup.ts"
+            "setupFile": "libs/autos/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
