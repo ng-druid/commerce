@@ -1,4 +1,5 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { AuthFacade } from '@classifieds-ui/auth';
 import { LogService } from '@classifieds-ui/logging';
@@ -20,9 +21,12 @@ export class ChatService {
   broadcasted$ = new Subject<ChatMessage>();
   private hubConnection: signalR.HubConnection;
   private conversations = new Map<string, BehaviorSubject<Array<ChatMessage>>>();
+  private isBrowser: boolean = isPlatformBrowser(this.platformId);
 
-  constructor(@Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade, private oktaAuth: OktaAuthService) {
-    setTimeout(() => this.initializeConnection(), 1);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, @Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade, private oktaAuth: OktaAuthService) {
+    if (this.isBrowser) {
+      setTimeout(() => this.initializeConnection(), 1);
+    }
   }
 
   private initializeConnection(): void {

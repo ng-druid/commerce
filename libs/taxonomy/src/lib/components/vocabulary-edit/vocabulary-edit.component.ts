@@ -29,7 +29,7 @@ export class VocabularyEditComponent implements OnInit {
 
   submitted() {
     this.vocabularyService.update(this.vocabulary).subscribe(v => {
-      alert("vocabulary updated");
+      // alert("vocabulary updated");
     });
   }
 

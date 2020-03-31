@@ -131,7 +131,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     // this.stepper.next();
     this.filesService.bulkUpload(this.files).pipe(
       catchError(e => {
-        alert(e.error);
+        // alert(e.error);
         return NEVER;
       }),
       tap((files: Array<MediaFile>) => {

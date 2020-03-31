@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Inject, Component, Input, OnDestroy, OnChanges, SimpleChanges, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
@@ -22,7 +23,8 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
   messages: Array<ChatMessage> = [];
   private subscription$: Subscription;
   private componentDestroyed$ = new Subject();
-  constructor(private chatService: ChatService) { }
+  private isBrowser: boolean = isPlatformBrowser(this.platformId);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private chatService: ChatService) { }
   sendMessage(event) {
     this.chatService.send(new ChatMessage({ id: undefined, message: event.message, senderId: undefined, recipientId: this.recipientId, createdAt: new Date() }));
   }
@@ -38,16 +40,18 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
   }
 
   private connect() {
-    this.subscription$ = this.chatService.started$.pipe(
-      switchMap(() => this.chatService.connect(this.recipientId)),
-      takeUntil(this.componentDestroyed$)
-    ).subscribe((chatMessages: Array<ChatMessage>) => {
-      this.messages = this.messages.concat(chatMessages);
-    });
+    if (this.isBrowser) {
+      this.subscription$ = this.chatService.started$.pipe(
+        switchMap(() => this.chatService.connect(this.recipientId)),
+        takeUntil(this.componentDestroyed$)
+      ).subscribe((chatMessages: Array<ChatMessage>) => {
+        this.messages = this.messages.concat(chatMessages);
+      });
+    }
   }
 
   private disconnect() {
-    if(this.subscription$) {
+    if(this.isBrowser && this.subscription$) {
       this.subscription$.unsubscribe();
     }
   }

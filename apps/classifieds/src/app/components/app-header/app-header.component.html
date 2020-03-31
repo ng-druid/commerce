@@ -1,14 +1,14 @@
 <mat-toolbar color="primary">
     <span class="brand">Classifieds</span>
-    <button mat-button (click)="home()">home</button>
-    <button mat-button (click)="browseAds('general')">classifieds</button>
-    <button mat-button (click)="browseAds('realestate')">real estate</button>
-    <button mat-button (click)="browseAds('rentals')">rentals</button>
-    <button mat-button (click)="browseAds('autos')">autos</button>
-    <button mat-button *ngIf="isAuthenticated" (click)="chat()">conversations</button>
-    <button mat-button *ngIf="isAuthenticated" (click)="vocabularies()">vocabularies</button>
+    <a mat-button routerLink="/">home</a>
+    <a mat-button routerLink="/ads/general">classifieds</a>
+    <a mat-button routerLink="/ads/realestate">real estate</a>
+    <a mat-button routerLink="/ads/rentals">rentals</a>
+    <a mat-button routerLink="/ads/autos">autos</a>
+    <a mat-button *ngIf="isAuthenticated" routerLink="/chat">conversations</a>
+    <a mat-button *ngIf="isAuthenticated" routerLink="/vocabularies">vocabularies</a>
     <span class="spacer"></span>
-    <button mat-button *ngIf="!isAuthenticated">register</button>
-    <button mat-raised-button color="accent" *ngIf="!isAuthenticated" (click)="login()">login</button>
-    <button mat-raised-button color="accent" *ngIf="isAuthenticated" (click)="createAd()">create ad</button>
+    <a mat-button *ngIf="!isAuthenticated">register</a>
+    <a mat-raised-button color="accent" *ngIf="!isAuthenticated" (click)="login()">login</a>
+    <a mat-raised-button color="accent" *ngIf="isAuthenticated" routerLink="/ads/nop/create-ad">create ad</a>
 </mat-toolbar>

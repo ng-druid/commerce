@@ -10,7 +10,9 @@
   "projects": {
     "classifieds-e2e": {
       "tags": [],
-      "implicitDependencies": ["classifieds"]
+      "implicitDependencies": [
+        "classifieds"
+      ]
     },
     "classifieds": {
       "tags": []
@@ -49,6 +51,9 @@
       "tags": []
     },
     "autos": {
+      "tags": []
+    },
+    "classifieds-ssr": {
       "tags": []
     }
   }

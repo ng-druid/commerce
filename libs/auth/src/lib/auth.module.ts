@@ -4,11 +4,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import * as fromAuth from './+state/auth.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { UserManager } from 'oidc-client';
+// import { UserManager } from 'oidc-client';
 import { AuthEffects } from './+state/auth.effects';
 import { AuthFacade } from './+state/auth.facade';
-import { userManagerFactory } from './auth.factories';
-import { CLIENT_SETTINGS } from './auth.tokens';
+// import { userManagerFactory } from './auth.factories';
+// import { CLIENT_SETTINGS } from './auth.tokens';
 import { EntityDefinitionService } from '@ngrx/data';
 
 import { entityMetadata } from './entity-metadata';
@@ -21,8 +21,8 @@ import { entityMetadata } from './entity-metadata';
     EffectsModule.forFeature([AuthEffects])
   ],
   providers: [
-    AuthFacade,
-    { provide: UserManager, useFactory: userManagerFactory, deps: [CLIENT_SETTINGS] }
+    AuthFacade
+    // { provide: UserManager, useFactory: userManagerFactory, deps: [CLIENT_SETTINGS] }
   ]
 })
 export class AuthModule {

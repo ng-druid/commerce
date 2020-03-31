@@ -112,7 +112,10 @@
               "apps/classifieds/tsconfig.app.json",
               "apps/classifieds/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/classifieds/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/classifieds/**"
+            ]
           }
         },
         "test": {
@@ -122,6 +125,28 @@
             "tsConfig": "apps/classifieds/tsconfig.spec.json",
             "setupFile": "apps/classifieds/src/test-setup.ts",
             "passWithNoTests": true
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/apps/classifieds/server",
+            "main": "apps/classifieds/src/main.server.ts",
+            "tsConfig": "apps/classifieds/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "bundleDependencies": "all",
+              "fileReplacements": [
+                {
+                  "replace": "apps/classifieds/src/environments/environment.ts",
+                  "with": "apps/classifieds/src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
           }
         }
       }
@@ -147,8 +172,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/classifieds-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/classifieds-e2e/**"]
+            "tsConfig": [
+              "apps/classifieds-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/classifieds-e2e/**"
+            ]
           }
         }
       }
@@ -166,7 +196,10 @@
               "libs/ads/tsconfig.lib.json",
               "libs/ads/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ads/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ads/**"
+            ]
           }
         },
         "test": {
@@ -194,7 +227,10 @@
               "libs/auth/tsconfig.lib.json",
               "libs/auth/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/auth/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/auth/**"
+            ]
           }
         },
         "test": {
@@ -226,7 +262,10 @@
               "libs/media/tsconfig.lib.json",
               "libs/media/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/media/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/media/**"
+            ]
           }
         },
         "test": {
@@ -258,7 +297,10 @@
               "libs/utils/tsconfig.lib.json",
               "libs/utils/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/utils/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/utils/**"
+            ]
           }
         },
         "test": {
@@ -290,7 +332,10 @@
               "libs/material/tsconfig.lib.json",
               "libs/material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/material/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/material/**"
+            ]
           }
         },
         "test": {
@@ -322,7 +367,10 @@
               "libs/logging/tsconfig.lib.json",
               "libs/logging/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/logging/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/logging/**"
+            ]
           }
         },
         "test": {
@@ -350,7 +398,10 @@
               "libs/cities/tsconfig.lib.json",
               "libs/cities/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/cities/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/cities/**"
+            ]
           }
         },
         "test": {
@@ -378,7 +429,10 @@
               "libs/chat/tsconfig.lib.json",
               "libs/chat/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/chat/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/chat/**"
+            ]
           }
         },
         "test": {
@@ -410,7 +464,10 @@
               "libs/taxonomy/tsconfig.lib.json",
               "libs/taxonomy/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/taxonomy/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/taxonomy/**"
+            ]
           }
         },
         "test": {
@@ -442,7 +499,10 @@
               "libs/vocabulary/tsconfig.lib.json",
               "libs/vocabulary/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/vocabulary/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/vocabulary/**"
+            ]
           }
         },
         "test": {
@@ -474,7 +534,10 @@
               "libs/attributes/tsconfig.lib.json",
               "libs/attributes/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/attributes/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/attributes/**"
+            ]
           }
         },
         "test": {
@@ -506,7 +569,10 @@
               "libs/autos/tsconfig.lib.json",
               "libs/autos/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/autos/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/autos/**"
+            ]
           }
         },
         "test": {
@@ -522,6 +588,76 @@
       "schematics": {
         "@nrwl/angular:component": {
           "styleext": "scss"
+        }
+      }
+    },
+    "classifieds-ssr": {
+      "root": "apps/classifieds-ssr",
+      "sourceRoot": "apps/classifieds-ssr/src",
+      "projectType": "application",
+      "prefix": "classifieds-ssr",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/classifieds-ssr",
+            "main": "apps/classifieds-ssr/src/main.ts",
+            "tsConfig": "apps/classifieds-ssr/tsconfig.app.json",
+            "assets": [
+              "apps/classifieds-ssr/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/classifieds-ssr/src/environments/environment.ts",
+                  "with": "apps/classifieds-ssr/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "classifieds-ssr:build"
+          }
+        },
+        "serve-all": {
+          "builder": "@angular-devkit/architect:concat",
+          "options": {
+            "targets": [
+              { "target": "classifieds:build" },
+              { "target": "classifieds:server" },
+              { "target": "classifieds-ssr:serve" }
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/classifieds-ssr/tsconfig.app.json",
+              "apps/classifieds-ssr/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/classifieds-ssr/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/classifieds-ssr/jest.config.js",
+            "tsConfig": "apps/classifieds-ssr/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
         }
       }
     }

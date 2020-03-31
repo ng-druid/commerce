@@ -29,19 +29,4 @@ export class AppHeaderComponent implements OnInit {
     // this.authFacade.login();
     this.oktaAuth.loginRedirect();
   }
-  createAd() {
-    this.router.navigateByUrl('/ads/nop/create-ad');
-  }
-  browseAds(adType: string) {
-    this.router.navigateByUrl(`/ads/${adType}`);
-  }
-  vocabularies() {
-    this.router.navigateByUrl('/vocabularies');
-  }
-  chat() {
-    this.router.navigateByUrl('/chat');
-  }
-  home() {
-    this.router.navigateByUrl('/home');
-  }
 }
