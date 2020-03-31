@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DefaultDataServiceConfig } from '@ngrx/data';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CityListItem } from '../models/cities.models';
@@ -8,8 +9,8 @@ import { CityListItem } from '../models/cities.models';
   providedIn: 'root'
 })
 export class ZippoService {
-  zippoBaseUrl = 'https://localhost:44340/zippo/';
-  constructor(private http: HttpClient) { }
+  zippoBaseUrl = `${this.config.root}/zippo/`;
+  constructor(private http: HttpClient, private config: DefaultDataServiceConfig) { }
   getWithQuery(query: { searchString: string }): Observable<Array<CityListItem>> {
     if(!query.searchString || !query.searchString.indexOf || query.searchString.indexOf(',') < 3) {
       return of([]);

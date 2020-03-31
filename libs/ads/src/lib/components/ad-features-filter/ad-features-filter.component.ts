@@ -105,7 +105,7 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   loadFeatures(searchString: string) {
     this.featuresListItemsService.clearCache();
     const location = this.searchForm.location === undefined || this.searchForm.location.length !== 2 ? '' : this.searchForm.location.join(",");
-    const search = new FeaturesSearchConfig({ adType: mapAdType(this.searchForm.adType), searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString });
+    const search = new FeaturesSearchConfig({ adType: mapAdType(this.searchForm.adType), searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString, attributes: this.searchForm.attributes });
     this.featuresListItemsService.getWithQuery(search as Object as QueryParams).subscribe(features => {
       this.features$.next(features);
     });

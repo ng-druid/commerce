@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DefaultDataServiceConfig } from '@ngrx/data';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Make, Model } from '../models/carquery.models';
@@ -8,8 +9,8 @@ import { Make, Model } from '../models/carquery.models';
   providedIn: 'root'
 })
 export class CarQueryService {
-  private baseUrl = 'https://localhost:44340/carquery/api/0.3/';
-  constructor(private http: HttpClient) { }
+  private baseUrl = `${this.config.root}/carquery/api/0.3/`;
+  constructor(private http: HttpClient, private config: DefaultDataServiceConfig) { }
   getYears() : Observable<Array<number>> {
     return this.http.jsonp(`${this.baseUrl}?cmd=getYears&callback=callback`, 'callback').pipe(
       map((r: any) => Array(+r.Years.max_year - (+r.Years.max_year - +r.Years.min_year)).fill('').map((v, idx) => +r.Years.max_year - idx) as Array<number>)

@@ -61,6 +61,7 @@ export class FeaturesSearchConfig {
   location: string;
   features: Array<string>;
   adType: number;
+  attributes: any;
   constructor(data: FeaturesSearchConfig) {
     if(data) {
       this.adType = data.adType;
@@ -68,6 +69,7 @@ export class FeaturesSearchConfig {
       this.adSearchString = data.adSearchString;
       this.location = data.location;
       this.features = data.features;
+      this.attributes = Object.assign({}, data.attributes);
     }
   }
 }
