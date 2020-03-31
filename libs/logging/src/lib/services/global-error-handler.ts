@@ -1,15 +1,16 @@
-import { ErrorHandler, Injectable, Injector } from '@angular/core';
-import { LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { ErrorHandler, Injectable, Injector, PLATFORM_ID, Inject } from '@angular/core';
+import { LocationStrategy, PathLocationStrategy, Location, isPlatformBrowser } from '@angular/common';
 import * as StackTrace from 'stacktrace-js';
 
 import { LogService } from '../services/log.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-constructor(private logService: LogService, private localStrategy: LocationStrategy) { }
-handleError(error) {
+  private isBrowser: boolean = isPlatformBrowser(this.platformId);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private logService: LogService, private localStrategy: LocationStrategy, private location: Location) { }
+  handleError(error) {
     const message = error.message ? error.message : error.toString();
-    const url = location instanceof PathLocationStrategy ? location.path() : '';
+    const url = this.location.path();
     StackTrace.fromError(error).then(stackframes => {
       const stackString = stackframes
         .splice(0, 20)
@@ -17,6 +18,9 @@ handleError(error) {
         .join('\n');
         this.logService.log({ message, url, stack: stackString });
     });
-    throw error;
+    // When error is thrown ss bombs entire app / server - not good :/
+    if (this.isBrowser) {
+      throw error;
+    }
   }
 }

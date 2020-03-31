@@ -20,7 +20,7 @@ export const environment = {
     endpointUrl: "https://localhost:44340/chat"
   },
   oktaSettings: {
-    redirectUri: 'http://localhost:4200/implicit/callback',
+    redirectUri: 'http://localhost:4000/implicit/callback',
     clientId: '0oa33yn39XtrnvY774x6',
   },
   clientSettings: {
