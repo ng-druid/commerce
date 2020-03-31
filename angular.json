@@ -82,6 +82,20 @@
                   "with": "apps/classifieds/src/environments/environment.dev.ts"
                 }
               ]
+            },
+            "local.dev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/classifieds/src/environments/environment.ts",
+                  "with": "apps/classifieds/src/environments/environment.local.dev.ts"
+                }
+              ]
             }
           }
         },
@@ -96,6 +110,9 @@
             },
             "dev": {
               "browserTarget": "classifieds:build:dev"
+            },
+            "local.dev": {
+              "browserTarget": "classifieds:build:local.dev"
             }
           }
         },
@@ -137,11 +154,35 @@
           "configurations": {
             "production": {
               "outputHashing": "media",
-              "bundleDependencies": "all",
+              "bundleDependencies": true,
               "fileReplacements": [
                 {
                   "replace": "apps/classifieds/src/environments/environment.ts",
                   "with": "apps/classifieds/src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            },
+            "dev": {
+              "outputHashing": "media",
+              "bundleDependencies": true,
+              "fileReplacements": [
+                {
+                  "replace": "apps/classifieds/src/environments/environment.ts",
+                  "with": "apps/classifieds/src/environments/environment.dev.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            },
+            "local.dev": {
+              "outputHashing": "media",
+              "bundleDependencies": true,
+              "fileReplacements": [
+                {
+                  "replace": "apps/classifieds/src/environments/environment.ts",
+                  "with": "apps/classifieds/src/environments/environment.local.dev.ts"
                 }
               ],
               "sourceMap": false,
@@ -625,7 +666,7 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "classifieds-ssr:build"
+            "buildTarget": "classifieds-ssr:serve"
           }
         },
         "serve-all": {

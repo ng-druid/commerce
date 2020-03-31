@@ -1,0 +1,15 @@
+# Default
+.dockerignore
+.env
+.git
+.gitignore
+.vs
+.vscode
+*/bin
+*/obj
+**/.toolstarget
+
+# Custom
+node_modules
+database.json
+Dockerfile
