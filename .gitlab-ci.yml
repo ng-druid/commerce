@@ -1,4 +1,8 @@
 # This file is a template, and might need editing before it works on your project.
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay
+
 docker-build-master:
   # Official docker image.
   image: docker:latest
