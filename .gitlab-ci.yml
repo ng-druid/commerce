@@ -1,20 +1,14 @@
-image: node:10.16.3
-
-pages:
-  cache:
-    paths:
-    - node_modules/
-
-  stage: deploy
+# This file is a template, and might need editing before it works on your project.
+docker-build-master:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-  - npm install -g @angular/cli@8.3.6
-  - npm install
-  - ng build classifieds --configuration="dev"
-  - mkdir public
-  - mv dist/apps/classifieds/* public/
-  artifacts:
-    paths:
-    - public
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
   only:
-  - master
-  - pages
+    - master
