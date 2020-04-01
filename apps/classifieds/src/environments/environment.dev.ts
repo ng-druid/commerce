@@ -3,24 +3,24 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
+  production: false,
   apiGatewaySettings: {
     endpointUrl: 'https://classifieds-dev.azurewebsites.net',
   },
   mediaSettings: {
-    endpointUrl: 'https://localhost:44340/media',
+    endpointUrl: 'https://classifieds-dev.azurewebsites.net/media',
     cloudinaryUrl: 'https://api.cloudinary.com/v1_1/dj4vvkgzw',
     uploadPreset: 'i0hm4opm',
     imageUrl: 'https://res.cloudinary.com/dj4vvkgzw'
   },
   loggingSettings: {
-    endpointUrl: "https://localhost:44340/logging"
+    endpointUrl: "https://classifieds-dev.azurewebsites.net/logging"
   },
   chatSettings: {
     endpointUrl: "https://classifieds-dev.azurewebsites.net/chat"
   },
   oktaSettings: {
-    redirectUri: 'https://smeskey.gitlab.io/classifieds-ui/implicit/callback',
+    redirectUri: 'https://classifieds-dev-ui.azurewebsites.net/implicit/callback',
     clientId: '0oa4qw6inqps2eUgC4x6',
   },
   clientSettings: {

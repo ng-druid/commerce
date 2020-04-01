@@ -1,14 +1,11 @@
 # Most recent version of node.
-FROM node:12.16.1
+FROM node:12.16.1 as buildContainer
 
 # Sets the default working directory of the image.
 ENV DEPLOYMENT_DIR=/app
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
-
-# ssr runs on port 4000
-EXPOSE 4000
 
 # Sets the default working directory of the image for any
 # RUN, CMD, ENTRYPOINT, COPY, and ADD statements that come
@@ -30,5 +27,25 @@ RUN ng run classifieds:server --configuration="dev"
 
 # Build node server files
 RUN ng run classifieds-ssr:build
+
+# ----------------------------------------------
+
+FROM node:12.16.1
+
+# Sets the default working directory of the image.
+ENV DEPLOYMENT_DIR=/app
+
+WORKDIR $DEPLOYMENT_DIR
+
+COPY --from=buildContainer /app/package.json /app
+COPY --from=buildContainer /app/server.js /app
+RUN npm install
+RUN npm uninstall cypress
+
+COPY --from=buildContainer /app/dist/apps/classifieds /app/dist/apps/classifieds
+COPY --from=buildContainer /app/dist/apps/classifieds-ssr /app/dist/apps/classifieds-ssr
+
+# ssr runs on port 4000
+EXPOSE 4000
 
 CMD ["node", "server.js"]

@@ -2,10 +2,8 @@
 import 'localstorage-polyfill';
 import 'zone.js/dist/zone-node';
 import * as express from 'express';
-import { join } from 'path';
 const { ngExpressEngine, AppServerModule, enableProdMode } = require('../../../dist/apps/classifieds/server/main');
 import { APP_BASE_HREF } from '@angular/common';
-import { existsSync } from 'fs';
 const winston  = require('winston');
 const  { Loggly } = require('winston-loggly-bulk');
 
@@ -23,8 +21,8 @@ winston.add(new Loggly({
 export function app() {
   enableProdMode();
   const server = express();
-  const distFolder = join(process.cwd(), 'dist/apps/classifieds');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+  const distFolder = 'dist/apps/classifieds';
+  const indexHtml = 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   server.engine('html', ngExpressEngine({
