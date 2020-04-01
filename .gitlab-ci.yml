@@ -2,6 +2,7 @@
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
+  MOUNT_POINT: /builds/$CI_PROJECT_PATH/mnt
 
 docker-build-master:
   # Official docker image.
@@ -12,6 +13,7 @@ docker-build-master:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
+    - mkdir -p "$MOUNT_POINT"
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
   only:
