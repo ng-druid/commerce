@@ -55,6 +55,9 @@
     },
     "classifieds-ssr": {
       "tags": []
+    },
+    "classifieds-lambda": {
+      "tags": []
     }
   }
 }

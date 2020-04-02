@@ -20,7 +20,7 @@ export const environment = {
     endpointUrl: "https://classifieds-dev.azurewebsites.net/chat"
   },
   oktaSettings: {
-    redirectUri: 'https://classifieds-ui-dev.azurewebsites.net/implicit/callback',
+    redirectUri: 'https://1amv4ijcf9.execute-api.us-east-1.amazonaws.com/dev/implicit/callback',
     clientId: '0oa4qw6inqps2eUgC4x6',
   },
   clientSettings: {

@@ -705,6 +705,81 @@
           }
         }
       }
+    },
+    "classifieds-lambda": {
+      "root": "apps/classifieds-lambda",
+      "sourceRoot": "apps/classifieds-lambda/src",
+      "projectType": "application",
+      "prefix": "classifieds-lambda",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "optimization": false,
+            "buildLibsFromSource": true,
+            "externalDependencies": [
+              "../../../dist/apps/classifieds/server/main"
+            ],
+            "outputPath": "dist/apps/classifieds-lambda",
+            "main": "apps/classifieds-lambda/src/main.ts",
+            "tsConfig": "apps/classifieds-lambda/tsconfig.app.json",
+            "assets": [
+              "apps/classifieds-lambda/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/classifieds-lambda/src/environments/environment.ts",
+                  "with": "apps/classifieds-lambda/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "classifieds-lambda:serve"
+          }
+        },
+        "build-all": {
+          "builder": "@angular-devkit/architect:concat",
+          "options": {
+            "targets": [
+              { "target": "classifieds:build" },
+              { "target": "classifieds:server" },
+              { "target": "classifieds-lambda:build" }
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/classifieds-lambda/tsconfig.app.json",
+              "apps/classifieds-lambda/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/classifieds-lambda/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/classifieds-lambda/jest.config.js",
+            "tsConfig": "apps/classifieds-lambda/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
