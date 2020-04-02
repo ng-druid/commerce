@@ -2,29 +2,16 @@
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
-  MOUNT_POINT: /builds/$CI_PROJECT_PATH/mnt
 
-docker-build-master:
-  # Official docker image.
+stages:
+  - install-node
+  - install-app-packages
+  - build-app
+
+.base:
   image: docker:19.03.0
-  stage: build
   services:
     - docker:19.03.0-dind
-  .pre
-    - apt update
-    - apt -y upgrade
-    - apt update
-    - apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
-    - curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-    - apt -y install nodejs 
-  before_script:
-    - npm install -g serverless
-    - npm install
-  script:
-    - mkdir -p "$MOUNT_POINT"
-    - ng run classifieds:build --configuration="dev" --baseHref="/dev/" --deployUrl="/dev/"
-    - ng run classifieds:server --configuration="dev" --deployUrl="/dev/"
-    - ng run classifieds-lambda:build
   only:
     - master
   tags:
@@ -32,3 +19,29 @@ docker-build-master:
     - azure
     - classifieds
     - smeskey
+
+install-node:
+  extends: .base
+  stage: install-node
+  script:
+    - yum update
+    - yum -y upgrade
+    - yum update
+    - yum -y install curl dirmngr apt-transport-https lsb-release ca-certificates
+    - curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    - yum -y install nodejs
+
+install-app-packages:
+  extends: .base
+  stage: install-app-packages
+  script:
+    - npm install -g serverless
+    - npm install
+
+build-app:
+  extends: .base
+  stage: build-app
+  script:
+    - ng run classifieds:build --configuration="dev" --baseHref="/dev/" --deployUrl="/dev/"
+    - ng run classifieds:server --configuration="dev" --deployUrl="/dev/"
+    - ng run classifieds-lambda:build
