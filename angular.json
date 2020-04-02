@@ -642,6 +642,10 @@
         "build": {
           "builder": "@nrwl/node:build",
           "options": {
+            "buildLibsFromSource": true,
+            "externalDependencies": [
+              "../../../dist/apps/classifieds/server/main"
+            ],
             "outputPath": "dist/apps/classifieds-ssr",
             "main": "apps/classifieds-ssr/src/main.ts",
             "tsConfig": "apps/classifieds-ssr/tsconfig.app.json",
@@ -669,13 +673,13 @@
             "buildTarget": "classifieds-ssr:serve"
           }
         },
-        "serve-all": {
+        "build-all": {
           "builder": "@angular-devkit/architect:concat",
           "options": {
             "targets": [
               { "target": "classifieds:build" },
               { "target": "classifieds:server" },
-              { "target": "classifieds-ssr:serve" }
+              { "target": "classifieds-ssr:build" }
             ]
           }
         },

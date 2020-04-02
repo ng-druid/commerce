@@ -5,23 +5,23 @@
 export const environment = {
   production: true,
   apiGatewaySettings: {
-    endpointUrl: 'https://localhost:44340',
+    endpointUrl: 'https://classifieds-dev.azurewebsites.net',
   },
   mediaSettings: {
-    endpointUrl: 'https://localhost:44340/media',
+    endpointUrl: 'https://classifieds-dev.azurewebsites.net/media',
     cloudinaryUrl: 'https://api.cloudinary.com/v1_1/dj4vvkgzw',
     uploadPreset: 'i0hm4opm',
     imageUrl: 'https://res.cloudinary.com/dj4vvkgzw'
   },
   loggingSettings: {
-    endpointUrl: "https://localhost:44340/logging"
+    endpointUrl: "https://classifieds-dev.azurewebsites.net/logging"
   },
   chatSettings: {
-    endpointUrl: "http://classifieds-dev.azurewebsites.net/chat"
+    endpointUrl: "https://classifieds-dev.azurewebsites.net/chat"
   },
   oktaSettings: {
-    redirectUri: 'http://localhost:4000/implicit/callback',
-    clientId: '0oa33yn39XtrnvY774x6',
+    redirectUri: 'https://classifieds-dev-ui.azurewebsites.net/implicit/callback',
+    clientId: '0oa4qw6inqps2eUgC4x6',
   },
   clientSettings: {
     authority: 'https://localhost:44392',

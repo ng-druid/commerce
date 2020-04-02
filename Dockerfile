@@ -37,10 +37,10 @@ ENV DEPLOYMENT_DIR=/app
 
 WORKDIR $DEPLOYMENT_DIR
 
-COPY --from=buildContainer /app/package.json /app
+#COPY --from=buildContainer /app/package.json /app
 COPY --from=buildContainer /app/server.js /app
-RUN npm install
-RUN npm uninstall cypress
+#RUN npm install
+#RUN npm uninstall cypress
 
 COPY --from=buildContainer /app/dist/apps/classifieds /app/dist/apps/classifieds
 COPY --from=buildContainer /app/dist/apps/classifieds-ssr /app/dist/apps/classifieds-ssr
