@@ -12,7 +12,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 # with it in the Dockerfile.
 WORKDIR $DEPLOYMENT_DIR
 
-RUN nom install -g serverless
+RUN npm install -g serverless
 
 # Install and cache dependencies.
 COPY package.json /app/package.json
