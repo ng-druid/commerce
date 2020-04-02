@@ -12,7 +12,7 @@ docker-build-master:
     - docker:19.03.0-dind
   script:
     - mkdir -p "$MOUNT_POINT"
-    - docker build --pull -f "apps/classifieds-lambda/Dockerfile" .
+    - docker build -f "apps/classifieds-lambda/Dockerfile" .
   only:
     - master
   tags:
