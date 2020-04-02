@@ -24,12 +24,12 @@ install-node:
   extends: .base
   stage: install-node
   script:
-    - apt update
-    - apt -y upgrade
-    - apt update
-    - apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
+    - apt-get update
+    - apt-get -y upgrade
+    - apt-get update
+    - apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates
     - curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-    - apt -y install nodejs
+    - apt-get -y install nodejs
 
 install-app-packages:
   extends: .base
