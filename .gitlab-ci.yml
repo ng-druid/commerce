@@ -3,7 +3,6 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
   MOUNT_POINT: /builds/$CI_PROJECT_PATH/mnt
-  IMAGE_NAME: "classifieds-ui"
 
 docker-build-master:
   # Official docker image.
@@ -11,16 +10,21 @@ docker-build-master:
   stage: build
   services:
     - docker:19.03.0-dind
+  .pre
+    - apt update
+    - apt -y upgrade
+    - apt update
+    - apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
+    - curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    - apt -y install nodejs 
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - npm install -g serverless
+    - npm install
   script:
     - mkdir -p "$MOUNT_POINT"
-    - docker build --pull -t "$CI_REGISTRY_IMAGE/$IMAGE_NAME:$CI_PIPELINE_IID-$CI_COMMIT_SHORT_SHA" -f "$DOCKERFILE_PATH" .
-    - docker tag "$CI_REGISTRY_IMAGE/$IMAGE_NAME:$CI_PIPELINE_IID-$CI_COMMIT_SHORT_SHA" "jobid:$CI_JOB_ID"
-    - docker tag "$CI_REGISTRY_IMAGE/$IMAGE_NAME:$CI_PIPELINE_IID-$CI_COMMIT_SHORT_SHA" "pipid:$CI_PIPELINE_ID"
-    - docker tag "$CI_REGISTRY_IMAGE/$IMAGE_NAME:$CI_PIPELINE_IID-$CI_COMMIT_SHORT_SHA" "pipiid:$CI_PIPELINE_IID"
-    - docker tag "$CI_REGISTRY_IMAGE/$IMAGE_NAME:$CI_PIPELINE_IID-$CI_COMMIT_SHORT_SHA" "commit:$CI_COMMIT_SHORT_SHA"
-    - docker push "$CI_REGISTRY_IMAGE/$IMAGE_NAME:$CI_PIPELINE_IID-$CI_COMMIT_SHORT_SHA"
+    - ng run classifieds:build --configuration="dev" --baseHref="/dev/" --deployUrl="/dev/"
+    - ng run classifieds:server --configuration="dev" --deployUrl="/dev/"
+    - ng run classifieds-lambda:build
   only:
     - master
   tags:
