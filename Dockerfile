@@ -30,7 +30,7 @@ RUN ng run classifieds-ssr:build
 
 # ----------------------------------------------
 
-FROM node:12.16.1
+FROM node:12.16.1-buster-slim
 
 # Sets the default working directory of the image.
 ENV DEPLOYMENT_DIR=/app
@@ -42,6 +42,7 @@ COPY --from=buildContainer /app/dist/apps/classifieds /app/dist/apps/classifieds
 COPY --from=buildContainer /app/dist/apps/classifieds-ssr /app/dist/apps/classifieds-ssr
 
 # ssr runs on port 4000
-EXPOSE 4000
+EXPOSE 80
+ENV PORT 80
 
 CMD ["node", "server.js"]
