@@ -3,6 +3,7 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
   MOUNT_POINT: /builds/$CI_PROJECT_PATH/mnt
+  IMAGE_NAME: "classifieds-ui"
 
 docker-build-master:
   # Official docker image.
