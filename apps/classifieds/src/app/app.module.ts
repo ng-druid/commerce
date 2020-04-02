@@ -25,6 +25,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HomeComponent } from './components/home/home.component';
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import { reducers, metaReducers } from './reducers';
@@ -35,7 +36,8 @@ const routes = [
   // { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
   { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
   { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
-  { path: '', component: HomeComponent }
+  { path: '', component: HomeComponent },
+  { path: '**', component: NotFoundComponent }
 ];
 
 // @todo: just get this to work for now deal with actual endpoints later.
@@ -55,7 +57,7 @@ const oktaConfig = {
 }
 
 @NgModule({
-  declarations: [AppComponent, AuthCallbackComponent, AppHeaderComponent, AppFooterComponent, HomeComponent],
+  declarations: [AppComponent, AuthCallbackComponent, AppHeaderComponent, AppFooterComponent, HomeComponent, NotFoundComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     CommonModule,

@@ -42,7 +42,7 @@ COPY --from=buildContainer /app/dist/apps/classifieds /app/dist/apps/classifieds
 COPY --from=buildContainer /app/dist/apps/classifieds-ssr /app/dist/apps/classifieds-ssr
 
 # ssr runs on port 4000
-EXPOSE 80
-ENV PORT 80
+#EXPOSE 80
+#ENV PORT 80
 
 CMD ["node", "server.js"]
