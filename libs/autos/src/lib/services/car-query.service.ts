@@ -9,7 +9,8 @@ import { Make, Model } from '../models/carquery.models';
   providedIn: 'root'
 })
 export class CarQueryService {
-  private baseUrl = `${this.config.root}/carquery/api/0.3/`;
+  //private baseUrl = `${this.config.root}/carquery/api/0.3/`;
+  private baseUrl = 'https://www.carqueryapi.com/api/0.3/';
   constructor(private http: HttpClient, private config: DefaultDataServiceConfig) { }
   getYears() : Observable<Array<number>> {
     return this.http.jsonp(`${this.baseUrl}?cmd=getYears&callback=callback`, 'callback').pipe(
