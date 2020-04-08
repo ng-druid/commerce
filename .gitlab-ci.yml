@@ -12,7 +12,7 @@ docker-build-master:
     - docker:19.03.0-dind
   script:
     - mkdir -p "$MOUNT_POINT"
-    - docker build -f "apps/classifieds-lambda/Dockerfile" .
+    - docker build -f "apps/classifieds-lambda/Dockerfile" -e AWS_ACCESS_KEY="$AWS_ACCESS_KEY" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" . 
   only:
     - master
   tags:
