@@ -9,7 +9,6 @@ import { AdType } from '../models/ads.models';
 })
 export class AdTypesDataService extends DefaultDataService<AdType> {
   constructor(config: DefaultDataServiceConfig, http: HttpClient, httpUrlGenerator: HttpUrlGenerator, logger: Logger) {
-    super('AdType', http, httpUrlGenerator, config);
-    this.entityUrl = this.entitiesUrl = `${config.root}/ads/adtype/`;
+    super('AdType', http, httpUrlGenerator, { ...config, root: `${config.root}/ads` });
   }
 }
