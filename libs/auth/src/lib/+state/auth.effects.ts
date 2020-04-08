@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-// import { UserManager } from 'oidc-client';
+import { UserManager } from 'oidc-client';
 import { switchMap, tap } from 'rxjs/operators';
 
 import {
@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthEffects {
 
-  /*login$ = createEffect(() =>
+  login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActionTypes.Login),
       tap(() => {
@@ -20,9 +20,9 @@ export class AuthEffects {
       })
     ),
     { dispatch: false }
-  );*/
+  );
 
-  /*completeAuthentication$ = createEffect(() =>
+  completeAuthentication$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActionTypes.CompleteAuthentication),
       switchMap(() => new Observable<SetUser>(sub => {
@@ -33,10 +33,10 @@ export class AuthEffects {
         })
       )
     )
-  );*/
+  );
 
   constructor(
     private actions$: Actions,
-    // private userManager: UserManager
+    private userManager: UserManager
   ) {}
 }

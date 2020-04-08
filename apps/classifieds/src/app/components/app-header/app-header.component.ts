@@ -12,21 +12,23 @@ import { AuthFacade } from '@classifieds-ui/auth';
   styleUrls: ['./app-header.component.scss']
 })
 export class AppHeaderComponent implements OnInit {
-  user$: Observable<User>;
+  // user$: Observable<User>;
   isAuthenticated: boolean;
   constructor(private authFacade: AuthFacade, private router: Router, private oktaAuth: OktaAuthService) {
-    this.oktaAuth.$authenticationState.subscribe(
+    /*this.oktaAuth.$authenticationState.subscribe(
       (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
-    );
+    );*/
   }
   ngOnInit() {
-    // this.user$ = this.authFacade.getUser$;
-    this.oktaAuth.isAuthenticated().then((value) => {
-      this.isAuthenticated = value;
+    this.authFacade.getUser$.subscribe(u => {
+      this.isAuthenticated = !!u;
     });
+    /*this.oktaAuth.isAuthenticated().then((value) => {
+      this.isAuthenticated = value;
+    });*/
   }
   login() {
-    // this.authFacade.login();
-    this.oktaAuth.loginRedirect();
+    this.authFacade.login();
+    // this.oktaAuth.loginRedirect();
   }
 }

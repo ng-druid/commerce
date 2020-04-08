@@ -10,5 +10,6 @@
     <span class="spacer"></span>
     <a mat-button *ngIf="!isAuthenticated">register</a>
     <a mat-raised-button color="accent" *ngIf="!isAuthenticated" (click)="login()">login</a>
-    <a mat-raised-button color="accent" *ngIf="isAuthenticated" routerLink="/ads/nop/create-ad">create ad</a>
+    <!-- <a mat-raised-button color="accent" *ngIf="isAuthenticated" routerLink="/ads/nop/create-ad">create ad</a> -->
+    <a mat-raised-button color="accent" routerLink="/ads/nop/create-ad">create ad</a>
 </mat-toolbar>

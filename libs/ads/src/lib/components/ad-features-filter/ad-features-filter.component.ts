@@ -2,13 +2,13 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList
 import { AdSearchBarForm } from '../../models/form.models';
 import { FormBuilder, FormArray } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
-import { QueryParams } from '@ngrx/data';
-import { FeatureListItemsService } from '../../services/feature-list-items.service';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { FeaturesSearchConfig, FeatureListItem } from '../../models/ads.models';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { mapAdType } from '../../ad.helpers';
+import * as qs from 'qs';
 
 @Component({
   selector: 'classifieds-ui-ad-features-filter',
@@ -40,11 +40,15 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
 
   featureSelections = new SelectionModel<string>(true);
 
+  private featureListItemsService: EntityCollectionService<FeatureListItem>;
+
   get featuresArray(): FormArray {
     return this.featuresFormGroup.controls.features as FormArray;
   }
 
-  constructor(private renderer: Renderer2, private fb: FormBuilder, private featuresListItemsService: FeatureListItemsService) { }
+  constructor(private renderer: Renderer2, private fb: FormBuilder, es: EntityServices) {
+    this.featureListItemsService = es.getEntityCollectionService('FeatureListItem');
+  }
 
   ngOnInit() {
     this.featuresFormGroup.get('features').valueChanges.pipe(
@@ -103,10 +107,10 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   }
 
   loadFeatures(searchString: string) {
-    this.featuresListItemsService.clearCache();
+    this.featureListItemsService.clearCache();
     const location = this.searchForm.location === undefined || this.searchForm.location.length !== 2 ? '' : this.searchForm.location.join(",");
     const search = new FeaturesSearchConfig({ adType: mapAdType(this.searchForm.adType), searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString, attributes: this.searchForm.attributes });
-    this.featuresListItemsService.getWithQuery(search as Object as QueryParams).subscribe(features => {
+    this.featureListItemsService.getWithQuery(qs.stringify(search as Object)).subscribe(features => {
       this.features$.next(features);
     });
   }

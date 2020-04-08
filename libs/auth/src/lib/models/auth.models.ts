@@ -8,6 +8,7 @@ export class ClientSettings {
   filterProtocolClaims: boolean;
   loadUserInfo: boolean;
   automaticSilentRenew: boolean;
+  metadata: any;
   constructor(data?: ClientSettings) {
     if(data) {
       this.authority = data.authority;
@@ -19,6 +20,7 @@ export class ClientSettings {
       this.filterProtocolClaims = data.filterProtocolClaims;
       this.loadUserInfo = data.loadUserInfo;
       this.automaticSilentRenew = data.automaticSilentRenew;
+      this.metadata = data.metadata;
     }
   }
 }

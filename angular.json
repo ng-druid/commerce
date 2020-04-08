@@ -34,7 +34,7 @@
             ],
             "scripts": [
               {
-                "input": "node_modules/oidc-client/dist/oidc-client.min.js",
+                "input": "node_modules/oidc-client/dist/oidc-client.js",
                 "inject": false,
                 "bundleName": "oidc-client"
               }

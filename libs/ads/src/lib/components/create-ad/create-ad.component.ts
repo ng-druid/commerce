@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { MediaObserver } from '@angular/flex-layout';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,8 +14,6 @@ import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from
 import { Attribute, ValueComputerService, AttributeValue } from '@classifieds-ui/attributes';
 import { AdBrowserFacade } from '../../features/ad-browser/ad-browser.facade';
 
-import { AdsService } from '../../services/ads.service';
-import { AdTypesService } from '../../services/ad-types.service';
 import { AdImage, Ad, AdStatuses, AdType } from '../../models/ads.models';
 
 @Component({
@@ -40,6 +39,9 @@ export class CreateAdComponent implements OnInit, OnDestroy {
   detailsFormGroup: FormGroup;
   attributesFormGroup: FormGroup;
 
+  private adsService: EntityCollectionService<Ad>;
+  private adTypesService: EntityCollectionService<AdType>
+
   private componentDestroyed = new Subject();
 
   @ViewChild(MatHorizontalStepper, { static: true })
@@ -49,7 +51,10 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     return this.adTypes[this.adTypeFormGroup.get('adType').value];
   }
 
-  constructor(private router: Router, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private adsService: AdsService, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adTypesService: AdTypesService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) { }
+  constructor(private router: Router, es: EntityServices, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) {
+    this.adsService = es.getEntityCollectionService('Ad');
+    this.adTypesService = es.getEntityCollectionService('AdType');
+  }
 
   ngOnInit() {
     this.adTypesService.getAll().subscribe(adTypes => this.adTypes = adTypes);

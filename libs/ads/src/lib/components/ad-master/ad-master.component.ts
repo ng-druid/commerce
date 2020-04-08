@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { MediaObserver } from '@angular/flex-layout';
 import { select, Store } from '@ngrx/store';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
@@ -8,8 +9,8 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
+import { AdListItem } from '../../models/ads.models';
 import { AdsDataSourceService } from '../../services/ads-data-source.service';
-import { AdListItemService } from '../../services/ad-list-item.service';
 
 @Component({
   selector: 'classifieds-ui-ad-master',
@@ -26,14 +27,17 @@ export class AdMasterComponent implements OnInit, OnChanges {
   @Input()
   adType: string;
   loading$: Observable<boolean>;
-  constructor(private router: Router, private mo: MediaObserver, private store: Store<RouterReducerState>, private adListItemService: AdListItemService, public adsDataSource: AdsDataSourceService) { }
+  private adListItemsService: EntityCollectionService<AdListItem>;
+  constructor(private router: Router, private mo: MediaObserver, private store: Store<RouterReducerState>, public adsDataSource: AdsDataSourceService, es: EntityServices) {
+    this.adListItemsService = es.getEntityCollectionService('AdListItem');
+  }
   ngOnInit() {
-    this.loading$ = this.adListItemService.loading$;
+    this.loading$ = this.adListItemsService.loading$;
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
-    combineLatest(
+    combineLatest([
       this.mo.asObservable().pipe(map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)),
       this.store.pipe(select(selectCurrentRoute))
-    ).pipe(
+    ]).pipe(
       distinctUntilChanged(),
       debounceTime(250)
     ).subscribe(() => {

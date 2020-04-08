@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { QueryParams } from '@ngrx/data';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { Ad, SearchConfig, AdTypes } from '../models/ads.models';
+import { Ad, SearchConfig, AdListItem } from '../models/ads.models';
 import { AdSearchBarForm } from '../models/form.models';
-import { AdListItemService } from './ad-list-item.service';
 import { mapAdType } from '../ad.helpers';
 import * as qs from 'qs';
 
@@ -15,9 +14,11 @@ export class AdsDataSourceService extends DataSource<Ad> {
   private pageSize = 25;
   private lastPage = 0;
   private searchConfig: SearchConfig;
-  constructor(private adListItemService: AdListItemService) {
+  private adListItemsService: EntityCollectionService<AdListItem>;
+  constructor(es: EntityServices) {
     super();
-    this.adListItemService.entities$.subscribe(ads => {
+    this.adListItemsService = es.getEntityCollectionService('AdListItem');
+    this.adListItemsService.entities$.subscribe(ads => {
       this.dataStream.next(ads);
     });
   }
@@ -26,7 +27,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
     this.lastPage = 0;
     const location = searchForm.location === undefined || searchForm.location.length !== 2 ? '' : searchForm.location.join(",");
     this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features, adType: mapAdType(searchForm.adType), attributes: searchForm.attributes });
-    this.adListItemService.clearCache();
+    this.adListItemsService.clearCache();
     this.query();
   }
 
@@ -43,7 +44,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   }
 
   query() {
-    this.adListItemService.getWithQuery(qs.stringify(this.searchConfig as Object));
+    this.adListItemsService.getWithQuery(qs.stringify(this.searchConfig as Object));
   }
 
   disconnect(collectionViewer: CollectionViewer): void {

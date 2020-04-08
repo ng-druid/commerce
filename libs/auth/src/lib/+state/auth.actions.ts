@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-// import { User } from 'oidc-client';
+import { User } from 'oidc-client';
 
 export enum AuthActionTypes {
   Login = '[Auth] Login',
@@ -20,15 +20,15 @@ export class CompleteAuthentication implements Action {
   readonly type = AuthActionTypes.CompleteAuthentication;
 }
 
-/*export class SetUser implements Action {
-  readonly type = AuthActionTypes.SetUser;
-  constructor(public payload: User) {}
-}*/
-
 export class SetUser implements Action {
   readonly type = AuthActionTypes.SetUser;
-  constructor(public payload: any) {}
+  constructor(public payload: User) {}
 }
+
+/*export class SetUser implements Action {
+  readonly type = AuthActionTypes.SetUser;
+  constructor(public payload: any) {}
+}*/
 
 export type AuthAction = Login | Logout | CompleteAuthentication | SetUser;
 

@@ -21,6 +21,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     // When error is thrown ss bombs entire app / server - not good :/
     if (this.isBrowser) {
       throw error;
+    } else {
+      console.log(error);
     }
   }
 }

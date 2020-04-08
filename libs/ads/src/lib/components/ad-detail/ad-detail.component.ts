@@ -1,13 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { iif, of, EMPTY } from 'rxjs';
 import { map, filter, switchMap, tap, withLatestFrom, mergeMap } from 'rxjs/operators';
 import { MEDIA_SETTINGS, MediaSettings } from '@classifieds-ui/media';
 import { CitiesService, City } from '@classifieds-ui/cities';
 
 import { Ad } from '../../models/ads.models';
-import { AdsService } from '../../services/ads.service';
 
 @Component({
   selector: 'classifieds-ui-ad-detail',
@@ -22,7 +22,10 @@ export class AdDetailComponent implements OnInit {
   mediaBaseUrl: string;
   selectedTabIndex = 0;
   adType: string;
-  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private adsService: AdsService, private citiesService: CitiesService) { }
+  private adsService: EntityCollectionService<Ad>;
+  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private citiesService: CitiesService, es: EntityServices) {
+    this.adsService = es.getEntityCollectionService('Ad');
+  }
   ngOnInit() {
     this.mediaBaseUrl = this.mediaSettings.imageUrl;
     this.route.paramMap.pipe(

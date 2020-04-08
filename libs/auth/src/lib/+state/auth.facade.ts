@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
+import { User } from 'oidc-client';
 
 import { select, Store } from '@ngrx/store';
 
 import { AuthPartialState } from './auth.reducer';
 import { authQuery } from './auth.selectors';
-import { CompleteAuthentication, Login, Logout } from './auth.actions';
+import { CompleteAuthentication, Login, Logout, SetUser } from './auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class AuthFacade {
 
   logout() {
     this.store.dispatch(new Logout());
+  }
+
+  setUser(user: User) {
+    this.store.dispatch(new SetUser(user));
   }
 
   completeAuthentication() {

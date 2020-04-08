@@ -13,7 +13,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 
-
 import { AdBrowserComponent } from './components/ad-browser/ad-browser.component';
 import { AdDetailComponent } from './components/ad-detail/ad-detail.component';
 import { CreateAdComponent } from './components/create-ad/create-ad.component';
@@ -30,6 +29,10 @@ import { AdBrowserEffects } from './features/ad-browser/ad-browser.effects';
 import { CreateAdGuard } from './guards/create-ad.guard';
 import { AdTypeResolver } from './resolvers/ad-type.resolver';
 import { AdAttributesFilterComponent } from './components/ad-attributes-filter/ad-attributes-filter.component';
+import { AdsDataService } from './services/ads-data.service';
+import { AdListItemsDataService } from './services/ad-list-items-data.service';
+import { FeatureListItemsDataService } from './services/feature-list-items-data.service';
+import { AdTypesDataService } from './services/ad-types-data.service';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
@@ -62,7 +65,39 @@ const routes = [
   ]
 })
 export class AdsModule {
-  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService) {
+  constructor(
+    eds: EntityDefinitionService,
+    entityDataService: EntityDataService,
+    adsDataService: AdsDataService,
+    adListItemsDataService: AdListItemsDataService,
+    featureListItemsDataService: FeatureListItemsDataService,
+    adTypesDataService: AdTypesDataService
+  ) {
     eds.registerMetadataMap(entityMetadata);
+    entityDataService.registerServices({
+      Ad: adsDataService,
+      AdListItem: adListItemsDataService,
+      FeatureListItem: featureListItemsDataService,
+      AdType: adTypesDataService
+    });
+    /*entityDataService.registerService('Ad', this.createAdsDataService<Ad>('Ad', http, httpUrlGenerator, config));
+    entityDataService.registerService('AdListItem', this.createAdsDataService<AdListItem>('AdListItem', http, httpUrlGenerator, config));
+    entityDataService.registerService('FeatureListItem', this.createAdsDataService<FeatureListItem>('FeatureListItem', http, httpUrlGenerator, config));
+    entityDataService.registerService('AdType', this.createAdsDataService<AdType>('AdType', http, httpUrlGenerator, config));*/
   }
+  // This is not my favorite way to do this but it works without needing to create a separate data service class for each entity.
+  /*createAdsDataService<T>(
+    entityName: string,
+    http: HttpClient,
+    httpUrlGenerator: HttpUrlGenerator,
+    config: DefaultDataServiceConfig
+  ): EntityCollectionDataService<T> {
+    const configCopy = { ...config, root: `${config.root}/ads` } as DefaultDataServiceConfig;
+    return new DefaultDataService<T>(
+      entityName,
+      http,
+      httpUrlGenerator,
+      configCopy
+    );
+  }*/
 }

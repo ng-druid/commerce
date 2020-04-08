@@ -1,5 +1,5 @@
 import { AuthAction, AuthActionTypes } from './auth.actions';
-// import { User } from 'oidc-client';
+import { User } from 'oidc-client';
 
 export const AUTH_FEATURE_KEY = 'auth';
 
@@ -14,8 +14,8 @@ export const AUTH_FEATURE_KEY = 'auth';
 export interface Entity {}
 
 export interface AuthState {
-  // user: User;
-  user: any;
+  user: User;
+  // user: any;
 }
 
 export interface AuthPartialState {
