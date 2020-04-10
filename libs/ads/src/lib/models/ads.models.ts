@@ -78,6 +78,7 @@ export class Ad {
   id: string;
   title: string;
   adType: AdTypes;
+  // userId: string;
   status: AdStatuses;
   description: string;
   location: Array<number>;
@@ -94,6 +95,7 @@ export class Ad {
       this.description = data.description;
       this.location = data.location;
       this.cityDisplay = data.cityDisplay;
+      // this.userId = data.userId;
       if(data.images) {
         this.images = data.images.map(i => new AdImage(i));
       }

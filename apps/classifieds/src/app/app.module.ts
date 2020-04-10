@@ -109,7 +109,7 @@ const oktaConfig = {
     // { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
 
     // There is no way to prioritize interceptors so order can be important.
-    { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LogoutInterceptor, multi: true },

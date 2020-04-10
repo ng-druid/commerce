@@ -10,7 +10,7 @@ import { catchError, switchMap, tap, debounceTime, finalize, takeUntil, map, dis
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { CityListItemsService, CityListItem, ZippoService } from '@classifieds-ui/cities';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { VocabularyService, Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
+import { Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/taxonomy';
 import { Attribute, ValueComputerService, AttributeValue } from '@classifieds-ui/attributes';
 import { AdBrowserFacade } from '../../features/ad-browser/ad-browser.facade';
 
@@ -41,6 +41,7 @@ export class CreateAdComponent implements OnInit, OnDestroy {
 
   private adsService: EntityCollectionService<Ad>;
   private adTypesService: EntityCollectionService<AdType>
+  private vocabularyService: EntityCollectionService<Vocabulary>;
 
   private componentDestroyed = new Subject();
 
@@ -51,9 +52,10 @@ export class CreateAdComponent implements OnInit, OnDestroy {
     return this.adTypes[this.adTypeFormGroup.get('adType').value];
   }
 
-  constructor(private router: Router, es: EntityServices, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private vocabularyService: VocabularyService, private zippoService: ZippoService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) {
+  constructor(private router: Router, es: EntityServices, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private zippoService: ZippoService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) {
     this.adsService = es.getEntityCollectionService('Ad');
     this.adTypesService = es.getEntityCollectionService('AdType');
+    this.vocabularyService = es.getEntityCollectionService('Vocabulary');
   }
 
   ngOnInit() {

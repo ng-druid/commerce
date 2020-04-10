@@ -1,9 +1,9 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs/operators';
 
 import { Vocabulary } from '../../models/taxonomy.models';
-import { VocabularyService } from '../../services/vocabulary.service';
 
 @Component({
   selector: 'classifieds-ui-vocabulary-edit',
@@ -13,8 +13,11 @@ import { VocabularyService } from '../../services/vocabulary.service';
 export class VocabularyEditComponent implements OnInit {
 
   vocabulary: Vocabulary;
+  private vocabularyService: EntityCollectionService<Vocabulary>;
 
-  constructor(private route: ActivatedRoute, private vocabularyService: VocabularyService) { }
+  constructor(private route: ActivatedRoute, es: EntityServices) {
+    this.vocabularyService = es.getEntityCollectionService('Vocabulary');
+  }
 
   ngOnInit() {
     this.route.paramMap.pipe(

@@ -1,5 +1,6 @@
 import { AuthAction, AuthActionTypes } from './auth.actions';
 import { User } from 'oidc-client';
+import { userInfo } from 'os';
 
 export const AUTH_FEATURE_KEY = 'auth';
 

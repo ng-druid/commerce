@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { VocabularyListItem, VocabularyListItemService } from '@classifieds-ui/taxonomy';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
+import { VocabularyListItem } from '@classifieds-ui/taxonomy';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -11,12 +12,15 @@ export class VocabularyMasterComponent implements OnInit {
   vocabularies$: Observable<Array<VocabularyListItem>>;
   loading$: Observable<boolean>;
   displayOverlay = false;
+  private vocabularyListItemsService: EntityCollectionService<VocabularyListItem>;
 
-  constructor(private vocabularyListItemService: VocabularyListItemService) { }
+  constructor(es: EntityServices) {
+    this.vocabularyListItemsService = es.getEntityCollectionService('VocabularyListItem');
+  }
 
   ngOnInit() {
-    this.vocabularies$ = this.vocabularyListItemService.getAll();
-    this.loading$ = this.vocabularyListItemService.loading$;
+    this.vocabularies$ = this.vocabularyListItemsService.getAll();
+    this.loading$ = this.vocabularyListItemsService.loading$;
   }
 
 }

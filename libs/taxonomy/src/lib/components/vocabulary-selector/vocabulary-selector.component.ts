@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { Observable } from  'rxjs';
 import { VocabularyListItem } from '../../models/taxonomy.models';
-import { VocabularyListItemService } from '../../services/vocabulary-list-item.service';
 
 @Component({
   selector: 'classifieds-ui-vocabulary-selector',
@@ -11,15 +11,18 @@ import { VocabularyListItemService } from '../../services/vocabulary-list-item.s
 })
 export class VocabularySelectorComponent implements OnInit {
   vocabs$: Observable<Array<VocabularyListItem>>;
+  private vocabularyListItemsService: EntityCollectionService<VocabularyListItem>;
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: { selectedId: string; },
-    private vocabularyListService: VocabularyListItemService,
-    private bottomSheetRef: MatBottomSheetRef<VocabularySelectorComponent>
-  ) { }
+    private bottomSheetRef: MatBottomSheetRef<VocabularySelectorComponent>,
+    es: EntityServices
+  ) {
+    this.vocabularyListItemsService = es.getEntityCollectionService('VocabularyListItem');
+  }
 
   ngOnInit() {
-    this.vocabs$ = this.vocabularyListService.getAll();
+    this.vocabs$ = this.vocabularyListItemsService.getAll();
   }
 
   openLink(event, vocabId: string) {

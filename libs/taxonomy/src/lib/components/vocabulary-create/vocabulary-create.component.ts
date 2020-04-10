@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { Vocabulary } from '../../models/taxonomy.models';
-import { VocabularyService } from '../../services/vocabulary.service';
 
 @Component({
   selector: 'classifieds-ui-vocabulary-create',
@@ -10,8 +10,11 @@ import { VocabularyService } from '../../services/vocabulary.service';
 export class VocabularyCreateComponent implements OnInit {
 
   vocabulary: Vocabulary = new Vocabulary({ humanName: '', machineName: '', id: undefined, terms: [], userId: undefined });
+  private vocabularyService: EntityCollectionService<Vocabulary>;
 
-  constructor(private vocabularyService: VocabularyService) { }
+  constructor(es: EntityServices) {
+    this.vocabularyService = es.getEntityCollectionService('Vocabulary');
+  }
 
   ngOnInit() {
   }
