@@ -2,13 +2,36 @@
   <classifieds-ui-app-header (menuClicked)="sidenav.toggle()" fxFlex="0 1 auto"></classifieds-ui-app-header>
     <mat-sidenav-container fxFlex="1 1 auto">
       <mat-sidenav #sidenav mode="over">
-        <nav>
+        <nav class="home-nav">
           <ul>
-            <li><a routerLink="/">home</a></li>
-            <li><a routerLink="/ads/general">classifieds</a></li>
+            <li><li><a routerLink="/">home</a></li>
+          </ul>
+        </nav>
+        <nav class="classifieds-nav">
+          <h4>Browse</h4>
+          <ul>
+            <li><a routerLink="/ads/general">general</a></li>
             <li><a routerLink="/ads/realestate">real estate</a></li>
             <li><a routerLink="/ads/rentals">rentals</a></li>
             <li><a routerLink="/ads/autos">autos</a></li>
+            <li><a routerLink="/ads/jobs">jobs</a></li>
+          </ul>
+        </nav>
+        <nav class="users-nav">
+          <h4>Account</h4>
+          <ul>
+            <li><a routerLink="/">Chats</a></li>
+            <li><a routerLink="/">Vocabs</a></li>
+            <li><a routerLink="/">My Ads</a></li>
+            <li><a routerLink="/">Profiles</a></li>
+          </ul>
+        </nav>
+        <nav class="bottom-nav">
+          <h4>Services</h4>
+          <ul>
+            <li><a routerLink="/">Pricing</a></li>
+            <li><a routerLink="/">Contact</a></li>
+            <li><a routerLink="/">Terms</a></li>
           </ul>
         </nav>
       </mat-sidenav>

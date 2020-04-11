@@ -1,12 +1,12 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="searchFormGroup" fxLayout="row" fxLayoutGap="2em">
-  <span fxFlex="20"></span>
-  <div fxFlex="30">
+<form (ngSubmit)="onSubmit()" [ngClass]="{flush: flush}" [formGroup]="searchFormGroup" [fxLayout]="flush ? 'column' : 'row'" [fxLayoutGap]="flush ? '0' : '2em'">
+  <span *ngIf="!flush" fxFlex="20"></span>
+  <div [fxFlex]="flush ? 100 : 30">
     <mat-form-field appearance="standard">
       <input matInput type="text" placeholder="Search" formControlName="searchString">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>
-  <div fxFlex="30">
+  <div [fxFlex]="flush ? 100: 30">
     <mat-form-field appearance="standard">
       <input matInput placeholder="Location" [matAutocomplete]="auto" formControlName="location">
       <mat-icon matSuffix>location_city</mat-icon>
@@ -18,5 +18,5 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
-  <span fxFlex="20"></span>
+  <span *ngIf="!flush" fxFlex="20"></span>
 </form>

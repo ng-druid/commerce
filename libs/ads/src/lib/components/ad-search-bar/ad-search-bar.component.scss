@@ -10,15 +10,15 @@ mat-form-field {
 }
 
 form div:nth-child(1) {
-  padding-left: 1em;
+  // padding-left: 1em;
 }
 
 form div:nth-child(2) {
-  padding-right: 1em;
+  //padding-right: 1em;
 }
 
 form {
-  padding-top: 1em;
+  //padding-top: 1em;
 }
 
 mat-form-field.mat-form-field {
@@ -37,4 +37,16 @@ mat-form-field.mat-form-field input::placeholder {
 
 mat-form-field.mat-form-field-appearance-standard::ng-deep .mat-form-field-underline {
   background-color: white;
+}
+
+form.flush {
+  padding-right: 1em;
+}
+
+form.flush mat-form-field.mat-form-field-appearance-standard .mat-form-field-flex {
+  padding-top: 0;
+}
+
+form.flush mat-form-field.mat-form-field-appearance-standard .mat-form-field-infix {
+  padding: 0 0 .25em 0;
 }

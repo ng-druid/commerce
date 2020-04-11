@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Output, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { MediaObserver } from '@angular/flex-layout';
 import { Subject, } from 'rxjs';
-import { debounceTime, tap, switchMap, takeUntil, finalize, filter } from 'rxjs/operators';
+import { debounceTime, tap, switchMap, takeUntil, finalize, filter, map } from 'rxjs/operators';
 import { CityListItem , CityListItemsService, ZippoService } from '@classifieds-ui/cities';
 
 import { AdSearchBarForm } from '../../models/form.models';
@@ -25,6 +26,8 @@ export class AdSearchBarComponent implements OnInit, OnChanges, OnDestroy {
   cities: Array<CityListItem> = [];
   isLoadingCities = false;
 
+  flush = false;
+
   searchFormGroup: FormGroup = this.fb.group({
     searchString: [''],
     location: ['']
@@ -32,7 +35,7 @@ export class AdSearchBarComponent implements OnInit, OnChanges, OnDestroy {
 
   private componentDestroyed = new Subject();
 
-  constructor(private fb: FormBuilder, private citiesListService: CityListItemsService, private zippoService: ZippoService) { }
+  constructor(private fb: FormBuilder, private citiesListService: CityListItemsService, private zippoService: ZippoService, private mo: MediaObserver ) { }
 
   ngOnInit() {
     this.searchFormGroup.get('searchString').valueChanges.pipe(
@@ -72,6 +75,13 @@ export class AdSearchBarComponent implements OnInit, OnChanges, OnDestroy {
     .subscribe((cities: Array<CityListItem>) => {
       this.cities = cities;
     });
+    this.mo.asObservable().pipe(
+      map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1),
+      takeUntil(this.componentDestroyed)
+    ).subscribe(desktop => {
+      this.flush = !desktop;
+      console.log(this.flush);
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {

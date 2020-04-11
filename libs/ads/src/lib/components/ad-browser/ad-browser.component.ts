@@ -19,14 +19,15 @@ export class AdBrowserComponent implements OnInit {
   hideRouterOutlet = false;
   hideSearchBar = false;
   refreshViewport = true;
+  spacerGap = '2em';
   adType = this.route.snapshot.data.adType;
   constructor(private mo: MediaObserver, private store: Store<RouterReducerState>, private route: ActivatedRoute) { }
   ngOnInit() {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
-    combineLatest(
+    combineLatest([
       this.mo.asObservable().pipe(map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)),
       this.store.pipe(select(selectCurrentRoute))
-    ).pipe(
+    ]).pipe(
       distinctUntilChanged(),
       debounceTime(250)
     ).subscribe(([desktop, r]) => {
@@ -34,14 +35,17 @@ export class AdBrowserComponent implements OnInit {
         this.hideMasterComponent = false;
         this.hideRouterOutlet = false;
         this.hideSearchBar = false;
+        this.spacerGap = '2em';
       } else if(r.routeConfig.path === 'ad/:adId' || r.routeConfig.path === 'create-ad') {
         this.hideMasterComponent = true;
         this.hideRouterOutlet = false;
         this.hideSearchBar = r.routeConfig.path === 'create-ad';
+        this.spacerGap = '1em';
       } else {
         this.hideMasterComponent = false;
         this.hideRouterOutlet = true;
         this.hideSearchBar = false;
+        this.spacerGap = '1em';
       }
     });
     this.route.paramMap.pipe(

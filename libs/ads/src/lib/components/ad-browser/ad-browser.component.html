@@ -12,8 +12,10 @@
           </div>
       </div>
       <div fxFlex fxLayout="row" fxFill>
+        <span [fxFlex]="spacerGap"></span>
         <classifieds-ui-ad-master [fxFlex]="hideRouterOutlet ? 100 : 30" [hidden]="hideMasterComponent" [searchForm]="searchForm" [adType]="adType"></classifieds-ui-ad-master>
         <div class="router-outlet" [fxFlex]="hideMasterComponent ? 100 : 70" [hidden]="hideRouterOutlet"><router-outlet></router-outlet></div>
+        <span [fxFlex]="spacerGap"></span>
       </div>
     </div>
   </mat-sidenav-content>
