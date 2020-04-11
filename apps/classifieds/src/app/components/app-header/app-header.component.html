@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-    <span class="brand">Classifieds</span>
+    <span class="brand">GalADika</span>
     <a mat-button routerLink="/">home</a>
     <a mat-button routerLink="/ads/general">classifieds</a>
     <a mat-button routerLink="/ads/realestate">real estate</a>
@@ -11,5 +11,5 @@
     <a mat-button *ngIf="!isAuthenticated">register</a>
     <a mat-raised-button color="accent" *ngIf="!isAuthenticated" (click)="login()">login</a>
     <!-- <a mat-raised-button color="accent" *ngIf="isAuthenticated" routerLink="/ads/nop/create-ad">create ad</a> -->
-    <a mat-raised-button color="accent" routerLink="/ads/nop/create-ad">create ad</a>
+    <a class="create-ad" mat-raised-button color="accent" routerLink="/ads/nop/create-ad">create</a>
 </mat-toolbar>

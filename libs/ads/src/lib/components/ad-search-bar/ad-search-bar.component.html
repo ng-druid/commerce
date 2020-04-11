@@ -1,9 +1,12 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="searchFormGroup" fxLayout="row" fxLayoutGap="1em">
-  <mat-form-field appearance="standard" fxFlex="50">
-    <input matInput type="text" placeholder="Search" formControlName="searchString">
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
-  <mat-form-field appearance="standard" fxFlex="50">
+<form (ngSubmit)="onSubmit()" [formGroup]="searchFormGroup" fxLayout="row" fxLayoutGap="2em">
+  <div fxFlex="50">
+    <mat-form-field appearance="standard">
+      <input matInput type="text" placeholder="Search" formControlName="searchString">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+  <div fxFlex="50">
+    <mat-form-field appearance="standard">
       <input matInput placeholder="Location" [matAutocomplete]="auto" formControlName="location">
       <mat-icon matSuffix>location_city</mat-icon>
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity" (optionSelected)="onSubmit()">
@@ -13,4 +16,5 @@
         </ng-container>
       </mat-autocomplete>
     </mat-form-field>
+  </div>
 </form>

@@ -8,10 +8,28 @@
 }
 
 .mat-drawer-container {
-  background-color: white;
+  background-color: transparent;
 }
 
 mat-sidenav {
   width: 500px;
   border-right: none;
+}
+
+.mat-drawer {
+  background-color: rgba(255,255,255,.1);
+  // background-color: transparent;
+  //border-right: 1px solid white;
+  //border-top: 1px solid white;
+  padding: 2em;
+}
+
+.filter-btn {
+  background-color: rgba(255,255,255,.1);
+  border-bottom: 1px solid black;
+  color: rgb(178, 178, 241);
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  font-weight: lighter;
+  // border-left: 1px solid rgba(255, 255,255, .5);
 }

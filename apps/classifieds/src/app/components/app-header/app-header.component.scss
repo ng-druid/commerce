@@ -9,7 +9,42 @@
   color: black;
   padding-right: 1em;
   text-transform: uppercase;
-  letter-spacing: .15em;
+  letter-spacing: .25em;
   font-weight: lighter;
   font-style: serif;
+  color: #ffd300;
+  color: rgb(131,215,254);
+  color: white;
+}
+
+a {
+  text-transform: uppercase;
+  font-weight: lighter;
+  text-decoration: none;
+  letter-spacing: .15em;
+  // color: rgb(44,123,207);
+  color: rgb(131,215,254);
+  font-size: small;
+
+  &:hover {
+    color: rgb(131,215,254);
+    // border-bottom: 1px solid rgb(131,215,254);
+  }
+}
+
+.mat-raised-button.mat-accent {
+  background-color: transparent;
+}
+
+:host .mat-toolbar.mat-primary {
+  background-color: transparent;
+  border-bottom: 1px solid #155599;
+  background-color: black;
+}
+
+a.create-ad {
+  color: rgb(131,215,254);
+  border-left: 1px solid rgb(131,215,254);
+  padding-left: 3em;
+  color: white;
 }

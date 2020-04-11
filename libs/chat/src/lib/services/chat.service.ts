@@ -32,8 +32,8 @@ export class ChatService {
   private initializeConnection(): void {
     this.hubConnection = new signalR.HubConnectionBuilder()
     .withUrl(`${this.chatSettings.endpointUrl}/chat`, {
-      // accessTokenFactory: (): Promise<string> => this.authFacade.getUser$.pipe(take(1), map(u => `${u.access_token}` )).toPromise(),
-      accessTokenFactory: (): Promise<string> => this.oktaAuth.getAccessToken(),
+      accessTokenFactory: (): Promise<string> => this.authFacade.getUser$.pipe(take(1), map(u => `${u.access_token}` )).toPromise(),
+      // accessTokenFactory: (): Promise<string> => this.oktaAuth.getAccessToken(),
       transport: signalR.HttpTransportType.WebSockets,
       skipNegotiation: true
     })

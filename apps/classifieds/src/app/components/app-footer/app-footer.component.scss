@@ -9,3 +9,10 @@ mat-toolbar {
   z-index: 1000;
 }
 
+:host .mat-toolbar.mat-primary {
+  background-color: transparent;
+  color: white;
+  // border-bottom: 1px solid white;
+  background-color: black;
+}
+

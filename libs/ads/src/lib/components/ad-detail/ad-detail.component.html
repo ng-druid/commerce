@@ -1,4 +1,4 @@
-<div *ngIf="ad" fxLayout="column" fxFill>
+<div class="ad-detail-wrapper" *ngIf="ad" fxLayout="column" fxFill>
   <h1>{{ ad.title }}</h1>
   <ul class="attributes" *ngIf="ad.attributes && ad.attributes.length > 0">
     <li *ngFor="let attribute of ad.attributes">

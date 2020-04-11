@@ -2,6 +2,14 @@
   height: 100%;
 }
 
+responsive-stepper mat-horizontal-stepper.mat-stepper-horizontal {
+  background-color: transparent !important;
+}
+
+responsive-stepper .mat-stepper-vertical {
+  background-color: transparent !important;
+}
+
 form {
   padding-right: 1em;
   padding-top: 1em;

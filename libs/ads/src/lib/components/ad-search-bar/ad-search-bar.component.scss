@@ -1,4 +1,21 @@
 :host {
-  padding: 0 .5em;
-  // border-bottom: 2px solid rgba(0,0,0,.42);
+  padding: 0;
+  background-color: rgba(255,255,255,.1);
+  border-bottom: 1px solid black;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+form div:nth-child(1) {
+  padding-left: 1em;
+}
+
+form div:nth-child(2) {
+  padding-right: 1em;
+}
+
+form {
+  padding-top: 1em;
 }
