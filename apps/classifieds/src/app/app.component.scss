@@ -1,1 +1,50 @@
 
+.mat-drawer-container {
+  background-color: transparent;
+}
+
+.mat-drawer {
+  background-color: #3a38a0
+}
+
+a {
+  text-transform: uppercase;
+  font-weight: lighter;
+  text-decoration: none;
+  letter-spacing: .15em;
+  // color: rgb(44,123,207);
+  color: whitesmoke;
+  padding: .75em 2.5em;
+  display: block;
+
+  &:link {
+    color: whitesmoke;
+    background-color: transparent;
+  }
+
+  &:hover {
+    color: rgb(131,215,254);
+    // border-bottom: 1px solid rgb(131,215,254);
+  }
+
+  &:visited {
+    color: whitesmoke;
+    background-color: transparent;
+  }
+
+  &:active {
+    color: whitesmoke;
+    background-color: transparent;
+  }
+}
+
+nav ul {
+  padding: 0;
+  margin: 1em 0;
+}
+
+nav li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}

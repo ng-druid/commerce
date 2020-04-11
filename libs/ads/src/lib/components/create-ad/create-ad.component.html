@@ -1,4 +1,5 @@
-<responsive-stepper [linear]="true" [orientation]="orientation" #stepper>
+<div class="ad-create-wrapper" *ngIf="ad" fxLayout="column" fxFill>
+  <responsive-stepper [linear]="true" [orientation]="orientation" #stepper>
     <mat-step [stepControl]="adTypeFormGroup">
       <form [formGroup]="adTypeFormGroup">
         <ng-template matStepLabel>Ad Type</ng-template>
@@ -83,3 +84,4 @@
       </div>
     </mat-step>
   </responsive-stepper>
+</div>

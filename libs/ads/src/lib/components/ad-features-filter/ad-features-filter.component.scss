@@ -11,6 +11,29 @@
 }
 
 .is-selected {
-  background-color: red;
+  background-color: rgba(255,255,255,.1);
   order: 1000;
+  padding: .25em .5em;
+}
+
+mat-form-field.mat-form-field {
+  color: whitesmoke;
+  text-transform: uppercase;
+  font-weight: lighter;
+  letter-spacing: .15em;
+}
+
+mat-form-field.mat-form-field input::placeholder {
+  color: #b2b2f1;
+  text-transform: uppercase;
+  font-weight: lighter;
+  letter-spacing: .15em;
+}
+
+mat-form-field.mat-form-field-appearance-standard::ng-deep .mat-form-field-underline {
+  background-color: whitesmoke;
+}
+
+.mat-checkbox-frame {
+  background-color: whitesmoke;
 }

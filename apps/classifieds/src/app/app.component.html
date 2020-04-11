@@ -1,7 +1,21 @@
 <div fxLayout="column" fxFill>
-  <classifieds-ui-app-header fxFlex="0 1 auto"></classifieds-ui-app-header>
-  <div fxFlex="1 1 auto">
-    <router-outlet></router-outlet>
-  </div>
+  <classifieds-ui-app-header (menuClicked)="sidenav.toggle()" fxFlex="0 1 auto"></classifieds-ui-app-header>
+    <mat-sidenav-container fxFlex="1 1 auto">
+      <mat-sidenav #sidenav mode="over">
+        <nav>
+          <ul>
+            <li><a routerLink="/">home</a></li>
+            <li><a routerLink="/ads/general">classifieds</a></li>
+            <li><a routerLink="/ads/realestate">real estate</a></li>
+            <li><a routerLink="/ads/rentals">rentals</a></li>
+            <li><a routerLink="/ads/autos">autos</a></li>
+          </ul>
+        </nav>
+      </mat-sidenav>
+      <mat-sidenav-content>
+          <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
   <classifieds-ui-app-footer fxFlex="0 1 auto"></classifieds-ui-app-footer>
 </div>
+

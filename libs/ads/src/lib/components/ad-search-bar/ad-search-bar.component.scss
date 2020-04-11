@@ -1,7 +1,8 @@
 :host {
   padding: 0;
   background-color: rgba(255,255,255,.1);
-  border-bottom: 1px solid black;
+  background-color: transparent;
+  // border-bottom: 1px solid black;
 }
 
 mat-form-field {
@@ -18,4 +19,22 @@ form div:nth-child(2) {
 
 form {
   padding-top: 1em;
+}
+
+mat-form-field.mat-form-field {
+  color: white;
+  text-transform: uppercase;
+  font-weight: lighter;
+  letter-spacing: .15em;
+}
+
+mat-form-field.mat-form-field input::placeholder {
+  color: white;
+  text-transform: uppercase;
+  font-weight: lighter;
+  letter-spacing: .15em;
+}
+
+mat-form-field.mat-form-field-appearance-standard::ng-deep .mat-form-field-underline {
+  background-color: white;
 }

@@ -7,7 +7,7 @@
     <div fxLayout="column" fxFill>
       <div class="topbar">
           <div fxFlex fxLayout="row" fxFill>
-            <button mat-button (click)="sidenav.toggle()" class="filter-btn">Filters</button>
+            <button mat-button (click)="sidenav.toggle()" class="filter-btn"><i class="fas fa-filter"></i></button>
             <classifieds-ui-ad-search-bar fxFlex="100" [hidden]="hideSearchBar" [(searchForm)]="searchForm" [adType]="adType"></classifieds-ui-ad-search-bar>
           </div>
       </div>

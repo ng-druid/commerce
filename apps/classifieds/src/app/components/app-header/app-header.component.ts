@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { OktaAuthService } from '@okta/okta-angular';
 import { Observable } from 'rxjs';
@@ -14,6 +14,8 @@ import { AuthFacade } from '@classifieds-ui/auth';
 export class AppHeaderComponent implements OnInit {
   // user$: Observable<User>;
   isAuthenticated: boolean;
+  @Output()
+  menuClicked = new EventEmitter();
   constructor(private authFacade: AuthFacade, private router: Router, private oktaAuth: OktaAuthService) {
     /*this.oktaAuth.$authenticationState.subscribe(
       (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
@@ -30,5 +32,9 @@ export class AppHeaderComponent implements OnInit {
   login() {
     this.authFacade.login();
     // this.oktaAuth.loginRedirect();
+  }
+
+  menuClick() {
+    this.menuClicked.emit();
   }
 }

@@ -1,15 +1,10 @@
 <mat-toolbar color="primary">
-    <span class="brand">GalADika</span>
-    <a mat-button routerLink="/">home</a>
-    <a mat-button routerLink="/ads/general">classifieds</a>
-    <a mat-button routerLink="/ads/realestate">real estate</a>
-    <a mat-button routerLink="/ads/rentals">rentals</a>
-    <a mat-button routerLink="/ads/autos">autos</a>
-    <a mat-button *ngIf="isAuthenticated" routerLink="/chat">conversations</a>
-    <a mat-button *ngIf="isAuthenticated" routerLink="/vocabularies">vocabularies</a>
-    <span class="spacer"></span>
+    <button mat-button (click)="menuClick()"><i class="fas fa-bars"></i></button>
+    <!-- <span class="brand">GalADika</span> -->
+    <span class="brand">classifieds</span>
+    <!-- <span class="spacer"></span> -->
     <a mat-button *ngIf="!isAuthenticated">register</a>
     <a mat-raised-button color="accent" *ngIf="!isAuthenticated" (click)="login()">login</a>
     <!-- <a mat-raised-button color="accent" *ngIf="isAuthenticated" routerLink="/ads/nop/create-ad">create ad</a> -->
-    <a class="create-ad" mat-raised-button color="accent" routerLink="/ads/nop/create-ad">create</a>
+    <a class="create-ad" mat-raised-button color="accent" routerLink="/ads/nop/create-ad">create ad</a>
 </mat-toolbar>

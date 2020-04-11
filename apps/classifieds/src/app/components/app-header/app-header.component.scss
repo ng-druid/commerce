@@ -1,3 +1,6 @@
+.mat-toolbar-single-row {
+  padding: 0;
+}
 
 .spacer {
   /* This fills the remaining space, by using flexbox.
@@ -15,6 +18,8 @@
   color: #ffd300;
   color: rgb(131,215,254);
   color: white;
+  flex: 1 1 auto;
+  text-align: center;
 }
 
 a {
@@ -38,13 +43,13 @@ a {
 
 :host .mat-toolbar.mat-primary {
   background-color: transparent;
-  border-bottom: 1px solid #155599;
-  background-color: black;
+  //border-bottom: 1px solid white;
+  //background-color: black;
 }
 
 a.create-ad {
   color: rgb(131,215,254);
-  border-left: 1px solid rgb(131,215,254);
+  // border-left: 1px solid rgb(131,215,254);
   padding-left: 3em;
   color: white;
 }
