@@ -27,7 +27,8 @@
       "@classifieds-ui/taxonomy": ["libs/taxonomy/src/index.ts"],
       "@classifieds-ui/vocabulary": ["libs/vocabulary/src/index.ts"],
       "@classifieds-ui/attributes": ["libs/attributes/src/index.ts"],
-      "@classifieds-ui/autos": ["libs/autos/src/index.ts"]
+      "@classifieds-ui/autos": ["libs/autos/src/index.ts"],
+      "@classifieds-ui/realestate": ["libs/realestate/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

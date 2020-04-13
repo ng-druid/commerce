@@ -19,7 +19,7 @@ import { AdTypePluginsService } from '../../services/ad-type-plugins.service';
   templateUrl: './ad-master.component.html',
   styleUrls: ['./ad-master.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ AdsDataSourceService ]
+  providers: [ AdsDataSourceService, AdTypePluginsService ]
 })
 export class AdMasterComponent implements OnInit, OnChanges {
   @ViewChild(CdkVirtualScrollViewport, { static: true })

@@ -10,9 +10,7 @@
   "projects": {
     "classifieds-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "classifieds"
-      ]
+      "implicitDependencies": ["classifieds"]
     },
     "classifieds": {
       "tags": []
@@ -57,6 +55,9 @@
       "tags": []
     },
     "classifieds-lambda": {
+      "tags": []
+    },
+    "realestate": {
       "tags": []
     }
   }

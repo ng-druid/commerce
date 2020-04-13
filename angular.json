@@ -129,10 +129,7 @@
               "apps/classifieds/tsconfig.app.json",
               "apps/classifieds/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/classifieds/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/classifieds/**"]
           }
         },
         "test": {
@@ -213,13 +210,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/classifieds-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/classifieds-e2e/**"
-            ]
+            "tsConfig": ["apps/classifieds-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/classifieds-e2e/**"]
           }
         }
       }
@@ -237,10 +229,7 @@
               "libs/ads/tsconfig.lib.json",
               "libs/ads/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ads/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ads/**"]
           }
         },
         "test": {
@@ -268,10 +257,7 @@
               "libs/auth/tsconfig.lib.json",
               "libs/auth/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/auth/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/auth/**"]
           }
         },
         "test": {
@@ -303,10 +289,7 @@
               "libs/media/tsconfig.lib.json",
               "libs/media/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/media/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/media/**"]
           }
         },
         "test": {
@@ -338,10 +321,7 @@
               "libs/utils/tsconfig.lib.json",
               "libs/utils/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/utils/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/utils/**"]
           }
         },
         "test": {
@@ -373,10 +353,7 @@
               "libs/material/tsconfig.lib.json",
               "libs/material/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/material/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/material/**"]
           }
         },
         "test": {
@@ -408,10 +385,7 @@
               "libs/logging/tsconfig.lib.json",
               "libs/logging/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/logging/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/logging/**"]
           }
         },
         "test": {
@@ -439,10 +413,7 @@
               "libs/cities/tsconfig.lib.json",
               "libs/cities/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/cities/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/cities/**"]
           }
         },
         "test": {
@@ -470,10 +441,7 @@
               "libs/chat/tsconfig.lib.json",
               "libs/chat/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/chat/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/chat/**"]
           }
         },
         "test": {
@@ -505,10 +473,7 @@
               "libs/taxonomy/tsconfig.lib.json",
               "libs/taxonomy/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/taxonomy/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/taxonomy/**"]
           }
         },
         "test": {
@@ -540,10 +505,7 @@
               "libs/vocabulary/tsconfig.lib.json",
               "libs/vocabulary/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/vocabulary/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/vocabulary/**"]
           }
         },
         "test": {
@@ -575,10 +537,7 @@
               "libs/attributes/tsconfig.lib.json",
               "libs/attributes/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/attributes/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/attributes/**"]
           }
         },
         "test": {
@@ -610,10 +569,7 @@
               "libs/autos/tsconfig.lib.json",
               "libs/autos/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/autos/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/autos/**"]
           }
         },
         "test": {
@@ -649,9 +605,7 @@
             "outputPath": "dist/apps/classifieds-ssr",
             "main": "apps/classifieds-ssr/src/main.ts",
             "tsConfig": "apps/classifieds-ssr/tsconfig.app.json",
-            "assets": [
-              "apps/classifieds-ssr/src/assets"
-            ]
+            "assets": ["apps/classifieds-ssr/src/assets"]
           },
           "configurations": {
             "production": {
@@ -677,9 +631,15 @@
           "builder": "@angular-devkit/architect:concat",
           "options": {
             "targets": [
-              { "target": "classifieds:build" },
-              { "target": "classifieds:server" },
-              { "target": "classifieds-ssr:build" }
+              {
+                "target": "classifieds:build"
+              },
+              {
+                "target": "classifieds:server"
+              },
+              {
+                "target": "classifieds-ssr:build"
+              }
             ]
           }
         },
@@ -690,10 +650,7 @@
               "apps/classifieds-ssr/tsconfig.app.json",
               "apps/classifieds-ssr/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/classifieds-ssr/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/classifieds-ssr/**"]
           }
         },
         "test": {
@@ -724,9 +681,7 @@
             "outputPath": "dist/apps/classifieds-lambda",
             "main": "apps/classifieds-lambda/src/main.ts",
             "tsConfig": "apps/classifieds-lambda/tsconfig.app.json",
-            "assets": [
-              "apps/classifieds-lambda/src/assets"
-            ]
+            "assets": ["apps/classifieds-lambda/src/assets"]
           },
           "configurations": {
             "production": {
@@ -752,9 +707,15 @@
           "builder": "@angular-devkit/architect:concat",
           "options": {
             "targets": [
-              { "target": "classifieds:build" },
-              { "target": "classifieds:server" },
-              { "target": "classifieds-lambda:build" }
+              {
+                "target": "classifieds:build"
+              },
+              {
+                "target": "classifieds:server"
+              },
+              {
+                "target": "classifieds-lambda:build"
+              }
             ]
           }
         },
@@ -765,10 +726,7 @@
               "apps/classifieds-lambda/tsconfig.app.json",
               "apps/classifieds-lambda/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/classifieds-lambda/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/classifieds-lambda/**"]
           }
         },
         "test": {
@@ -778,6 +736,38 @@
             "tsConfig": "apps/classifieds-lambda/tsconfig.spec.json",
             "passWithNoTests": true
           }
+        }
+      }
+    },
+    "realestate": {
+      "projectType": "library",
+      "root": "libs/realestate",
+      "sourceRoot": "libs/realestate/src",
+      "prefix": "classifieds-ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/realestate/tsconfig.lib.json",
+              "libs/realestate/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/realestate/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/realestate/jest.config.js",
+            "tsConfig": "libs/realestate/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/realestate/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }

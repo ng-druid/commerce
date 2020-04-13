@@ -9,6 +9,7 @@ import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 import { AttributesModule } from '@classifieds-ui/attributes';
 import { CitiesModule } from '@classifieds-ui/cities';
 import { AutosModule } from '@classifieds-ui/autos';
+import { RealestateModule } from '@classifieds-ui/realestate';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
@@ -58,6 +59,7 @@ const routes = [
     TaxonomyModule,
     CitiesModule,
     AttributesModule,
+    RealestateModule,
     AutosModule,
     StoreModule.forFeature(fromAdBrowser.adBrowserFeatureKey, fromAdBrowser.reducer),
     EffectsModule.forFeature([AdBrowserEffects])

@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { AD_TYPE_PLUGIN } from '../ad.tokens';
 import { AdTypePlugin } from '../models/ads.models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AdTypePluginsService {
   constructor(@Optional() @Inject(AD_TYPE_PLUGIN) private plugins: Array<AdTypePlugin>) { }
   get(adTypeId: number): AdTypePlugin {
