@@ -1,4 +1,5 @@
-import { AdTypes } from './models/ads.models';
+import { AdTypes, AdTypePlugin } from './models/ads.models';
+import { AdListItemDefaultComponent } from './components/ad-list-item-default/ad-list-item-default.component';
 
 export const mapAdType = (adType: string): AdTypes => {
   switch(adType) {
@@ -13,4 +14,11 @@ export const mapAdType = (adType: string): AdTypes => {
     case 'jobs':
       return AdTypes.Job;
   }
+};
+
+export const createAdTypePlugin = (adTypeId: number) => {
+  return new AdTypePlugin({
+    adTypeId: adTypeId,
+    listItemDisplay: AdListItemDefaultComponent
+  });
 };

@@ -9,8 +9,10 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
-import { AdListItem } from '../../models/ads.models';
+import { AdListItem, AdTypePlugin } from '../../models/ads.models';
 import { AdsDataSourceService } from '../../services/ads-data-source.service';
+import { mapAdType, createAdTypePlugin } from '../../ad.helpers';
+import { AdTypePluginsService } from '../../services/ad-type-plugins.service';
 
 @Component({
   selector: 'classifieds-ui-ad-master',
@@ -27,13 +29,22 @@ export class AdMasterComponent implements OnInit, OnChanges {
   @Input()
   adType: string;
   loading$: Observable<boolean>;
+  plugin: AdTypePlugin;
   private adListItemsService: EntityCollectionService<AdListItem>;
-  constructor(private router: Router, private mo: MediaObserver, private store: Store<RouterReducerState>, public adsDataSource: AdsDataSourceService, es: EntityServices) {
+  constructor(
+    private router: Router,
+    private mo: MediaObserver,
+    private store: Store<RouterReducerState>,
+    public adsDataSource: AdsDataSourceService,
+    private adTypePlugins: AdTypePluginsService,
+    es: EntityServices
+  ) {
     this.adListItemsService = es.getEntityCollectionService('AdListItem');
   }
   ngOnInit() {
     this.loading$ = this.adListItemsService.loading$;
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
+    this.plugin = this.adTypePlugins.get(mapAdType(this.adType)) ?? createAdTypePlugin(mapAdType(this.adType));
     combineLatest([
       this.mo.asObservable().pipe(map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)),
       this.store.pipe(select(selectCurrentRoute))

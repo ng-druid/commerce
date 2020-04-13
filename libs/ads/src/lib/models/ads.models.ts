@@ -1,3 +1,4 @@
+import { Type } from '@angular/core';
 import { Vocabulary } from '@classifieds-ui/taxonomy';
 import { Attribute, AttributeValue } from '@classifieds-ui/attributes';
 
@@ -32,6 +33,17 @@ export class SearchConfig {
       this.page = data.page;
       this.adType = data.adType;
       this.attributes = Object.assign({}, data.attributes);
+    }
+  }
+}
+
+export class AdTypePlugin {
+  adTypeId: number;
+  listItemDisplay: Type<any>;
+  constructor(data?: AdTypePlugin) {
+    if (data) {
+      this.adTypeId = data.adTypeId;
+      this.listItemDisplay = data.listItemDisplay;
     }
   }
 }

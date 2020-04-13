@@ -33,6 +33,9 @@ import { AdsDataService } from './services/ads-data.service';
 import { AdListItemsDataService } from './services/ad-list-items-data.service';
 import { FeatureListItemsDataService } from './services/feature-list-items-data.service';
 import { AdTypesDataService } from './services/ad-types-data.service';
+import { AdListItemComponent } from './components/ad-list-item/ad-list-item.component';
+import { AdTypePluginDirective } from './directives/ad-type-plugin.directive';
+import { AdListItemDefaultComponent } from './components/ad-list-item-default/ad-list-item-default.component';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
@@ -42,7 +45,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdTypePluginDirective, AdListItemDefaultComponent ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -62,7 +65,8 @@ const routes = [
   providers: [
     CreateAdGuard,
     AdTypeResolver
-  ]
+  ],
+  entryComponents: [AdListItemDefaultComponent]
 })
 export class AdsModule {
   constructor(
