@@ -69,4 +69,7 @@ export class AdMasterComponent implements OnInit, OnChanges {
   viewAd(id: string) {
     this.router.navigateByUrl(`/ads/${this.adType}/ad/${id}`);
   }
+  trackById(index: number, ad: AdListItem): string {
+    return ad.id;
+  }
 }

@@ -67,4 +67,9 @@ mat-divider {
 
 .ad-item {
   height: 300px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
 }

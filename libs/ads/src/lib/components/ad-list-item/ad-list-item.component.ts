@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver, Type } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver, Type, OnChanges, SimpleChanges } from '@angular/core';
 import { AdTypePlugin, AdListItem } from '../../models/ads.models';
 import { AdTypePluginDirective } from '../../directives/ad-type-plugin.directive';
 
@@ -7,7 +7,7 @@ import { AdTypePluginDirective } from '../../directives/ad-type-plugin.directive
   styleUrls: ['./ad-list-item.component.scss'],
   template: `<ng-container><ng-template classifiedsUiAdTypePluginHost></ng-template></ng-container>`
 })
-export class AdListItemComponent implements OnInit {
+export class AdListItemComponent implements OnInit, OnChanges {
 
   @Input()
   plugin: AdTypePlugin;
@@ -23,7 +23,9 @@ export class AdListItemComponent implements OnInit {
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.plugin.listItemDisplay);
 
     const viewContainerRef = this.pluginHost.viewContainerRef;

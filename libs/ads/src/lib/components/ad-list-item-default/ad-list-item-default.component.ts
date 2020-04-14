@@ -24,9 +24,8 @@ export class AdListItemDefaultComponent implements OnInit {
       width: '100%',
       height: '100%',
       thumbnails: false,
-      previewFullscreen: false,
-      imageAnimation: NgxGalleryAnimation.Slide,
-      previewForceFullscreen: false
+      preview: false,
+      imageAnimation: NgxGalleryAnimation.Slide
     }
   ];
 

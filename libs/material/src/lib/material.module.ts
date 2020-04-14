@@ -42,6 +42,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
 import { ResponsiveStepperComponent } from './components/responsive-stepper/responsive-stepper.component';
+import { ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
 
 @NgModule({
   imports: [CommonModule, CdkStepperModule, MatStepperModule],
@@ -88,6 +89,7 @@ import { ResponsiveStepperComponent } from './components/responsive-stepper/resp
     MatTreeModule,
     PortalModule,
     ScrollingModule,
+    ExperimentalScrollingModule,
     ResponsiveStepperComponent
   ],
   declarations: [ResponsiveStepperComponent]
