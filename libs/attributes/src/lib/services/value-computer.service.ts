@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as numeral from 'numeral';
 import { AttributeValue, AttributeTypes } from '../models/attributes.models';
 
 @Injectable({
@@ -31,8 +32,8 @@ export class ValueComputerService {
   resolveComputedValue(value: string, type: AttributeTypes): string | undefined {
     let computedValue: any;
     if (type === AttributeTypes.Number) {
-      computedValue = parseInt(value.trim(), 10);
-      if(isNaN(computedValue)) {
+      computedValue = numeral(value.trim()).value();
+      if(computedValue && isNaN(computedValue)) {
         computedValue = undefined;
       }
     } else {

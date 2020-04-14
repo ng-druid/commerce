@@ -63,6 +63,7 @@
     "hammerjs": "^2.0.8",
     "ngrx-store-localstorage": "^9.0.0",
     "ngx-dropzone": "^2.2.2",
+    "numeral": "^2.0.6",
     "oidc-client": "^1.9.1",
     "qs": "^6.9.3",
     "rxjs": "~6.5.4",

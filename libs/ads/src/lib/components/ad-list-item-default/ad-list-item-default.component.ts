@@ -1,4 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
+import { MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
+import { INgxGalleryOptions, INgxGalleryImage, NgxGalleryAnimation } from '@kolkov/ngx-gallery';
+import { AttributeMatcherService } from '@classifieds-ui/attributes';
 import { AdListItem } from '../../models/ads.models';
 
 @Component({
@@ -6,7 +9,7 @@ import { AdListItem } from '../../models/ads.models';
   templateUrl: './ad-list-item-default.component.html',
   styleUrls: ['./ad-list-item-default.component.scss']
 })
-export class AdListItemDefaultComponent {
+export class AdListItemDefaultComponent implements OnInit {
 
   @Input()
   ad: AdListItem;
@@ -14,6 +17,34 @@ export class AdListItemDefaultComponent {
   @Input()
   adType: string;
 
-  constructor() { }
+  mediaBaseUrl: string;
+
+  galleryOptions: Array<INgxGalleryOptions> = [
+    {
+      width: '100%',
+      height: '100%',
+      thumbnails: false,
+      previewFullscreen: false,
+      imageAnimation: NgxGalleryAnimation.Slide,
+      previewForceFullscreen: false
+    }
+  ];
+
+  galleryImages: Array<INgxGalleryImage> = [];
+
+  constructor(@Inject(MEDIA_SETTINGS) mediaSettings: MediaSettings, private attributesMatcher: AttributeMatcherService) {
+    this.mediaBaseUrl = mediaSettings.imageUrl;
+  }
+
+  ngOnInit(): void {
+    if(this.ad.images) {
+      this.galleryImages = this.ad.images.map(i => ({
+        small: `${this.mediaBaseUrl}/image/upload/${i.path}`,
+        medium: `${this.mediaBaseUrl}/image/upload/${i.path}`,
+        big: `${this.mediaBaseUrl}/image/upload/${i.path}`
+      }));
+    }
+  }
 
 }
+

@@ -12,6 +12,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   private dataStream = new BehaviorSubject<Array<Ad>>([]);
   private subscription = new Subscription();
   private pageSize = 25;
+  //private pageSize = 4;
   private lastPage = 0;
   private searchConfig: SearchConfig;
   private adListItemsService: EntityCollectionService<AdListItem>;

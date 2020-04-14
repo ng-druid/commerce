@@ -1,16 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RealestateAdListItemComponent } from './components/realestate-ad-list-item/realestate-ad-list-item.component';
-
-// Workaround to prevent circular dependency.
-import { AdTypePlugin } from '../../../ads/src/lib/models/ads.models';
-import { AD_TYPE_PLUGIN } from '../../../ads/src/lib/ad.tokens';
+import { MediaModule } from '@classifieds-ui/media';
+import { AttributesModule } from '@classifieds-ui/attributes';
+import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [RealestateAdListItemComponent],
-  providers: [
-    { provide: AD_TYPE_PLUGIN, useValue: new AdTypePlugin({ adTypeId: 1, listItemDisplay: RealestateAdListItemComponent }), multi: true }
-  ]
+  imports: [CommonModule, MediaModule, NgxGalleryModule, FlexLayoutModule, AttributesModule ]
 })
 export class RealestateModule {}
