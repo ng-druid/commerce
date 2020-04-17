@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OktaAuthService, UserClaims } from '@okta/okta-angular';
+// import { OktaAuthService, UserClaims } from '@okta/okta-angular';
 import { forkJoin, Observable } from 'rxjs';
 import { map, filter, take, switchMap, withLatestFrom } from 'rxjs/operators';
 import { AuthFacade, PublicUserProfilesService, PublicUserProfile } from '@classifieds-ui/auth';
@@ -15,9 +15,9 @@ export class ChatDetailComponent implements OnInit {
   recipientLabel: string;
   userId: string;
   userLabel: string;
-  constructor(private route: ActivatedRoute, private publicUserProfilesService: PublicUserProfilesService, private authFacade: AuthFacade, private oktaService: OktaAuthService) { }
+  constructor(private route: ActivatedRoute, private publicUserProfilesService: PublicUserProfilesService, private authFacade: AuthFacade) { }
   ngOnInit() {
-    this.route.paramMap.pipe(
+    /*this.route.paramMap.pipe(
       map(p => p.get('recipientId')),
       filter(recipientId => typeof(recipientId) === 'string'),
       switchMap(recipientId => {
@@ -38,7 +38,7 @@ export class ChatDetailComponent implements OnInit {
       this.userLabel = user.userName;
       this.recipientId = recipient.id;
       this.recipientLabel = recipient.userName;
-    });
+    });*/
   }
 
 }

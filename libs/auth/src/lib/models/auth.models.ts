@@ -9,6 +9,8 @@ export class ClientSettings {
   loadUserInfo: boolean;
   automaticSilentRenew: boolean;
   metadata: any;
+  userStore: any;
+  stateStore: any;
   constructor(data?: ClientSettings) {
     if(data) {
       this.authority = data.authority;
@@ -20,7 +22,9 @@ export class ClientSettings {
       this.filterProtocolClaims = data.filterProtocolClaims;
       this.loadUserInfo = data.loadUserInfo;
       this.automaticSilentRenew = data.automaticSilentRenew;
-      this.metadata = data.metadata;
+      this.metadata = { ...data.metadata };
+      this.userStore = data.userStore ? data.userStore : undefined;
+      this.stateStore = data.userStore ? data.stateStore : undefined;
     }
   }
 }

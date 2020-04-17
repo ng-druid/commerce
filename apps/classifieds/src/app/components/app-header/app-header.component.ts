@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { OktaAuthService } from '@okta/okta-angular';
+//import { OktaAuthService } from '@okta/okta-angular';
 import { Observable } from 'rxjs';
 import { User } from 'oidc-client';
 
@@ -16,7 +16,7 @@ export class AppHeaderComponent implements OnInit {
   isAuthenticated: boolean;
   @Output()
   menuClicked = new EventEmitter();
-  constructor(private authFacade: AuthFacade, private router: Router, private oktaAuth: OktaAuthService) {
+  constructor(private authFacade: AuthFacade, private router: Router) {
     /*this.oktaAuth.$authenticationState.subscribe(
       (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
     );*/

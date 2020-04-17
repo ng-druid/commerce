@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { v4 as uuidv4 } from 'uuid';
 
 import { AuthFacade } from '@classifieds-ui/auth';
 
@@ -12,7 +14,7 @@ export class AuthCallbackComponent implements OnInit {
 
   error: boolean;
 
-  constructor(private authFacade: AuthFacade, private router: Router, private route: ActivatedRoute) {}
+  constructor(private authFacade: AuthFacade, private router: Router, private route: ActivatedRoute, @Inject(PLATFORM_ID) private platformId: Object) {}
 
   async ngOnInit() {
 
@@ -22,8 +24,11 @@ export class AuthCallbackComponent implements OnInit {
        return;
      }*/
 
-    this.authFacade.completeAuthentication();
-    this.router.navigate(['/']);
+    if(isPlatformBrowser(this.platformId)) {
+      this.authFacade.completeAuthentication();
+      this.router.navigate(['/'], { queryParams: { cacheBuster: uuidv4() }});
+    }
+
   }
 
 }

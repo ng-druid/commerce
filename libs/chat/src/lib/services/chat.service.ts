@@ -6,7 +6,7 @@ import { LogService } from '@classifieds-ui/logging';
 import { Observable } from 'rxjs';
 import { tap, take, map, switchMap } from 'rxjs/operators';
 import * as signalR from "@aspnet/signalr";
-import { OktaAuthService } from '@okta/okta-angular';
+//import { OktaAuthService } from '@okta/okta-angular';
 
 import { ChatSettings, ChatMessage, ChatConversation } from '../models/chat.models';
 
@@ -23,7 +23,7 @@ export class ChatService {
   private conversations = new Map<string, BehaviorSubject<Array<ChatMessage>>>();
   private isBrowser: boolean = isPlatformBrowser(this.platformId);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, @Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade, private oktaAuth: OktaAuthService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, @Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade) {
     if (this.isBrowser) {
       setTimeout(() => this.initializeConnection(), 1);
     }

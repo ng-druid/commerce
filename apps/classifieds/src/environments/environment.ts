@@ -1,6 +1,7 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+import { GlobalErrorHandler } from '@classifieds-ui/logging';
 
 // https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html
 const signingKeys = {
@@ -68,7 +69,10 @@ export const environment = {
     scope:"openid profile aws.cognito.signin.user.admin ads_api/ads_api taxonomy_api/taxonomy_api chat/chat", /*'ads_api media_api chat IdentityServerApi taxonomy_api api_gateway",*/
     filterProtocolClaims: true,
     loadUserInfo: true,
-    automaticSilentRenew: true,
+    // automaticSilentRenew: true,
+    automaticSilentRenew: false,
+    stateStore: undefined,
+    userStore: undefined,
     metadata: {
       issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_z8PhK3D8V",
       authorization_endpoint: "https://classifieds-ui-dev.auth.us-east-1.amazoncognito.com/oauth2/authorize",

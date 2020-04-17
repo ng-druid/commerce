@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule } from '@angular/common/http';
@@ -11,8 +11,8 @@ import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/medi
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
-import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
-import { OktaAuthModule, OktaCallbackComponent, OKTA_CONFIG } from '@okta/okta-angular';
+//import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
+// import { OktaAuthModule, OktaCallbackComponent, OKTA_CONFIG } from '@okta/okta-angular';
 import { UserManager } from 'oidc-client';
 
 import { AppComponent } from './app.component';
@@ -33,8 +33,8 @@ import { reducers, metaReducers } from './reducers';
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
-  { path: 'implicit/callback', component: OktaCallbackComponent },
-  { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
+  // { path: 'implicit/callback', component: OktaCallbackComponent },
+  // { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
   { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
   { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
   { path: '', component: HomeComponent },
@@ -64,6 +64,7 @@ const oktaConfig = {
     CommonModule,
     HttpClientModule,
     HttpClientJsonpModule,
+    BrowserTransferStateModule ,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
@@ -91,22 +92,22 @@ const oktaConfig = {
     MaterialModule,
     UtilsModule,
     LoggingModule,
-    AuthModule,
+    AuthModule.forRoot(),
     MediaModule,
     NxModule.forRoot(),
     EntityDataModule.forRoot({}),
-    OktaAuthModule
+    // OktaAuthModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
 
     // okta auth
-    { provide: OKTA_CONFIG, useValue: oktaConfig },
+    //{ provide: OKTA_CONFIG, useValue: oktaConfig },
 
     { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
-    { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
+    // { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
 
     // There is no way to prioritize interceptors so order can be important.
     // { provide: HTTP_INTERCEPTORS, useClass: CorrelationInterceptor, multi: true },
