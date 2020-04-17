@@ -24,10 +24,10 @@ export class AuthCallbackComponent implements OnInit {
        return;
      }*/
 
-    if(isPlatformBrowser(this.platformId)) {
+    //if(isPlatformBrowser(this.platformId)) {
       this.authFacade.completeAuthentication();
       this.router.navigate(['/'], { queryParams: { cacheBuster: uuidv4() }});
-    }
+    //}
 
   }
 

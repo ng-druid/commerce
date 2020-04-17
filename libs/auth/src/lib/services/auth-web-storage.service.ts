@@ -37,6 +37,11 @@ export class AuthWebStorageService {
         if(value) {
           this.setItem(this.tokenKey, value);
         }
+      } else {
+        for(let i = 0;i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          this.setItem(key, sessionStorage.getItem(key));
+        }
       }
     } else {
       const token: any = { token_type: 'Bearer' };
