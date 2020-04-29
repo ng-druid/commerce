@@ -8,5 +8,4 @@ export * from './lib/auth.tokens';
 export * from './lib/models/auth.models';
 export * from './lib/http-interceptors/auth-interceptor';
 export * from './lib/http-interceptors/logout-interceptor';
-export * from './lib/services/public-user-profiles.service';
 export * from './lib/auth.factories';
