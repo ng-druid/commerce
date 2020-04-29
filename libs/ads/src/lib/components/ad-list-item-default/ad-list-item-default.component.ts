@@ -38,9 +38,9 @@ export class AdListItemDefaultComponent implements OnInit {
   ngOnInit(): void {
     if(this.ad.images) {
       this.galleryImages = this.ad.images.map(i => ({
-        small: `${this.mediaBaseUrl}/image/upload/${i.path}`,
-        medium: `${this.mediaBaseUrl}/image/upload/${i.path}`,
-        big: `${this.mediaBaseUrl}/image/upload/${i.path}`
+        small: `${this.mediaBaseUrl}/${i.path}`,
+        medium: `${this.mediaBaseUrl}/${i.path}`,
+        big: `${this.mediaBaseUrl}/${i.path}`
       }));
     }
   }

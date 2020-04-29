@@ -18,6 +18,15 @@ export enum AdStatuses {
   Deleted
 }
 
+export class AdSettings {
+  adUrl: string;
+  constructor(data?: AdSettings) {
+    if(data) {
+      this.adUrl = data.adUrl;
+    }
+  }
+}
+
 export class SearchConfig {
   searchString: string;
   location: string;

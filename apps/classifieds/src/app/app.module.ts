@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NxModule } from '@nrwl/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { AD_SETTINGS, AdSettings } from '@classifieds-ui/ads';
 import { AuthModule, AuthInterceptor, LogoutInterceptor, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
 import { MediaModule, MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
 import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
@@ -107,6 +109,7 @@ const oktaConfig = {
     { provide: CLIENT_SETTINGS, useValue: new ClientSettings(environment.clientSettings) },
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
+    { provide: AD_SETTINGS, useValue: new AdSettings(environment.adSettings) },
     // { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
 
     // There is no way to prioritize interceptors so order can be important.

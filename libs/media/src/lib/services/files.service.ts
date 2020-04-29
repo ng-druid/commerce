@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { MEDIA_SETTINGS } from '../media.tokens';
-import { MediaSettings, MediaFile, CloudinaryUploadResponse } from '../models/media.models';
+import { MediaSettings, MediaFile } from '../models/media.models';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +14,11 @@ export class FilesService {
     const requests$: Array<Observable<MediaFile>> = [];
     files.forEach(f => {
       const formData = new FormData();
-      formData.append('file', f, f.name);
-      formData.append('upload_preset', this.settings.uploadPreset);
-      requests$.push(this.http.post(`${this.settings.cloudinaryUrl}/upload`, formData).pipe(
+      formData.append('File', f, f.name);
+      requests$.push(this.http.post<MediaFile>(`${this.settings.endpointUrl}/file`, formData).pipe(
         catchError(e => {
           return throwError(new Error("Error uploading images."));
-        }),
-        map((data) => {
-          const res = new CloudinaryUploadResponse(data as CloudinaryUploadResponse);
-          return new MediaFile({
-            id: res.public_id,
-            contentType: res.format,
-            contentDisposition: '',
-            path: `${res.public_id}.${res.format}`,
-            length: res.bytes,
-            fileName: res.original_filename
-           });
-        }),
+        })
       ));
     });
     return requests$.length > 0 ? forkJoin(requests$) : of([]);

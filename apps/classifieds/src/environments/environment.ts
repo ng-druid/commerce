@@ -32,10 +32,13 @@ export const environment = {
     endpointUrl: "https://gzm61h96d7.execute-api.us-east-1.amazonaws.com/dev"
   },
   mediaSettings: {
-    endpointUrl: 'https://localhost:44340/media',
+    endpointUrl: 'https://gzm61h96d7.execute-api.us-east-1.amazonaws.com/dev/media',
     cloudinaryUrl: 'https://api.cloudinary.com/v1_1/dj4vvkgzw',
     uploadPreset: 'i0hm4opm',
-    imageUrl: 'https://res.cloudinary.com/dj4vvkgzw'
+    imageUrl: 'https://d2o66qxp1qwfb9.cloudfront.net'
+  },
+  adSettings: {
+    adUrl: 'https://d2o66qxp1qwfb9.cloudfront.net/ads'
   },
   loggingSettings: {
     endpointUrl: "https://localhost:44340/logging"
@@ -66,11 +69,10 @@ export const environment = {
     redirect_uri: 'http://localhost:4200/auth-callback',
     silent_redirect_uri: 'http://localhost:4200/silent-refresh.html',
     response_type: "code",
-    scope:"openid profile aws.cognito.signin.user.admin ads_api/ads_api taxonomy_api/taxonomy_api chat/chat", /*'ads_api media_api chat IdentityServerApi taxonomy_api api_gateway",*/
+    scope:"openid profile aws.cognito.signin.user.admin ads_api/ads_api taxonomy_api/taxonomy_api chat/chat media_api/media_api", /*'ads_api media_api chat IdentityServerApi taxonomy_api api_gateway",*/
     filterProtocolClaims: true,
     loadUserInfo: true,
-    // automaticSilentRenew: true,
-    automaticSilentRenew: false,
+    automaticSilentRenew: true,
     stateStore: undefined,
     userStore: undefined,
     metadata: {

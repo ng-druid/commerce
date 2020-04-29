@@ -45,9 +45,9 @@ export class AdGalleryTabComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if(changes.ad.previousValue !== changes.ad.currentValue) {
       this.galleryImages = this.ad.images.map(i => ({
-        small: `${this.mediaBaseUrl}/image/upload/${i.path}`,
-        medium: `${this.mediaBaseUrl}/image/upload/${i.path}`,
-        big: `${this.mediaBaseUrl}/image/upload/${i.path}`
+        small: `${this.mediaBaseUrl}/${i.path}`,
+        medium: `${this.mediaBaseUrl}/${i.path}`,
+        big: `${this.mediaBaseUrl}/${i.path}`
       }));
     }
   }
