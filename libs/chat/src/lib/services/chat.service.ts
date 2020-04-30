@@ -17,12 +17,11 @@ import { CHAT_SETTINGS } from '../chat.tokens';
 })
 export class ChatService {
   started$ = new ReplaySubject<boolean>(1);
-  connected$ = new Subject<string>();
   broadcasted$ = new Subject<ChatMessage>();
-  private hubConnection: signalR.HubConnection;
   private conversations = new Map<string, BehaviorSubject<Array<ChatMessage>>>();
   private isBrowser: boolean = isPlatformBrowser(this.platformId);
   private ws: WebSocket;
+  private userId: string;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, @Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade) {
     if (this.isBrowser) {
@@ -31,79 +30,47 @@ export class ChatService {
   }
 
   private initializeConnection(): void {
+    if(this.ws !== undefined) {
+      this.ws.close();
+    }
     this.authFacade.getUser$.pipe(
       take(1),
-      map(u => `${u.access_token}` )
-    ).subscribe(token => {
-      this.ws = new WebSocket(`${this.chatSettings.endpointUrl}?token=${token}`);
+    ).subscribe(user => {
+      this.userId = user.profile.sub;
+      this.ws = new WebSocket(`${this.chatSettings.endpointUrl}?token=${user.access_token}`);
       this.ws.addEventListener('open', () => {
         this.started$.next(true);
-        console.log("opened");
         this.initializeListeners();
       });
       this.ws.addEventListener('error', (evt) => {
-        console.log(`Error establishing websocket connection: ${evt}`);
         this.logService.log(evt);
         this.started$.next(false);
       });
     });
-    /*this.hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl(`${this.chatSettings.endpointUrl}/chat`, {
-      accessTokenFactory: (): Promise<string> => this.authFacade.getUser$.pipe(take(1), map(u => `${u.access_token}` )).toPromise(),
-      // accessTokenFactory: (): Promise<string> => this.oktaAuth.getAccessToken(),
-      transport: signalR.HttpTransportType.WebSockets,
-      skipNegotiation: true
-    })
-    .build();*/
-    /*this.hubConnection
-      .start()
-      .then(() => {
-        this.started$.next(true);
-        this.initializeListeners();
-      })
-      .catch(err => {
-        console.log(`Error while starting SignalR connection: ${err}`);
-        this.logService.log(err);
-        this.started$.next(false);
-      });*/
   }
 
   connect(recipientId: string): BehaviorSubject<Array<ChatMessage>> {
     this.initializeConversation(recipientId);
-    /*this.hubConnection.invoke('connect', recipientId)
-    .then(() => {
-      this.connected$.next(recipientId);
-    })
-    .catch(err => {
-      this.logService.log(err);
-    })*/
+    this.ws.send(JSON.stringify({ action: "messages", recipientId }));
+    const listener = evt => {
+      const chatMessages = JSON.parse(evt.data).map(d => new ChatMessage(d));
+      this.conversations.get(recipientId).next(chatMessages);
+      this.ws.removeEventListener('message', listener);
+    };
+    this.ws.addEventListener('message', listener);
     return this.conversations.get(recipientId);
   }
 
   send(chatMessage: ChatMessage): void {
-    // this.hubConnection.invoke('send', chatMessage)
-    this.ws.send(JSON.stringify(chatMessage));
+    this.ws.send(JSON.stringify({ action: "message", message: chatMessage }));
   }
 
   getConversations(): Observable<Array<ChatConversation>> {
-    // return of([]);
-    /*return new Observable(obs => {
-      this.hubConnection.invoke('getconversations').then(chats => {
-        obs.next(chats.map(c => new ChatConversation(c)));
-        obs.complete();
-      }).catch(err => {
-        this.logService.log(err);
-        obs.error(err);
-        obs.complete();
-      })
-    });*/
-    console.log('get conversations');
-    this.ws.send(JSON.stringify({ action: "conversations", data: {} }));
+    this.ws.send(JSON.stringify({ action: "conversations", data: {  } }));
     const conversations$ = new Subject<Array<ChatConversation>>();
     const listener = evt => {
-      const chatMessages = JSON.parse(evt.data).map(d => new ChatConversation(d));
-      console.log(chatMessages);
-      conversations$.next(chatMessages);
+      const conversations = JSON.parse(evt.data).map(d => new ChatConversation(d));
+      conversations$.next(conversations);
       conversations$.complete();
       this.ws.removeEventListener('message', listener);
     };
@@ -118,13 +85,13 @@ export class ChatService {
     this.hubConnection.on('broadcastMessage', (chatMessage: ChatMessage, reply: boolean) => {
       this.conversations.get(reply ? chatMessage.senderId : chatMessage.recipientId).next([chatMessage]);
     });*/
-    /*this.ws.addEventListener('message', (evt) => {
-      console.log("Message Received");
-      console.log(evt);
-      const chatMessages = JSON.parse(evt.data).map(d => new ChatConversation(d));
-      this.conversations$.next(chatMessages);
-      this.conversations$.complete();
-    })*/
+    this.ws.addEventListener('message', (evt) => {
+      const data = JSON.parse(evt.data);
+      if(data.length === undefined) {
+        const message = new ChatMessage(data);
+        this.conversations.get(message.senderId === this.userId ? message.senderId : message.recipientId).next([message]);
+      }
+    })
   }
 
   private initializeConversation(recipientId: string): void {

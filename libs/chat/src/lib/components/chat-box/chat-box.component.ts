@@ -20,6 +20,7 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
   recipientId: string;
   @Input()
   recipientLabel: string;
+  @Input()
   messages: Array<ChatMessage> = [];
   private subscription$: Subscription;
   private componentDestroyed$ = new Subject();
@@ -41,12 +42,12 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
 
   private connect() {
     if (this.isBrowser) {
-      this.subscription$ = this.chatService.started$.pipe(
+      /*this.subscription$ = this.chatService.started$.pipe(
         switchMap(() => this.chatService.connect(this.recipientId)),
         takeUntil(this.componentDestroyed$)
       ).subscribe((chatMessages: Array<ChatMessage>) => {
         this.messages = this.messages.concat(chatMessages);
-      });
+      });*/
     }
   }
 

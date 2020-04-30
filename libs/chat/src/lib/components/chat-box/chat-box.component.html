@@ -1,4 +1,4 @@
-<nb-chat [title]="recipientLabel" size="large">
+<nb-chat [title]="recipientLabel" size="100%">
   <nb-chat-message *ngFor="let msg of messages"
                      type="text"
                      [reply]="msg.senderId !== userId"

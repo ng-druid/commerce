@@ -16,6 +16,7 @@ import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor,
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 // import { OktaAuthModule, OktaCallbackComponent, OKTA_CONFIG } from '@okta/okta-angular';
 // import { UserManager } from 'oidc-client';
+import { NbA11yModule } from '@nebular/theme';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -71,6 +72,7 @@ const oktaConfig = {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    NbA11yModule.forRoot(),
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

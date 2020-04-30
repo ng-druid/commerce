@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { take, filter, map, switchMap } from 'rxjs/operators'
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 
 import { ChatConversation } from '../../models/chat.models';
-import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'classifieds-ui-chat-master',
@@ -12,13 +11,13 @@ import { ChatService } from '../../services/chat.service';
 })
 export class ChatMasterComponent implements OnInit {
   chats: Array<ChatConversation> = [];
-  constructor(private router: Router, private chatService: ChatService) { }
+  private chatConversationsService: EntityCollectionService<ChatConversation>;
+  constructor(private router: Router, es: EntityServices) {
+    this.chatConversationsService = es.getEntityCollectionService('ChatConversation');
+  }
 
   ngOnInit() {
-    this.chatService.started$.pipe(
-      filter(started => started),
-      switchMap(() => this.chatService.getConversations())
-    ).subscribe((chats: Array<ChatConversation>) => {
+    this.chatConversationsService.getAll().subscribe(chats => {
       this.chats = chats;
     });
   }
