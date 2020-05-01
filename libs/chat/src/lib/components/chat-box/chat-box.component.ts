@@ -1,9 +1,7 @@
-import { Inject, Component, Input, OnDestroy, OnChanges, SimpleChanges, PLATFORM_ID } from '@angular/core';
+import { Inject, Component, Input, Output, OnDestroy, OnChanges, SimpleChanges, PLATFORM_ID, EventEmitter } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-
-import { ChatService } from '../../services/chat.service';
 import { ChatMessage } from '../../models/chat.models';
 
 @Component({
@@ -22,18 +20,20 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
   recipientLabel: string;
   @Input()
   messages: Array<ChatMessage> = [];
+  @Output()
+  newMessage = new EventEmitter<ChatMessage>();
   private subscription$: Subscription;
   private componentDestroyed$ = new Subject();
   private isBrowser: boolean = isPlatformBrowser(this.platformId);
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private chatService: ChatService) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
   sendMessage(event) {
-    this.chatService.send(new ChatMessage({ id: undefined, message: event.message, senderId: undefined, recipientId: this.recipientId, createdAt: new Date() }));
+    this.newMessage.emit((new ChatMessage({ id: undefined, message: event.message, senderId: undefined, recipientId: this.recipientId, createdAt: new Date() })));
   }
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.recipientId.previousValue !== changes.recipientId.currentValue) {
-      this.disconnect();
-      this.connect();
-    }
+    //if(changes.recipientId.previousValue !== changes.recipientId.currentValue) {
+      // this.disconnect();
+      // this.connect();
+    //}
   }
   ngOnDestroy() {
     this.componentDestroyed$.next();
@@ -53,7 +53,7 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
 
   private disconnect() {
     if(this.isBrowser && this.subscription$) {
-      this.subscription$.unsubscribe();
+      // this.subscription$.unsubscribe();
     }
   }
 

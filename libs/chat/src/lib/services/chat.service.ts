@@ -49,15 +49,16 @@ export class ChatService {
     });
   }
 
-  connect(recipientId: string): BehaviorSubject<Array<ChatMessage>> {
+ connect(recipientId: string): BehaviorSubject<Array<ChatMessage>> {
     this.initializeConversation(recipientId);
-    this.ws.send(JSON.stringify({ action: "messages", recipientId }));
+    /*this.ws.send(JSON.stringify({ action: "messages", recipientId }));
     const listener = evt => {
       const chatMessages = JSON.parse(evt.data).map(d => new ChatMessage(d));
       this.conversations.get(recipientId).next(chatMessages);
       this.ws.removeEventListener('message', listener);
     };
-    this.ws.addEventListener('message', listener);
+    this.ws.addEventListener('message', listener);*/
+    // setTimeout(() => this.conversations.get(recipientId).next([]), 0)
     return this.conversations.get(recipientId);
   }
 
@@ -65,7 +66,7 @@ export class ChatService {
     this.ws.send(JSON.stringify({ action: "message", message: chatMessage }));
   }
 
-  getConversations(): Observable<Array<ChatConversation>> {
+  /*getConversations(): Observable<Array<ChatConversation>> {
     this.ws.send(JSON.stringify({ action: "conversations", data: {  } }));
     const conversations$ = new Subject<Array<ChatConversation>>();
     const listener = evt => {
@@ -76,7 +77,7 @@ export class ChatService {
     };
     this.ws.addEventListener('message', listener);
     return conversations$;
-  }
+  }*/
 
   private initializeListeners(): void {
     /*this.hubConnection.on('connected', (recipientId: string, chatMessages) => {

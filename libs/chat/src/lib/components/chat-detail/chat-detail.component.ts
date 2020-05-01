@@ -1,26 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Inject, Component, OnInit, OnDestroy, OnChanges, SimpleChanges, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 // import { OktaAuthService, UserClaims } from '@okta/okta-angular';
-import { forkJoin, Observable } from 'rxjs';
-import { map, filter, take, switchMap, withLatestFrom } from 'rxjs/operators';
+import { forkJoin, Observable, Subject, Subscription } from 'rxjs';
+import { map, filter, takeUntil, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import { AuthFacade, PublicUserProfile } from '@classifieds-ui/auth';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { ChatMessage } from '../../models/chat.models';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'classifieds-ui-chat-detail',
   templateUrl: './chat-detail.component.html',
   styleUrls: ['./chat-detail.component.scss']
 })
-export class ChatDetailComponent implements OnInit {
+export class ChatDetailComponent implements OnInit, OnDestroy {
   recipientId: string;
   recipientLabel: string;
   userId: string;
   userLabel: string;
   messages: Array<ChatMessage>;
+  private subscription$: Subscription;
   private publicUserProfilesService: EntityCollectionService<PublicUserProfile>;
   private chatMessagesService: EntityCollectionService<ChatMessage>;
-  constructor(private route: ActivatedRoute, private authFacade: AuthFacade, es: EntityServices) {
+  private componentDestroyed$ = new Subject();
+  private isBrowser: boolean = isPlatformBrowser(this.platformId);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private route: ActivatedRoute, private authFacade: AuthFacade, private chatService: ChatService, es: EntityServices) {
     this.publicUserProfilesService = es.getEntityCollectionService('PublicUserProfile');
     this.chatMessagesService = es.getEntityCollectionService('ChatMessage');
   }
@@ -28,6 +33,10 @@ export class ChatDetailComponent implements OnInit {
     this.route.paramMap.pipe(
       map(p => p.get('recipientId')),
       filter(recipientId => typeof(recipientId) === 'string'),
+      tap(recipientId => {
+        this.disconnect();
+        this.connect(recipientId);
+      }),
       switchMap(recipientId => {
         return forkJoin([
           this.publicUserProfilesService.getByKey(recipientId),
@@ -45,14 +54,6 @@ export class ChatDetailComponent implements OnInit {
               obs.complete();
             });
           })
-          /*new Observable<PublicUserProfile>(observer => {
-            this.oktaService.getUser().then((claims: UserClaims) => {
-              this.publicUserProfilesService.getByKey(claims.sub).subscribe(p => {
-                observer.next(p);
-                observer.complete();
-              });
-            });
-          })*/
         ]);
       })
     ).subscribe(([recipient, user, messages]) => {
@@ -63,5 +64,28 @@ export class ChatDetailComponent implements OnInit {
       this.messages = messages;
     });
   }
-
+  ngOnDestroy() {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
+  }
+  onMessage(chatMessage: ChatMessage) {
+    this.chatService.send(chatMessage);
+  }
+  connect(recipientId: string) {
+    if (this.isBrowser) {
+      this.subscription$ = this.chatService.started$.pipe(
+        switchMap(() => this.chatService.connect(recipientId)),
+        takeUntil(this.componentDestroyed$)
+      ).subscribe((chatMessages: Array<ChatMessage>) => {
+        if(chatMessages.length > 0) {
+          this.messages = this.messages.concat(chatMessages);
+        }
+      });
+    }
+  }
+  disconnect() {
+    if(this.isBrowser && this.subscription$) {
+      this.subscription$.unsubscribe();
+    }
+  }
 }
