@@ -49,7 +49,21 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
             });
           }),
           new Observable<Array<ChatMessage>>(obs => {
-            this.chatMessagesService.getWithQuery({ recipientId }).subscribe(messages => {
+            this.chatMessagesService.getWithQuery({ recipientId }).pipe(
+              map(messages => {
+                const messagesCopy = messages.map(m => new ChatMessage(m));
+                messagesCopy.sort((m1, m2) => {
+                  const md1 = new Date(m1.createdAt);
+                  const md2 = new Date(m2.createdAt);
+                  if (md1 > md2)
+                  return 1;
+                  if (md1 < md2)
+                  return -1;
+                  return 0;
+                });
+                return messagesCopy;
+              })
+            ).subscribe(messages => {
               obs.next(messages);
               obs.complete();
             });
@@ -69,7 +83,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
   onMessage(chatMessage: ChatMessage) {
-    this.chatService.send(chatMessage);
+    this.chatMessagesService.add(new ChatMessage({ ...chatMessage, createdAt: new Date() }));
   }
   connect(recipientId: string) {
     if (this.isBrowser) {

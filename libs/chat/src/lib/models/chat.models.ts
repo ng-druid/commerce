@@ -15,14 +15,12 @@ export class ChatSettings {
 }
 
 export class ChatMessage {
-  id: string;
   senderId: string;
   message: string;
   recipientId: string;
   createdAt: Date;
   constructor(data?: ChatMessage) {
     if(data) {
-      this.id = data.id;
       this.senderId = data.senderId;
       this.message = data.message;
       this.recipientId = data.recipientId;
@@ -32,10 +30,14 @@ export class ChatMessage {
 }
 
 export class ChatConversation {
+  id: string;
+  userId: string;
   recipientId: string;
   recipientLabel: string;
   constructor(data?: ChatConversation) {
     if(data) {
+      this.id= data.id;
+      this.userId = data.userId;
       this.recipientId = data.recipientId;
       this.recipientLabel = data.recipientLabel;
     }

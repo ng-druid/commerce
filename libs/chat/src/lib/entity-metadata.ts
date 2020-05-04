@@ -1,5 +1,5 @@
 import { EntityMetadataMap } from '@ngrx/data';
-import { ChatConversation } from './models/chat.models';
+import { ChatConversation, ChatMessage } from './models/chat.models';
 
 export const entityMetadata: EntityMetadataMap = {
   ChatConversation: {
@@ -7,6 +7,7 @@ export const entityMetadata: EntityMetadataMap = {
     entityName: 'ChatConversation'
   },
   ChatMessage: {
+    selectId: (m: ChatMessage) => `${m.senderId}__${m.recipientId}__${m.createdAt}`,
     entityName: 'ChatMessage'
   }
 };

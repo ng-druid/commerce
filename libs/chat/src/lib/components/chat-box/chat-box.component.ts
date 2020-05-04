@@ -27,7 +27,7 @@ export class ChatBoxComponent implements OnDestroy, OnChanges {
   private isBrowser: boolean = isPlatformBrowser(this.platformId);
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
   sendMessage(event) {
-    this.newMessage.emit((new ChatMessage({ id: undefined, message: event.message, senderId: undefined, recipientId: this.recipientId, createdAt: new Date() })));
+    this.newMessage.emit((new ChatMessage({ message: event.message, senderId: undefined, recipientId: this.recipientId, createdAt: new Date() })));
   }
   ngOnChanges(changes: SimpleChanges) {
     //if(changes.recipientId.previousValue !== changes.recipientId.currentValue) {
