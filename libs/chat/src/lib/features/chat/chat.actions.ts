@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ChatMessage, ChatInfo } from '../../models/chat.models';
+import { ChatConversation } from '../../models/chat.models';
 
 export const loadChatConversation = createAction(
   '[Chat] Load Chat Conversation',
@@ -8,7 +8,7 @@ export const loadChatConversation = createAction(
 
 export const loadChatConversationSuccess = createAction(
   '[Chat] Load Chat Conversation Success',
-  props<{ data: Array<ChatMessage>, info: ChatInfo }>()
+  props<{ data: ChatConversation }>()
 );
 
 export const loadChatConversationFailure = createAction(

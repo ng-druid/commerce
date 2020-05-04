@@ -5,5 +5,4 @@ export const selectChatState = createFeatureSelector<fromChat.State>(
   fromChat.chatFeatureKey
 );
 
-export const selectChatMessages = createSelector(selectChatState, state => state.messages);
-export const selectChatInfo = createSelector(selectChatState, state => state.chatInfo);
+export const selectChatConversation = createSelector(selectChatState, state => state.conversation);

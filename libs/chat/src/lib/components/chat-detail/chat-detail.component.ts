@@ -10,7 +10,7 @@ import { ChatMessage } from '../../models/chat.models';
 import { ChatService } from '../../services/chat.service';
 import { Store, select } from '@ngrx/store';
 import { State } from '../../features/chat/chat.reducer';
-import { selectChatMessages, selectChatInfo } from '../../features/chat/chat.selectors';
+import { selectChatConversation } from '../../features/chat/chat.selectors';
 import * as fromActions from '../../features/chat/chat.actions';
 
 @Component({
@@ -43,20 +43,15 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
       this.connect(recipientId);
     });
     this.store.pipe(
-      select(selectChatMessages),
-      takeUntil(this.componentDestroyed$)
-    ).subscribe(messages => {
-      this.messages = messages;
-    });
-    this.store.pipe(
-      select(selectChatInfo),
+      select(selectChatConversation),
       filter(info => info !== undefined),
       takeUntil(this.componentDestroyed$)
-    ).subscribe(info => {
-      this.userId =  info.userId;
-      this.userLabel = info.userLabel;
-      this.recipientId = info.recipientId;
-      this.recipientLabel = info.recipientLabel
+    ).subscribe(conversation => {
+      this.userId =  conversation.userId;
+      this.userLabel = conversation.userLabel;
+      this.recipientId = conversation.recipientId;
+      this.recipientLabel = conversation.recipientLabel;
+      this.messages = conversation.messages;
     });
   }
   ngOnDestroy() {

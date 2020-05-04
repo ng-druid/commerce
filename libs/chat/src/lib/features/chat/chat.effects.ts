@@ -5,7 +5,7 @@ import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { forkJoin } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import * as ChatActions from './chat.actions';
-import { ChatMessage, ChatInfo } from '../../models/chat.models';
+import { ChatConversation, ChatMessage } from '../../models/chat.models';
 import { PublicUserProfile, AuthFacade } from '@classifieds-ui/auth';
 
 
@@ -43,7 +43,17 @@ export class ChatEffects {
             )
           ]).pipe(
             map(([recipient, user, messages]) => {
-              return ChatActions.loadChatConversationSuccess({ info: new ChatInfo({ userId: user.id, userLabel: user.userName, recipientId: recipient.id, recipientLabel: recipient.userName}), data: messages });
+              return ChatActions.loadChatConversationSuccess({
+                data: new ChatConversation({
+                  id: undefined,
+                  userId: user.id,
+                  userLabel: user.userName,
+                  recipientId: recipient.id,
+                  recipientLabel:
+                  recipient.userName,
+                  messages
+                })
+              });
             })
           );
         },

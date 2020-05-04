@@ -32,29 +32,20 @@ export class ChatMessage {
 export class ChatConversation {
   id: string;
   userId: string;
-  recipientId: string;
-  recipientLabel: string;
-  constructor(data?: ChatConversation) {
-    if(data) {
-      this.id= data.id;
-      this.userId = data.userId;
-      this.recipientId = data.recipientId;
-      this.recipientLabel = data.recipientLabel;
-    }
-  }
-}
-
-export class ChatInfo {
-  userId: string;
   userLabel: string;
   recipientId: string;
   recipientLabel: string;
-  constructor(data?: ChatInfo) {
+  messages: Array<ChatMessage> = [];
+  constructor(data?: ChatConversation) {
     if(data) {
-      this.userId = data.userId;
+      this.id= data.id;
       this.userLabel = data.userLabel;
+      this.userId = data.userId;
       this.recipientId = data.recipientId;
       this.recipientLabel = data.recipientLabel;
+      if(data.messages) {
+        this.messages = data.messages.map(m => new ChatMessage(m));
+      }
     }
   }
 }
