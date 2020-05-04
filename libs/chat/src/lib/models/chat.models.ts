@@ -43,3 +43,18 @@ export class ChatConversation {
     }
   }
 }
+
+export class ChatInfo {
+  userId: string;
+  userLabel: string;
+  recipientId: string;
+  recipientLabel: string;
+  constructor(data?: ChatInfo) {
+    if(data) {
+      this.userId = data.userId;
+      this.userLabel = data.userLabel;
+      this.recipientId = data.recipientId;
+      this.recipientLabel = data.recipientLabel;
+    }
+  }
+}

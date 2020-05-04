@@ -9,9 +9,13 @@ import { ChatDetailComponent } from './components/chat-detail/chat-detail.compon
 import { ChatBrowserComponent } from './components/chat-browser/chat-browser.component';
 import { MaterialModule } from '@classifieds-ui/material';
 import { entityMetadata } from './entity-metadata';
-import { EntityDefinitionService, EntityDataService } from '@ngrx/data';
+import { EntityDefinitionService, EntityDataService, EntityDataModule } from '@ngrx/data';
 import { ChatConversationsDataService } from './services/chat-conversations-data.service';
 import { ChatMessagesDataService } from './services/chat-messages-data.service';
+import { StoreModule } from '@ngrx/store';
+import * as fromChat from './features/chat/chat.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { ChatEffects } from './features/chat/chat.effects';
 
 const routes = [
   { path: '', component: ChatBrowserComponent, children: [
@@ -25,7 +29,9 @@ const routes = [
     NbChatModule.forChild(),
     RouterModule.forChild(routes),
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    StoreModule.forFeature(fromChat.chatFeatureKey, fromChat.reducer),
+    EffectsModule.forFeature([ChatEffects])
   ],
   declarations: [ChatBoxComponent, ChatMasterComponent, ChatDetailComponent, ChatBrowserComponent],
   exports: [ChatBoxComponent]
