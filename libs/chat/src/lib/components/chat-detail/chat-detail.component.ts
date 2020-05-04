@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { map, filter, takeUntil } from 'rxjs/operators';
+import { map, filter, takeUntil, take } from 'rxjs/operators';
 import { ChatMessage } from '../../models/chat.models';
 import { Store, select } from '@ngrx/store';
 import { State } from '../../features/chat/chat.reducer';
-import { selectChatConversation, selectRecievedChatMessage } from '../../features/chat/chat.selectors';
+import { selectChatConversation, selectRecievedChatMessage, selectChatConnected } from '../../features/chat/chat.selectors';
 import * as fromActions from '../../features/chat/chat.actions';
+import { AuthFacade } from '@classifieds-ui/auth';
 
 @Component({
   selector: 'classifieds-ui-chat-detail',
@@ -19,8 +20,9 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
   userId: string;
   userLabel: string;
   messages: Array<ChatMessage>;
+  enableSend = false;
   private componentDestroyed$ = new Subject();
-  constructor(private route: ActivatedRoute, private store: Store<State>) {}
+  constructor(private route: ActivatedRoute, private store: Store<State>, private authFacade: AuthFacade) {}
   ngOnInit() {
     this.store.dispatch(fromActions.establishSocketConnection());
     this.route.paramMap.pipe(
@@ -45,14 +47,29 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
       filter(message => message !== undefined),
       takeUntil(this.componentDestroyed$)
     ).subscribe(message => {
-      this.messages = this.messages.concat(message);
-    })
+      const last = this.messages.length - 1;
+      this.messages[last] = new ChatMessage(message);
+    });
+    this.store.pipe(
+      select(selectChatConnected),
+      filter(connected => connected !== undefined),
+      takeUntil(this.componentDestroyed$)
+    ).subscribe(connected => {
+      this.enableSend = connected;
+    });
   }
   ngOnDestroy() {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
   }
   onMessage(chatMessage: ChatMessage) {
-    this.store.dispatch(fromActions.sendChatMessage({ data: new ChatMessage({ ...chatMessage, createdAt: new Date() }) }));
+    this.authFacade.getUser$.pipe(
+      filter(() => this.enableSend),
+      take(1)
+    ).subscribe(u => {
+      const message = new ChatMessage({ ...chatMessage, senderId: u.profile.sub, createdAt: new Date() });
+      this.messages = this.messages.concat(new ChatMessage({ ...message, message: 'sending...' }));
+      this.store.dispatch(fromActions.sendChatMessage({ data: message }));
+    })
   }
 }

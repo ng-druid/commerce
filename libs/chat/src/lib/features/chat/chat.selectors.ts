@@ -7,3 +7,4 @@ export const selectChatState = createFeatureSelector<fromChat.State>(
 
 export const selectChatConversation = createSelector(selectChatState, state => state.conversation);
 export const selectRecievedChatMessage = createSelector(selectChatState, state => state.recievedMessage);
+export const selectChatConnected = createSelector(selectChatState, state => state.connected);

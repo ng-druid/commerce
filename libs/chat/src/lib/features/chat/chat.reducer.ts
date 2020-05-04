@@ -7,12 +7,14 @@ export const chatFeatureKey = 'chat';
 export interface State {
   conversation: ChatConversation;
   connected: boolean;
+  sentMessage: ChatMessage;
   recievedMessage: ChatMessage;
 }
 
 export const initialState: State = {
   conversation: undefined,
   connected: undefined,
+  sentMessage: undefined,
   recievedMessage: undefined
 };
 
