@@ -1,20 +1,27 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as ChatActions from './chat.actions';
-import { ChatConversation } from '../../models/chat.models';
+import { ChatConversation, ChatMessage } from '../../models/chat.models';
 
 export const chatFeatureKey = 'chat';
 
 export interface State {
   conversation: ChatConversation;
+  connected: boolean;
+  recievedMessage: ChatMessage;
 }
 
 export const initialState: State = {
-  conversation: undefined
+  conversation: undefined,
+  connected: undefined,
+  recievedMessage: undefined
 };
 
 const chatReducer = createReducer(
   initialState,
   on(ChatActions.loadChatConversationSuccess, (state, action) => ({ ...state, conversation: action.data } )),
+  on(ChatActions.establishSocketConnectionFailure, state => ({ ...state, connected: false } )),
+  on(ChatActions.establishSocketConnectionSuccess, state => ({ ...state, connected: true } )),
+  on(ChatActions.recieveChatMessageSuccess, (state, action) => ({ ...state, recievedMessage: action.data } )),
 );
 
 export function reducer(state: State | undefined, action: Action) {

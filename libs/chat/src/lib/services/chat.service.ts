@@ -7,6 +7,9 @@ import { Observable } from 'rxjs';
 import { tap, take, map, switchMap } from 'rxjs/operators';
 import * as signalR from "@aspnet/signalr";
 //import { OktaAuthService } from '@okta/okta-angular';
+import { Store } from '@ngrx/store';
+import { State } from '../features/chat/chat.reducer';
+import * as fromActions from '../features/chat/chat.actions';
 
 import { ChatSettings, ChatMessage, ChatConversation } from '../models/chat.models';
 
@@ -16,60 +19,33 @@ import { CHAT_SETTINGS } from '../chat.tokens';
   providedIn: "root"
 })
 export class ChatService {
-  started$ = new ReplaySubject<boolean>(1);
-  broadcasted$ = new Subject<ChatMessage>();
-  private conversations = new Map<string, BehaviorSubject<Array<ChatMessage>>>();
-  private isBrowser: boolean = isPlatformBrowser(this.platformId);
   private ws: WebSocket;
-  private userId: string;
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, @Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade) {
-    if (this.isBrowser) {
-      setTimeout(() => this.initializeConnection(), 1);
-    }
-  }
-
-  private initializeConnection(): void {
+  constructor(@Inject(CHAT_SETTINGS) private chatSettings: ChatSettings, private logService: LogService, private authFacade: AuthFacade, private store: Store<State>) {}
+  createConnection(): Observable<boolean> {
     if(this.ws !== undefined) {
-      this.ws.close();
-    }
-    this.authFacade.getUser$.pipe(
-      take(1),
-    ).subscribe(user => {
-      this.userId = user.profile.sub;
-      this.ws = new WebSocket(`${this.chatSettings.endpointUrl}?token=${user.access_token}`);
-      this.ws.addEventListener('open', () => {
-        this.started$.next(true);
-        console.log('connnected to web socket');
-        this.initializeListeners();
+      return of(true);
+    } else {
+      return new Observable(obs => {
+        this.authFacade.getUser$.pipe(
+          take(1),
+        ).subscribe(user => {
+          this.ws = new WebSocket(`${this.chatSettings.endpointUrl}?token=${user.access_token}`);
+          this.ws.addEventListener('open', () => {
+            obs.next(true);
+            obs.complete();
+          });
+          this.ws.addEventListener('error', (evt) => {
+            this.logService.log(evt);
+            obs.next(false);
+            obs.complete();
+          });
+          this.ws.addEventListener('message', (evt) => {
+            const data = JSON.parse(evt.data);
+            const message = new ChatMessage(data);
+            this.store.dispatch(fromActions.recieveChatMessage({ data: message }));
+          });
+        });
       });
-      this.ws.addEventListener('error', (evt) => {
-        this.logService.log(evt);
-        this.started$.next(false);
-      });
-    });
-  }
-
- connect(recipientId: string): BehaviorSubject<Array<ChatMessage>> {
-    this.initializeConversation(recipientId);
-    return this.conversations.get(recipientId);
-  }
-
-  private initializeListeners(): void {
-    this.ws.addEventListener('message', (evt) => {
-      const data = JSON.parse(evt.data);
-      console.log(evt);
-      if(data.length === undefined) {
-        const message = new ChatMessage(data);
-        this.conversations.get(message.recipientId === this.userId ? message.senderId : message.recipientId).next([message]);
-      }
-    })
-  }
-
-  private initializeConversation(recipientId: string): void {
-    if(!this.conversations.has(recipientId)) {
-      this.conversations.set(recipientId, new BehaviorSubject<Array<ChatMessage>>([]));
     }
   }
-
 }

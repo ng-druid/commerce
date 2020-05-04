@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { fetch } from '@nrwl/angular';
+import { fetch, pessimisticUpdate } from '@nrwl/angular';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { forkJoin } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import * as ChatActions from './chat.actions';
 import { ChatConversation, ChatMessage } from '../../models/chat.models';
+import { ChatService } from '../../services/chat.service';
 import { PublicUserProfile, AuthFacade } from '@classifieds-ui/auth';
 
 
@@ -14,11 +15,51 @@ export class ChatEffects {
 
   private publicUserProfilesService: EntityCollectionService<PublicUserProfile>;
 
+  establishSocketConnection$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ChatActions.establishSocketConnection),
+      switchMap(() => {
+        return this.chatService.createConnection().pipe(
+          map(created => {
+            if(created) {
+              return ChatActions.establishSocketConnectionSuccess();
+            } else {
+              return ChatActions.establishSocketConnectionFailure();
+            }
+          })
+        );
+      })
+    );
+  });
+
+  recieveChatmessage$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ChatActions.recieveChatMessage),
+      map(action => ChatActions.recieveChatMessageSuccess({ data: action.data }))
+    );
+  });
+
+  sendChatmessage$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ChatActions.sendChatMessage),
+      pessimisticUpdate({
+        run: action => {
+          return this.es.getEntityCollectionService('ChatMessage').add(action.data).pipe(
+            map(() => ChatActions.sendChatMessageSuccess())
+          );
+        },
+        onError: (action, error: any) => {
+          // dispatch an undo action to undo the changes in the client state
+          return null;
+        }
+      })
+    );
+  });
+
   loadChatConversations$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ChatActions.loadChatConversation),
       fetch({
-        // provides an action
         run: action => {
           return forkJoin([
             this.publicUserProfilesService.getByKey(action.recipientId),
@@ -66,7 +107,7 @@ export class ChatEffects {
   });
 
 
-  constructor(private actions$: Actions, private authFacade: AuthFacade, private es: EntityServices) {
+  constructor(private actions$: Actions, private authFacade: AuthFacade, private es: EntityServices, private chatService: ChatService) {
     this.publicUserProfilesService = es.getEntityCollectionService('PublicUserProfile')
   }
 
