@@ -23,6 +23,7 @@ const chatReducer = createReducer(
   on(ChatActions.loadChatConversationSuccess, (state, action) => ({ ...state, conversation: action.data } )),
   on(ChatActions.establishSocketConnectionFailure, state => ({ ...state, connected: false } )),
   on(ChatActions.establishSocketConnectionSuccess, state => ({ ...state, connected: true } )),
+  on(ChatActions.sendChatMessage, (state, action) => ({ ...state, sentMessage: action.data } )),
   on(ChatActions.recieveChatMessageSuccess, (state, action) => ({ ...state, recievedMessage: action.data } )),
 );
 
