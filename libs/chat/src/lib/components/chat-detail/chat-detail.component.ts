@@ -48,7 +48,14 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
       takeUntil(this.componentDestroyed$)
     ).subscribe(message => {
       const last = this.messages.length - 1;
+      // @todo: Just support one message at a time for now.
       this.messages[last] = new ChatMessage(message);
+      /*for(let i = last; i >= 0; i--) {
+        if(`${message.senderId}__${message.recipientId}__${message.createdAt}` === `${this.messages[i].senderId}__${this.messages[i].recipientId}__${this.messages[i].createdAt.toString()}`) {
+          this.messages[i] = new ChatMessage(message);
+          break;
+        }
+      }*/
     });
     this.store.pipe(
       select(selectChatConnected),

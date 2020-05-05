@@ -29,7 +29,12 @@ export class ChatService {
         this.authFacade.getUser$.pipe(
           take(1),
         ).subscribe(user => {
-          this.ws = new WebSocket(`${this.chatSettings.endpointUrl}?token=${user.access_token}`);
+          try {
+            this.ws = new WebSocket(`${this.chatSettings.endpointUrl}?token=${user.access_token}`);
+          } catch(e) {
+            console.log(e);
+            // throw e;
+          }
           this.ws.addEventListener('open', () => {
             obs.next(true);
             obs.complete();

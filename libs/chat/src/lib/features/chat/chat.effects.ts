@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { fetch, pessimisticUpdate } from '@nrwl/angular';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { forkJoin } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take, concatMap } from 'rxjs/operators';
 import * as ChatActions from './chat.actions';
 import { ChatConversation, ChatMessage } from '../../models/chat.models';
 import { ChatService } from '../../services/chat.service';
@@ -42,16 +42,10 @@ export class ChatEffects {
   sendChatmessage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ChatActions.sendChatMessage),
-      pessimisticUpdate({
-        run: action => {
-          return this.es.getEntityCollectionService('ChatMessage').add(action.data).pipe(
-            map(() => ChatActions.sendChatMessageSuccess())
-          );
-        },
-        onError: (action, error: any) => {
-          // dispatch an undo action to undo the changes in the client state
-          return null;
-        }
+      concatMap(action => {
+        return this.es.getEntityCollectionService('ChatMessage').add(action.data).pipe(
+          map(() => ChatActions.sendChatMessageSuccess())
+        );
       })
     );
   });
