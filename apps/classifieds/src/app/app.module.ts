@@ -17,6 +17,7 @@ import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 // import { OktaAuthModule, OktaCallbackComponent, OKTA_CONFIG } from '@okta/okta-angular';
 // import { UserManager } from 'oidc-client';
 import { NbA11yModule } from '@nebular/theme';
+import { JsonschemaModule } from '@classifieds-ui/jsonschema';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -33,8 +34,6 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HomeComponent } from './components/home/home.component';
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import { reducers, metaReducers } from './reducers';
-import { FormlyModule } from '@ngx-formly/core';
-import { FormlyMaterialModule } from '@ngx-formly/material';
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
@@ -42,6 +41,7 @@ const routes = [
   { path: 'chat', loadChildren: () => import('@classifieds-ui/chat').then(m => m.ChatModule) },
   { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
   { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
+  { path: 'profiles', loadChildren: () => import('@classifieds-ui/profiles').then(m => m.ProfilesModule) },
   { path: '', component: HomeComponent },
   { path: '**', component: NotFoundComponent }
 ];
@@ -102,8 +102,7 @@ const oktaConfig = {
     MediaModule,
     NxModule.forRoot(),
     EntityDataModule.forRoot({}),
-    FormlyModule.forRoot(),
-    FormlyMaterialModule,
+    JsonschemaModule
     // OktaAuthModule
   ],
   providers: [

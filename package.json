@@ -57,6 +57,8 @@
     "@ngrx/store": "^9.0.0",
     "@ngrx/store-devtools": "^9.0.0",
     "@nguniversal/express-engine": "^9.1.0",
+    "@ngx-formly/core": "^5.6.1",
+    "@ngx-formly/material": "^5.6.1",
     "@ngx-formly/schematics": "^5.6.1",
     "@nrwl/angular": "^9.2.3",
     "@okta/okta-angular": "^2.0.0",
@@ -74,9 +76,7 @@
     "rxjs": "~6.5.4",
     "stacktrace-js": "^2.0.1",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2",
-    "@ngx-formly/core": "^5.0.0",
-    "@ngx-formly/material": "^5.0.0"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.0",
