@@ -6,537 +6,515 @@ import { Profile } from '../../models/profiles.model';
 
 const schema =
 {
-  "schema": {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Profile",
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "Id": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "ParentId": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "UserId": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "Title": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "Status": {
-        "$ref": "#/definitions/ProfileStatuses"
-      },
-      "Type": {
-        "$ref": "#/definitions/ProfileTypes"
-      },
-      "Subtype": {
-        "$ref": "#/definitions/ProfileSubtypes"
-      },
-      "Adspace": {
-        "$ref": "#/definitions/AdTypes"
-      },
-      "FirstName": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "LastName": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "MiddleName": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "PreferredName": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "CompanyName": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "Email": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "Introduction": {
-        "type": [
-          "null",
-          "string"
-        ]
-      },
-      "Logo": {
-        "oneOf": [
-          {
-            "type": "null"
-          },
-          {
-            "$ref": "#/definitions/ProfileImage"
-          }
-        ]
-      },
-      "Headshot": {
-        "oneOf": [
-          {
-            "type": "null"
-          },
-          {
-            "$ref": "#/definitions/ProfileImage"
-          }
-        ]
-      },
-      "PhoneNumbers": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/PhoneNumber"
-        }
-      },
-      "Locations": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/Location"
-        }
-      }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Id": {
+      "title": "Id",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
     },
-    "definitions": {
-      "ProfileStatuses": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "Submitted",
-          "Approved",
-          "Rejected",
-          "Deleted"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "ProfileTypes": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "Person",
-          "Company",
-          "Shop"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
-      },
-      "ProfileSubtypes": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "Agent",
-          "Broker",
-          "Dealer",
-          "Seller"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "AdTypes": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "General",
-          "RealEstate",
-          "Rental",
-          "Auto",
-          "Job"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "ProfileImage": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Id": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "Path": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "Weight": {
-            "$ref": "#/definitions/SByte"
-          }
+    "ParentId": {
+      "title": "ParentId",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "UserId": {
+      "title": "UserId",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "Title": {
+      "title": "Title",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "Status": {
+      "title": "Status",
+      "$ref": "#/definitions/ProfileStatuses",
+      "templateOptions": {}
+    },
+    "Type": {
+      "title": "Type",
+      "$ref": "#/definitions/ProfileTypes",
+      "templateOptions": {}
+    },
+    "Subtype": {
+      "title": "Subtype",
+      "$ref": "#/definitions/ProfileSubtypes",
+      "templateOptions": {}
+    },
+    "Adspace": {
+      "title": "Adspace",
+      "$ref": "#/definitions/AdTypes",
+      "templateOptions": {}
+    },
+    "FirstName": {
+      "title": "FirstName",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "LastName": {
+      "title": "LastName",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "MiddleName": {
+      "title": "MiddleName",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "PreferredName": {
+      "title": "PreferredName",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "CompanyName": {
+      "title": "CompanyName",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "Email": {
+      "title": "Email",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "Introduction": {
+      "title": "Introduction",
+      "type": [
+        "null",
+        "string"
+      ],
+      "templateOptions": {}
+    },
+    "Logo": {
+      "title": "Logo",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/ProfileImage"
         }
-      },
-      "SByte": {
-        "type": "object",
-        "additionalProperties": false
-      },
-      "PhoneNumber": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Type": {
-            "$ref": "#/definitions/PhoneNumberTypes"
-          },
-          "Value": {
-            "type": [
-              "null",
-              "string"
-            ]
-          }
+      ],
+      "templateOptions": {}
+    },
+    "Headshot": {
+      "title": "Headshot",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/ProfileImage"
         }
+      ],
+      "templateOptions": {}
+    },
+    "PhoneNumbers": {
+      "title": "PhoneNumbers",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PhoneNumber"
       },
-      "PhoneNumberTypes": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "Email",
-          "Fax"
-        ],
-        "enum": [
-          0,
-          1
-        ]
+      "templateOptions": {}
+    },
+    "Locations": {
+      "title": "Locations",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Location"
       },
-      "Location": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Title": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "Type": {
-            "$ref": "#/definitions/LocationTypes"
-          },
-          "Address": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/definitions/Address"
-              }
-            ]
-          },
-          "PhoneNumbers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/PhoneNumber"
-            }
-          }
-        }
-      },
-      "LocationTypes": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "Home",
-          "Office"
-        ],
-        "enum": [
-          0,
-          1
-        ]
-      },
-      "Address": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Street1": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "Street2": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "Street3": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "City": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "State": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "Zip": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "Country": {
-            "type": [
-              "null",
-              "string"
-            ]
-          }
-        }
-      }
+      "templateOptions": {}
     }
   },
-  "layout": [
-    {
-      "key": "Id"
-    },
-    {
-      "key": "ParentId"
-    },
-    {
-      "key": "UserId"
-    },
-    {
-      "key": "Title"
-    },
-    {
-      "key": "Status",
-      "widget": "select",
-      "titleMap": [
-        {
-          "value": 0,
-          "name": "Submitted"
-        },
-        {
-          "value": 1,
-          "name": "Approved"
-        },
-        {
-          "value": 2,
-          "name": "Rejected"
-        },
-        {
-          "value": 3,
-          "name": "Deleted"
+  "definitions": {
+    "ProfileStatuses": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Submitted",
+        "Approved",
+        "Rejected",
+        "Deleted"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "value": 0,
+                "label": "Submitted"
+              },
+              {
+                "value": 1,
+                "label": "Approved"
+              },
+              {
+                "value": 2,
+                "label": "Rejected"
+              },
+              {
+                "value": 3,
+                "label": "Deleted"
+              }
+            ]
+          }
         }
-      ]
+      }
     },
-    {
-      "key": "Type",
-      "widget": "select",
-      "titleMap": [
-        {
-          "value": 0,
-          "name": "Person"
-        },
-        {
-          "value": 1,
-          "name": "Company"
-        },
-        {
-          "value": 2,
-          "name": "Shop"
+    "ProfileTypes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Person",
+        "Company",
+        "Shop"
+      ],
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "value": 0,
+                "label": "Person"
+              },
+              {
+                "value": 1,
+                "label": "Company"
+              },
+              {
+                "value": 2,
+                "label": "Shop"
+              }
+            ]
+          }
         }
-      ]
+      }
     },
-    {
-      "key": "Subtype",
-      "widget": "select",
-      "titleMap": [
-        {
-          "value": 0,
-          "name": "Agent"
-        },
-        {
-          "value": 1,
-          "name": "Broker"
-        },
-        {
-          "value": 2,
-          "name": "Dealer"
-        },
-        {
-          "value": 3,
-          "name": "Seller"
+    "ProfileSubtypes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Agent",
+        "Broker",
+        "Dealer",
+        "Seller"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "value": 0,
+                "label": "Agent"
+              },
+              {
+                "value": 1,
+                "label": "Broker"
+              },
+              {
+                "value": 2,
+                "label": "Dealer"
+              },
+              {
+                "value": 3,
+                "label": "Seller"
+              }
+            ]
+          }
         }
-      ]
+      }
     },
-    {
-      "key": "Adspace",
-      "widget": "select",
-      "titleMap": [
-        {
-          "value": 0,
-          "name": "General"
-        },
-        {
-          "value": 1,
-          "name": "RealEstate"
-        },
-        {
-          "value": 2,
-          "name": "Rental"
-        },
-        {
-          "value": 3,
-          "name": "Auto"
-        },
-        {
-          "value": 4,
-          "name": "Job"
+    "AdTypes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "General",
+        "RealEstate",
+        "Rental",
+        "Auto",
+        "Job"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "value": 0,
+                "label": "General"
+              },
+              {
+                "value": 1,
+                "label": "RealEstate"
+              },
+              {
+                "value": 2,
+                "label": "Rental"
+              },
+              {
+                "value": 3,
+                "label": "Auto"
+              },
+              {
+                "value": 4,
+                "label": "Job"
+              }
+            ]
+          }
         }
-      ]
+      }
     },
-    {
-      "key": "FirstName"
-    },
-    {
-      "key": "LastName"
-    },
-    {
-      "key": "MiddleName"
-    },
-    {
-      "key": "PreferredName"
-    },
-    {
-      "key": "CompanyName"
-    },
-    {
-      "key": "Email"
-    },
-    {
-      "key": "Introduction"
-    },
-    {
-      "key": "Logo"
-    },
-    {
-      "key": "Headshot"
-    },
-    {
-      "key": "PhoneNumbers",
-      "items": [
-        {
-          "key": "PhoneNumbers[].Type",
-          "widget": "select",
-          "titleMap": [
-            {
-              "value": 0,
-              "name": "Email"
-            },
-            {
-              "value": 1,
-              "name": "Fax"
-            }
+    "ProfileImage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
           ]
         },
-        {
-          "key": "PhoneNumbers[].Value"
+        "Path": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Weight": {
+          "$ref": "#/definitions/SByte"
         }
-      ]
+      }
     },
-    {
-      "key": "Locations",
-      "items": [
-        {
-          "key": "Locations[].Title"
+    "SByte": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "PhoneNumber": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Type": {
+          "title": "Type",
+          "$ref": "#/definitions/PhoneNumberTypes",
+          "templateOptions": {}
         },
-        {
-          "key": "Locations[].Type",
-          "widget": "select",
-          "titleMap": [
+        "Value": {
+          "title": "Value",
+          "type": [
+            "null",
+            "string"
+          ],
+          "templateOptions": {}
+        }
+      }
+    },
+    "PhoneNumberTypes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Email",
+        "Fax"
+      ],
+      "enum": [
+        0,
+        1
+      ],
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "value": 0,
+                "label": "Email"
+              },
+              {
+                "value": 1,
+                "label": "Fax"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Title": {
+          "title": "Title",
+          "type": [
+            "null",
+            "string"
+          ],
+          "templateOptions": {}
+        },
+        "Type": {
+          "title": "Type",
+          "$ref": "#/definitions/LocationTypes",
+          "templateOptions": {}
+        },
+        "Address": {
+          "title": "Address",
+          "oneOf": [
             {
-              "value": 0,
-              "name": "Home"
+              "type": "null"
             },
             {
-              "value": 1,
-              "name": "Office"
+              "$ref": "#/definitions/Address"
             }
+          ],
+          "templateOptions": {}
+        },
+        "PhoneNumbers": {
+          "title": "PhoneNumbers",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PhoneNumber"
+          },
+          "templateOptions": {}
+        }
+      }
+    },
+    "LocationTypes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Home",
+        "Office"
+      ],
+      "enum": [
+        0,
+        1
+      ],
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "value": 0,
+                "label": "Home"
+              },
+              {
+                "value": 1,
+                "label": "Office"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Street1": {
+          "type": [
+            "null",
+            "string"
           ]
         },
-        {
-          "key": "Locations[].Address"
+        "Street2": {
+          "type": [
+            "null",
+            "string"
+          ]
         },
-        {
-          "key": "Locations[].PhoneNumbers",
-          "items": [
-            {
-              "key": "Locations[].PhoneNumbers[].Type",
-              "widget": "select",
-              "titleMap": [
-                {
-                  "value": 0,
-                  "name": "Email"
-                },
-                {
-                  "value": 1,
-                  "name": "Fax"
-                }
-              ]
-            },
-            {
-              "key": "Locations[].PhoneNumbers[].Value"
-            }
+        "Street3": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "City": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "State": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Zip": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Country": {
+          "type": [
+            "null",
+            "string"
           ]
         }
-      ]
+      }
     }
-  ]
+  }
 };
 
 @Component({
@@ -556,12 +534,12 @@ export class CreateProfileComponent implements OnInit {
   ngOnInit(): void {
     // const config = this.formlyJsonschema.toFieldConfig(schema.schema);
     this.form = new FormGroup({});
-    this.fields = [this.formlyJsonschema.toFieldConfig(schema.schema)];
+    this.fields = [this.formlyJsonschema.toFieldConfig(schema)];
     this.model = new Profile();
   }
 
   onSubmit() {
-    // alert(JSON.stringify(this.model));
+    console.log(this.model);
   }
 
 }
