@@ -33,6 +33,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HomeComponent } from './components/home/home.component';
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import { reducers, metaReducers } from './reducers';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
 
 const routes = [
   { path: 'auth-callback', component: AuthCallbackComponent },
@@ -100,6 +102,8 @@ const oktaConfig = {
     MediaModule,
     NxModule.forRoot(),
     EntityDataModule.forRoot({}),
+    FormlyModule.forRoot(),
+    FormlyMaterialModule,
     // OktaAuthModule
   ],
   providers: [
