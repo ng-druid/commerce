@@ -36,6 +36,9 @@ export const environment = {
   adSettings: {
     adUrl: 'https://d2o66qxp1qwfb9.cloudfront.net/ads'
   },
+  profileSettings: {
+    profileUrl: 'https://d2o66qxp1qwfb9.cloudfront.net/profiles'
+  },
   loggingSettings: {
     endpointUrl: "https://classifieds-dev.azurewebsites.net/logging"
   },

@@ -14,6 +14,8 @@ import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { PROFILE_SETTINGS, ProfileSettings } from '@classifieds-ui/profiles';
 // import { OktaAuthModule, OktaCallbackComponent, OKTA_CONFIG } from '@okta/okta-angular';
 // import { UserManager } from 'oidc-client';
 import { NbA11yModule } from '@nebular/theme';
@@ -115,6 +117,7 @@ const oktaConfig = {
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
     { provide: AD_SETTINGS, useValue: new AdSettings(environment.adSettings) },
+    { provide: PROFILE_SETTINGS, useValue: new ProfileSettings(environment.profileSettings) },
     { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
 
     // There is no way to prioritize interceptors so order can be important.

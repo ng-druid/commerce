@@ -14,10 +14,16 @@ import { ProfileMasterComponent } from './components/profile-master/profile-mast
 import { LocationMasterComponent } from './components/location-master/location-master.component';
 import { ProfileBrowserComponent } from './components/profile-browser/profile-browser.component';
 import { ProfileDashboardComponent } from './components/profile-dashboard/profile-dashboard.component';
+import { StoreModule } from '@ngrx/store';
+import * as fromProfileBrowser from './features/profile-browser/profile-browser.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { ProfileBrowserEffects } from './features/profile-browser/profile-browser.effects';
+import { ProfilesDataService } from './services/profiles-data.service';
+import { ProfileResolver } from './resolvers/profile.resolver';
 
 const routes = [
   { path: '', component: ProfileBrowserComponent, children: [
-    { path: 'profile/:profileId', component: ProfileDashboardComponent },
+    { path: 'profile/:profileId', component: ProfileDashboardComponent, resolve: { profile: ProfileResolver } },
     { path: 'create-profile', component: CreateProfileComponent },
   ] }
 ];
@@ -30,13 +36,21 @@ const routes = [
     FlexLayoutModule,
     NgxDropzoneModule,
     RouterModule.forChild(routes),
+    StoreModule.forFeature(fromProfileBrowser.profileBrowserFeatureKey, fromProfileBrowser.reducer),
+    EffectsModule.forFeature([ProfileBrowserEffects]),
     /*FormlyModule.forChild(),
     FormlyMaterialModule*/
   ],
-  declarations: [CreateProfileComponent, ProfileMasterComponent, LocationMasterComponent, ProfileBrowserComponent, ProfileDashboardComponent]
+  declarations: [CreateProfileComponent, ProfileMasterComponent, LocationMasterComponent, ProfileBrowserComponent, ProfileDashboardComponent],
+  providers: [
+    ProfileResolver
+  ]
 })
 export class ProfilesModule {
-  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService) {
+  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService, profilesDataService: ProfilesDataService) {
     eds.registerMetadataMap(entityMetadata);
+    entityDataService.registerServices({
+      Profile: profilesDataService
+    });
   }
 }

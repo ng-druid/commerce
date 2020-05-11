@@ -36,6 +36,15 @@ export enum LocationTypes {
   Office = 1,
 }
 
+export class ProfileSettings {
+  profileUrl: string;
+  constructor(data?: ProfileSettings) {
+    if(data) {
+      this.profileUrl = data.profileUrl;
+    }
+  }
+}
+
 export class ProfileImage {
   id: string;
   path: string;
