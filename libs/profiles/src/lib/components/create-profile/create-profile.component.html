@@ -1,6 +1,160 @@
-<p>create-profile works!</p>
-
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+<div class="profile-create-wrapper" fxLayout="column" fxFill>
+  <form [formGroup]="profileForm" (ngSubmit)="submit()">
+    <div fxLayout="row" fxLayoutGap="2em">
+      <div fxLayout="column">
+        <div class="section-heading">Profile Type</div>
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option [value]="0">Person</mat-option>
+            <mat-option [value]="1">Company</mat-option>
+            <mat-option [value]="2">Shop</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Subtyype</mat-label>
+          <mat-select formControlName="subtype" [disabled]="type.value === ''">
+            <mat-option *ngIf="individual" [value]="0">Agent</mat-option>
+            <mat-option *ngIf="!individual" [value]="1">Broker</mat-option>
+            <mat-option *ngIf="!individual" [value]="2">Dealer</mat-option>
+            <mat-option *ngIf="individual" [value]="3">Seller</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Adspace</mat-label>
+          <mat-select formControlName="adspace">
+            <mat-option [value]="0">General</mat-option>
+            <mat-option [value]="1">Realestate</mat-option>
+            <mat-option [value]="2">Rental</mat-option>
+            <mat-option [value]="3">Auto</mat-option>
+            <mat-option [value]="4">Job</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div [fxFlex]="this.individual ? 70 : 20">
+        <div *ngIf="type.value !== ''">
+          <div *ngIf="individual" fxLayout="row" fxLayoutGap="2em">
+            <div fxFlex="50" fxLayout="column">
+              <div class="section-heading">Individual Info</div>
+              <mat-form-field>
+                <input matInput placeholder="First Name" formControlName="firstName">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Middle Name" formControlName="middleName">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Last Name" formControlName="lastName">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Preferred Name" formControlName="preferredName">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Title" formControlName="title">
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" fxLayout="column">
+              <div class="section-heading">Contact Info</div>
+              <div formArrayName="phoneNumbers" *ngFor="let pn of phoneNumbers.controls; let i = index;">
+                <div [formGroupName]="i" fxLayout="row" fxLayoutGap="1em">
+                  <mat-form-field>
+                    <mat-label>Type</mat-label>
+                    <mat-select formControlName="type">
+                      <mat-option [value]="0">Email</mat-option>
+                      <mat-option [value]="1">Fax</mat-option>
+                      <mat-option [value]="2">Phone</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field fxFlex="80">
+                    <input matInput placeholder="Number" formControlName="value">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div>
+                <button mat-raised-button (click)="addNumber()">Add Number</button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!individual" fxLayout="column">
+            <div class="section-heading">Business Info</div>
+            <mat-form-field>
+              <input matInput placeholder="Company Name" formControlName="companyName">
+            </mat-form-field>
+            <div>
+              <ngx-dropzone [multiple]="false" (change)="onSelect($event)">
+                <ngx-dropzone-label>Drag and Drop Logo Here</ngx-dropzone-label>
+                <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                  <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+              </ngx-dropzone>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button type="submit" mat-raised-button color="primary" [disabled]="!profileForm.valid">Create Profile</button>
+        </div>
+      </div>
+      <div [fxFlex]="this.individual ? 10 : 100">
+        <div *ngIf="individual" class="section-heading">Photos</div>
+        <div *ngIf="!individual" class="section-heading">Locations</div>
+        <ngx-dropzone *ngIf="individual" [multiple]="false" (change)="onSelect($event)">
+          <ngx-dropzone-label>Drag and Drop Headshot Here</ngx-dropzone-label>
+          <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+          </ngx-dropzone-preview>
+        </ngx-dropzone>
+        <div *ngIf="!individual" fxLayout="column">
+          <div formArrayName="locations" *ngFor="let l of locations.controls; let i = index;" class="location">
+            <div [formGroupName]="i" fxLayout="column">
+              <div formGroupName="address" fxLayout="row" fxLayoutGap="1em">
+                <mat-form-field>
+                  <input matInput placeholder="Street1" formControlName="street1">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Street2" formControlName="street2">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Street3" formControlName="street3">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="City" formControlName="city">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="state" formControlName="state">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Zip" formControlName="zip">
+                </mat-form-field>
+              </div>
+              <div>
+                <div fxLayout="row wrap" fxLayoutGap="1em">
+                  <div formArrayName="phoneNumbers" *ngFor="let pn of locationNumbers(i).controls; let j = index;">
+                    <div [formGroupName]="j" fxLayout="row" fxLayoutGap=".5em">
+                      <mat-form-field fxFlex="4em">
+                        <mat-label>Type</mat-label>
+                        <mat-select formControlName="type">
+                          <mat-option [value]="0">Email</mat-option>
+                          <mat-option [value]="1">Fax</mat-option>
+                          <mat-option [value]="2">Phone</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field>
+                        <input matInput placeholder="Number" formControlName="value">
+                      </mat-form-field>
+                      <div>
+                        <button mat-raised-button (click)="removeLocationNumber(i, j)">-</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button mat-raised-button (click)="addLocationNumber(i)">Add Number</button>
+              </div>
+            </div>
+          </div>
+          <div class="add-location-btn-container">
+            <button mat-raised-button (click)="addLocation()">Add Location</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

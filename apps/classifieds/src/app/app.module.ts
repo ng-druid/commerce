@@ -17,7 +17,7 @@ import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 // import { OktaAuthModule, OktaCallbackComponent, OKTA_CONFIG } from '@okta/okta-angular';
 // import { UserManager } from 'oidc-client';
 import { NbA11yModule } from '@nebular/theme';
-import { JsonschemaModule } from '@classifieds-ui/jsonschema';
+// import { JsonschemaModule } from '@classifieds-ui/jsonschema';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -102,7 +102,7 @@ const oktaConfig = {
     MediaModule,
     NxModule.forRoot(),
     EntityDataModule.forRoot({}),
-    JsonschemaModule
+    // JsonschemaModule
     // OktaAuthModule
   ],
   providers: [

@@ -63,7 +63,7 @@ export const environment = {
     redirect_uri: 'http://localhost:4000/auth-callback',
     silent_redirect_uri: 'http://localhost:4000/silent-refresh.html',
     response_type: "code",
-    scope:"openid profile aws.cognito.signin.user.admin ads_api/ads_api taxonomy_api/taxonomy_api chat/chat media_api/media_api", /*'ads_api media_api chat IdentityServerApi taxonomy_api api_gateway",*/
+    scope:"openid profile aws.cognito.signin.user.admin ads_api/ads_api taxonomy_api/taxonomy_api chat/chat media_api/media_api profiles_api/profiles_api", /*'ads_api media_api chat IdentityServerApi taxonomy_api api_gateway",*/
     filterProtocolClaims: true,
     loadUserInfo: true,
     automaticSilentRenew: true,
