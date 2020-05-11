@@ -1,1 +1,6 @@
-<p>location-master works!</p>
+<cdk-virtual-scroll-viewport [itemSize]="300" class="locations-viewport">
+  <div *cdkVirtualFor="let location of locations" class="location-item">
+    <div>{{ location.title }}</div>
+  </div>
+  <!-- <div class="spinner" *ngIf="loading$ | async"><mat-spinner diameter="30" mode="indeterminate"></mat-spinner></div> -->
+</cdk-virtual-scroll-viewport>

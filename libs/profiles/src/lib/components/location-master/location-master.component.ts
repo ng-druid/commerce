@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Location } from '../../models/profiles.model';
 
 @Component({
   selector: 'classifieds-ui-location-master',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./location-master.component.scss']
 })
 export class LocationMasterComponent implements OnInit {
+
+  @Input()
+  locations: Array<Location> = [];
 
   constructor() { }
 
