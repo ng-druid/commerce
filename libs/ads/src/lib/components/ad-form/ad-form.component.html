@@ -33,7 +33,7 @@
         </mat-form-field>
           <mat-form-field fxFlex="35">
             <input matInput placeholder="Marketing Profile" [matAutocomplete]="profileAuto" formControlName="profile">
-            <!-- <mat-icon matSuffix>location_city</mat-icon> -->
+            <mat-icon matSuffix>person</mat-icon>
             <mat-autocomplete #profileAuto="matAutocomplete" [displayWith]="displayProfile">
               <mat-option *ngIf="isLoadingProfiles" class="is-loading">Loading...</mat-option>
               <ng-container *ngIf="!isLoadingProfiles">
