@@ -14,7 +14,7 @@ import { Term, Vocabulary, VocabularySelectorComponent } from '@classifieds-ui/t
 import { Attribute, ValueComputerService, AttributeValue } from '@classifieds-ui/attributes';
 import { AdBrowserFacade } from '../../features/ad-browser/ad-browser.facade';
 
-import { AdImage, Ad, AdStatuses, AdType } from '../../models/ads.models';
+import { AdImage, Ad, AdStatuses, AdType, AdProfileItem } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-form',
@@ -27,9 +27,11 @@ export class AdFormComponent implements OnInit, OnDestroy {
   cities: Array<CityListItem> = [];
   adTypes: Array<AdType> = [];
   attributes: Array<Attribute> = [];
+  profiles: Array<AdProfileItem> = [];
   ad: Ad = new Ad();
 
   isLoadingCities = false;
+  isLoadingProfiles = false;
   orientation = 'horizontal';
 
   featuresSheetData: { selectedId: string; } = { selectedId: undefined };
@@ -42,6 +44,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
   private adsService: EntityCollectionService<Ad>;
   private adTypesService: EntityCollectionService<AdType>
   private vocabularyService: EntityCollectionService<Vocabulary>;
+  private profilesService: EntityCollectionService<AdProfileItem>;
 
   private componentDestroyed = new Subject();
 
@@ -56,6 +59,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
     this.adsService = es.getEntityCollectionService('Ad');
     this.adTypesService = es.getEntityCollectionService('AdType');
     this.vocabularyService = es.getEntityCollectionService('Vocabulary');
+    this.profilesService = es.getEntityCollectionService('AdProfileItem');
   }
 
   ngOnInit() {
@@ -66,6 +70,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
     this.detailsFormGroup = this.fb.group({
       title: ['', Validators.required],
       location: ['', Validators.required],
+      profile: [''],
       description: ['', Validators.required]
     });
     this.attributesFormGroup = this.fb.group({
@@ -120,6 +125,28 @@ export class AdFormComponent implements OnInit, OnDestroy {
         }));
       });*/
     });
+    this.detailsFormGroup.get('profile').valueChanges.pipe(
+      debounceTime(500),
+      tap(() => {
+        this.profiles = [];
+        this.isLoadingProfiles = true;
+      }),
+      switchMap(value => this.profilesService.getAll()
+        .pipe(
+          catchError(e => {
+            this.profiles = [];
+            this.isLoadingProfiles = false;
+            return NEVER;
+          }),
+          finalize(() => {
+            this.isLoadingProfiles = false
+          }),
+        )
+      ),
+      takeUntil(this.componentDestroyed)
+    ).subscribe((profiles: Array<AdProfileItem>) => {
+      this.profiles = profiles;
+    });
     this.mo.asObservable().pipe(
       map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1),
       distinctUntilChanged(),
@@ -145,11 +172,13 @@ export class AdFormComponent implements OnInit, OnDestroy {
         const attributes = this.attributesFormGroup.get('attributes').value.map(av => new AttributeValue(av));
         this.valueComputerService.compute(attributes);
         const city = this.detailsFormGroup.get('location').value;
+        const profile = this.detailsFormGroup.get('profile').value;
         this.ad.adType = this.adTypes[this.adTypeFormGroup.get('adType').value].id;
         this.ad.status = AdStatuses.Submitted;
         this.ad.title = this.detailsFormGroup.get('title').value;
         this.ad.description = this.detailsFormGroup.get('description').value;
         this.ad.location = city ? city.location : [];
+        this.ad.profileId = profile ? profile.id : undefined;
         this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
         this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
         this.ad.attributes = this.valueComputerService.compute(attributes);
@@ -188,6 +217,10 @@ export class AdFormComponent implements OnInit, OnDestroy {
 
   displayCity(city?: CityListItem): string | undefined {
     return city ? `${city.city}, ${city.stateId} (${city.zip})` : undefined;
+  }
+
+  displayProfile(profile?: AdProfileItem) {
+    return profile ? `${profile.title} [${profile.id}]` : undefined;
   }
 
 }

@@ -103,6 +103,7 @@ export class Ad {
   status: AdStatuses;
   description: string;
   location: Array<number>;
+  profileId: string;
   cityDisplay: string;
   images: Array<AdImage> = [];
   featureSets: Array<Vocabulary> = [];
@@ -115,6 +116,7 @@ export class Ad {
       this.title = data.title;
       this.description = data.description;
       this.location = data.location;
+      this.profileId = data.profileId;
       this.cityDisplay = data.cityDisplay;
       // this.userId = data.userId;
       if(data.images) {

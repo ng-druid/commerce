@@ -17,19 +17,29 @@
       <form [formGroup]="detailsFormGroup">
         <ng-template matStepLabel>Details</ng-template>
         <div fxLayout="row" fxLayoutGap="2em">
-          <mat-form-field fxFlex="65">
+          <mat-form-field fxFlex="45">
             <input matInput placeholder="Title" formControlName="title" required>
             <mat-icon matSuffix>title</mat-icon>
           </mat-form-field>
-          <mat-form-field fxFlex="45">
-              <input matInput placeholder="Location" [matAutocomplete]="auto" formControlName="location">
-              <mat-icon matSuffix>location_city</mat-icon>
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCity">
-                <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
-                <ng-container *ngIf="!isLoadingCities">
-                  <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }} ({{ city.zip }})</mat-option>
-                </ng-container>
-              </mat-autocomplete>
+          <mat-form-field fxFlex="20">
+            <input matInput placeholder="Location" [matAutocomplete]="locationAuto" formControlName="location">
+            <mat-icon matSuffix>location_city</mat-icon>
+            <mat-autocomplete #locationAuto="matAutocomplete" [displayWith]="displayCity">
+              <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
+              <ng-container *ngIf="!isLoadingCities">
+                <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }} ({{ city.zip }})</mat-option>
+              </ng-container>
+            </mat-autocomplete>
+        </mat-form-field>
+          <mat-form-field fxFlex="35">
+            <input matInput placeholder="Marketing Profile" [matAutocomplete]="profileAuto" formControlName="profile">
+            <!-- <mat-icon matSuffix>location_city</mat-icon> -->
+            <mat-autocomplete #profileAuto="matAutocomplete" [displayWith]="displayProfile">
+              <mat-option *ngIf="isLoadingProfiles" class="is-loading">Loading...</mat-option>
+              <ng-container *ngIf="!isLoadingProfiles">
+                <mat-option *ngFor="let profile of profiles" [value]="profile">{{ profile.title }} [{{ profile.id }}]</mat-option>
+              </ng-container>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
         <div>
