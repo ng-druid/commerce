@@ -159,3 +159,16 @@ export class FeatureListItem {
     }
   }
 }
+
+export class AdProfileItem {
+  id: string;
+  parentId: string;
+  title: string;
+  constructor(data: AdProfileItem) {
+    if(data) {
+      this.id = data.id;
+      this.parentId = data.parentId;
+      this.title = data.title;
+    }
+  }
+}

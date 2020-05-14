@@ -35,7 +35,7 @@ export class ProfileFormComponent implements OnInit, OnChanges {
     lastName: [''],
     middleName: ['' ],
     preferredName: [''],
-    title: [''],
+    title: ['', Validators.required ],
     companyName: [''],
     phoneNumbers: this.fb.array([]),
     locations: this.fb.array([])

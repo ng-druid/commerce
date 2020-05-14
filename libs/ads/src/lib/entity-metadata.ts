@@ -12,5 +12,8 @@ export const entityMetadata: EntityMetadataMap = {
   },
   AdType: {
     entityName: 'AdType'
+  },
+  AdProfileItem: {
+    entityName: 'AdProfileItem'
   }
 };

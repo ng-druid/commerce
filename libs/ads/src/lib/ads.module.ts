@@ -33,11 +33,13 @@ import { AdTypeResolver } from './resolvers/ad-type.resolver';
 import { AdAttributesFilterComponent } from './components/ad-attributes-filter/ad-attributes-filter.component';
 import { AdsDataService } from './services/ads-data.service';
 import { AdListItemsDataService } from './services/ad-list-items-data.service';
+import { AdProfileItemsDataService } from './services/ad-profile-items-data.service';
 import { FeatureListItemsDataService } from './services/feature-list-items-data.service';
 import { AdTypesDataService } from './services/ad-types-data.service';
 import { AdListItemComponent } from './components/ad-list-item/ad-list-item.component';
 import { AdTypePluginDirective } from './directives/ad-type-plugin.directive';
 import { AdListItemDefaultComponent } from './components/ad-list-item-default/ad-list-item-default.component';
+import { AdFormComponent } from './components/ad-form/ad-form.component';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
@@ -47,7 +49,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdTypePluginDirective, AdListItemDefaultComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdTypePluginDirective, AdListItemDefaultComponent, AdFormComponent ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -79,14 +81,16 @@ export class AdsModule {
     adsDataService: AdsDataService,
     adListItemsDataService: AdListItemsDataService,
     featureListItemsDataService: FeatureListItemsDataService,
-    adTypesDataService: AdTypesDataService
+    adTypesDataService: AdTypesDataService,
+    adProfileItemsDataService: AdProfileItemsDataService
   ) {
     eds.registerMetadataMap(entityMetadata);
     entityDataService.registerServices({
       Ad: adsDataService,
       AdListItem: adListItemsDataService,
       FeatureListItem: featureListItemsDataService,
-      AdType: adTypesDataService
+      AdType: adTypesDataService,
+      AdProfileItem: adProfileItemsDataService
     });
     /*entityDataService.registerService('Ad', this.createAdsDataService<Ad>('Ad', http, httpUrlGenerator, config));
     entityDataService.registerService('AdListItem', this.createAdsDataService<AdListItem>('AdListItem', http, httpUrlGenerator, config));
