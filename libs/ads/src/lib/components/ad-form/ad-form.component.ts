@@ -30,6 +30,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
   @Input()
   set ad(ad: Ad | undefined) {
     this._ad = ad;
+    this.attributeValues = ad ? ad.attributes : [];
     this.adTypeFormGroup.setValue({ adType: ad ? ad.adType : '' });
     const [city, state, zip] = ad && ad.cityDisplay ? ad.cityDisplay.replace(/(^.*?)\(([0-9]+)\)$/, '$1,$2').split(',').map(v => v.trim()): [undefined, undefined, undefined];
     if(city && state && zip) {
@@ -65,6 +66,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
   cities: Array<CityListItem> = [];
   attributes: Array<Attribute> = [];
   profiles: Array<AdProfileItem> = [];
+  attributeValues: Array<AttributeValue> = [];
 
   isLoadingCities = false;
   isLoadingProfiles = false;

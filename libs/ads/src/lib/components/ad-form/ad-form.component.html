@@ -55,7 +55,7 @@
     <mat-step [stepControl]="attributesFormGroup">
       <form [formGroup]="attributesFormGroup">
         <ng-template matStepLabel>Attributes</ng-template>
-        <classifieds-ui-attributes-builder formControlName="attributes" [attributes]="attributes"></classifieds-ui-attributes-builder>
+        <classifieds-ui-attributes-builder formControlName="attributes" [attributes]="attributes" [attributeValues]="attributeValues"></classifieds-ui-attributes-builder>
         <div>
           <button mat-raised-button color="primary" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" matStepperNext [disabled]="!attributesFormGroup.valid">Next</button>

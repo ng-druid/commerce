@@ -1,7 +1,7 @@
 
 import { Component, OnChanges, Input, SimpleChanges, forwardRef } from '@angular/core';
 import { ControlValueAccessor,NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup,FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
-import { Attribute, AttributeWidget } from '../../models/attributes.models';
+import { Attribute, AttributeWidget, AttributeValue } from '../../models/attributes.models';
 import { WidgetsService } from '../../services/widgets.service';
 
 @Component({
@@ -27,6 +27,15 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
   @Input()
   attributes: Array<Attribute> = [];
 
+  @Input()
+  set attributeValues(attributeValues: Array<AttributeValue> | undefined) {
+    this._attributeValues = attributeValues;
+    this.applyValues();
+  }
+  get attributeValues() {
+    return this._attributeValues;
+  }
+
   attributesForm = new FormGroup({
     attributes: new FormArray([])
   });
@@ -34,6 +43,8 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
   get attributesArray(): FormArray {
     return this.attributesForm.get('attributes') as FormArray;
   }
+
+  private _attributeValues: Array<AttributeValue> = [];
 
   constructor(private widgetsService: WidgetsService) { }
 
@@ -61,6 +72,8 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
           })))
         }));
       });
+
+      this.applyValues();
     }
   }
 
@@ -94,4 +107,20 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
     return this.widgetsService.get(widget);
   }
 
+  applyValues() {
+    this.attributesArray.controls.forEach(c => {
+      const attrValue = this.attributeValues ? this.attributeValues.find(av => av.name === c.get('name').value) : undefined;
+      if(attrValue !== undefined) {
+        c.get('value').setValue(attrValue.value);
+        c.updateValueAndValidity();
+      }
+      (c.get('attributes') as FormArray).controls.forEach(c => {
+        const attrValue = this.attributeValues ? this.attributeValues.find(av => av.name === c.get('name').value) : undefined;
+        if(attrValue !== undefined) {
+          c.get('value').setValue(attrValue.value);
+          c.updateValueAndValidity();
+        }
+      });
+    });
+  }
 }
