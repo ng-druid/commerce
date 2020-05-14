@@ -54,6 +54,23 @@ export class AdFormComponent implements OnInit, OnDestroy {
     }
     this.adTypeFormGroup.updateValueAndValidity();
      // attributesFormGroup
+    if(ad) {
+      const mediaFiles = ad.images.map(i => {
+        return new MediaFile({
+          id: undefined,
+          contentType: undefined,
+          contentDisposition: undefined,
+          path: `${i.path}`,
+          length: undefined,
+          fileName: i.path
+        });
+      });
+      this.filesService.convertToFiles(mediaFiles).subscribe(files => {
+        this.files = files;
+      });
+    } else {
+      this.files = [];
+    }
   }
   get ad() {
     return this._ad;

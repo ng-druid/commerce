@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NEVER } from 'rxjs';
-import { catchError, switchMap, map, take, filter } from 'rxjs/operators';
+import { catchError, switchMap, map, take, filter, withLatestFrom } from 'rxjs/operators';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { AdBrowserFacade } from '../../features/ad-browser/ad-browser.facade';
 
@@ -29,13 +29,17 @@ export class ManageAdComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.adTypesService.getAll().subscribe(adTypes => this.adTypes = adTypes);
+    // this.adTypesService.getAll().subscribe(adTypes => this.adTypes = adTypes);
     this.route.paramMap.pipe(
       map(p => p.get('adId')),
       filter((adId) => typeof(adId) === 'string'),
       switchMap(adId => this.adsService.getByKey(adId)),
-    ).subscribe(ad => {
+      switchMap(ad => this.adTypesService.getAll().pipe(
+        map<Array<AdType>, [Ad, Array<AdType>]>(adTypes => [ad, adTypes])
+      )),
+    ).subscribe(([ad, adTypes]) => {
       this.ad = new Ad(ad);
+      this.adTypes = adTypes;
     });
   }
 
