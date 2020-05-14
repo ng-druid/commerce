@@ -40,17 +40,18 @@ import { AdListItemComponent } from './components/ad-list-item/ad-list-item.comp
 import { AdTypePluginDirective } from './directives/ad-type-plugin.directive';
 import { AdListItemDefaultComponent } from './components/ad-list-item-default/ad-list-item-default.component';
 import { AdFormComponent } from './components/ad-form/ad-form.component';
+import { ManageAdComponent } from './components/manage-ad/manage-ad.component';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
-    { path: 'ad/:adId/manage', component: AdDetailComponent },
+    { path: 'ad/:adId/manage', component: ManageAdComponent },
     { path: 'ad/:adId', component: AdDetailComponent },
     { path: 'create-ad', component: CreateAdComponent, canActivate: [CreateAdGuard] },
   ] }
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdTypePluginDirective, AdListItemDefaultComponent, AdFormComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdTypePluginDirective, AdListItemDefaultComponent, AdFormComponent, ManageAdComponent ],
   imports: [
     CommonModule,
     HttpClientModule,

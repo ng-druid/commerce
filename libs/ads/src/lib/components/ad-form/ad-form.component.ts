@@ -27,11 +27,39 @@ export class AdFormComponent implements OnInit, OnDestroy {
   @Input()
   adTypes: Array<AdType> = [];
 
+  @Input()
+  set ad(ad: Ad | undefined) {
+    this._ad = ad;
+    this.adTypeFormGroup.setValue({ adType: ad ? ad.adType : '' });
+    const [city, state, zip] = ad && ad.cityDisplay ? ad.cityDisplay.replace(/(^.*?)\(([0-9]+)\)$/, '$1,$2').split(',').map(v => v.trim()): [undefined, undefined, undefined];
+    if(city && state && zip) {
+      this.zippoService.getWithQuery({ searchString: `${city},${state}`}).subscribe(locations => {
+        this.detailsFormGroup.setValue({
+          title: ad ? ad.title: '',
+          location: locations.find(l => l.zip === zip),
+          profile: ad ? ad.profileId ? this.profilesService.getByKey(ad.profileId) : '' : '',
+          description: ad ? ad.description: ''
+         });
+         this.detailsFormGroup.updateValueAndValidity();
+      });
+    } else {
+      this.detailsFormGroup.setValue({
+        title: ad ? ad.title: '',
+        location: ad ? ad.location : '',
+        profile: ad ? ad.profileId ? this.profilesService.getByKey(ad.profileId) : '' : '',
+        description: ad ? ad.description: ''
+       });
+       this.detailsFormGroup.updateValueAndValidity();
+    }
+    this.adTypeFormGroup.updateValueAndValidity();
+     // attributesFormGroup
+  }
+  get ad() {
+    return this._ad;
+  }
+
   @Output()
   submitted = new EventEmitter<AdFormPayload>();
-
-  @Input()
-  ad: Ad;
 
   files: Array<File> = [];
   cities: Array<CityListItem> = [];
@@ -60,6 +88,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
 
   private vocabularyService: EntityCollectionService<Vocabulary>;
   private profilesService: EntityCollectionService<AdProfileItem>;
+  private _ad: Ad;
 
   private componentDestroyed = new Subject();
 

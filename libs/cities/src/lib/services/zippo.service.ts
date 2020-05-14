@@ -4,6 +4,7 @@ import { DefaultDataServiceConfig } from '@ngrx/data';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CityListItem } from '../models/cities.models';
+import { states } from '../data/states.data';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,20 @@ export class ZippoService {
     if(!query.searchString || !query.searchString.indexOf || query.searchString.indexOf(',') < 3) {
       return of([]);
     }
-    const [city, state] = query.searchString.split(',').map(v => v.trim());
-    if(!city || !state || city.length === 0 || state.length !== 2) {
+    let [city, state] = query.searchString.split(',').map(v => v.trim());
+    if(!city || !state || city.length === 0) {
       return of([]);
+    }
+    if(state && state.length !== 2) {
+      for(const prop in states) {
+        if(states[prop] === state.trim()) {
+          state = prop;
+          break;
+        }
+      }
+    }
+    if(!state || state.length !== 2) {
+      return of();
     }
     return this.findByCity(state, city);
   }
