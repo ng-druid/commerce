@@ -27,7 +27,7 @@ export class ProfileFormComponent implements OnInit, OnChanges {
   logo: File;
 
   profileForm = this.fb.group({
-    type: ['', Validators.required ],
+    type: [ProfileTypes.Company, Validators.required ],
     subtype: ['', Validators.required],
     adspace: ['', Validators.required ],
     parentId: [''],
@@ -71,6 +71,7 @@ export class ProfileFormComponent implements OnInit, OnChanges {
     this.profileForm.get('type').valueChanges.subscribe(v => {
       this.applyFormRequirments();
     });
+    this.applyFormRequirments();
   }
 
   ngOnChanges(changes: SimpleChanges) {
