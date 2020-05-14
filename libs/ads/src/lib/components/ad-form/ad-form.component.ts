@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
@@ -15,6 +15,7 @@ import { Attribute, ValueComputerService, AttributeValue } from '@classifieds-ui
 import { AdBrowserFacade } from '../../features/ad-browser/ad-browser.facade';
 
 import { AdImage, Ad, AdStatuses, AdType, AdProfileItem } from '../../models/ads.models';
+import { AdFormPayload } from '../../models/form.models';
 
 @Component({
   selector: 'classifieds-ui-ad-form',
@@ -23,12 +24,19 @@ import { AdImage, Ad, AdStatuses, AdType, AdProfileItem } from '../../models/ads
 })
 export class AdFormComponent implements OnInit, OnDestroy {
 
+  @Input()
+  adTypes: Array<AdType> = [];
+
+  @Output()
+  submitted = new EventEmitter<AdFormPayload>();
+
+  @Input()
+  ad: Ad;
+
   files: Array<File> = [];
   cities: Array<CityListItem> = [];
-  adTypes: Array<AdType> = [];
   attributes: Array<Attribute> = [];
   profiles: Array<AdProfileItem> = [];
-  ad: Ad = new Ad();
 
   isLoadingCities = false;
   isLoadingProfiles = false;
@@ -37,12 +45,19 @@ export class AdFormComponent implements OnInit, OnDestroy {
   featuresSheetData: { selectedId: string; } = { selectedId: undefined };
   featureSets: Array<Vocabulary> = [];
 
-  adTypeFormGroup: FormGroup;
-  detailsFormGroup: FormGroup;
-  attributesFormGroup: FormGroup;
+  adTypeFormGroup = this.fb.group({
+    adType: ['', Validators.required]
+  });
+  detailsFormGroup = this.fb.group({
+    title: ['', Validators.required],
+    location: ['', Validators.required],
+    profile: [''],
+    description: ['', Validators.required]
+  });
+  attributesFormGroup = this.fb.group({
+    attributes: new FormControl('')
+  });
 
-  private adsService: EntityCollectionService<Ad>;
-  private adTypesService: EntityCollectionService<AdType>
   private vocabularyService: EntityCollectionService<Vocabulary>;
   private profilesService: EntityCollectionService<AdProfileItem>;
 
@@ -55,27 +70,12 @@ export class AdFormComponent implements OnInit, OnDestroy {
     return this.adTypes[this.adTypeFormGroup.get('adType').value];
   }
 
-  constructor(private router: Router, es: EntityServices, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private zippoService: ZippoService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) {
-    this.adsService = es.getEntityCollectionService('Ad');
-    this.adTypesService = es.getEntityCollectionService('AdType');
+  constructor(es: EntityServices, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private zippoService: ZippoService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) {
     this.vocabularyService = es.getEntityCollectionService('Vocabulary');
     this.profilesService = es.getEntityCollectionService('AdProfileItem');
   }
 
   ngOnInit() {
-    this.adTypesService.getAll().subscribe(adTypes => this.adTypes = adTypes);
-    this.adTypeFormGroup = this.fb.group({
-      adType: ['', Validators.required]
-    });
-    this.detailsFormGroup = this.fb.group({
-      title: ['', Validators.required],
-      location: ['', Validators.required],
-      profile: [''],
-      description: ['', Validators.required]
-    });
-    this.attributesFormGroup = this.fb.group({
-      attributes: new FormControl('')
-    });
     this.detailsFormGroup.get('location').valueChanges.pipe(
       debounceTime(500),
       tap(() => {
@@ -138,7 +138,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
             this.isLoadingProfiles = false;
             return NEVER;
           }),
-          map(profiles => profiles.filter(p => (p.title && p.title.indexOf(value.trim()) !== -1) || p.id.trim() === value.trim())),
+          map(profiles => profiles.filter(p => (p.title && p.title.indexOf(value) !== -1) || p.id.trim() === value)),
           finalize(() => {
             this.isLoadingProfiles = false
           }),
@@ -162,41 +162,25 @@ export class AdFormComponent implements OnInit, OnDestroy {
     this.componentDestroyed.complete();
   }
 
-  createAd() {
-    // this.stepper.next();
-    this.filesService.bulkUpload(this.files).pipe(
-      catchError(e => {
-        // alert(e.error);
-        return NEVER;
-      }),
-      tap((files: Array<MediaFile>) => {
-        const attributes = this.attributesFormGroup.get('attributes').value.map(av => new AttributeValue(av));
-        this.valueComputerService.compute(attributes);
-        const city = this.detailsFormGroup.get('location').value;
-        const profile = this.detailsFormGroup.get('profile').value;
-        this.ad.adType = this.adTypes[this.adTypeFormGroup.get('adType').value].id;
-        this.ad.status = AdStatuses.Submitted;
-        this.ad.title = this.detailsFormGroup.get('title').value;
-        this.ad.description = this.detailsFormGroup.get('description').value;
-        this.ad.location = city ? city.location : [];
-        this.ad.profileId = profile ? profile.id : undefined;
-        this.ad.images = files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i}));
-        this.ad.featureSets = this.featureSets.map(v => new Vocabulary(v));
-        this.ad.attributes = this.valueComputerService.compute(attributes);
-        this.ad.cityDisplay = `${city.city}, ${city.stateName} (${city.zip})`
-      }),
-      switchMap(f => {
-        return this.adsService.upsert(new Ad(this.ad));
-      })
-    ).subscribe((ad: Ad) => {
-      // this.stepper.next();
-      this.sb.open(`Ad has been created!`, 'Created', { duration: 3000 });
-      setTimeout(() => {
-        this.adBrowserFacade.getAdType$.pipe(take(1)).subscribe(adType => {
-          this.router.navigateByUrl(`/ads/${adType}/ad/${ad.id}`);
-        });
-      }, 2000)
+  submit() {
+    const attributes = this.attributesFormGroup.get('attributes').value.map(av => new AttributeValue(av));
+    this.valueComputerService.compute(attributes);
+    const city = this.detailsFormGroup.get('location').value;
+    const profile = this.detailsFormGroup.get('profile').value;
+    const ad = new Ad({
+      id: undefined,
+      adType: this.adTypes[this.adTypeFormGroup.get('adType').value].id,
+      status: AdStatuses.Submitted,
+      title: this.detailsFormGroup.get('title').value,
+      description: this.detailsFormGroup.get('description').value,
+      location: city ? city.location : [],
+      profileId: profile ? profile.id : undefined,
+      featureSets: this.featureSets.map(v => new Vocabulary(v)),
+      attributes: this.valueComputerService.compute(attributes),
+      cityDisplay: `${city.city}, ${city.stateName} (${city.zip})`,
+      images: []
     });
+    this.submitted.emit(new AdFormPayload({ files: this.files, ad }));
   }
 
   onSelect(event) {

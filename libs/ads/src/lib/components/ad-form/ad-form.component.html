@@ -1,4 +1,4 @@
-<div class="ad-create-wrapper" *ngIf="ad" fxLayout="column" fxFill>
+<div class="ad-create-wrapper" fxLayout="column" fxFill>
   <responsive-stepper [linear]="true" [orientation]="orientation" #stepper>
     <mat-step [stepControl]="adTypeFormGroup">
       <form [formGroup]="adTypeFormGroup">
@@ -90,7 +90,7 @@
       </mat-accordion>
       <div>
         <button mat-raised-button color="primary" matStepperPrevious>Back</button>
-        <button mat-raised-button color="primary" (click)="createAd()">Create Ad</button>
+        <button mat-raised-button color="primary" (click)="submit()">Create Ad</button>
       </div>
     </mat-step>
   </responsive-stepper>

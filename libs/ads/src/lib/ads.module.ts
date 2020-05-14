@@ -43,6 +43,7 @@ import { AdFormComponent } from './components/ad-form/ad-form.component';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
+    { path: 'ad/:adId/manage', component: AdDetailComponent },
     { path: 'ad/:adId', component: AdDetailComponent },
     { path: 'create-ad', component: CreateAdComponent, canActivate: [CreateAdGuard] },
   ] }
