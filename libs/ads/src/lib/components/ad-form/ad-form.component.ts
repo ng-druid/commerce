@@ -138,7 +138,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
             this.isLoadingProfiles = false;
             return NEVER;
           }),
-          map(profiles => profiles.filter(p => p.title && p.title.indexOf(value) !== -1)),
+          map(profiles => profiles.filter(p => (p.title && p.title.indexOf(value.trim()) !== -1) || p.id.trim() === value.trim())),
           finalize(() => {
             this.isLoadingProfiles = false
           }),
