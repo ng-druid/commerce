@@ -1,0 +1,24 @@
+form {
+  background-color: white;
+  padding: 2em;
+}
+
+.section-heading {
+  margin-bottom: 2em;
+  padding-bottom: .25em;
+  border-bottom: 1px solid black;
+}
+
+.location {
+  border: 1px solid #ccc;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.location + .location {
+  margin-top: 1em;
+}
+
+.add-location-btn-container {
+  padding-top: 1em;
+}

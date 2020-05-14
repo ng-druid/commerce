@@ -14,7 +14,7 @@ export class ProfilesDataService extends DefaultDataService<Profile> {
     http: HttpClient,
     httpUrlGenerator: HttpUrlGenerator,
     logger: Logger,
-    @Inject(PROFILE_SETTINGS) private adSettings: ProfileSettings
+    @Inject(PROFILE_SETTINGS) private profileSettings: ProfileSettings
   ) {
     super('Profile', http, httpUrlGenerator, config);
     this.entityUrl = this.entitiesUrl = `${config.root}/profiles/profile/`;
@@ -25,6 +25,6 @@ export class ProfilesDataService extends DefaultDataService<Profile> {
     if (key == null) {
       err = new Error(`No "${this.entityName}" key to get`);
     }
-    return this.execute('GET', `${this.adSettings.profileUrl}/${key}.json.gz`, err);
+    return this.execute('GET', `${this.profileSettings.profileUrl}/${key}.json.gz`, err);
   }
 }

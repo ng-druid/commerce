@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { ProfileBrowserFacade } from '../../features/profile-browser/profile-browser.facade';
-import { Profile, Location } from '../../models/profiles.model';
+import { Location, ProfileListItem } from '../../models/profiles.model';
+import { tap, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-profile-browser',
@@ -9,15 +11,21 @@ import { Profile, Location } from '../../models/profiles.model';
 })
 export class ProfileBrowserComponent implements OnInit {
 
-  profiles: Array<Profile>;
+  profiles: Array<ProfileListItem>;
   locations: Array<Location>;
 
-  constructor(private profileBrowserFacade: ProfileBrowserFacade) { }
+  private profileListitemsService: EntityCollectionService<ProfileListItem>;
+
+  constructor(private profileBrowserFacade: ProfileBrowserFacade, es: EntityServices) {
+    this.profileListitemsService = es.getEntityCollectionService('ProfileListItem');
+  }
 
   ngOnInit(): void {
-    this.profileBrowserFacade.getProfile$.subscribe(p => {
-      this.profiles = [];
-      this.locations = p.locations;
+    this.profileBrowserFacade.getProfile$.pipe(
+      tap(p => this.locations = p.locations),
+      switchMap(p => this.profileListitemsService.getWithQuery({ parentId: p.id }))
+    ).subscribe(profiles => {
+      this.profiles = profiles;
     });
   }
 

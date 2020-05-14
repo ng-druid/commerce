@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Profile } from '../../models/profiles.model';
+import { ProfileListItem } from '../../models/profiles.model';
 
 @Component({
   selector: 'classifieds-ui-profile-master',
@@ -9,7 +9,7 @@ import { Profile } from '../../models/profiles.model';
 export class ProfileMasterComponent implements OnInit {
 
   @Input()
-  profiles: Array<Profile> = [];
+  profiles: Array<ProfileListItem> = [];
 
   constructor() { }
 

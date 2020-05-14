@@ -19,13 +19,17 @@ import * as fromProfileBrowser from './features/profile-browser/profile-browser.
 import { EffectsModule } from '@ngrx/effects';
 import { ProfileBrowserEffects } from './features/profile-browser/profile-browser.effects';
 import { ProfilesDataService } from './services/profiles-data.service';
+import { ProfileListItemsDataService } from './services/profile-list-items-data.service';
 import { ProfileResolver } from './resolvers/profile.resolver';
+import { CreateProfileGuard } from './guards/create-profile.guard';
+import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 
 const routes = [
-  { path: '', component: ProfileBrowserComponent, children: [
-    { path: 'profile/:profileId', component: ProfileDashboardComponent, resolve: { profile: ProfileResolver } },
-    { path: 'create-profile', component: CreateProfileComponent },
-  ] }
+  { path: 'profile/:profileId', component: ProfileBrowserComponent, resolve: { profile: ProfileResolver }, children: [
+    { path: 'create-profile', component: CreateProfileComponent, canActivate: [ CreateProfileGuard ] },
+    { path: '', component: CreateProfileComponent }
+  ] },
+  { path: 'create-profile', component: CreateProfileComponent, canActivate: [ CreateProfileGuard ] }
 ];
 
 @NgModule({
@@ -41,16 +45,23 @@ const routes = [
     /*FormlyModule.forChild(),
     FormlyMaterialModule*/
   ],
-  declarations: [CreateProfileComponent, ProfileMasterComponent, LocationMasterComponent, ProfileBrowserComponent, ProfileDashboardComponent],
+  declarations: [CreateProfileComponent, ProfileMasterComponent, LocationMasterComponent, ProfileBrowserComponent, ProfileDashboardComponent, ProfileFormComponent],
   providers: [
-    ProfileResolver
+    ProfileResolver,
+    CreateProfileGuard
   ]
 })
 export class ProfilesModule {
-  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService, profilesDataService: ProfilesDataService) {
+  constructor(
+    eds: EntityDefinitionService,
+    entityDataService: EntityDataService,
+    profilesDataService: ProfilesDataService,
+    profilesListitemsDataService: ProfileListItemsDataService
+  ) {
     eds.registerMetadataMap(entityMetadata);
     entityDataService.registerServices({
-      Profile: profilesDataService
+      Profile: profilesDataService,
+      ProfileListItem: profilesListitemsDataService
     });
   }
 }
