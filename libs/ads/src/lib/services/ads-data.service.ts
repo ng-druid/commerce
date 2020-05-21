@@ -11,6 +11,7 @@ import { Ad } from '../models/ads.models';
   providedIn: 'root'
 })
 export class AdsDataService extends DefaultDataService<Ad> {
+  private goApi = 'https://r554br54jl.execute-api.us-east-1.amazonaws.com/dev';
   constructor(
     config: DefaultDataServiceConfig,
     http: HttpClient,
@@ -19,7 +20,8 @@ export class AdsDataService extends DefaultDataService<Ad> {
     @Inject(AD_SETTINGS) private adSettings: AdSettings
   ) {
     super('Ad', http, httpUrlGenerator, config);
-    this.entityUrl = this.entitiesUrl = `${config.root}/ads/ad/`;
+    //this.entityUrl = this.entitiesUrl = `${config.root}/ads/ad/`;
+    this.entityUrl = this.entitiesUrl = `${this.goApi}/ads/ad`;
   }
   // Override to fetch from cloud front.
   getById(key: number | string): Observable<Ad> {

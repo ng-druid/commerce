@@ -26,14 +26,34 @@ export class FilesService {
   }
   convertToFiles(mediaFiles: Array<MediaFile>): Observable<Array<File>> {
     const requests$ = mediaFiles.map(f => new Observable<File>(obs => {
-      fetch(`${this.settings.imageUrl}/${f.path}`, { mode: 'no-cors' }).then(r => {
-        return r.blob();
-      }).then(d => {
-        const file = new File([d], f.fileName);
-        obs.next(file);
-        obs.complete();
+      fetch(`${this.settings.imageUrl}/${f.path}`, { mode: 'no-cors'}).then(r => {
+        r.blob().then(d => {
+          new Promise(resolve => {
+            let reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(d);
+          }).then((d2: string) => {
+            const arrayBufferFromBase64 = this.convertDataURIToBinary(d2);
+            const file = new File([arrayBufferFromBase64], f.fileName, {type: 'image/png' });
+            obs.next(file);
+            obs.complete();
+          });
+        });
       });
     }));
     return forkJoin(requests$);
+  }
+  convertDataURIToBinary(dataURI: string) {
+    var BASE64_MARKER = ';base64,';
+    var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+    var base64 = dataURI.substring(base64Index);
+    var raw = window.atob(base64);
+    var rawLength = raw.length;
+    var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for(var i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
+    }
+    return array;
   }
 }
