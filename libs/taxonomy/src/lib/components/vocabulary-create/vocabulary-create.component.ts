@@ -21,7 +21,7 @@ export class VocabularyCreateComponent implements OnInit {
 
   submitted() {
     this.vocabularyService.add(this.vocabulary).subscribe(v => {
-      console.log(v);
+      alert('vocabulary created');
     });
   }
 

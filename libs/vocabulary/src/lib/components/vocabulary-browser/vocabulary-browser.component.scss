@@ -5,4 +5,12 @@
 .router-outlet {
   overflow: scroll;
   position: relative;
+  background-color: white;
+}
+
+.master-container {
+  background-color: white;
+  padding: .25em;
+  border-right: 1px solid rgb(151, 151, 192);
+  border-left: 1px solid #BDE5FF;
 }

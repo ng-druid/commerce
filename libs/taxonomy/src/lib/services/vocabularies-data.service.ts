@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DefaultDataService, HttpUrlGenerator, Logger, DefaultDataServiceConfig } from '@ngrx/data';
+import { Update } from '@ngrx/entity';
 import { Observable } from 'rxjs';
 
 import { TAXONOMY_SETTINGS } from '../taxonomy.tokens';
@@ -21,5 +22,13 @@ export class VocabulariesDataService extends DefaultDataService<Vocabulary> {
       err = new Error(`No "${this.entityName}" key to get`);
     }
     return this.execute('GET', `${this.taxonomySettings.vocabularyUrl}/${key}.json.gz`, err);
+  }
+  update(update: Update<Vocabulary>): Observable<Vocabulary> {
+    const id = update && update.id;
+    const updateOrError =
+      id == null
+        ? new Error(`No "${this.entityName}" update data or id`)
+        : update.changes;
+    return this.execute('PUT', `${this.entityUrl}/` + id, updateOrError);
   }
 }
