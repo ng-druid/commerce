@@ -1,3 +1,12 @@
+export class TaxonomySettings {
+  vocabularyUrl: string;
+  constructor(data?: TaxonomySettings) {
+    if(data) {
+      this.vocabularyUrl = data.vocabularyUrl;
+    }
+  }
+}
+
 export class Vocabulary {
   id: string;
   machineName: string;

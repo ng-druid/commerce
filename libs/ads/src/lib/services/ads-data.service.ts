@@ -11,7 +11,7 @@ import { Ad } from '../models/ads.models';
   providedIn: 'root'
 })
 export class AdsDataService extends DefaultDataService<Ad> {
-  private goApi = 'https://r554br54jl.execute-api.us-east-1.amazonaws.com/dev';
+  private goApi = 'https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com';
   constructor(
     config: DefaultDataServiceConfig,
     http: HttpClient,

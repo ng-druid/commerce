@@ -8,7 +8,9 @@ import { VocabularyListItem } from '../models/taxonomy.models';
   providedIn: 'root'
 })
 export class VocabularyListItemsDataService extends DefaultDataService<VocabularyListItem> {
+  private goApi = 'https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com/taxonomy';
   constructor(config: DefaultDataServiceConfig, http: HttpClient, httpUrlGenerator: HttpUrlGenerator, logger: Logger) {
-    super('VocabularyListItem', http, httpUrlGenerator, { ...config, root: `${config.root}/taxonomy` });
+    super('VocabularyListItem', http, httpUrlGenerator, config);
+    this.entityUrl = this.entitiesUrl = `${this.goApi}/vocabularylistitems`;
   }
 }

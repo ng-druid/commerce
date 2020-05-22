@@ -20,6 +20,7 @@ import { PROFILE_SETTINGS, ProfileSettings } from '@classifieds-ui/profiles';
 // import { UserManager } from 'oidc-client';
 import { NbA11yModule } from '@nebular/theme';
 // import { JsonschemaModule } from '@classifieds-ui/jsonschema';
+import { TAXONOMY_SETTINGS, TaxonomySettings } from '@classifieds-ui/taxonomy';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -117,6 +118,7 @@ const oktaConfig = {
     { provide: MEDIA_SETTINGS, useValue: new MediaSettings(environment.mediaSettings) },
     { provide: LOGGING_SETTINGS, useValue: new LoggingSettings(environment.loggingSettings) },
     { provide: AD_SETTINGS, useValue: new AdSettings(environment.adSettings) },
+    { provide: TAXONOMY_SETTINGS, useValue: new TaxonomySettings(environment.taxonomySettings) },
     { provide: PROFILE_SETTINGS, useValue: new ProfileSettings(environment.profileSettings) },
     { provide: CHAT_SETTINGS, useValue: new ChatSettings(environment.chatSettings) },
 

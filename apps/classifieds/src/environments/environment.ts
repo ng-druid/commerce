@@ -40,6 +40,9 @@ export const environment = {
   adSettings: {
     adUrl: 'https://d2o66qxp1qwfb9.cloudfront.net/ads'
   },
+  taxonomySettings: {
+    vocabularyUrl: 'https://d2o66qxp1qwfb9.cloudfront.net/vocabularies'
+  },
   profileSettings: {
     profileUrl: 'https://d2o66qxp1qwfb9.cloudfront.net/profiles'
   },
