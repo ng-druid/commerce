@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProfilesDataService extends DefaultDataService<Profile> {
+  private goApi = 'https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com';
   constructor(
     config: DefaultDataServiceConfig,
     http: HttpClient,
@@ -17,7 +18,7 @@ export class ProfilesDataService extends DefaultDataService<Profile> {
     @Inject(PROFILE_SETTINGS) private profileSettings: ProfileSettings
   ) {
     super('Profile', http, httpUrlGenerator, config);
-    this.entityUrl = this.entitiesUrl = `${config.root}/profiles/profile/`;
+    this.entityUrl = this.entitiesUrl = `${this.goApi}/profiles/profile`;
   }
   // Override to fetch from cloud front.
   getById(key: number | string): Observable<Profile> {

@@ -7,6 +7,7 @@ import { ProfileListItem } from '../models/profiles.model';
   providedIn: 'root'
 })
 export class ProfileListItemsDataService extends DefaultDataService<ProfileListItem> {
+  private goApi = 'https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com';
   constructor(
     config: DefaultDataServiceConfig,
     http: HttpClient,
@@ -14,6 +15,6 @@ export class ProfileListItemsDataService extends DefaultDataService<ProfileListI
     logger: Logger
   ) {
     super('ProfileListItem', http, httpUrlGenerator, config);
-    this.entityUrl = this.entitiesUrl = `${config.root}/profiles/profilelistitems/`;
+    this.entityUrl = this.entitiesUrl = `${this.goApi}/profiles/profilelistitems`;
   }
 }
