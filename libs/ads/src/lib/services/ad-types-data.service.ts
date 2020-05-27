@@ -8,7 +8,10 @@ import { AdType } from '../models/ads.models';
   providedIn: 'root'
 })
 export class AdTypesDataService extends DefaultDataService<AdType> {
+  private goApi = `https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com`;
   constructor(config: DefaultDataServiceConfig, http: HttpClient, httpUrlGenerator: HttpUrlGenerator, logger: Logger) {
-    super('AdType', http, httpUrlGenerator, { ...config, root: `${config.root}/ads` });
+    super('AdType', http, httpUrlGenerator, config);
+    this.entityUrl = `${this.goApi}/ad/types/`;
+    this.entitiesUrl = this.entitiesUrl = `${this.goApi}/ad/adtype`;
   }
 }
