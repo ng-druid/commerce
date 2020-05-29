@@ -9,6 +9,7 @@ import { debounceTime } from 'rxjs/operators';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { mapAdType } from '../../ad.helpers';
 import * as qs from 'qs';
+import { AdType } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-features-filter',
@@ -24,7 +25,7 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   searchForm: AdSearchBarForm;
 
   @Input()
-  adType: string;
+  adType: AdType;
 
   @Output()
   searchFormChange = new EventEmitter<AdSearchBarForm>();
@@ -109,7 +110,7 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   loadFeatures(searchString: string) {
     this.featureListItemsService.clearCache();
     const location = this.searchForm.location === undefined || this.searchForm.location.length !== 2 ? '' : this.searchForm.location.join(",");
-    const search = new FeaturesSearchConfig({ adType: mapAdType(this.searchForm.adType), searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString, attributes: this.searchForm.attributes });
+    const search = new FeaturesSearchConfig({ typeId: this.searchForm.typeId, searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString, attributes: this.searchForm.attributes });
     this.featureListItemsService.getWithQuery(qs.stringify(search as Object)).subscribe(features => {
       this.features$.next(features);
     });

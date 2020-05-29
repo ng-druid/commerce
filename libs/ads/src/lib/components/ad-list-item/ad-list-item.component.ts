@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver, Type, OnChanges, SimpleChanges } from '@angular/core';
-import { AdTypePlugin, AdListItem } from '../../models/ads.models';
+import { AdTypePlugin, AdListItem, AdType } from '../../models/ads.models';
 import { AdTypePluginDirective } from '../../directives/ad-type-plugin.directive';
 
 @Component({
@@ -16,7 +16,7 @@ export class AdListItemComponent implements OnInit, OnChanges {
   ad: AdListItem;
 
   @Input()
-  adType: string;
+  adType: AdType;
 
   @ViewChild(AdTypePluginDirective, {static: true}) pluginHost: AdTypePluginDirective;
 

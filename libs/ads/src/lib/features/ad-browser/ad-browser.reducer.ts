@@ -5,6 +5,7 @@ export const adBrowserFeatureKey = 'adBrowser';
 
 export interface State {
   adType: string;
+  typeId: string;
 }
 
 export interface AdBrowserPartialState {
@@ -12,7 +13,8 @@ export interface AdBrowserPartialState {
 }
 
 export const initialState: State = {
-  adType: undefined
+  adType: undefined,
+  typeId: undefined
 };
 
 const adBrowserReducer = createReducer(

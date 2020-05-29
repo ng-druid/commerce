@@ -6,6 +6,7 @@ import { debounceTime, tap, switchMap, takeUntil, finalize, filter, map } from '
 import { CityListItem , CityListItemsService, ZippoService } from '@classifieds-ui/cities';
 
 import { AdSearchBarForm } from '../../models/form.models';
+import { AdType } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-search-bar',
@@ -18,7 +19,7 @@ export class AdSearchBarComponent implements OnInit, OnChanges, OnDestroy {
   searchForm: AdSearchBarForm;
 
   @Input()
-  adType: string;
+  adType: AdType;
 
   @Output()
   searchFormChange = new EventEmitter<AdSearchBarForm>();

@@ -6,7 +6,7 @@ import { AdTypePlugin } from '../models/ads.models';
 @Injectable()
 export class AdTypePluginsService {
   constructor(@Optional() @Inject(AD_TYPE_PLUGIN) private plugins: Array<AdTypePlugin>) { }
-  get(adTypeId: number): AdTypePlugin {
-    return this.plugins ? this.plugins.find(p => p.adTypeId === adTypeId) : undefined;
+  get(adType: string): AdTypePlugin {
+    return this.plugins ? this.plugins.find(p => p.adType === adType) : undefined;
   }
 }

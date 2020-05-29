@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { EntityCollectionService, EntityServices } from '@ngrx/data';
 import { AdType } from '../../models/ads.models';
 import { AdSearchBarForm } from '../../models/form.models';
 import { mapAdType } from '../../ad.helpers';
@@ -16,7 +15,7 @@ import { takeUntil, debounceTime, map } from 'rxjs/operators';
 export class AdAttributesFilterComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
-  adType: string;
+  adType: AdType;
 
   @Input()
   searchForm: AdSearchBarForm;
@@ -32,11 +31,7 @@ export class AdAttributesFilterComponent implements OnInit, OnChanges, OnDestroy
 
   componentDestroyed = new Subject();
 
-  private adTypesService: EntityCollectionService<AdType>;
-
-  constructor(private fb: FormBuilder, entityServices: EntityServices) {
-    this.adTypesService = entityServices.getEntityCollectionService('AdType');
-  }
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     this.filterForm.get('attributes').valueChanges.pipe(
@@ -69,10 +64,8 @@ export class AdAttributesFilterComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.adType && changes.adType.previousValue !== changes.adType.currentValue) {
-      const adType = mapAdType(changes.adType.currentValue);
-      this.adTypesService.getByKey(adType).subscribe(t => {
-        this.filters = t.filters;
-      });
+      // const adType = mapAdType(changes.adType.currentValue);
+      this.filters = changes.adType.currentValue.filters;
       this.filterForm.setValue({
         attributes: ''
       });

@@ -27,7 +27,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   set searchForm(searchForm: AdSearchBarForm | undefined) {
     this.lastPage = 0;
     const location = searchForm.location === undefined || searchForm.location.length !== 2 ? '' : searchForm.location.join(",");
-    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features, adType: mapAdType(searchForm.adType), attributes: searchForm.attributes });
+    this.searchConfig = new SearchConfig({ ...this.searchConfig, page: '1', searchString: searchForm.searchString, location, features: searchForm.features, typeId: searchForm.typeId, attributes: searchForm.attributes });
     this.adListItemsService.clearCache();
     this.query();
   }

@@ -31,7 +31,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
   set ad(ad: Ad | undefined) {
     this._ad = ad;
     this.attributeValues = ad ? ad.attributes : [];
-    this.adTypeFormGroup.setValue({ adType: ad ? ad.adType : '' });
+    this.adTypeFormGroup.setValue({ adType: ad ? ad.typeId : '' });
     const [city, state, zip] = ad && ad.cityDisplay ? ad.cityDisplay.replace(/(^.*?)\(([0-9]+)\)$/, '$1,$2').split(',').map(v => v.trim()): [undefined, undefined, undefined];
     if(city && state && zip) {
       this.zippoService.getWithQuery({ searchString: `${city},${state}`}).subscribe(locations => {
@@ -217,7 +217,9 @@ export class AdFormComponent implements OnInit, OnDestroy {
     const profile = this.detailsFormGroup.get('profile').value;
     const ad = new Ad({
       id: undefined,
-      adType: this.adTypes[this.adTypeFormGroup.get('adType').value].id,
+      // adType: this.adTypes[this.adTypeFormGroup.get('adType').value].id,
+      typeId: this.adTypes[this.adTypeFormGroup.get('adType').value].id,
+      userId: "",
       status: AdStatuses.Submitted,
       title: this.detailsFormGroup.get('title').value,
       description: this.detailsFormGroup.get('description').value,

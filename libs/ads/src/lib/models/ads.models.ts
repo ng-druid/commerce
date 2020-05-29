@@ -32,7 +32,7 @@ export class SearchConfig {
   location: string;
   page: string;
   features: Array<string>;
-  adType: number;
+  typeId: string;
   attributes: any;
   constructor(data: SearchConfig) {
     if(data) {
@@ -40,25 +40,25 @@ export class SearchConfig {
       this.location = data.location;
       this.features = data.features;
       this.page = data.page;
-      this.adType = data.adType;
+      this.typeId = data.typeId;
       this.attributes = Object.assign({}, data.attributes);
     }
   }
 }
 
 export class AdTypePlugin {
-  adTypeId: number;
+  adType: string;
   listItemDisplay: Type<any>;
   constructor(data?: AdTypePlugin) {
     if (data) {
-      this.adTypeId = data.adTypeId;
+      this.adType = data.adType;
       this.listItemDisplay = data.listItemDisplay;
     }
   }
 }
 
 export class AdType {
-  id: AdTypes;
+  id: string;
   name: string;
   attributes: Array<Attribute> = [];
   filters: Array<Attribute> = [];
@@ -81,11 +81,11 @@ export class FeaturesSearchConfig {
   adSearchString: string;
   location: string;
   features: Array<string>;
-  adType: number;
+  typeId: string;
   attributes: any;
   constructor(data: FeaturesSearchConfig) {
     if(data) {
-      this.adType = data.adType;
+      this.typeId = data.typeId;
       this.searchString = data.searchString;
       this.adSearchString = data.adSearchString;
       this.location = data.location;
@@ -98,8 +98,9 @@ export class FeaturesSearchConfig {
 export class Ad {
   id: string;
   title: string;
-  adType: AdTypes;
-  // userId: string;
+  // adType: AdTypes;
+  typeId: string;
+  userId: string;
   status: AdStatuses;
   description: string;
   location: Array<number>;
@@ -111,14 +112,15 @@ export class Ad {
   constructor(data?: Ad) {
     if (data) {
       this.id = data.id;
-      this.adType = data.adType;
+      // this.adType = data.adType;
+      this.typeId = data.typeId;
       this.status = data.status;
       this.title = data.title;
       this.description = data.description;
       this.location = data.location;
       this.profileId = data.profileId;
       this.cityDisplay = data.cityDisplay;
-      // this.userId = data.userId;
+      this.userId = data.userId;
       if(data.images) {
         this.images = data.images.map(i => new AdImage(i));
       }

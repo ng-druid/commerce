@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Inject } from '@angular/core';
 import { MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
 import { INgxGalleryOptions, INgxGalleryImage, NgxGalleryAnimation } from '@kolkov/ngx-gallery';
 import { AttributeMatcherService } from '@classifieds-ui/attributes';
-import { AdListItem } from '../../models/ads.models';
+import { AdListItem, AdType } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-list-item-default',
@@ -15,7 +15,7 @@ export class AdListItemDefaultComponent implements OnInit {
   ad: AdListItem;
 
   @Input()
-  adType: string;
+  adType: AdType;
 
   mediaBaseUrl: string;
 

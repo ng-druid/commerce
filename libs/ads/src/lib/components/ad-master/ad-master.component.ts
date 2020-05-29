@@ -9,7 +9,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
-import { AdListItem, AdTypePlugin } from '../../models/ads.models';
+import { AdListItem, AdTypePlugin, AdType } from '../../models/ads.models';
 import { AdsDataSourceService } from '../../services/ads-data-source.service';
 import { mapAdType, createAdTypePlugin } from '../../ad.helpers';
 import { AdTypePluginsService } from '../../services/ad-type-plugins.service';
@@ -27,7 +27,7 @@ export class AdMasterComponent implements OnInit, OnChanges {
   @Input()
   searchForm: AdSearchBarForm;
   @Input()
-  adType: string;
+  adType: AdType;
   loading$: Observable<boolean>;
   plugin: AdTypePlugin;
   private adListItemsService: EntityCollectionService<AdListItem>;
@@ -44,7 +44,7 @@ export class AdMasterComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.loading$ = this.adListItemsService.loading$;
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
-    this.plugin = this.adTypePlugins.get(mapAdType(this.adType)) ?? createAdTypePlugin(mapAdType(this.adType));
+    this.plugin = this.adTypePlugins.get(this.adType.name) ?? createAdTypePlugin(this.adType.name);
     combineLatest([
       this.mo.asObservable().pipe(map(v => v.length !== 0 && v[0].mqAlias.indexOf('sm') === -1 && v[0].mqAlias.indexOf('xs') === -1)),
       this.store.pipe(select(selectCurrentRoute))
@@ -67,7 +67,7 @@ export class AdMasterComponent implements OnInit, OnChanges {
     }
   }
   viewAd(id: string) {
-    this.router.navigateByUrl(`/ads/${this.adType}/ad/${id}`);
+    this.router.navigateByUrl(`/ads/${this.adType.name}/ad/${id}`);
   }
   trackById(index: number, ad: AdListItem): string {
     return ad.id;

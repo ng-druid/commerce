@@ -16,9 +16,9 @@ export const mapAdType = (adType: string): AdTypes => {
   }
 };
 
-export const createAdTypePlugin = (adTypeId: number) => {
+export const createAdTypePlugin = (adType: string) => {
   return new AdTypePlugin({
-    adTypeId: adTypeId,
+    adType: adType,
     listItemDisplay: AdListItemDefaultComponent
   });
 };

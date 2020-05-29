@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
 import { select, Store } from '@ngrx/store';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { combineLatest } from 'rxjs';
-import { debounceTime, map, distinctUntilChanged, filter } from 'rxjs/operators';
+import { debounceTime, map, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 
 import { AdSearchBarForm } from '../../models/form.models';
+import { AdType } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-browser',
@@ -14,14 +16,17 @@ import { AdSearchBarForm } from '../../models/form.models';
   styleUrls: ['./ad-browser.component.scss']
 })
 export class AdBrowserComponent implements OnInit {
-  searchForm: AdSearchBarForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType: this.route.snapshot.data.adType, attributes: {} });
+  searchForm: AdSearchBarForm = new AdSearchBarForm({ searchString: '', location: [], features: [], typeId: this.route.snapshot.data.adType.id, attributes: {} });
   hideMasterComponent = false;
   hideRouterOutlet = false;
   hideSearchBar = false;
   refreshViewport = true;
   spacerGap = '2em';
   adType = this.route.snapshot.data.adType;
-  constructor(private mo: MediaObserver, private store: Store<RouterReducerState>, private route: ActivatedRoute) { }
+  adTypesService: EntityCollectionService<AdType>;
+  constructor(private mo: MediaObserver, private store: Store<RouterReducerState>, private route: ActivatedRoute, es: EntityServices) {
+    this.adTypesService = es.getEntityCollectionService('AdType')
+  }
   ngOnInit() {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
     combineLatest([
@@ -51,10 +56,13 @@ export class AdBrowserComponent implements OnInit {
     this.route.paramMap.pipe(
       map(p => p.get('adType')),
       filter(adType => adType && adType !== this.adType),
-      distinctUntilChanged()
-    ).subscribe(adType => {
+      distinctUntilChanged(),
+      switchMap(adType => this.adTypesService.getAll().pipe(
+        map(types => types.find(t => t.name == adType))
+      )),
+    ).subscribe((adType: AdType) => {
       this.adType = adType;
-      this.searchForm = new AdSearchBarForm({ searchString: '', location: [], features: [], adType, attributes: {} });
+      this.searchForm = new AdSearchBarForm({ searchString: '', location: [], features: [], typeId: adType.id, attributes: {} });
     });
   }
 }
