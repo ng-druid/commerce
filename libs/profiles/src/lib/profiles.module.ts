@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '@classifieds-ui/material';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { EntityDefinitionService, EntityDataService } from '@ngrx/data';
+import { EntityDefinitionService } from '@ngrx/data';
 import { CreateProfileComponent } from './components/create-profile/create-profile.component';
 import { entityMetadata } from './entity-metadata';
 import { ProfileMasterComponent } from './components/profile-master/profile-master.component';
@@ -18,8 +18,6 @@ import { StoreModule } from '@ngrx/store';
 import * as fromProfileBrowser from './features/profile-browser/profile-browser.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ProfileBrowserEffects } from './features/profile-browser/profile-browser.effects';
-import { ProfilesDataService } from './services/profiles-data.service';
-import { ProfileListItemsDataService } from './services/profile-list-items-data.service';
 import { ProfileResolver } from './resolvers/profile.resolver';
 import { CreateProfileGuard } from './guards/create-profile.guard';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
@@ -52,16 +50,7 @@ const routes = [
   ]
 })
 export class ProfilesModule {
-  constructor(
-    eds: EntityDefinitionService,
-    entityDataService: EntityDataService,
-    profilesDataService: ProfilesDataService,
-    profilesListitemsDataService: ProfileListItemsDataService
-  ) {
+  constructor(eds: EntityDefinitionService) {
     eds.registerMetadataMap(entityMetadata);
-    entityDataService.registerServices({
-      Profile: profilesDataService,
-      ProfileListItem: profilesListitemsDataService
-    });
   }
 }
