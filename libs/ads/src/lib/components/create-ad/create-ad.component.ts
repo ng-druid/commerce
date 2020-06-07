@@ -38,7 +38,7 @@ export class CreateAdComponent implements OnInit {
         return NEVER;
       }),
       map((files: Array<MediaFile>) => {
-        return new Ad({ ...event.ad, images: files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i})) });
+        return new Ad({ ...event.ad, images: files.map((f, i) => new AdImage({ id: f.id, path: f.path, weight: i + 1})) });
       }),
       switchMap(ad => {
         return this.adsService.upsert(new Ad(ad));

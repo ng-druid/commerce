@@ -12,6 +12,6 @@ export class AdTypesDataService extends DefaultDataService<AdType> {
   constructor(config: DefaultDataServiceConfig, http: HttpClient, httpUrlGenerator: HttpUrlGenerator, logger: Logger) {
     super('AdType', http, httpUrlGenerator, config);
     this.entityUrl = `${this.goApi}/entity/type/`;
-    this.entitiesUrl = this.entitiesUrl = `${this.goApi}/entity/type/all`;
+    this.entitiesUrl = this.entitiesUrl = `${this.goApi}/types/all`;
   }
 }

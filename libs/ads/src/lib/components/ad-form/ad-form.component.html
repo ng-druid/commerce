@@ -5,7 +5,7 @@
         <ng-template matStepLabel>Ad Type</ng-template>
         <div class="adtype-select">
           <mat-radio-group formControlName="adType">
-            <mat-radio-button *ngFor="let adType of adTypes; let i=index" [value]="i">{{ adType.name }}</mat-radio-button>
+            <mat-radio-button *ngFor="let adType of adTypes; let i=index" [value]="adType.id">{{ adType.name }}</mat-radio-button>
           </mat-radio-group>
         </div>
         <div>

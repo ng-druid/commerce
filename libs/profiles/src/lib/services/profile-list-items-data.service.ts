@@ -15,6 +15,6 @@ export class ProfileListItemsDataService extends DefaultDataService<ProfileListI
     logger: Logger
   ) {
     super('ProfileListItem', http, httpUrlGenerator, config);
-    this.entityUrl = this.entitiesUrl = `${this.goApi}/profiles/profilelistitems`;
+    this.entityUrl = this.entitiesUrl = `${this.goApi}/profiles`;
   }
 }

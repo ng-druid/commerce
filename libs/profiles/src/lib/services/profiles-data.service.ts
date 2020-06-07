@@ -18,14 +18,15 @@ export class ProfilesDataService extends DefaultDataService<Profile> {
     @Inject(PROFILE_SETTINGS) private profileSettings: ProfileSettings
   ) {
     super('Profile', http, httpUrlGenerator, config);
-    this.entityUrl = this.entitiesUrl = `${this.goApi}/profiles/profile`;
+    this.entityUrl = `${this.goApi}/profile/`;
+    this.entitiesUrl = `${this.goApi}/profiles`;
   }
   // Override to fetch from cloud front.
-  getById(key: number | string): Observable<Profile> {
+  /*getById(key: number | string): Observable<Profile> {
     let err: Error | undefined;
     if (key == null) {
       err = new Error(`No "${this.entityName}" key to get`);
     }
     return this.execute('GET', `${this.profileSettings.profileUrl}/${key}.json.gz`, err);
-  }
+  }*/
 }

@@ -11,6 +11,7 @@ export class AdProfileItemsDataService extends DefaultDataService<AdProfileItem>
   private goApi = 'https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com';
   constructor(config: DefaultDataServiceConfig, http: HttpClient, httpUrlGenerator: HttpUrlGenerator, logger: Logger) {
     super('AdProfileItem', http, httpUrlGenerator, config);
-    this.entityUrl = this.entitiesUrl = `${this.goApi}/profiles/profilenavitems`;
+    this.entityUrl = `${this.goApi}/profile/`;
+    this.entitiesUrl = `${this.goApi}/profiles/profilenavitems`;
   }
 }

@@ -12,6 +12,6 @@ export class AdListItemsDataService extends DefaultDataService<AdListItem> {
   constructor(config: DefaultDataServiceConfig, http: HttpClient, httpUrlGenerator: HttpUrlGenerator, logger: Logger) {
     super('AdListItem', http, httpUrlGenerator, config);
     // this.entityUrl = this.entitiesUrl = `${config.root}/ads/adlistitems/`;
-    this.entityUrl = this.entitiesUrl = `${this.goApi}/ads/adlistitems`;
+    this.entityUrl = this.entitiesUrl = `${this.goApi}/ads`;
   }
 }

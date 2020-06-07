@@ -80,19 +80,19 @@ export class AdsModule {
   constructor(
     eds: EntityDefinitionService,
     entityDataService: EntityDataService,
-    adsDataService: AdsDataService,
-    adListItemsDataService: AdListItemsDataService,
+    // adsDataService: AdsDataService,
+    //adListItemsDataService: AdListItemsDataService,
     featureListItemsDataService: FeatureListItemsDataService,
-    adTypesDataService: AdTypesDataService,
-    adProfileItemsDataService: AdProfileItemsDataService
+    //adTypesDataService: AdTypesDataService,
+   // adProfileItemsDataService: AdProfileItemsDataService
   ) {
     eds.registerMetadataMap(entityMetadata);
     entityDataService.registerServices({
-      Ad: adsDataService,
-      AdListItem: adListItemsDataService,
+      // Ad: adsDataService,
+      //AdListItem: adListItemsDataService,
       FeatureListItem: featureListItemsDataService,
-      AdType: adTypesDataService,
-      AdProfileItem: adProfileItemsDataService
+      //AdType: adTypesDataService,
+      // AdProfileItem: adProfileItemsDataService
     });
     /*entityDataService.registerService('Ad', this.createAdsDataService<Ad>('Ad', http, httpUrlGenerator, config));
     entityDataService.registerService('AdListItem', this.createAdsDataService<AdListItem>('AdListItem', http, httpUrlGenerator, config));

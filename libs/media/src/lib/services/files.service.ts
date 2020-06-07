@@ -16,7 +16,7 @@ export class FilesService {
     files.forEach(f => {
       const formData = new FormData();
       formData.append('File', f, f.name);
-      requests$.push(this.http.post<MediaFile>(`${this.settings.endpointUrl}/file`, formData).pipe(
+      requests$.push(this.http.post<MediaFile>(this.settings.endpointUrl, formData).pipe(
         catchError(e => {
           return throwError(new Error("Error uploading images."));
         })
@@ -26,7 +26,7 @@ export class FilesService {
   }
   convertToFiles(mediaFiles: Array<MediaFile>): Observable<Array<File>> {
     const requests$ = mediaFiles.map(f => new Observable<File>(obs => {
-      fetch(`${this.settings.imageUrl}/${f.path}`, { mode: 'no-cors'}).then(r => {
+      fetch(`${this.settings.imageUrl}/${f.path}`).then(r => {
         r.blob().then(d => {
           new Promise(resolve => {
             let reader = new FileReader();

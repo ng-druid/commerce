@@ -115,7 +115,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
   stepper: MatHorizontalStepper;
 
   get adType(): AdType {
-    return this.adTypes[this.adTypeFormGroup.get('adType').value];
+    return this.adTypes.find(t => t.id === this.adTypeFormGroup.get('adType').value)
   }
 
   constructor(es: EntityServices, private mo: MediaObserver, private bs: MatBottomSheet, private sb: MatSnackBar, private filesService: FilesService, private cityListItemsService: CityListItemsService, private fb: FormBuilder, private zippoService: ZippoService, private adBrowserFacade: AdBrowserFacade, private valueComputerService: ValueComputerService) {
@@ -155,7 +155,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
       this.cities = cities;
     });
     this.adTypeFormGroup.get('adType').valueChanges.pipe(
-      map(v => this.adTypes[v]),
+      map(id => this.adTypes.find(t => t.id === id)),
       /*tap(() => {
         while (this.attributes.length !== 0) {
           this.attributes.removeAt(0)
@@ -163,7 +163,11 @@ export class AdFormComponent implements OnInit, OnDestroy {
       }),*/
       takeUntil(this.componentDestroyed)
     ).subscribe(adType => {
-      this.attributes = adType.attributes.map(a => new Attribute(a));
+      if (adType) {
+        this.attributes = adType.attributes.map(a => new Attribute(a));
+      } else {
+        this.attributes = []
+      }
       /*adType.attributes.forEach(attr => {
         this.attributes.push(this.fb.group({
           name: [attr.name, Validators.required],
@@ -218,7 +222,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
     const ad = new Ad({
       id: undefined,
       // adType: this.adTypes[this.adTypeFormGroup.get('adType').value].id,
-      typeId: this.adTypes[this.adTypeFormGroup.get('adType').value].id,
+      typeId: this.adTypeFormGroup.get('adType').value,
       userId: "",
       status: AdStatuses.Submitted,
       title: this.detailsFormGroup.get('title').value,
