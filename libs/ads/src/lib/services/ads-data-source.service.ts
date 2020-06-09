@@ -32,6 +32,20 @@ export class AdsDataSourceService extends DataSource<Ad> {
     this.query();
   }
 
+  get queryString(): string {
+    const baseSearch = new SearchConfig({ ...this.searchConfig, attributes: undefined });
+    let queryString = qs.stringify(baseSearch as Object);
+    if(this.searchConfig.attributes !== undefined) {
+      for(const attr in this.searchConfig.attributes) {
+        const len = this.searchConfig.attributes[attr].length;
+        for(let i = 0; i < len; i++) {
+          queryString += `&${encodeURI(attr)}=${encodeURI(this.searchConfig.attributes[attr][i])}`;
+        }
+      }
+    }
+    return queryString;
+  }
+
   connect(collectionViewer: CollectionViewer): Observable<Array<Ad>> {
     this.subscription.add(collectionViewer.viewChange.subscribe(range => {
       const currentPage = Math.ceil((range.end + 1) / this.pageSize);
@@ -45,7 +59,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   }
 
   query() {
-    this.adListItemsService.getWithQuery(qs.stringify(this.searchConfig as Object));
+    this.adListItemsService.getWithQuery(this.queryString);
   }
 
   disconnect(collectionViewer: CollectionViewer): void {

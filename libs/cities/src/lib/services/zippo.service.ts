@@ -10,7 +10,7 @@ import { states } from '../data/states.data';
   providedIn: 'root'
 })
 export class ZippoService {
-  zippoBaseUrl = `${this.config.root}/zippo/`;
+  zippoBaseUrl = `${this.config.root}/cities/`;
   constructor(private http: HttpClient, private config: DefaultDataServiceConfig) { }
   getWithQuery(query: { searchString: string }): Observable<Array<CityListItem>> {
     if(!query.searchString || !query.searchString.indexOf || query.searchString.indexOf(',') < 3) {
