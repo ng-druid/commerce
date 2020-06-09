@@ -65,7 +65,13 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
     });
     this.features$.subscribe(features => {
       this.clearFeatures();
-      this.features = features.map(f => f.key);
+      const displayFeatures = this.features.filter(f => this.featureSelections.isSelected(f));
+      features.forEach(f => {
+        if(!this.featureSelections.isSelected(f.key)) {
+          displayFeatures.push(f.key);
+        }
+      })
+      this.features = [ ...displayFeatures ];
       this.populateFeatures();
     });
     this.loadFeatures("");
@@ -122,15 +128,21 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   populateFeatures() {
     for(let i = 0; i < this.features.length; i++) {
       const selected = this.featureSelections.isSelected(this.features[i]);
-      (this.featuresFormGroup.get('features') as FormArray).push(this.fb.control(selected))
+      if(!selected) {
+        (this.featuresFormGroup.get('features') as FormArray).push(this.fb.control(selected))
+      }
     }
   }
 
   clearFeatures() {
-    let i = 0;
-    while ((this.featuresFormGroup.get('features') as FormArray).length !== 0) {
-      (this.featuresFormGroup.get('features') as FormArray).removeAt(0);
-      i++;
+    let startIndex = 0;
+    const len = (this.featuresFormGroup.get('features') as FormArray).length;
+    for(let i = 0; i < len; i++) {
+      if(this.featureSelections.isSelected(this.features[i])) {
+        startIndex++;
+      } else {
+        (this.featuresFormGroup.get('features') as FormArray).removeAt(startIndex);
+      }
     }
   }
 
