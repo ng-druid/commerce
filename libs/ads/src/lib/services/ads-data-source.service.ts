@@ -33,7 +33,7 @@ export class AdsDataSourceService extends DataSource<Ad> {
   }
 
   get queryString(): string {
-    const baseSearch = new SearchConfig({ ...this.searchConfig, location: undefined, attributes: undefined });
+    const baseSearch = new SearchConfig({ ...this.searchConfig, location: undefined, attributes: undefined, features: undefined });
     let queryString = qs.stringify(baseSearch as Object);
     if(this.searchConfig.location !== undefined && this.searchConfig.location.split(',').length === 2) {
       const cords = this.searchConfig.location.split(',').map(c => c.trim());
@@ -45,6 +45,11 @@ export class AdsDataSourceService extends DataSource<Ad> {
         for(let i = 0; i < len; i++) {
           queryString += `&${encodeURI(attr)}=${encodeURI(this.searchConfig.attributes[attr][i])}`;
         }
+      }
+    }
+    if(this.searchConfig.features !== undefined) {
+      for(const feature in this.searchConfig.features) {
+        queryString += `&features=${encodeURI(this.searchConfig.features[feature])}`;
       }
     }
     return queryString;

@@ -13,6 +13,9 @@ export class TextWidgetComponent {
   @Input()
   attribute: Attribute;
 
+  @Input()
+  appearance = "legacy"
+
   constructor(public controlContainer: ControlContainer) { }
 
 }

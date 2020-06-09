@@ -29,13 +29,13 @@ export const environment = {
   production: false,
   apiGatewaySettings: {
     // endpointUrl: 'https://localhost:44340',
-    endpointUrl: "https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com"
+    endpointUrl: "https://80ry0dd5s4.execute-api.us-east-1.amazonaws.com"
   },
   mediaSettings: {
-    endpointUrl: 'https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com/media',
+    endpointUrl: 'https://80ry0dd5s4.execute-api.us-east-1.amazonaws.com/media',
     cloudinaryUrl: 'https://api.cloudinary.com/v1_1/dj4vvkgzw',
     uploadPreset: 'i0hm4opm',
-    imageUrl: 'https://p1vgub4jtb.execute-api.us-east-1.amazonaws.com'
+    imageUrl: 'https://80ry0dd5s4.execute-api.us-east-1.amazonaws.com'
   },
   adSettings: {
     adUrl: 'https://d2o66qxp1qwfb9.cloudfront.net/ads'

@@ -31,7 +31,6 @@ import { AdBrowserEffects } from './features/ad-browser/ad-browser.effects';
 import { CreateAdGuard } from './guards/create-ad.guard';
 import { AdTypeResolver } from './resolvers/ad-type.resolver';
 import { AdAttributesFilterComponent } from './components/ad-attributes-filter/ad-attributes-filter.component';
-import { FeatureListItemsDataService } from './services/feature-list-items-data.service';
 import { AdListItemComponent } from './components/ad-list-item/ad-list-item.component';
 import { AdTypePluginDirective } from './directives/ad-type-plugin.directive';
 import { AdListItemDefaultComponent } from './components/ad-list-item-default/ad-list-item-default.component';
@@ -73,15 +72,8 @@ const routes = [
   entryComponents: [AdListItemDefaultComponent]
 })
 export class AdsModule {
-  constructor(
-    eds: EntityDefinitionService,
-    entityDataService: EntityDataService,
-    featureListItemsDataService: FeatureListItemsDataService,
-  ) {
+  constructor(eds: EntityDefinitionService) {
     eds.registerMetadataMap(entityMetadata);
-    entityDataService.registerServices({
-      FeatureListItem: featureListItemsDataService,
-    });
     /*entityDataService.registerService('Ad', this.createAdsDataService<Ad>('Ad', http, httpUrlGenerator, config));
     entityDataService.registerService('AdListItem', this.createAdsDataService<AdListItem>('AdListItem', http, httpUrlGenerator, config));
     entityDataService.registerService('FeatureListItem', this.createAdsDataService<FeatureListItem>('FeatureListItem', http, httpUrlGenerator, config));

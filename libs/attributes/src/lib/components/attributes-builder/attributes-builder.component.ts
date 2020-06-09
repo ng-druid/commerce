@@ -28,6 +28,9 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
   attributes: Array<Attribute> = [];
 
   @Input()
+  appearance = 'legacy';
+
+  @Input()
   set attributeValues(attributeValues: Array<AttributeValue> | undefined) {
     this._attributeValues = attributeValues;
     this.applyValues();

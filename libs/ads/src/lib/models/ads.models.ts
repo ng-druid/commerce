@@ -154,12 +154,12 @@ export class AdImage {
 }
 
 export class FeatureListItem {
-  id: string;
-  humanName: string;
+  key: string;
+  doc_count: string;
   constructor(data?: FeatureListItem) {
     if(data) {
-      this.id = data.id;
-      this.humanName = data.humanName;
+      this.key = data.key;
+      this.doc_count = data.doc_count;
     }
   }
 }

@@ -65,7 +65,7 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
     });
     this.features$.subscribe(features => {
       this.clearFeatures();
-      this.features = features.map(f => f.humanName);
+      this.features = features.map(f => f.key);
       this.populateFeatures();
     });
     this.loadFeatures("");
@@ -92,6 +92,7 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
       (
         changes.searchForm.previousValue.searchString !== changes.searchForm.currentValue.searchString ||
         changes.searchForm.previousValue.location !== changes.searchForm.currentValue.location
+        // changes.searchForm.previousValue.attributes !== changes.searchForm.currentValue.attributes
       )
     ) {
       const searchString = this.featuresFormGroup.get("searchString").value;
@@ -109,9 +110,7 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
 
   loadFeatures(searchString: string) {
     this.featureListItemsService.clearCache();
-    const location = this.searchForm.location === undefined || this.searchForm.location.length !== 2 ? '' : this.searchForm.location.join(",");
-    const search = new FeaturesSearchConfig({ typeId: this.searchForm.typeId, searchString: searchString, location, features: this.searchForm.features, adSearchString: this.searchForm.searchString, attributes: this.searchForm.attributes });
-    this.featureListItemsService.getWithQuery(qs.stringify(search as Object)).subscribe(features => {
+    this.featureListItemsService.getWithQuery(this.makeQueryString(searchString)).subscribe(features => {
       this.features$.next(features);
     });
   }
@@ -133,6 +132,23 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
       (this.featuresFormGroup.get('features') as FormArray).removeAt(0);
       i++;
     }
+  }
+
+  makeQueryString(searchString: string): string {
+    const baseSearch = new AdSearchBarForm({ ...this.searchForm, searchString, location: undefined, attributes: undefined, features: undefined});
+    let queryString = qs.stringify(baseSearch as Object);
+    if(this.searchForm.location !== undefined && this.searchForm.location.length === 2) {
+      queryString += `&location=${this.searchForm.location[0]}&location=${this.searchForm.location[1]}`
+    }
+    if(this.searchForm.attributes !== undefined) {
+      for(const attr in this.searchForm.attributes) {
+        const len = this.searchForm.attributes[attr].length;
+        for(let i = 0; i < len; i++) {
+          queryString += `&${encodeURI(attr)}=${encodeURI(this.searchForm.attributes[attr][i])}`;
+        }
+      }
+    }
+    return queryString;
   }
 
 }

@@ -1,7 +1,7 @@
 <ng-container [formGroup]="attributesForm">
-  <div formArrayName="attributes">
-    <div *ngFor="let attribute of attributesArray.controls; let i=index" formGroupName="{{i}}">
-      <classifieds-ui-attribute-widget [attribute]="attributes[i]" [widget]="discoverWidget(attributes[i].widget)"></classifieds-ui-attribute-widget>
+  <div formArrayName="attributes" class="attribute-fields">
+    <div *ngFor="let attribute of attributesArray.controls; let i=index" formGroupName="{{i}}" class="attribute-field-container">
+      <classifieds-ui-attribute-widget [attribute]="attributes[i]" [widget]="discoverWidget(attributes[i].widget)" [appearance]="appearance"></classifieds-ui-attribute-widget>
     </div>
   </div>
 </ng-container>

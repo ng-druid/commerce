@@ -16,6 +16,9 @@ export class AttributeWidgetComponent implements OnInit {
   @Input()
   attribute: Attribute;
 
+  @Input()
+  appearance = "legacy"
+
   @ViewChild(AttributeWidgetDirective, {static: true}) widgetHost: AttributeWidgetDirective;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver, public controlContainer: ControlContainer) { }
@@ -29,6 +32,7 @@ export class AttributeWidgetComponent implements OnInit {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as any).attribute = this.attribute;
+    (componentRef.instance as any).appearance = this.appearance;
   }
 
 }

@@ -1,0 +1,45 @@
+form {
+  margin-top: 1em;
+}
+
+.ad-attributes-form ::ng-deep .mat-form-field-type-mat-input {
+  width: 100%;
+}
+
+.ad-attributes-form ::ng-deep .mat-form-field-type-mat-input .mat-form-field-underline {
+  background-color: white;
+}
+
+.ad-attributes-form ::ng-deep .mat-form-field-type-mat-input .mat-form-field-infix {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.ad-attributes-form ::ng-deep .mat-form-field-type-mat-input .mat-form-field-infix input {
+  font-weight: lighter;
+  padding: 0 1em;
+  &::placeholder {
+    color: rgb(39, 158, 179);
+    font-weight: lighter;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+}
+
+.ad-attributes-form ::ng-deep .attribute-fields {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ad-attributes-form ::ng-deep .attribute-field-container {
+  width: 47%;
+  margin-right: 3%;
+}
+
+.ad-attributes-form ::ng-deep classifieds-ui-attribute-widget {
+  width: 100%;
+}
+
+.ad-attributes-form ::ng-deep classifieds-ui-text-widget {
+  width: 100%;
+}
