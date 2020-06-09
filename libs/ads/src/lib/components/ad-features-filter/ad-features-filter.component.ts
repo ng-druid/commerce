@@ -135,8 +135,11 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
   }
 
   makeQueryString(searchString: string): string {
-    const baseSearch = new AdSearchBarForm({ ...this.searchForm, searchString, location: undefined, attributes: undefined, features: undefined});
+    const baseSearch = new AdSearchBarForm({ ...this.searchForm, location: undefined, attributes: undefined, features: undefined});
     let queryString = qs.stringify(baseSearch as Object);
+    if(searchString !== undefined && searchString !== "") {
+      queryString += `&featureSearchString=${encodeURI(searchString)}`;
+    }
     if(this.searchForm.location !== undefined && this.searchForm.location.length === 2) {
       queryString += `&location=${this.searchForm.location[0]}&location=${this.searchForm.location[1]}`
     }
@@ -146,6 +149,12 @@ export class AdFeaturesFilterComponent implements OnInit, AfterViewInit, OnChang
         for(let i = 0; i < len; i++) {
           queryString += `&${encodeURI(attr)}=${encodeURI(this.searchForm.attributes[attr][i])}`;
         }
+      }
+    }
+    if(this.searchForm.features !== undefined) {
+      const len = this.searchForm.features.length;
+      for(let i = 0; i < len; i++) {
+        queryString += `&features=${encodeURI(this.searchForm.features[i])}`;
       }
     }
     return queryString;
