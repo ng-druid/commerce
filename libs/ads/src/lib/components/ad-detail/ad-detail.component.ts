@@ -2,17 +2,19 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
-import { iif, of, EMPTY } from 'rxjs';
+import { iif, of, EMPTY, forkJoin } from 'rxjs';
 import { map, filter, switchMap, tap, withLatestFrom, mergeMap } from 'rxjs/operators';
 import { MEDIA_SETTINGS, MediaSettings } from '@classifieds-ui/media';
 import { CitiesService, City } from '@classifieds-ui/cities';
-
-import { Ad } from '../../models/ads.models';
+import { AdType, Ad, AdTypePlugin } from '../../models/ads.models';
+import { createAdTypePlugin } from '../../ad.helpers';
+import { AdTypePluginsService } from '../../services/ad-type-plugins.service';
 
 @Component({
   selector: 'classifieds-ui-ad-detail',
   templateUrl: './ad-detail.component.html',
-  styleUrls: ['./ad-detail.component.scss']
+  styleUrls: ['./ad-detail.component.scss'],
+  providers: [ AdTypePluginsService ]
 })
 export class AdDetailComponent implements OnInit {
   ad: Ad;
@@ -21,19 +23,25 @@ export class AdDetailComponent implements OnInit {
   displayGalleryTab = false;
   mediaBaseUrl: string;
   selectedTabIndex = 0;
-  adType: string;
+  adType: AdType;
+  plugin: AdTypePlugin;
   private adsService: EntityCollectionService<Ad>;
-  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private citiesService: CitiesService, es: EntityServices) {
+  private adTypesService: EntityCollectionService<AdType>;
+  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private citiesService: CitiesService, private adTypePlugins: AdTypePluginsService, es: EntityServices) {
     this.adsService = es.getEntityCollectionService('Ad');
+    this.adTypesService = es.getEntityCollectionService('AdType');
   }
   ngOnInit() {
     this.mediaBaseUrl = this.mediaSettings.imageUrl;
     this.route.paramMap.pipe(
-      map(p => [p.get('adId'), p.get('adType')]),
-      filter(([adId]) => typeof(adId) === 'string'),
+      map(p => p.get('adId')),
+      filter(adId => typeof(adId) === 'string'),
       tap(() => this.displayOverlay = true),
-      switchMap(([adId, adType]) => this.adsService.getByKey(adId).pipe(
-        map<Ad, [Ad, string]>(ad => [ad, adType])
+      switchMap(adId => this.adsService.getByKey(adId).pipe(
+        switchMap(ad => this.adTypesService.getAll().pipe(
+          map(types => types.find(t => t.id === ad.typeId)),
+          map<AdType, [Ad, AdType]>(adType => [ad, adType])
+        ))
       )), /*.pipe(
         switchMap(ad =>
           ad.location && ad.location.length === 2 ?
@@ -45,6 +53,7 @@ export class AdDetailComponent implements OnInit {
       )*/
     ).subscribe(([ad, adType]) => {
       this.adType = adType;
+      this.plugin = this.adTypePlugins.get(adType.name) ?? createAdTypePlugin(adType.name);
       this.displayOverlay = false;
       this.selectedTabIndex = 0;
       this.ad = new Ad(ad as Ad);

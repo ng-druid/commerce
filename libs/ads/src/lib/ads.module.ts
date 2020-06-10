@@ -33,10 +33,12 @@ import { CreateAdGuard } from './guards/create-ad.guard';
 import { AdTypeResolver } from './resolvers/ad-type.resolver';
 import { AdAttributesFilterComponent } from './components/ad-attributes-filter/ad-attributes-filter.component';
 import { AdListItemComponent } from './components/ad-list-item/ad-list-item.component';
+import { AdDetailHeaderComponent } from './components/ad-detail-header/ad-detail-header.component';
 import { AdFormComponent } from './components/ad-form/ad-form.component';
 import { ManageAdComponent } from './components/manage-ad/manage-ad.component';
 import { AdDisplayComponent } from './components/ad-display/ad-display.component';
 import { RealestateItemInfoComponent } from './displays/realestate-item-info/realestate-item-info.component';
+import { RealestateDetailHeaderComponent } from './displays/realestate-detail-header/realestate-detail-header.component';
 import { AD_TYPE_PLUGIN } from './ad.tokens';
 import { AdTypePlugin } from './models/ads.models';
 
@@ -49,7 +51,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdFormComponent, ManageAdComponent, AdDisplayDirective, AdDisplayComponent, RealestateItemInfoComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdDetailHeaderComponent, AdFormComponent, ManageAdComponent, AdDisplayDirective, AdDisplayComponent, RealestateItemInfoComponent, RealestateDetailHeaderComponent ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -71,7 +73,7 @@ const routes = [
   providers: [
     CreateAdGuard,
     AdTypeResolver,
-    { provide: AD_TYPE_PLUGIN, useValue: new AdTypePlugin({ adType: 'realestate', listItemDisplay: AdListItemComponent, listItemInfoDisplay: RealestateItemInfoComponent }), multi: true }
+    { provide: AD_TYPE_PLUGIN, useValue: new AdTypePlugin({ adType: 'realestate', listItemDisplay: AdListItemComponent, listItemInfoDisplay: RealestateItemInfoComponent, detailHeaderDisplay: RealestateDetailHeaderComponent }), multi: true }
   ]
 })
 export class AdsModule {

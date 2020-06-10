@@ -50,11 +50,13 @@ export class AdTypePlugin {
   adType: string;
   listItemDisplay: Type<any>;
   listItemInfoDisplay: Type<any>;
+  detailHeaderDisplay: Type<any>;
   constructor(data?: AdTypePlugin) {
     if (data) {
       this.adType = data.adType;
       this.listItemDisplay = data.listItemDisplay;
       this.listItemInfoDisplay = data.listItemInfoDisplay;
+      this.detailHeaderDisplay = data.detailHeaderDisplay;
     }
   }
 }

@@ -1,0 +1,5 @@
+<h1>{{ ad.title }}</h1>
+<div>{{ ad.attributes | attribute:'beds' }} Beds</div>
+<div>{{ ad.attributes | attribute:'baths' }} Baths</div>
+<div>{{ ad.attributes | attribute:'sqft' }} Sqft</div>
+<p *ngIf="ad.cityDisplay">{{ ad.cityDisplay }}</p>
