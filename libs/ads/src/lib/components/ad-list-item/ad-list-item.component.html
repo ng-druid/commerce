@@ -1,1 +1,21 @@
-<p>ad-list-item works!</p>
+<div fxFlex fxLayout="column" fxFill>
+  <div class="ad-header">
+    <h3>{{ ad.title }}</h3>
+    <div>{{ ad.id }}</div>
+  </div>
+  <div class="ad-content-container">
+    <div fxFlex fxLayout="row" fxFill class="ad-content">
+      <div fxFlex="65">
+        <ngx-gallery *ngIf="galleryImages.length != 0 else imagePlaceholder" [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
+        <ng-template #imagePlaceholder>
+          <div class="placeholder">
+            <span>No Photo Available</span>
+          </div>
+        </ng-template>
+      </div>
+      <div fxFlex="35" class="ad-info">
+        <!-- <classifieds-ui-ad-display [adType]="adType" [ad]="ad" [plugin]="plugin" display="listItemInfoDisplay"></classifieds-ui-ad-display> -->
+      </div>
+    </div>
+  </div>
+</div>

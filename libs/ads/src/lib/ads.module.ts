@@ -22,6 +22,7 @@ import { AdMasterComponent } from './components/ad-master/ad-master.component';
 import { AdSearchBarComponent } from './components/ad-search-bar/ad-search-bar.component';
 import { AdDetailTabComponent } from './components/ad-detail/ad-detail-tab/ad-detail-tab.component';
 import { AdGalleryTabComponent } from './components/ad-detail/ad-gallery-tab/ad-gallery-tab.component';
+import { AdDisplayDirective } from './directives/ad-display.directive';
 import { entityMetadata } from './entity-metadata';
 import { AdFeaturesFilterComponent } from './components/ad-features-filter/ad-features-filter.component';
 import { StoreModule } from '@ngrx/store';
@@ -32,10 +33,9 @@ import { CreateAdGuard } from './guards/create-ad.guard';
 import { AdTypeResolver } from './resolvers/ad-type.resolver';
 import { AdAttributesFilterComponent } from './components/ad-attributes-filter/ad-attributes-filter.component';
 import { AdListItemComponent } from './components/ad-list-item/ad-list-item.component';
-import { AdTypePluginDirective } from './directives/ad-type-plugin.directive';
-import { AdListItemDefaultComponent } from './components/ad-list-item-default/ad-list-item-default.component';
 import { AdFormComponent } from './components/ad-form/ad-form.component';
 import { ManageAdComponent } from './components/manage-ad/manage-ad.component';
+import { AdDisplayComponent } from './components/ad-display/ad-display.component';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
@@ -46,7 +46,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdTypePluginDirective, AdListItemDefaultComponent, AdFormComponent, ManageAdComponent ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdFormComponent, ManageAdComponent, AdDisplayComponent, AdDisplayDirective ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -68,8 +68,7 @@ const routes = [
   providers: [
     CreateAdGuard,
     AdTypeResolver
-  ],
-  entryComponents: [AdListItemDefaultComponent]
+  ]
 })
 export class AdsModule {
   constructor(eds: EntityDefinitionService) {

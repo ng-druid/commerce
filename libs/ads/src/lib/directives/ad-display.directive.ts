@@ -1,8 +1,8 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[classifiedsUiAdTypePluginHost]'
+  selector: '[classifiedsUiAdDisplayHost]'
 })
-export class AdTypePluginDirective {
+export class AdDisplayDirective {
   constructor(public viewContainerRef: ViewContainerRef) { }
 }

@@ -1,16 +1,15 @@
-import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver, Type, OnChanges, SimpleChanges } from '@angular/core';
-import { AdTypePlugin, AdListItem, AdType } from '../../models/ads.models';
-import { AdTypePluginDirective } from '../../directives/ad-type-plugin.directive';
+import { Component, OnInit, Input, Inject, TemplateRef, ContentChild } from '@angular/core';
+import { MediaSettings, MEDIA_SETTINGS } from '@classifieds-ui/media';
+import { INgxGalleryOptions, INgxGalleryImage, NgxGalleryAnimation } from '@kolkov/ngx-gallery';
+import { AttributeMatcherService } from '@classifieds-ui/attributes';
+import { AdListItem, AdType, AdTypePlugin } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-list-item',
-  styleUrls: ['./ad-list-item.component.scss'],
-  template: `<ng-container><ng-template classifiedsUiAdTypePluginHost></ng-template></ng-container>`
+  templateUrl: './ad-list-item.component.html',
+  styleUrls: ['./ad-list-item.component.scss']
 })
-export class AdListItemComponent implements OnInit, OnChanges {
-
-  @Input()
-  plugin: AdTypePlugin;
+export class AdListItemComponent implements OnInit {
 
   @Input()
   ad: AdListItem;
@@ -18,22 +17,35 @@ export class AdListItemComponent implements OnInit, OnChanges {
   @Input()
   adType: AdType;
 
-  @ViewChild(AdTypePluginDirective, {static: true}) pluginHost: AdTypePluginDirective;
+  @Input()
+  plugin: AdTypePlugin;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
+  mediaBaseUrl: string;
 
-  ngOnInit() {
+  galleryOptions: Array<INgxGalleryOptions> = [
+    {
+      width: '100%',
+      height: '100%',
+      thumbnails: false,
+      preview: false,
+      imageAnimation: NgxGalleryAnimation.Slide
+    }
+  ];
+
+  galleryImages: Array<INgxGalleryImage> = [];
+
+  constructor(@Inject(MEDIA_SETTINGS) mediaSettings: MediaSettings, private attributesMatcher: AttributeMatcherService) {
+    this.mediaBaseUrl = mediaSettings.imageUrl;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.plugin.listItemDisplay);
-
-    const viewContainerRef = this.pluginHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-    (componentRef.instance as any).ad = this.ad;
-    (componentRef.instance as any).adType = this.adType;
+  ngOnInit(): void {
+    if(this.ad.images) {
+      this.galleryImages = this.ad.images.map(i => ({
+        small: `${this.mediaBaseUrl}/${i.path}`,
+        medium: `${this.mediaBaseUrl}/${i.path}`,
+        big: `${this.mediaBaseUrl}/${i.path}`
+      }));
+    }
   }
 
 }

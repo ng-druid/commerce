@@ -1,5 +1,5 @@
 import { AdTypes, AdTypePlugin } from './models/ads.models';
-import { AdListItemDefaultComponent } from './components/ad-list-item-default/ad-list-item-default.component';
+import { AdListItemComponent } from './components/ad-list-item/ad-list-item.component';
 
 export const mapAdType = (adType: string): AdTypes => {
   switch(adType) {
@@ -19,6 +19,6 @@ export const mapAdType = (adType: string): AdTypes => {
 export const createAdTypePlugin = (adType: string) => {
   return new AdTypePlugin({
     adType: adType,
-    listItemDisplay: AdListItemDefaultComponent
+    listItemDisplay: AdListItemComponent
   });
 };

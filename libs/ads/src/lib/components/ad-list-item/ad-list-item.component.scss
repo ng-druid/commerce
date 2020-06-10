@@ -1,0 +1,56 @@
+:host {
+  height: 100%;
+}
+
+.placeholder {
+  height: 250px;
+  background-color: rgb(184, 179, 179);
+  color: black;
+  text-align: center;
+  line-height: 250px;
+}
+
+.ad-header {
+  background-color: rgb(23, 41, 65);
+  color: white;
+  padding: .5em;
+  border-top: 1px solid rgb(23, 177, 177);
+  border-bottom: 1px solid rgb(23, 177, 177);
+}
+
+h3 {
+  text-transform: uppercase;
+  font-size: larger;
+  font-weight: lighter;
+  padding: 0;
+  margin: 0;
+  color: white;
+  letter-spacing: .15em;
+}
+
+.ad-content-container {
+  height: 100%;
+  background-color: white;
+}
+
+.ad-content {
+  height: 100%;
+}
+
+.ad-info {
+  padding: 0 1em;
+}
+
+.price {
+  font-size: 1.2em;
+  background-color: rgb(23, 177, 177);
+  color: white;
+  padding: .5em;
+  font-weight: lighter;
+  letter-spacing: .125em;
+  position: relative;
+}
+
+.ad-info > div {
+  margin-top: 1em;
+}
