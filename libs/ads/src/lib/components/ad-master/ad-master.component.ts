@@ -61,6 +61,9 @@ export class AdMasterComponent implements OnInit, OnChanges {
     });
   }
   ngOnChanges(changes: SimpleChanges) {
+    if(!changes.adType || !changes.adType.previousValue || (changes.adType.previousValue.name !== changes.adType.currentValue.name)) {
+      this.plugin = this.adTypePlugins.get(this.adType.name) ?? createAdTypePlugin(this.adType.name);
+    }
     // Safe guard against duplicate requests.
     if(changes.searchForm.previousValue !== changes.searchForm.currentValue && JSON.stringify(changes.searchForm.previousValue) !== JSON.stringify(changes.searchForm.currentValue)) {
       this.adsDataSource.searchForm = changes.searchForm.currentValue;

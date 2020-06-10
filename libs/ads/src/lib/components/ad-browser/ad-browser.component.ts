@@ -61,7 +61,7 @@ export class AdBrowserComponent implements OnInit {
         map(types => types.find(t => t.name == adType))
       )),
     ).subscribe((adType: AdType) => {
-      this.adType = adType;
+      this.adType = new AdType(adType);
       this.searchForm = new AdSearchBarForm({ searchString: '', location: [], features: [], typeId: adType.id, attributes: {} });
     });
   }

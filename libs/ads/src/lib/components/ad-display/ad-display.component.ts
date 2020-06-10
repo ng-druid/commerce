@@ -7,7 +7,7 @@ import { AdDisplayDirective } from '../../directives/ad-display.directive';
   styleUrls: ['./ad-display.component.scss'],
   template: `<ng-container><ng-template classifiedsUiAdDisplayHost></ng-template></ng-container>`
 })
-export class AdDisplayComponent {
+export class AdDisplayComponent implements OnInit, OnChanges {
   @Input()
   plugin: AdTypePlugin;
 
@@ -24,17 +24,25 @@ export class AdDisplayComponent {
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
+  ngOnInit() {
+    // this.rebuild()
+  }
+
   ngOnChanges(changes: SimpleChanges) {
-    if(this.display && this.plugin) {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.plugin[this.display]);
-
-      const viewContainerRef = this.displayHost.viewContainerRef;
-      viewContainerRef.clear();
-
-      const componentRef = viewContainerRef.createComponent(componentFactory);
-      (componentRef.instance as any).ad = this.ad;
-      (componentRef.instance as any).adType = this.adType;
-      (componentRef.instance as any).plugin = this.plugin;
+    if(!changes.ad || !changes.ad.previousValue || (changes.ad.previousValue.id !== changes.ad.currentValue.id)) {
+      this.rebuild();
     }
+  }
+
+  rebuild() {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.plugin[this.display]);
+
+    const viewContainerRef = this.displayHost.viewContainerRef;
+    viewContainerRef.clear();
+
+    const componentRef = viewContainerRef.createComponent(componentFactory);
+    (componentRef.instance as any).ad = this.ad;
+    (componentRef.instance as any).adType = this.adType;
+    (componentRef.instance as any).plugin = this.plugin;
   }
 }
