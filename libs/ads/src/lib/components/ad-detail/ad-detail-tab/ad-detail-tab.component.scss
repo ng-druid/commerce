@@ -4,4 +4,23 @@
 
 .description {
   white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.photo-container {
+  padding: 0 1em 1em 0;
+  float: left;
+  overflow: hidden;
+}
+
+.photo {
+  width: 120px;
+  height: 140px;
+  background-color: gray;
+  float: left;
+}
+
+.photo img {
+  max-width: 100%;
+  height: auto;
 }

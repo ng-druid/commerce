@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { AdDetail } from '../../../models/ads.models';
+import { AdDetail, AdProfile } from '../../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-ad-detail-tab',
@@ -10,6 +10,8 @@ import { AdDetail } from '../../../models/ads.models';
 export class AdDetailTabComponent {
   @Input()
   ad: AdDetail;
+  @Input()
+  profile: AdProfile;
   @Input()
   mediaBaseUrl: string;
 }

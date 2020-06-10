@@ -83,11 +83,11 @@
               <input matInput placeholder="Company Name" formControlName="companyName">
             </mat-form-field>
             <div>
-              <ngx-dropzone [multiple]="false" (change)="onSelect($event)">
+              <ngx-dropzone [multiple]="false" [accept]="imageTypes" (change)="onSelectLogo($event)">
                 <ngx-dropzone-label>Drag and Drop Logo Here</ngx-dropzone-label>
-                <ngx-dropzone-preview *ngIf="logo" [removable]="true" (removed)="onRemove()">
+                <ngx-dropzone-image-preview *ngIf="logo" [removable]="true" [file]="logo" (removed)="onRemoveLogo()">
                   <ngx-dropzone-label>{{ logo.name }} ({{ logo.type }})</ngx-dropzone-label>
-                </ngx-dropzone-preview>
+                </ngx-dropzone-image-preview>
               </ngx-dropzone>
             </div>
           </div>
@@ -99,11 +99,11 @@
       <div [fxFlex]="this.individual ? 10 : 100">
         <div *ngIf="individual" class="section-heading">Photos</div>
         <div *ngIf="!individual" class="section-heading">Locations</div>
-        <ngx-dropzone *ngIf="individual" [multiple]="false" (change)="onSelect($event)">
+        <ngx-dropzone *ngIf="individual" [multiple]="false" [accept]="imageTypes" (change)="onSelectHeadshot($event)">
           <ngx-dropzone-label>Drag and Drop Headshot Here</ngx-dropzone-label>
-          <ngx-dropzone-preview *ngIf="headshot" [removable]="true" (removed)="onRemove()">
+          <ngx-dropzone-image-preview *ngIf="headshot" [removable]="true" [file]="headshot" (removed)="onRemoveHeadshot()">
             <ngx-dropzone-label>{{ headshot.name }} ({{ headshot.type }})</ngx-dropzone-label>
-          </ngx-dropzone-preview>
+          </ngx-dropzone-image-preview>
         </ngx-dropzone>
         <div *ngIf="isTypeSelected && !individual" fxLayout="column">
           <div formArrayName="locations" *ngFor="let l of locations.controls; let i = index;" class="location">

@@ -6,7 +6,7 @@ import { Ad } from '../../models/ads.models';
   templateUrl: './vehicle-item-info.component.html',
   styleUrls: ['./vehicle-item-info.component.scss']
 })
-export class VehicleItemInfoComponent implements OnInit, OnChanges {
+export class VehicleItemInfoComponent implements OnInit {
 
   @Input()
   ad: Ad;
@@ -14,11 +14,6 @@ export class VehicleItemInfoComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.ad);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(this.ad);
   }
 
 }

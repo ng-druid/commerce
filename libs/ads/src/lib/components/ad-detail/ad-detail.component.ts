@@ -6,7 +6,7 @@ import { iif, of, EMPTY, forkJoin } from 'rxjs';
 import { map, filter, switchMap, tap, withLatestFrom, mergeMap } from 'rxjs/operators';
 import { MEDIA_SETTINGS, MediaSettings } from '@classifieds-ui/media';
 import { CitiesService, City } from '@classifieds-ui/cities';
-import { AdType, Ad, AdTypePlugin } from '../../models/ads.models';
+import { AdType, Ad, AdTypePlugin, AdProfile } from '../../models/ads.models';
 import { createAdTypePlugin } from '../../ad.helpers';
 import { AdTypePluginsService } from '../../services/ad-type-plugins.service';
 
@@ -25,11 +25,14 @@ export class AdDetailComponent implements OnInit {
   selectedTabIndex = 0;
   adType: AdType;
   plugin: AdTypePlugin;
+  profile: AdProfile;
   private adsService: EntityCollectionService<Ad>;
   private adTypesService: EntityCollectionService<AdType>;
+  private adProfilesService: EntityCollectionService<AdProfile>;
   constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private mo: MediaObserver, private route: ActivatedRoute, private citiesService: CitiesService, private adTypePlugins: AdTypePluginsService, es: EntityServices) {
     this.adsService = es.getEntityCollectionService('Ad');
     this.adTypesService = es.getEntityCollectionService('AdType');
+    this.adProfilesService = es.getEntityCollectionService('AdProfile');
   }
   ngOnInit() {
     this.mediaBaseUrl = this.mediaSettings.imageUrl;
@@ -37,21 +40,22 @@ export class AdDetailComponent implements OnInit {
       map(p => p.get('adId')),
       filter(adId => typeof(adId) === 'string'),
       tap(() => this.displayOverlay = true),
-      switchMap(adId => this.adsService.getByKey(adId).pipe(
-        switchMap(ad => this.adTypesService.getAll().pipe(
-          map(types => types.find(t => t.id === ad.typeId)),
-          map<AdType, [Ad, AdType]>(adType => [ad, adType])
-        ))
-      )), /*.pipe(
-        switchMap(ad =>
-          ad.location && ad.location.length === 2 ?
-          this.citiesService.getWithQuery({ lat: `${ad.location[1]}`, lng: `${ad.location[0]}`}).pipe(
-            map(cities => cities.length > 0 ? cities[0] : undefined),
-            map(city => [ad, city])
-          ) : of([ad])
-        )
-      )*/
-    ).subscribe(([ad, adType]) => {
+      switchMap(adId => this.adsService.getByKey(adId)),
+      switchMap(ad =>
+        forkJoin([
+          of(ad),
+          this.adTypesService.getAll().pipe(
+            map(types => types.find(t => t.id === ad.typeId))
+          ),
+          iif(
+            () => ad.profileId !== undefined,
+            this.adProfilesService.getByKey(ad.profileId),
+            of(undefined)
+          )
+        ])
+      )
+    ).subscribe(([ad, adType, profile]) => {
+      this.profile = profile;
       this.adType = adType;
       this.plugin = this.adTypePlugins.get(adType.name) ?? createAdTypePlugin(adType.name);
       this.displayOverlay = false;

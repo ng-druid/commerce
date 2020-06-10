@@ -1,1 +1,5 @@
-<p>vehicle info</p>
+<div class="info-container">
+<div>Year: {{ ad.attributes | attribute:'year' }}</div>
+<div>Make: {{ ad.attributes | attribute:'make' }}</div>
+<div>Model: {{ ad.attributes | attribute:'model' }}</div>
+</div>

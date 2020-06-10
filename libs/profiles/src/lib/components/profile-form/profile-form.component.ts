@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, AbstractControl, RequiredValidator, FormArray } from '@angular/forms';
 import { Profile, ProfileSubtypes, AdTypes, ProfileTypes } from '../../models/profiles.model';
+import { ProfileFormPayload } from '../../models/form.models';
 
 @Component({
   selector: 'classifieds-ui-profile-form',
@@ -16,7 +17,7 @@ export class ProfileFormComponent implements OnInit, OnChanges {
   parent: Profile;
 
   @Output()
-  submitted = new EventEmitter();
+  submitted = new EventEmitter<ProfileFormPayload>();
 
   individualRequiredFields = ['firstName', 'lastName', 'preferredName'];
   businessRequiredFields = ['companyName'];
@@ -25,6 +26,8 @@ export class ProfileFormComponent implements OnInit, OnChanges {
 
   headshot: File;
   logo: File;
+
+  imageTypes = '.png,.jpg,.jpeg,.gif';
 
   profileForm = this.fb.group({
     type: [ProfileTypes.Company, Validators.required ],
@@ -108,7 +111,7 @@ export class ProfileFormComponent implements OnInit, OnChanges {
 
   submit() {
     if(this.profileForm.valid) {
-      this.submitted.emit(new Profile(this.profileForm.value));
+      this.submitted.emit(new ProfileFormPayload({ profile: new Profile(this.profileForm.value), logo: this.logo, headshot: this.headshot }));
     }
   }
 
@@ -151,12 +154,20 @@ export class ProfileFormComponent implements OnInit, OnChanges {
     }));
   }
 
-  onSelect(event) {
-    // this.files.push(...event.addedFiles);
+  onSelectLogo(event) {
+    this.logo = event.addedFiles[0];
   }
 
-  onRemove(event) {
-    // this.files.splice(this.files.indexOf(event), 1);
+  onSelectHeadshot(event) {
+    this.headshot = event.addedFiles[0];
+  }
+
+  onRemoveLogo(event) {
+    this.logo = undefined;
+  }
+
+  onRemoveHeadshot(event) {
+    this.headshot = undefined;
   }
 
   applyFormRequirments() {

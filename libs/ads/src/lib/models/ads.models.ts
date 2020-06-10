@@ -180,3 +180,24 @@ export class AdProfileItem {
     }
   }
 }
+
+export class AdProfile {
+  id: string;
+  parentId: string;
+  title: string;
+  headshot: AdImage;
+  logo: AdImage;
+  constructor(data: AdProfile) {
+    if(data) {
+      this.id = data.id;
+      this.parentId = data.parentId;
+      this.title = data.title;
+      if(data.headshot) {
+        this.headshot = new AdImage(data.headshot);
+      }
+      if(data.logo) {
+        this.logo = new AdImage(data.logo);
+      }
+    }
+  }
+}

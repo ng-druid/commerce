@@ -53,7 +53,27 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdDetailHeaderComponent, AdFormComponent, ManageAdComponent, AdDisplayDirective, AdDisplayComponent, RealestateItemInfoComponent, RealestateDetailHeaderComponent ],
+  declarations: [
+    AdDetailComponent,
+    CreateAdComponent,
+    AdMasterComponent,
+    AdSearchBarComponent,
+    AdBrowserComponent,
+    AdDetailTabComponent,
+    AdGalleryTabComponent,
+    AdFeaturesFilterComponent,
+    AdAttributesFilterComponent,
+    AdListItemComponent,
+    AdDetailHeaderComponent,
+    AdFormComponent,
+    ManageAdComponent,
+    AdDisplayDirective,
+    AdDisplayComponent,
+    RealestateItemInfoComponent,
+    RealestateDetailHeaderComponent,
+    VehicleItemInfoComponent,
+    VehicleDetailHeaderComponent
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
