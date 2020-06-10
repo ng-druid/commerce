@@ -36,6 +36,9 @@ import { AdListItemComponent } from './components/ad-list-item/ad-list-item.comp
 import { AdFormComponent } from './components/ad-form/ad-form.component';
 import { ManageAdComponent } from './components/manage-ad/manage-ad.component';
 import { AdDisplayComponent } from './components/ad-display/ad-display.component';
+import { RealestateItemInfoComponent } from './displays/realestate/realestate-item-info/realestate-item-info.component';
+import { AD_TYPE_PLUGIN } from './ad.tokens';
+import { AdTypePlugin } from './models/ads.models';
 
 const routes = [
   { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
@@ -46,7 +49,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdFormComponent, ManageAdComponent, AdDisplayComponent, AdDisplayDirective ],
+  declarations: [AdDetailComponent, CreateAdComponent, AdMasterComponent, AdSearchBarComponent, AdBrowserComponent, AdDetailTabComponent, AdGalleryTabComponent, AdFeaturesFilterComponent, AdAttributesFilterComponent, AdListItemComponent, AdFormComponent, ManageAdComponent, AdDisplayDirective, AdDisplayComponent, RealestateItemInfoComponent ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -67,7 +70,8 @@ const routes = [
   ],
   providers: [
     CreateAdGuard,
-    AdTypeResolver
+    AdTypeResolver,
+    { provide: AD_TYPE_PLUGIN, useValue: new AdTypePlugin({ adType: 'realestate', listItemDisplay: AdListItemComponent, listItemInfoDisplay: RealestateItemInfoComponent }), multi: true }
   ]
 })
 export class AdsModule {

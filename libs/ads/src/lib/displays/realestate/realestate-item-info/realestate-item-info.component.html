@@ -1,0 +1,12 @@
+<div class="info-container">
+  <div class="price">{{ ad.attributes | attribute:'price' | numeral:'$0,0.00' | na }}</div>
+  <div>
+    <div fxFlex fxLayout="row">
+      <div fxFlex="50">{{ ad.attributes | attribute:'beds' }} Beds</div>
+      <div fxFlex="50">{{ ad.attributes | attribute:'sqft' }} Sqft</div>
+    </div>
+  </div>
+  <div>{{ ad.attributes | attribute:'baths' }} Baths</div>
+</div>
+<!-- <div>{{ phone }}</div> -->
+<!-- <p>>contact</p> -->
