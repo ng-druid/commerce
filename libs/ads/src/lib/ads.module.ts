@@ -36,7 +36,7 @@ import { AdListItemComponent } from './components/ad-list-item/ad-list-item.comp
 import { AdFormComponent } from './components/ad-form/ad-form.component';
 import { ManageAdComponent } from './components/manage-ad/manage-ad.component';
 import { AdDisplayComponent } from './components/ad-display/ad-display.component';
-import { RealestateItemInfoComponent } from './displays/realestate/realestate-item-info/realestate-item-info.component';
+import { RealestateItemInfoComponent } from './displays/realestate-item-info/realestate-item-info.component';
 import { AD_TYPE_PLUGIN } from './ad.tokens';
 import { AdTypePlugin } from './models/ads.models';
 

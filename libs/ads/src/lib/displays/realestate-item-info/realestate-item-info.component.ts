@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Ad } from '../../../models/ads.models';
+import { Ad } from '../../models/ads.models';
 
 @Component({
   selector: 'classifieds-ui-realestate-item-info',
