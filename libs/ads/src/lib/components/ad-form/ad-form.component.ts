@@ -31,6 +31,7 @@ export class AdFormComponent implements OnInit, OnDestroy {
   set ad(ad: Ad | undefined) {
     this._ad = ad;
     this.attributeValues = ad ? ad.attributes : [];
+    this.featureSets = ad ? ad.featureSets.map(v => new Vocabulary(v)) : [];
     this.adTypeFormGroup.setValue({ adType: ad ? ad.typeId : '' });
     const [city, state, zip] = ad && ad.cityDisplay ? ad.cityDisplay.replace(/(^.*?)\(([0-9]+)\)$/, '$1,$2').split(',').map(v => v.trim()): [undefined, undefined, undefined];
     if(city && state && zip) {
