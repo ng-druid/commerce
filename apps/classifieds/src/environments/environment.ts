@@ -52,7 +52,7 @@ export const environment = {
   chatSettings: {
     // endpointUrl: "https://localhost:44340/chat"
     // endpointUrl: "http://classifieds-chat-dev-2064029101.us-east-1.elb.amazonaws.com"
-    endpointUrl: "wss://5b1dxqpji3.execute-api.us-east-1.amazonaws.com/dev"
+    endpointUrl: "wss://61rdyvvayj.execute-api.us-east-1.amazonaws.com/dev"
   },
   oktaSettings: {
     redirectUri: 'http://localhost:4000/implicit/callback',

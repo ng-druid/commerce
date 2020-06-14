@@ -1,1 +1,10 @@
-<p>vehicle header</p>
+<div class="ad-header-info">
+  <h1>{{ ad.title }}</h1>
+  <ul>
+    <li>{{ ad.attributes | attribute:'year' }} Year</li>
+    <li>{{ ad.attributes | attribute:'make' }} Make</li>
+    <li>{{ ad.attributes | attribute:'model' }} Model</li>
+    <li *ngIf="ad.cityDisplay">{{ ad.cityDisplay }}</li>
+  </ul>
+</div>
+

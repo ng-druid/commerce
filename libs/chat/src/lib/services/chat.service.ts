@@ -36,6 +36,7 @@ export class ChatService {
             // throw e;
           }
           this.ws.addEventListener('open', () => {
+            console.log("connected");
             obs.next(true);
             obs.complete();
           });

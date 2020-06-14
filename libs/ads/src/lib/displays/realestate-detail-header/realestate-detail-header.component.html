@@ -1,5 +1,9 @@
-<h1>{{ ad.title }}</h1>
-<div>{{ ad.attributes | attribute:'beds' }} Beds</div>
-<div>{{ ad.attributes | attribute:'baths' }} Baths</div>
-<div>{{ ad.attributes | attribute:'sqft' }} Sqft</div>
-<p *ngIf="ad.cityDisplay">{{ ad.cityDisplay }}</p>
+<div class="ad-header-info">
+  <h1>{{ ad.title }}</h1>
+  <ul>
+    <li>{{ ad.attributes | attribute:'beds' }} Beds</li>
+    <li>{{ ad.attributes | attribute:'baths' }} Baths</li>
+    <li>{{ ad.attributes | attribute:'sqft' }} Sqft</li>
+    <li *ngIf="ad.cityDisplay">{{ ad.cityDisplay }}</li>
+  </ul>
+</div>
