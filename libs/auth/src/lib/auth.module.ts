@@ -9,12 +9,11 @@ import { AuthEffects } from './+state/auth.effects';
 import { AuthFacade } from './+state/auth.facade';
 import { userManagerFactory } from './auth.factories';
 import { CLIENT_SETTINGS } from './auth.tokens';
-import { EntityDefinitionService, EntityDataService } from '@ngrx/data';
+import { EntityDefinitionService } from '@ngrx/data';
 import { initAuthFactory, authWebStorageFactory } from './auth.factories';
 import { AuthWebStorageService } from './services/auth-web-storage.service';
 import { entityMetadata } from './entity-metadata';
 import { TransferState } from '@angular/platform-browser';
-import { PublicUserProfilesService } from './services/public-user-profiles-data.service';
 
 @NgModule({
   imports: [
@@ -25,11 +24,8 @@ import { PublicUserProfilesService } from './services/public-user-profiles-data.
   ]
 })
 export class AuthModule {
-  constructor(eds: EntityDefinitionService, entityDataService: EntityDataService, publicUserProfilesDataService: PublicUserProfilesService) {
+  constructor(eds: EntityDefinitionService) {
     eds.registerMetadataMap(entityMetadata);
-    entityDataService.registerServices({
-      PublicUserProfile: publicUserProfilesDataService
-    });
   }
   static forRoot(): ModuleWithProviders {
     return {

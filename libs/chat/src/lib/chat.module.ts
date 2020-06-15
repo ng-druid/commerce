@@ -9,8 +9,7 @@ import { ChatDetailComponent } from './components/chat-detail/chat-detail.compon
 import { ChatBrowserComponent } from './components/chat-browser/chat-browser.component';
 import { MaterialModule } from '@classifieds-ui/material';
 import { entityMetadata } from './entity-metadata';
-import { EntityDefinitionService, EntityDataService, EntityDataModule } from '@ngrx/data';
-import { ChatMessagesDataService } from './services/chat-messages-data.service';
+import { EntityDefinitionService } from '@ngrx/data';
 import { StoreModule } from '@ngrx/store';
 import * as fromChat from './features/chat/chat.reducer';
 import { EffectsModule } from '@ngrx/effects';
@@ -36,14 +35,7 @@ const routes = [
   exports: [ChatBoxComponent]
 })
 export class ChatModule {
-  constructor(
-    eds: EntityDefinitionService,
-    entityDataService: EntityDataService,
-    chatMessagesDataService: ChatMessagesDataService
-  ) {
+  constructor(eds: EntityDefinitionService) {
     eds.registerMetadataMap(entityMetadata);
-    entityDataService.registerServices({
-      ChatMessage: chatMessagesDataService
-    });
   }
 }
