@@ -46,6 +46,7 @@ export class ChatService {
             obs.complete();
           });
           this.ws.addEventListener('message', (evt) => {
+            console.log(evt);
             const data = JSON.parse(evt.data);
             const message = new ChatMessage(data);
             this.store.dispatch(fromActions.recieveChatMessage({ data: message }));
