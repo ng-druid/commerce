@@ -33,6 +33,7 @@
               "apps/classifieds/src/theme.scss"
             ],
             "scripts": [
+              "node_modules/marked/lib/marked.js",
               {
                 "input": "node_modules/oidc-client/dist/oidc-client.js",
                 "inject": false,

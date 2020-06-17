@@ -21,6 +21,7 @@ import { PROFILE_SETTINGS, ProfileSettings } from '@classifieds-ui/profiles';
 import { NbA11yModule } from '@nebular/theme';
 // import { JsonschemaModule } from '@classifieds-ui/jsonschema';
 import { TAXONOMY_SETTINGS, TaxonomySettings } from '@classifieds-ui/taxonomy';
+import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -78,6 +79,7 @@ const oktaConfig = {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    MarkdownModule.forRoot(),
     NbA11yModule.forRoot(),
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
     StoreDevtoolsModule.instrument({

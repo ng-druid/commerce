@@ -70,6 +70,7 @@
     "js-cookie": "^2.2.1",
     "ngrx-store-localstorage": "^9.0.0",
     "ngx-dropzone": "^2.2.2",
+    "ngx-markdown": "^9.1.1",
     "numeral": "^2.0.6",
     "oidc-client": "^1.10.1",
     "qs": "^6.9.3",
