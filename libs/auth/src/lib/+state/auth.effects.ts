@@ -22,6 +22,16 @@ export class AuthEffects {
     { dispatch: false }
   );
 
+  logout$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AuthActionTypes.Logout),
+    tap(() => {
+      this.userManager.signoutRedirect();
+    })
+  ),
+  { dispatch: false }
+);
+
   completeAuthentication$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActionTypes.CompleteAuthentication),

@@ -18,7 +18,7 @@ export class LogoutInterceptor implements HttpInterceptor {
           if(e.status === 401) {
             this.authFacade.logout();
             // alert('You have been automatically logged out due to inactivity. Please login again.');
-            this.router.navigateByUrl('/');
+            //this.router.navigateByUrl('/');
           }
         }
       })

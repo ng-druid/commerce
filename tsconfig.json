@@ -30,7 +30,8 @@
       "@classifieds-ui/autos": ["libs/autos/src/index.ts"],
       "@classifieds-ui/realestate": ["libs/realestate/src/index.ts"],
       "@classifieds-ui/profiles": ["libs/profiles/src/index.ts"],
-      "@classifieds-ui/jsonschema": ["libs/jsonschema/src/index.ts"]
+      "@classifieds-ui/jsonschema": ["libs/jsonschema/src/index.ts"],
+      "@classifieds-ui/pages": ["libs/pages/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -65,6 +65,9 @@
     },
     "jsonschema": {
       "tags": []
+    },
+    "pages": {
+      "tags": []
     }
   }
 }
