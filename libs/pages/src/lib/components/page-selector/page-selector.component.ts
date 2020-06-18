@@ -1,7 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { EntityServices, EntityCollectionService, DefaultDataServiceConfig } from '@ngrx/data';
+import { Component, OnInit, Input } from '@angular/core';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { Page } from '../../models/page.models';
+import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { Observable } from 'rxjs';
+import { ContentInstance } from '@classifieds-ui/content';
 
 @Component({
   selector: 'classifieds-ui-page-selector',
@@ -10,14 +12,11 @@ import { Observable } from 'rxjs';
 })
 export class PageSelectorComponent implements OnInit {
 
-  @Output()
-  selected = new EventEmitter<Page>()
-
   pages$: Observable<Array<Page>>;
 
   private pagesService: EntityCollectionService<Page>;
 
-  constructor(es: EntityServices) {
+  constructor(es: EntityServices, private pageBuilderFacade: PageBuilderFacade) {
     this.pagesService = es.getEntityCollectionService('Page');
   }
 
@@ -26,8 +25,7 @@ export class PageSelectorComponent implements OnInit {
   }
 
   onItemSelect(page: Page) {
-    console.log(page);
-    this.selected.emit(page);
+    this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: 'page' }));
   }
 
 }

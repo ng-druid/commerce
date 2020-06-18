@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {DisplayGrid, GridsterConfig, GridsterItem, GridType} from 'angular-gridster2';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
+import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 
 @Component({
   selector: 'classifieds-ui-layout-construction-form',
@@ -42,9 +43,13 @@ export class LayoutConstructionFormComponent implements OnInit {
     {cols: 1, rows: 1, y: 0, x: 6}*/
   ];
 
-  constructor(private bs: MatBottomSheet) { }
+  constructor(private bs: MatBottomSheet, private pageBuilderFadcade: PageBuilderFacade) { }
 
   ngOnInit(): void {
+    this.pageBuilderFadcade.getContentInstance$.subscribe(c => {
+      console.log(c);
+      this.bs.dismiss();
+    });
   }
 
   changedOptions() {

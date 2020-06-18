@@ -21,6 +21,10 @@ import { CreateLayoutComponent } from './components/create-layout/create-layout.
 import { ContentSelectorComponent } from './components/content-selector/content-selector.component';
 import { PageSelectorComponent } from './components/page-selector/page-selector.component';
 import { ContentSelectionHostDirective } from './directives/content-selection-host.directive';
+import { StoreModule } from '@ngrx/store';
+import * as fromPageBuilder from './features/page-builder/page-builder.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { PageBuilderEffects } from './features/page-builder/page-builder.effects';
 
 const routes = [
   { path: 'create-page', component: CreatePageComponent },
@@ -39,14 +43,16 @@ const routes = [
     RouterModule.forChild(routes),
     MarkdownModule.forChild(),
     GridsterModule,
-    UtilsModule
+    UtilsModule,
+    StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
+    EffectsModule.forFeature([PageBuilderEffects])
   ],
   declarations: [PageConstructionFormComponent, CreatePageComponent, PageComponent, PageControllerComponent, LayoutConstructionFormComponent, CreateLayoutComponent, ContentSelectorComponent, PageSelectorComponent, ContentSelectionHostDirective],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PageComponent , multi: true},
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
-    { provide: CONTENT_PROVIDER, useValue: new ContentProvider({ title: 'page', selectionComponent: PageSelectorComponent }), multi: true }
+    { provide: CONTENT_PROVIDER, useValue: new ContentProvider({ title: 'Page', name: 'page', selectionComponent: PageSelectorComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]
 })
