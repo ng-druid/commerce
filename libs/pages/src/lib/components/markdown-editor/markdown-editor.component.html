@@ -1,7 +1,16 @@
 <form [formGroup]="contentForm" (ngSubmit)="submit()">
   <h2 class="mat-subheading-2" mat-dialog-title>Add Markdown Content</h2>
   <mat-dialog-content>
-    <textarea formControlName="content" cols="100" rows="40"></textarea>
+    <div class="content-inner">
+      <as-split direction="vertical">
+        <as-split-area size="50">
+          <textarea formControlName="content" cols="100" rows="40"></textarea>
+        </as-split-area>
+        <as-split-area size="50">
+          <classifieds-ui-dynamic-content-viewer [content]="preview | markdown"></classifieds-ui-dynamic-content-viewer>
+        </as-split-area>
+      </as-split>
+    </div>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button type="submit" mat-raised-button color="primary" mat-dialog-close [disabled]="!contentForm.valid">Save</button>

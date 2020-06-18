@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { AttributeValue } from '@classifieds-ui/attributes';
 
 @Component({
   selector: 'classifieds-ui-page-pane-renderer',
@@ -6,6 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./page-pane-renderer.component.scss']
 })
 export class PagePaneRendererComponent implements OnInit {
+
+  @Input()
+  settings: Array<AttributeValue> = [];
+
+
 
   constructor() { }
 

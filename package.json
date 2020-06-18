@@ -63,6 +63,7 @@
     "@nrwl/angular": "^9.2.3",
     "@okta/okta-angular": "^2.0.0",
     "angular-gridster2": "^9.2.0",
+    "angular-split": "^3.0.3",
     "aws-serverless-express": "^3.3.8",
     "bson": "^4.0.2",
     "core-js": "^2.5.4",

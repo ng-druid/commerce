@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChildren, QueryList, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, Inject } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {DisplayGrid, GridsterConfig, GridType} from 'angular-gridster2';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
-import { PanelContentHostDirective } from '../../directives/panel-content-host.directive';
+import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { Layout } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-layout-construction-form',
@@ -38,9 +38,6 @@ export class LayoutConstructionFormComponent implements OnInit {
 
   private contentProviders: Array<ContentProvider> = [];
 
-  @ViewChild(MatMenuTrigger, {static: true}) menuTriggers: QueryList<MatMenuTrigger>
-  @ViewChildren(PanelContentHostDirective) contentPanels: QueryList<PanelContentHostDirective>;
-
   get panels() {
     return (this.layoutForm.get('panels') as FormArray);
   }
@@ -55,6 +52,10 @@ export class LayoutConstructionFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  submit() {
+    console.log(new Layout(this.layoutForm.value));
   }
 
   removeItem(index: number) {

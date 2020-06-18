@@ -1,8 +1,8 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[classifiedsUiPanelContentHost]'
+  selector: '[classifiedsUiPaneContentHost]'
 })
-export class PanelContentHostDirective {
+export class PaneContentHostDirective {
   constructor(public viewContainerRef: ViewContainerRef) { }
 }

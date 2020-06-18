@@ -15,3 +15,15 @@
 button.delete {
   float: right;
 }
+
+.preview-area {
+  display: none;
+}
+
+.preview-area.visible {
+  display: block;
+  height: 300px;
+  overflow-y: scroll;
+  border: 1px solid black;
+  padding: .5em;
+}

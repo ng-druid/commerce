@@ -1,14 +1,13 @@
-<form [formGroup]="layoutForm">
-
-  <button mat-mini-fab (click)="addItem()" class="add-button cols-2">
-    <mat-icon>add</mat-icon>
-  </button>
-
+<form [formGroup]="layoutForm" (ngSubmit)="submit()">
+  <div class="main-controls">
+    <button type="button" (mousedown)="addItem()">Add Column</button>
+    <button type="submit">Save</button>
+  </div>
   <gridster formArrayName="panels" [options]="options">
     <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index" formGroupName="{{i}}">
       <div class="panel-header">
-        <button (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
-        <button class="delete" (mousedown)="removeItem(i)" (touchstart)="removeItem(i)">Delete</button>
+        <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
+        <button type="button" class="delete" (mousedown)="removeItem(i)" (touchstart)="removeItem(i)">Delete</button>
       </div>
       <div class="panel" formArrayName="panes">
         <ng-container *ngFor="let pane of panelPanes(i).controls; let j = index">
@@ -17,6 +16,5 @@
       </div>
     </gridster-item>
   </gridster>
-
 </form>
 

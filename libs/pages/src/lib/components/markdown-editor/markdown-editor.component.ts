@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AttributeTypes, AttributeValue } from '@classifieds-ui/attributes';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { ContentInstance } from '@classifieds-ui/content';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-markdown-editor',
@@ -16,6 +17,8 @@ export class MarkdownEditorComponent implements OnInit {
     content: this.fb.control('', Validators.required)
   });
 
+  preview: string;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private panelFormGroup: FormGroup,
     private fb: FormBuilder,
@@ -23,6 +26,12 @@ export class MarkdownEditorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.contentForm.get("content").valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(500),
+    ).subscribe(v => {
+      this.preview = v;
+    })
   }
 
   submit() {

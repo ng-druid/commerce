@@ -1,7 +1,9 @@
 <div class="editable-pane-wrapper">
   <div class="pane-header">
-    <button (click)="onEditClick()">Edit</button>
-    <button class="delete" (click)="onDeleteClick()">Delete</button>
+    <button type="button" (click)="onEditClick()">Edit</button>
+    <button *ngIf="!preview" type="button" (click)="onPreviewClick()">Preview</button>
+    <button *ngIf="preview" type="button" (click)="onDisablePreviewClick()">Disable Preview</button>
+    <button type="button" class="delete" (click)="onDeleteClick()">Delete</button>
   </div>
   <div class="inner-pane-wrapper">
     <mat-expansion-panel>
@@ -9,9 +11,12 @@
         <mat-panel-title>Content: {{ contentProvider.title }}</mat-panel-title>
         <mat-panel-description>See Settings</mat-panel-description>
       </mat-expansion-panel-header>
-      <ul *ngFor="let setting of settings">
-        <li>{{ setting.displayName }}: {{ settings | attribute: setting.name }}</li>
-      </ul>
+      <div [hidden]="preview">
+        <ul *ngFor="let setting of settings">
+          <li>{{ setting.displayName }}: {{ settings | attribute: setting.name }}</li>
+        </ul>
+      </div>
+      <div class="preview-area" [ngClass]="{'visible': preview }"><ng-container><ng-template classifiedsUiPaneContentHost></ng-template></ng-container></div>
     </mat-expansion-panel>
   </div>
 </div>
