@@ -27,6 +27,7 @@ import * as fromPageBuilder from './features/page-builder/page-builder.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { PageBuilderEffects } from './features/page-builder/page-builder.effects';
 import { PagePaneRendererComponent } from './components/page-pane-renderer/page-pane-renderer.component';
+import { EditablePaneComponent } from './components/editable-pane/editable-pane.component';
 
 const routes = [
   { path: 'create-page', component: CreatePageComponent },
@@ -49,12 +50,13 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [PageConstructionFormComponent, CreatePageComponent, PageComponent, PageControllerComponent, LayoutConstructionFormComponent, CreateLayoutComponent, ContentSelectorComponent, PageSelectorComponent, ContentSelectionHostDirective, PanelContentHostDirective, PagePaneRendererComponent],
+  declarations: [PageConstructionFormComponent, CreatePageComponent, PageComponent, PageControllerComponent, LayoutConstructionFormComponent, CreateLayoutComponent, ContentSelectorComponent, PageSelectorComponent, ContentSelectionHostDirective, PanelContentHostDirective, PagePaneRendererComponent, EditablePaneComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PageComponent , multi: true},
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
-    { provide: CONTENT_PROVIDER, useValue: new ContentProvider({ title: 'Page', name: 'page', selectionComponent: PageSelectorComponent, renderComponent: PagePaneRendererComponent }), multi: true }
+    { provide: CONTENT_PROVIDER, useValue: new ContentProvider({ title: 'Page', name: 'page', selectionComponent: PageSelectorComponent, renderComponent: PagePaneRendererComponent }), multi: true },
+    { provide: CONTENT_PROVIDER, useValue: new ContentProvider({ title: 'Markdown', name: 'markdown', selectionComponent: undefined, renderComponent: PagePaneRendererComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]
 })

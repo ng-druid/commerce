@@ -1,4 +1,5 @@
 import { ContentInstance } from '@classifieds-ui/content';
+import { AttributeValue } from '@classifieds-ui/attributes';
 
 export class Page {
   site: string;
@@ -21,11 +22,37 @@ export class Page {
   }
 }
 
+export class Layout {
+  panels: Array<Panel> = [];
+  constructor(data?: Layout) {
+    if(data) {
+      if(data.panels) {
+        this.panels = data.panels.map(p => new Panel(p));
+      }
+    }
+  }
+}
+
+export class Panel {
+  panes: Array<Pane> = [];
+  constructor(data?: Panel) {
+    if(data) {
+      if(data.panes) {
+        this.panes = data.panes.map(p => new Pane(p));
+      }
+    }
+  }
+}
+
 export class Pane {
-  contentInstance: ContentInstance;
+  contentProvider: string;
+  settings: Array<AttributeValue> = [];
   constructor(data?: Pane) {
     if(data) {
-      this.contentInstance = data.contentInstance;
+      this.contentProvider = data.contentProvider;
+      if(data.settings) {
+        this.settings = data.settings.map(a => new AttributeValue(a));
+      }
     }
   }
 }

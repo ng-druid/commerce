@@ -4,6 +4,8 @@ import { Page } from '../../models/page.models';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { Observable } from 'rxjs';
 import { ContentInstance } from '@classifieds-ui/content';
+import { FormGroup, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { AttributeTypes } from '@classifieds-ui/attributes';
 
 @Component({
   selector: 'classifieds-ui-page-selector',
@@ -12,11 +14,14 @@ import { ContentInstance } from '@classifieds-ui/content';
 })
 export class PageSelectorComponent implements OnInit {
 
+  @Input()
+  panelFormGroup: FormGroup;
+
   pages$: Observable<Array<Page>>;
 
   private pagesService: EntityCollectionService<Page>;
 
-  constructor(es: EntityServices, private pageBuilderFacade: PageBuilderFacade) {
+  constructor(es: EntityServices, private pageBuilderFacade: PageBuilderFacade, private fb: FormBuilder) {
     this.pagesService = es.getEntityCollectionService('Page');
   }
 
@@ -25,6 +30,17 @@ export class PageSelectorComponent implements OnInit {
   }
 
   onItemSelect(page: Page) {
+    (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
+      contentProvider: 'page',
+      settings: this.fb.array([
+        this.fb.group({
+          name: new FormControl('path', Validators.required),
+          type: new FormControl(AttributeTypes.Text, Validators.required),
+          displayName: new FormControl('Path', Validators.required),
+          value: new FormControl(page.path, Validators.required),
+        })
+      ])
+    }));
     this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: 'page' }));
   }
 

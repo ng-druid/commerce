@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
+import { FormBuilder, FormArray, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {DisplayGrid, GridsterConfig, GridsterItem, GridType} from 'angular-gridster2';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
@@ -7,6 +8,8 @@ import { PanelContentHostDirective } from '../../directives/panel-content-host.d
 import { ContentProvider, CONTENT_PROVIDER, ContentInstance } from '@classifieds-ui/content';
 import { filter } from 'rxjs/operators';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
+import { Layout } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-layout-construction-form',
@@ -29,36 +32,27 @@ export class LayoutConstructionFormComponent implements OnInit {
     }
   };
 
-  dashboard = [
-    /*{cols: 1, rows: 2, y: 0, x: 0},
-    {cols: 1, rows: 2, y: 0, x: 1},
-    {cols: 1, rows: 2, y: 0, x: 2},
-    {cols: 1, rows: 2, y: 0, x: 3},
-    {cols: 1, rows: 2, y: 0, x: 4},
-    {cols: 1, rows: 2, y: 0, x: 5},
-    {cols: 1, rows: 2, y: 0, x: 6},
-    {cols: 1, rows: 2, y: 0, x: 7},*/
-    /*{cols: 1, rows: 1, y: 0, x: 4},
-    {cols: 3, rows: 2, y: 1, x: 4},
-    {cols: 1, rows: 1, y: 4, x: 5},
-    {cols: 1, rows: 1, y: 2, x: 1},
-    {cols: 2, rows: 2, y: 5, x: 5},
-    {cols: 2, rows: 2, y: 3, x: 2},
-    {cols: 2, rows: 1, y: 2, x: 2},
-    {cols: 1, rows: 1, y: 3, x: 4},
-    {cols: 1, rows: 1, y: 0, x: 6}*/
-  ];
+  dashboard = [];
+
+  layoutForm = this.fb.group({
+    panels: this.fb.array([])
+  });
 
   private contentProviders: Array<ContentProvider> = [];
 
   @ViewChild(MatMenuTrigger, {static: true}) menuTriggers: QueryList<MatMenuTrigger>
   @ViewChildren(PanelContentHostDirective) contentPanels: QueryList<PanelContentHostDirective>;
 
+  get panels() {
+    return (this.layoutForm.get('panels') as FormArray);
+  }
+
   constructor(
     @Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>,
     private bs: MatBottomSheet,
     private pageBuilderFadcade: PageBuilderFacade,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private fb: FormBuilder
   ) {
     this.contentProviders = contentProviders;
   }
@@ -68,6 +62,7 @@ export class LayoutConstructionFormComponent implements OnInit {
       filter(c => c !== undefined)
     ).subscribe(c => {
       this.bs.dismiss();
+      console.log(new Layout(this.layoutForm.value));
       this.renderPaneComponent(this.panel, c);
     });
   }
@@ -80,12 +75,15 @@ export class LayoutConstructionFormComponent implements OnInit {
 
   addItem() {
     this.dashboard.push({cols: 1, rows: 1, y: 0, x: this.dashboard.length});
+    this.panels.push(this.fb.group({
+      panes: this.fb.array([])
+    }));
   }
 
   addContent(index: number) {
     this.panel = index;
     // this.menuTriggers.find((t, i) => i === index).closeMenu();
-    this.bs.open(ContentSelectorComponent);
+    this.bs.open(ContentSelectorComponent, { data: this.panels.controls[this.panel] });
   }
 
   renderPaneComponent(index: number, contentInstance: ContentInstance) {
@@ -94,16 +92,16 @@ export class LayoutConstructionFormComponent implements OnInit {
 
     const provider = this.contentProviders.find(p => p.name === contentInstance.providerName);
 
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(provider.renderComponent);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(EditablePaneComponent);
 
     const viewContainerRef = this.contentPanels.find((p, i) => i === index).viewContainerRef;
     // viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
-    /*(componentRef.instance as any).ad = this.ad;
-    (componentRef.instance as any).adType = this.adType;
-    (componentRef.instance as any).plugin = this.plugin;*/
+    (componentRef.instance as any).contentInstance = contentInstance;
+    (componentRef.instance as any).contentProvider = provider;
+    //(componentRef.instance as any).plugin = this.plugin;*/
   }
 
 }

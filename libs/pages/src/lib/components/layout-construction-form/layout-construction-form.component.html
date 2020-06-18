@@ -1,20 +1,25 @@
-<button mat-mini-fab (click)="addItem()" class="add-button cols-2">
-  <mat-icon>add</mat-icon>
-</button>
 
-<gridster [options]="options">
-  <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index">
 
-    <mat-menu #ops="matMenu">
-      <button (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
-      <button (mousedown)="removeItem($event, item)" (touchstart)="removeItem($event, item)">Delete</button>
-    </mat-menu>
+  <button mat-mini-fab (click)="addItem()" class="add-button cols-2">
+    <mat-icon>add</mat-icon>
+  </button>
 
-    <button mat-icon-button [matMenuTriggerFor]="ops">
-      <mat-icon>more_vert</mat-icon>
-    </button>
+  <gridster [options]="options">
+    <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index">
 
-    <ng-container><ng-template classifiedsUiPanelContentHost></ng-template></ng-container>
+      <mat-menu #ops="matMenu">
+        <button (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
+        <button (mousedown)="removeItem($event, item)" (touchstart)="removeItem($event, item)">Delete</button>
+      </mat-menu>
 
-  </gridster-item>
-</gridster>
+      <button mat-icon-button [matMenuTriggerFor]="ops">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <div class="panel">
+        <ng-container><ng-template classifiedsUiPanelContentHost></ng-template></ng-container>
+      </div>
+
+    </gridster-item>
+  </gridster>
+

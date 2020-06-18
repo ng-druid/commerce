@@ -9,8 +9,8 @@ export class ContentProvider {
     if (data) {
       this.name = data.name;
       this.title = data.title;
-      this.selectionComponent = data.selectionComponent;
-      this.renderComponent = data.renderComponent;
+      this.selectionComponent = data.selectionComponent ? data.selectionComponent : undefined;
+      this.renderComponent = data.renderComponent ? data.renderComponent: undefined;
     }
   }
 }
