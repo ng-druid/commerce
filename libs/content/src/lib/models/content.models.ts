@@ -4,11 +4,13 @@ export class ContentProvider {
   name: string
   title: string;
   selectionComponent: Type<any>;
+  renderComponent: Type<any>;
   constructor(data?: ContentProvider) {
     if (data) {
       this.name = data.name;
       this.title = data.title;
       this.selectionComponent = data.selectionComponent;
+      this.renderComponent = data.renderComponent;
     }
   }
 }

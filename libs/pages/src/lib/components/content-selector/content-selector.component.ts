@@ -30,6 +30,7 @@ export class ContentSelectorComponent implements OnInit {
   }
 
   renderSelectionComponent() {
+    console.log(this.provider);
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.provider.selectionComponent);
 
     const viewContainerRef = this.selectionHost.viewContainerRef;

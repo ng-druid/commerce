@@ -1,3 +1,5 @@
+import { ContentInstance } from '@classifieds-ui/content';
+
 export class Page {
   site: string;
   path: string;
@@ -15,6 +17,15 @@ export class Page {
       this.createdAt = data.createdAt;
       this.published = data.published;
       this.body = data.body;
+    }
+  }
+}
+
+export class Pane {
+  contentInstance: ContentInstance;
+  constructor(data?: Pane) {
+    if(data) {
+      this.contentInstance = data.contentInstance;
     }
   }
 }

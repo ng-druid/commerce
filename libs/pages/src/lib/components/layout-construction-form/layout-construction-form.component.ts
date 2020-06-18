@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {DisplayGrid, GridsterConfig, GridsterItem, GridType} from 'angular-gridster2';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
+import { PanelContentHostDirective } from '../../directives/panel-content-host.directive';
+import { ContentProvider, CONTENT_PROVIDER, ContentInstance } from '@classifieds-ui/content';
+import { filter } from 'rxjs/operators';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'classifieds-ui-layout-construction-form',
@@ -10,6 +14,8 @@ import { PageBuilderFacade } from '../../features/page-builder/page-builder.faca
   styleUrls: ['./layout-construction-form.component.scss']
 })
 export class LayoutConstructionFormComponent implements OnInit {
+
+  panel: number;
 
   options: GridsterConfig = {
     gridType: GridType.Fit,
@@ -43,19 +49,27 @@ export class LayoutConstructionFormComponent implements OnInit {
     {cols: 1, rows: 1, y: 0, x: 6}*/
   ];
 
-  constructor(private bs: MatBottomSheet, private pageBuilderFadcade: PageBuilderFacade) { }
+  private contentProviders: Array<ContentProvider> = [];
 
-  ngOnInit(): void {
-    this.pageBuilderFadcade.getContentInstance$.subscribe(c => {
-      console.log(c);
-      this.bs.dismiss();
-    });
+  @ViewChild(MatMenuTrigger, {static: true}) menuTriggers: QueryList<MatMenuTrigger>
+  @ViewChildren(PanelContentHostDirective) contentPanels: QueryList<PanelContentHostDirective>;
+
+  constructor(
+    @Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>,
+    private bs: MatBottomSheet,
+    private pageBuilderFadcade: PageBuilderFacade,
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {
+    this.contentProviders = contentProviders;
   }
 
-  changedOptions() {
-    if (typeof(this.options.api) !== 'undefined' && this.options.api.optionsChanged) {
-      this.options.api.optionsChanged();
-    }
+  ngOnInit(): void {
+    this.pageBuilderFadcade.getContentInstance$.pipe(
+      filter(c => c !== undefined)
+    ).subscribe(c => {
+      this.bs.dismiss();
+      this.renderPaneComponent(this.panel, c);
+    });
   }
 
   removeItem($event, item) {
@@ -65,21 +79,31 @@ export class LayoutConstructionFormComponent implements OnInit {
   }
 
   addItem() {
-    //this.dashboard.push({x: 0, y: 0, cols: 1, rows: 1});
-
-    // Add column
     this.dashboard.push({cols: 1, rows: 1, y: 0, x: this.dashboard.length});
   }
 
-  addContent() {
-    //this.dashboard.push({x: 0, y: 0, cols: 1, rows: 1});
-
-    // alert('Add Panel');
-
+  addContent(index: number) {
+    this.panel = index;
+    // this.menuTriggers.find((t, i) => i === index).closeMenu();
     this.bs.open(ContentSelectorComponent);
+  }
 
-    // Add column
-    //this.dashboard.push({cols: 1, rows: 1, y: 0, x: this.dashboard.length});
+  renderPaneComponent(index: number, contentInstance: ContentInstance) {
+
+    console.log(`panels len: ${this.contentPanels.length}`);
+
+    const provider = this.contentProviders.find(p => p.name === contentInstance.providerName);
+
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(provider.renderComponent);
+
+    const viewContainerRef = this.contentPanels.find((p, i) => i === index).viewContainerRef;
+    // viewContainerRef.clear();
+
+    const componentRef = viewContainerRef.createComponent(componentFactory);
+
+    /*(componentRef.instance as any).ad = this.ad;
+    (componentRef.instance as any).adType = this.adType;
+    (componentRef.instance as any).plugin = this.plugin;*/
   }
 
 }

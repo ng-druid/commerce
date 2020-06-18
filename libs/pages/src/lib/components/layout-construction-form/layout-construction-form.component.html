@@ -3,16 +3,18 @@
 </button>
 
 <gridster [options]="options">
-  <gridster-item [item]="item" *ngFor="let item of dashboard">
+  <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index">
 
     <mat-menu #ops="matMenu">
-      <button (mousedown)="addContent($event, item)" (touchstart)="addContent($event, item)">Add Content</button>
+      <button (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
       <button (mousedown)="removeItem($event, item)" (touchstart)="removeItem($event, item)">Delete</button>
     </mat-menu>
 
     <button mat-icon-button [matMenuTriggerFor]="ops">
       <mat-icon>more_vert</mat-icon>
     </button>
+
+    <ng-container><ng-template classifiedsUiPanelContentHost></ng-template></ng-container>
 
   </gridster-item>
 </gridster>
