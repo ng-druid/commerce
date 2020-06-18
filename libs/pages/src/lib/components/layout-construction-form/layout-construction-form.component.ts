@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChildren, QueryList, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
-import { FormBuilder, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormArray, Validators, FormGroup } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {DisplayGrid, GridsterConfig, GridsterItem, GridType} from 'angular-gridster2';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { PanelContentHostDirective } from '../../directives/panel-content-host.directive';
 import { ContentProvider, CONTENT_PROVIDER, ContentInstance } from '@classifieds-ui/content';
-import { filter } from 'rxjs/operators';
+import { AttributeValue } from '@classifieds-ui/attributes';
+import { filter, tap } from 'rxjs/operators';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
 import { Layout } from '../../models/page.models';
@@ -59,11 +60,11 @@ export class LayoutConstructionFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.pageBuilderFadcade.getContentInstance$.pipe(
-      filter(c => c !== undefined)
+      filter(c => c !== undefined),
+      tap(() => this.bs.dismiss())
     ).subscribe(c => {
-      this.bs.dismiss();
       console.log(new Layout(this.layoutForm.value));
-      this.renderPaneComponent(this.panel, c);
+      //this.renderPaneComponent(this.panel, c);
     });
   }
 
@@ -86,9 +87,23 @@ export class LayoutConstructionFormComponent implements OnInit {
     this.bs.open(ContentSelectorComponent, { data: this.panels.controls[this.panel] });
   }
 
-  renderPaneComponent(index: number, contentInstance: ContentInstance) {
+  panelPanes(index: number): FormArray {
+    return this.panels.at(index).get('panes') as FormArray;
+  }
 
-    console.log(`panels len: ${this.contentPanels.length}`);
+  panelPane(index: number, index2: number): FormGroup {
+    return this.panelPanes(index).at(index2) as FormGroup;
+  }
+
+  panelPaneProvider(index: number, index2: number): string {
+    return this.panelPane(index, index2).get('contentProvider').value;
+  }
+
+  panelPaneSettings(index: number, index2: number): string {
+    return this.panelPane(index, index2).get('settings').value.map(s => new AttributeValue(s));
+  }
+
+  renderPaneComponent(index: number, contentInstance: ContentInstance) {
 
     const provider = this.contentProviders.find(p => p.name === contentInstance.providerName);
 
@@ -99,9 +114,8 @@ export class LayoutConstructionFormComponent implements OnInit {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
-    (componentRef.instance as any).contentInstance = contentInstance;
-    (componentRef.instance as any).contentProvider = provider;
-    //(componentRef.instance as any).plugin = this.plugin;*/
+    /*(componentRef.instance as any).contentInstance = contentInstance;
+    (componentRef.instance as any).contentProvider = provider;*/
   }
 
 }

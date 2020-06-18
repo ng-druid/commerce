@@ -1,22 +1,33 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
-import { ContentInstance, ContentProvider } from '@classifieds-ui/content';
+import { Component, OnInit, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { AttributeValue } from '@classifieds-ui/attributes';
 
 @Component({
   selector: 'classifieds-ui-editable-pane',
   templateUrl: './editable-pane.component.html',
   styleUrls: ['./editable-pane.component.scss']
 })
-export class EditablePaneComponent implements OnInit {
+export class EditablePaneComponent implements OnInit, OnChanges {
 
   @Input()
-  contentInstance: ContentInstance;
+  providerName: string;
 
   @Input()
-  contentProvider: ContentProvider;
+  settings: Array<AttributeValue> = [];
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+  }
+
+  edit() {
+    alert('edit');
+  }
+
+  delete() {
+    alert('delete');
   }
 
 }

@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import { AttributeValue } from '@classifieds-ui/attributes';
 
 export class ContentProvider {
   name: string
@@ -17,9 +18,13 @@ export class ContentProvider {
 
 export class ContentInstance {
   providerName: string;
+  settings: Array<AttributeValue> = [];
   constructor(data?: ContentInstance) {
     if (data) {
       this.providerName = data.providerName;
+      if(data.settings) {
+        this.settings = data.settings.map(s => new AttributeValue(s));
+      }
     }
   }
 }

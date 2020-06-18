@@ -5,7 +5,7 @@ import { PageBuilderFacade } from '../../features/page-builder/page-builder.faca
 import { Observable } from 'rxjs';
 import { ContentInstance } from '@classifieds-ui/content';
 import { FormGroup, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { AttributeTypes } from '@classifieds-ui/attributes';
+import { AttributeTypes, AttributeValue } from '@classifieds-ui/attributes';
 
 @Component({
   selector: 'classifieds-ui-page-selector',
@@ -41,7 +41,16 @@ export class PageSelectorComponent implements OnInit {
         })
       ])
     }));
-    this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: 'page' }));
+    const settings = [new AttributeValue({
+      name: 'path',
+      type: AttributeTypes.Text,
+      displayName: 'Path',
+      value: page.path,
+      attributes: [],
+      intValue: undefined,
+      computedValue: undefined
+    })];
+    this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: 'page', settings }));
   }
 
 }

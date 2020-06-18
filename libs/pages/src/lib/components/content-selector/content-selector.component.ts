@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ComponentFactoryResolver, ViewChild } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { CONTENT_PROVIDER, ContentProvider, ContentInstance } from '@classifieds-ui/content';
 import { ContentSelectionHostDirective } from '../../directives/content-selection-host.directive';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
@@ -39,9 +39,10 @@ export class ContentSelectorComponent implements OnInit {
       this.renderSelectionComponent();
     } else {
       (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
-        contentProvider: this.provider.name
+        contentProvider: this.provider.name,
+        settings: this.fb.array([])
       }));
-      this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: this.provider.name }));
+      this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: this.provider.name, settings: [] }));
     }
   }
 

@@ -1,11 +1,12 @@
 
+<form [formGroup]="layoutForm">
 
   <button mat-mini-fab (click)="addItem()" class="add-button cols-2">
     <mat-icon>add</mat-icon>
   </button>
 
-  <gridster [options]="options">
-    <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index">
+  <gridster formArrayName="panels" [options]="options">
+    <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index" formGroupName="{{i}}">
 
       <mat-menu #ops="matMenu">
         <button (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
@@ -16,10 +17,14 @@
         <mat-icon>more_vert</mat-icon>
       </button>
 
-      <div class="panel">
-        <ng-container><ng-template classifiedsUiPanelContentHost></ng-template></ng-container>
+      <div class="panel" formArrayName="panes">
+        <ng-container *ngFor="let pane of panelPanes(i).controls; let j = index">
+          <classifieds-ui-editable-pane [providerName]="panelPaneProvider(i, j)" [settings]="panelPaneSettings(i, j)"></classifieds-ui-editable-pane>
+        </ng-container>
       </div>
 
     </gridster-item>
   </gridster>
+
+</form>
 
