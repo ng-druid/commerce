@@ -6,6 +6,7 @@ import { MarkdownModule, MarkdownComponent } from 'ngx-markdown';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from '@classifieds-ui/material';
 import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
+import { AttributesModule } from '@classifieds-ui/attributes';
 import { CONTENT_PROVIDER, ContentProvider } from '@classifieds-ui/content';
 import { GridsterModule } from 'angular-gridster2';
 import { EntityDefinitionService } from '@ngrx/data';
@@ -47,6 +48,7 @@ const routes = [
     MarkdownModule.forChild(),
     GridsterModule,
     UtilsModule,
+    AttributesModule,
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],

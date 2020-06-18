@@ -4,6 +4,14 @@
     <button (click)="delete()">Delete</button>
   </div>
   <div class="inner-pane-wrapper">
-    <div>Content: The content</div>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Content: {{ contentProvider.title }}</mat-panel-title>
+        <mat-panel-description>See Settings</mat-panel-description>
+      </mat-expansion-panel-header>
+      <ul *ngFor="let setting of settings">
+        <li>{{ setting.displayName }}: {{ settings | attribute: setting.name }}</li>
+      </ul>
+    </mat-expansion-panel>
   </div>
 </div>

@@ -38,6 +38,7 @@ export class PageSelectorComponent implements OnInit {
           type: new FormControl(AttributeTypes.Text, Validators.required),
           displayName: new FormControl('Path', Validators.required),
           value: new FormControl(page.path, Validators.required),
+          computedValue: new FormControl(page.path, Validators.required),
         })
       ])
     }));
