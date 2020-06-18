@@ -7,9 +7,7 @@ import { PageBuilderFacade } from '../../features/page-builder/page-builder.faca
 import { PanelContentHostDirective } from '../../directives/panel-content-host.directive';
 import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { filter, tap } from 'rxjs/operators';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { Layout } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-layout-construction-form',
@@ -57,18 +55,11 @@ export class LayoutConstructionFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /*this.pageBuilderFadcade.getContentInstance$.pipe(
-      filter(c => c !== undefined),
-      tap(() => this.bs.dismiss())
-    ).subscribe(c => {
-      console.log(new Layout(this.layoutForm.value));
-    });*/
   }
 
-  removeItem($event, item) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    this.dashboard.splice(this.dashboard.indexOf(item), 1);
+  removeItem(index: number) {
+    this.dashboard.splice(index, 1);
+    this.panels.removeAt(index);
   }
 
   addItem() {
@@ -80,7 +71,6 @@ export class LayoutConstructionFormComponent implements OnInit {
 
   addContent(index: number) {
     this.panel = index;
-    // this.menuTriggers.find((t, i) => i === index).closeMenu();
     this.bs.open(ContentSelectorComponent, { data: this.panels.controls[this.panel] });
   }
 
@@ -108,7 +98,7 @@ export class LayoutConstructionFormComponent implements OnInit {
   }
 
   onPaneDelete(index: number, index2: number) {
-    alert(`DELETE panel ${index} pane ${index2}`);
+    this.panelPanes(index).removeAt(index2);
   }
 
 }

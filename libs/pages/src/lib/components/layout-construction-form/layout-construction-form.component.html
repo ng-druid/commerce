@@ -8,7 +8,7 @@
     <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index" formGroupName="{{i}}">
       <div class="panel-header">
         <button (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
-        <button class="delete" (mousedown)="removeItem($event, item)" (touchstart)="removeItem($event, item)">Delete</button>
+        <button class="delete" (mousedown)="removeItem(i)" (touchstart)="removeItem(i)">Delete</button>
       </div>
       <div class="panel" formArrayName="panes">
         <ng-container *ngFor="let pane of panelPanes(i).controls; let j = index">
