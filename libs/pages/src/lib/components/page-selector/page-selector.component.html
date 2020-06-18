@@ -1,0 +1,9 @@
+<mat-form-field>
+  <input matInput placeholder="Search" required>
+</mat-form-field>
+
+<mat-nav-list>
+  <a *ngFor="let page of pages$ | async" mat-list-item mat-list-item (click)="onItemSelect(page)">
+    <span mat-line>{{ page.title }} {{ page.path }}}</span>
+  </a>
+</mat-nav-list>
