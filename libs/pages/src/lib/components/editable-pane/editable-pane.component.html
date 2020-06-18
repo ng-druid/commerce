@@ -1,7 +1,7 @@
 <div class="editable-pane-wrapper">
   <div class="pane-header">
-    <button (click)="edit()">Edit</button>
-    <button (click)="delete()">Delete</button>
+    <button (click)="onEditClick()">Edit</button>
+    <button class="delete" (click)="onDeleteClick()">Delete</button>
   </div>
   <div class="inner-pane-wrapper">
     <mat-expansion-panel>

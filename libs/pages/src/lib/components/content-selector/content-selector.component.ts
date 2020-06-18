@@ -4,6 +4,7 @@ import { CONTENT_PROVIDER, ContentProvider, ContentInstance } from '@classifieds
 import { ContentSelectionHostDirective } from '../../directives/content-selection-host.directive';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'classifieds-ui-content-selector',
@@ -22,6 +23,8 @@ export class ContentSelectorComponent implements OnInit {
   constructor(
     @Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public panelFormGroup: FormGroup,
+    private bottomSheetRef: MatBottomSheetRef<ContentSelectorComponent>,
+    private dialog: MatDialog,
     private componentFactoryResolver: ComponentFactoryResolver,
     private pageBuilderFacade: PageBuilderFacade,
     private fb: FormBuilder
@@ -37,6 +40,9 @@ export class ContentSelectorComponent implements OnInit {
     if(this.provider.selectionComponent !== undefined) {
       this.selectedIndex = 1;
       this.renderSelectionComponent();
+    } else if(this.provider.editorComponent !== undefined) {
+      this.bottomSheetRef.dismiss();
+      const dialogRef = this.dialog.open(this.provider.editorComponent, { data: this.panelFormGroup });
     } else {
       (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
         contentProvider: this.provider.name,

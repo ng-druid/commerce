@@ -5,3 +5,12 @@ form {
 .panel {
   padding: 1em;
 }
+
+.panel-header {
+  background-color: #ccc;
+  padding: .5em;
+}
+
+button.delete {
+  float: right;
+}

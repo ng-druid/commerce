@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, EventEmitter, Output } from '@angular/core';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
 
@@ -14,6 +14,12 @@ export class EditablePaneComponent implements OnInit, OnChanges {
 
   @Input()
   settings: Array<AttributeValue> = [];
+
+  @Output()
+  edit = new EventEmitter();
+
+  @Output()
+  delete = new EventEmitter();
 
   contentProvider: ContentProvider;
 
@@ -31,12 +37,12 @@ export class EditablePaneComponent implements OnInit, OnChanges {
     this.contentProvider = this.contentProviders.find(p => p.name === this.providerName);
   }
 
-  edit() {
-    alert('edit');
+  onEditClick() {
+    this.edit.emit();
   }
 
-  delete() {
-    alert('delete');
+  onDeleteClick() {
+    this.delete.emit();
   }
 
 }

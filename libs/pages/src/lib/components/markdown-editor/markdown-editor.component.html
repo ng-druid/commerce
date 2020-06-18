@@ -1,0 +1,9 @@
+<form [formGroup]="contentForm" (ngSubmit)="submit()">
+  <h2 class="mat-subheading-2" mat-dialog-title>Add Markdown Content</h2>
+  <mat-dialog-content>
+    <textarea formControlName="content" cols="100" rows="40"></textarea>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button type="submit" mat-raised-button color="primary" mat-dialog-close [disabled]="!contentForm.valid">Save</button>
+  </mat-dialog-actions>
+</form>

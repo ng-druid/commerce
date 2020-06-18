@@ -6,12 +6,14 @@ export class ContentProvider {
   title: string;
   selectionComponent: Type<any>;
   renderComponent: Type<any>;
+  editorComponent: Type<any>;
   constructor(data?: ContentProvider) {
     if (data) {
       this.name = data.name;
       this.title = data.title;
       this.selectionComponent = data.selectionComponent ? data.selectionComponent : undefined;
       this.renderComponent = data.renderComponent ? data.renderComponent: undefined;
+      this.editorComponent = data.editorComponent ? data.editorComponent: undefined;
     }
   }
 }

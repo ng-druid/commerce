@@ -1,15 +1,14 @@
-import { Component, OnInit, ViewChildren, QueryList, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
-import { FormBuilder, FormArray, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChildren, QueryList, Inject, ViewChild } from '@angular/core';
+import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import {DisplayGrid, GridsterConfig, GridsterItem, GridType} from 'angular-gridster2';
+import {DisplayGrid, GridsterConfig, GridType} from 'angular-gridster2';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { PanelContentHostDirective } from '../../directives/panel-content-host.directive';
-import { ContentProvider, CONTENT_PROVIDER, ContentInstance } from '@classifieds-ui/content';
+import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { filter, tap } from 'rxjs/operators';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
 import { Layout } from '../../models/page.models';
 
 @Component({
@@ -52,20 +51,18 @@ export class LayoutConstructionFormComponent implements OnInit {
     @Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>,
     private bs: MatBottomSheet,
     private pageBuilderFadcade: PageBuilderFacade,
-    private componentFactoryResolver: ComponentFactoryResolver,
     private fb: FormBuilder
   ) {
     this.contentProviders = contentProviders;
   }
 
   ngOnInit(): void {
-    this.pageBuilderFadcade.getContentInstance$.pipe(
+    /*this.pageBuilderFadcade.getContentInstance$.pipe(
       filter(c => c !== undefined),
       tap(() => this.bs.dismiss())
     ).subscribe(c => {
       console.log(new Layout(this.layoutForm.value));
-      //this.renderPaneComponent(this.panel, c);
-    });
+    });*/
   }
 
   removeItem($event, item) {
@@ -103,19 +100,15 @@ export class LayoutConstructionFormComponent implements OnInit {
     return this.panelPane(index, index2).get('settings').value.map(s => new AttributeValue(s));
   }
 
-  renderPaneComponent(index: number, contentInstance: ContentInstance) {
+  onPaneEdit(index: number, index2: number) {
+    const provider = this.panelPaneProvider(index, index2);
+    const contentProvider = this.contentProviders.find(p => p.name === provider);
 
-    const provider = this.contentProviders.find(p => p.name === contentInstance.providerName);
+    alert(`EDIT panel ${index} pane ${index2}`);
+  }
 
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(EditablePaneComponent);
-
-    const viewContainerRef = this.contentPanels.find((p, i) => i === index).viewContainerRef;
-    // viewContainerRef.clear();
-
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-
-    /*(componentRef.instance as any).contentInstance = contentInstance;
-    (componentRef.instance as any).contentProvider = provider;*/
+  onPaneDelete(index: number, index2: number) {
+    alert(`DELETE panel ${index} pane ${index2}`);
   }
 
 }
