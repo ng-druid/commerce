@@ -1,5 +1,5 @@
 import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
+import { NgModule, ErrorHandler, APP_INITIALIZER,  SecurityContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,7 +21,7 @@ import { PROFILE_SETTINGS, ProfileSettings } from '@classifieds-ui/profiles';
 import { NbA11yModule } from '@nebular/theme';
 // import { JsonschemaModule } from '@classifieds-ui/jsonschema';
 import { TAXONOMY_SETTINGS, TaxonomySettings } from '@classifieds-ui/taxonomy';
-import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -67,6 +67,20 @@ const oktaConfig = {
   scopes: ['openid', 'profile', 'ads_api', 'chat', 'taxonomy_api', 'api_gateway']
 }
 
+export function markedOptionsFactory(): MarkedOptions {
+  const renderer = new MarkedRenderer();
+  renderer.link = (href: string, title: string, text: string) => {
+    if(text === 'page') {
+      return `<classifieds-ui-page path="${href}"></classifieds-ui-page>`;
+    } else {
+      return `<classifieds-ui-page-router-link href="${href}" text="${text}"></classifieds-ui-page-router-link>`;
+    }
+  };
+  return {
+    renderer: renderer,
+  };
+}
+
 @NgModule({
   declarations: [AppComponent, AuthCallbackComponent, AppHeaderComponent, AppFooterComponent, HomeComponent, NotFoundComponent],
   imports: [
@@ -79,7 +93,13 @@ const oktaConfig = {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
-    MarkdownModule.forRoot(),
+    MarkdownModule.forRoot({
+      sanitize: SecurityContext.NONE,
+      markedOptions: {
+        provide: MarkedOptions,
+        useFactory: markedOptionsFactory,
+      },
+    }),
     NbA11yModule.forRoot(),
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
     StoreDevtoolsModule.instrument({

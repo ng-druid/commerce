@@ -2,8 +2,8 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { EntityServices, EntityCollectionService, DefaultDataServiceConfig } from '@ngrx/data';
 import { Page } from '../../models/page.models';
 import { HttpClient } from '@angular/common/http';
-import { map, switchMap } from 'rxjs/operators';
-import { MarkdownService } from 'ngx-markdown';
+import { NEVER, iif, throwError } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-page',
@@ -22,7 +22,6 @@ export class PageComponent implements OnInit, OnChanges {
   constructor(
     private dataServiceConfig: DefaultDataServiceConfig,
     private http: HttpClient,
-    private markdownService: MarkdownService,
     es: EntityServices,
   ) {
     this.pagesService = es.getEntityCollectionService('Page');
@@ -39,8 +38,7 @@ export class PageComponent implements OnInit, OnChanges {
   renderPage() {
     this.pagesService.getWithQuery({ site: 'main', path: this.path }).pipe(
       map(pages => pages.find(p => p.path === this.path)),
-      switchMap(p => this.http.get(`${this.dataServiceConfig.root}/${p.body}`, { responseType: 'text' })),
-      map(c => this.markdownService.compile(c))
+      switchMap(p => this.http.get(`${this.dataServiceConfig.root}/${p.body}`, { responseType: 'text' }))
     ).subscribe(c => {
       this.content = c;
     });

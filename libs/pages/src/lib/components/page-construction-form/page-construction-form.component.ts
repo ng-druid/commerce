@@ -1,6 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MarkdownService } from 'ngx-markdown';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Page } from '../../models/page.models';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -24,7 +23,7 @@ export class PageConstructionFormComponent implements OnInit {
 
   body: string;
 
-  constructor(private fb: FormBuilder, private markdownService: MarkdownService) { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.pageForm.get("body").valueChanges.pipe(
@@ -32,8 +31,6 @@ export class PageConstructionFormComponent implements OnInit {
       debounceTime(500),
     ).subscribe(v => {
       this.body = v;
-      /*this.body = this.markdownService.compile(v);
-      console.log(this.body);*/
     })
   }
 
