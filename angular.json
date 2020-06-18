@@ -867,6 +867,38 @@
           "style": "scss"
         }
       }
+    },
+    "content": {
+      "projectType": "library",
+      "root": "libs/content",
+      "sourceRoot": "libs/content/src",
+      "prefix": "classifieds-ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/content/tsconfig.lib.json",
+              "libs/content/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/content/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/content/jest.config.js",
+            "tsConfig": "libs/content/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/content/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

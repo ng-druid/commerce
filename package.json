@@ -62,6 +62,7 @@
     "@ngx-formly/schematics": "^5.6.1",
     "@nrwl/angular": "^9.2.3",
     "@okta/okta-angular": "^2.0.0",
+    "angular-gridster2": "^9.2.0",
     "aws-serverless-express": "^3.3.8",
     "bson": "^4.0.2",
     "core-js": "^2.5.4",
