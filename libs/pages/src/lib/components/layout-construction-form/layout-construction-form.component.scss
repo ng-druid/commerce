@@ -1,14 +1,14 @@
-form {
+.layout-wrapper {
   height: 100%;
 }
 
-.panel {
-  padding: 1em;
-}
-
-.panel-header {
+.grid-item-header {
   background-color: #ccc;
   padding: .5em;
+}
+
+.grid-item-inner {
+  padding: 1em;
 }
 
 button.delete {

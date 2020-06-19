@@ -33,10 +33,12 @@ import { EditablePaneComponent } from './components/editable-pane/editable-pane.
 import { MarkdownEditorComponent } from './components/markdown-editor/markdown-editor.component';
 import { MarkdownPaneRendererComponent } from './components/markdown-pane-renderer/markdown-pane-renderer.component';
 import { PageManagerConstructComponent } from './components/page-manager-construct/page-manager-construct.component';
+import { ContentEditorOverlayComponent } from './components/content-editor-overlay/content-editor-overlay.component';
 
 const routes = [
   { path: 'create-page', component: CreatePageComponent },
   { path: 'create-layout', component: CreateLayoutComponent },
+  { path: 'content-editor', component: ContentEditorOverlayComponent },
   { path: 'page-manager', component: PageManagerConstructComponent },
   { path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
@@ -58,7 +60,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [PageConstructionFormComponent, CreatePageComponent, PageComponent, PageControllerComponent, LayoutConstructionFormComponent, CreateLayoutComponent, ContentSelectorComponent, PageSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, PagePaneRendererComponent, EditablePaneComponent, MarkdownEditorComponent, MarkdownPaneRendererComponent, PageManagerConstructComponent],
+  declarations: [PageConstructionFormComponent, CreatePageComponent, PageComponent, PageControllerComponent, LayoutConstructionFormComponent, CreateLayoutComponent, ContentSelectorComponent, PageSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, PagePaneRendererComponent, EditablePaneComponent, MarkdownEditorComponent, MarkdownPaneRendererComponent, PageManagerConstructComponent, ContentEditorOverlayComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PageComponent , multi: true},

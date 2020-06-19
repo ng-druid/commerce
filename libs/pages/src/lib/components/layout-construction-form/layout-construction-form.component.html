@@ -1,21 +1,19 @@
-<form [formGroup]="layoutForm" (ngSubmit)="submit()">
+<div class="layout-wrapper">
   <div class="main-controls">
     <button type="button" (mousedown)="addColumn()">Add Column</button>
     <button type="button" (mousedown)="addRow()">Add Row</button>
-    <button type="submit">Save</button>
+    <ng-container *ngTemplateOutlet="extraActionsTmpl"></ng-container>
   </div>
-  <gridster formArrayName="panels" [options]="options">
-    <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index" formGroupName="{{i}}">
-      <div class="panel-header">
-        <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
+  <gridster [options]="options">
+    <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index">
+      <div class="grid-item-header">
+        <ng-container *ngTemplateOutlet="gridItemActionsTmpl,context: { i: i }"></ng-container>
         <button type="button" class="delete" (mousedown)="removeItem(i)" (touchstart)="removeItem(i)">Delete</button>
       </div>
-      <div class="panel" formArrayName="panes">
-        <ng-container *ngFor="let pane of panelPanes(i).controls; let j = index">
-          <classifieds-ui-editable-pane (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [providerName]="panelPaneProvider(i, j)" [settings]="panelPaneSettings(i, j)"></classifieds-ui-editable-pane>
-        </ng-container>
+      <div class="grid-item-inner">
+        <ng-container *ngTemplateOutlet="innerGridItemTmpl,context: { i: i }"></ng-container>
       </div>
     </gridster-item>
   </gridster>
-</form>
+</div>
 

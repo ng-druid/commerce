@@ -1,12 +1,6 @@
-import { Component, OnInit, Inject, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { Component, OnInit, EventEmitter, Output, ContentChild, TemplateRef } from '@angular/core';
 import {DisplayGrid, GridsterConfig, GridType} from 'angular-gridster2';
-import { ContentSelectorComponent } from '../content-selector/content-selector.component';
-import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
-import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
-import { AttributeValue } from '@classifieds-ui/attributes';
-import { Layout, GridItem } from '../../models/page.models';
+import { Layout } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-layout-construction-form',
@@ -15,10 +9,14 @@ import { Layout, GridItem } from '../../models/page.models';
 })
 export class LayoutConstructionFormComponent implements OnInit {
 
-  @Output()
-  saved = new EventEmitter<Layout>();
+  /*@Output()
+  saved = new EventEmitter<Layout>();*/
 
-  panel: number;
+  @Output()
+  itemAdded = new EventEmitter();
+
+  @Output()
+  itemRemoved = new EventEmitter<number>();
 
   rows = 0;
 
@@ -36,85 +34,27 @@ export class LayoutConstructionFormComponent implements OnInit {
 
   dashboard = [];
 
-  layoutForm = this.fb.group({
-    panels: this.fb.array([])
-  });
+  @ContentChild('gridItemActions') gridItemActionsTmpl: TemplateRef<any>;
+  @ContentChild('innerGridItem') innerGridItemTmpl: TemplateRef<any>;
+  @ContentChild('extraActions') extraActionsTmpl: TemplateRef<any>;
 
-  private contentProviders: Array<ContentProvider> = [];
+  constructor() {}
 
-  get panels() {
-    return (this.layoutForm.get('panels') as FormArray);
-  }
-
-  constructor(
-    @Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>,
-    private bs: MatBottomSheet,
-    private pageBuilderFadcade: PageBuilderFacade,
-    private fb: FormBuilder
-  ) {
-    this.contentProviders = contentProviders;
-  }
-
-  ngOnInit(): void {
-  }
-
-  submit() {
-    const layout = new Layout({
-      ...this.layoutForm.value,
-      id: undefined,
-      gridItems: this.dashboard.map(i => new GridItem(i))
-    })
-    this.saved.emit(layout);
-  }
+  ngOnInit(): void {}
 
   removeItem(index: number) {
     this.dashboard.splice(index, 1);
-    this.panels.removeAt(index);
+    this.itemRemoved.emit(index);
   }
 
   addColumn() {
     this.dashboard.push({cols: 1, rows: 1, y: 0, x: this.dashboard.length});
-    this.panels.push(this.fb.group({
-      panes: this.fb.array([])
-    }));
+    this.itemAdded.emit();
   }
 
   addRow() {
     this.dashboard.push({cols: 1, rows: 1, y: this.rows++, x: 0});
-    this.panels.push(this.fb.group({
-      panes: this.fb.array([])
-    }));
-  }
-
-  addContent(index: number) {
-    this.panel = index;
-    this.bs.open(ContentSelectorComponent, { data: this.panels.controls[this.panel] });
-  }
-
-  panelPanes(index: number): FormArray {
-    return this.panels.at(index).get('panes') as FormArray;
-  }
-
-  panelPane(index: number, index2: number): FormGroup {
-    return this.panelPanes(index).at(index2) as FormGroup;
-  }
-
-  panelPaneProvider(index: number, index2: number): string {
-    return this.panelPane(index, index2).get('contentProvider').value;
-  }
-
-  panelPaneSettings(index: number, index2: number): string {
-    return this.panelPane(index, index2).get('settings').value.map(s => new AttributeValue(s));
-  }
-
-  onPaneEdit(index: number, index2: number) {
-    const provider = this.panelPaneProvider(index, index2);
-    const contentProvider = this.contentProviders.find(p => p.name === provider);
-    alert(`EDIT panel ${index} pane ${index2}`);
-  }
-
-  onPaneDelete(index: number, index2: number) {
-    this.panelPanes(index).removeAt(index2);
+    this.itemAdded.emit();
   }
 
 }

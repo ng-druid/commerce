@@ -8,9 +8,7 @@ import { FormBuilder } from '@angular/forms';
 })
 export class PageManagerConstructComponent implements OnInit {
 
-
-
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
   }
