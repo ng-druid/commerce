@@ -1,6 +1,7 @@
 <form [formGroup]="layoutForm" (ngSubmit)="submit()">
   <div class="main-controls">
-    <button type="button" (mousedown)="addItem()">Add Column</button>
+    <button type="button" (mousedown)="addColumn()">Add Column</button>
+    <button type="button" (mousedown)="addRow()">Add Row</button>
     <button type="submit">Save</button>
   </div>
   <gridster formArrayName="panels" [options]="options">

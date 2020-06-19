@@ -23,11 +23,17 @@ export class Page {
 }
 
 export class Layout {
+  id: string;
+  gridItems: Array<GridItem> = [];
   panels: Array<Panel> = [];
   constructor(data?: Layout) {
     if(data) {
       if(data.panels) {
+        this.id = data.id;
         this.panels = data.panels.map(p => new Panel(p));
+        if(data.gridItems) {
+          this.gridItems = data.gridItems.map(i => new GridItem(i));
+        }
       }
     }
   }
@@ -53,6 +59,21 @@ export class Pane {
       if(data.settings) {
         this.settings = data.settings.map(a => new AttributeValue(a));
       }
+    }
+  }
+}
+
+export class GridItem {
+  cols: number;
+  rows: number;
+  x: number;
+  y: number;
+  constructor(data?: GridItem) {
+    if(data) {
+      this.cols = data.cols;
+      this.rows = data.rows;
+      this.x = data.x;
+      this.y = data.y;
     }
   }
 }

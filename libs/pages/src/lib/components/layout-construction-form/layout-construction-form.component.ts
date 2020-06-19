@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChildren, QueryList, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {DisplayGrid, GridsterConfig, GridType} from 'angular-gridster2';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
-import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { Layout } from '../../models/page.models';
+import { Layout, GridItem } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-layout-construction-form',
@@ -16,7 +15,12 @@ import { Layout } from '../../models/page.models';
 })
 export class LayoutConstructionFormComponent implements OnInit {
 
+  @Output()
+  saved = new EventEmitter<Layout>();
+
   panel: number;
+
+  rows = 0;
 
   options: GridsterConfig = {
     gridType: GridType.Fit,
@@ -55,7 +59,12 @@ export class LayoutConstructionFormComponent implements OnInit {
   }
 
   submit() {
-    console.log(new Layout(this.layoutForm.value));
+    const layout = new Layout({
+      ...this.layoutForm.value,
+      id: undefined,
+      gridItems: this.dashboard.map(i => new GridItem(i))
+    })
+    this.saved.emit(layout);
   }
 
   removeItem(index: number) {
@@ -63,8 +72,15 @@ export class LayoutConstructionFormComponent implements OnInit {
     this.panels.removeAt(index);
   }
 
-  addItem() {
+  addColumn() {
     this.dashboard.push({cols: 1, rows: 1, y: 0, x: this.dashboard.length});
+    this.panels.push(this.fb.group({
+      panes: this.fb.array([])
+    }));
+  }
+
+  addRow() {
+    this.dashboard.push({cols: 1, rows: 1, y: this.rows++, x: 0});
     this.panels.push(this.fb.group({
       panes: this.fb.array([])
     }));
@@ -94,7 +110,6 @@ export class LayoutConstructionFormComponent implements OnInit {
   onPaneEdit(index: number, index2: number) {
     const provider = this.panelPaneProvider(index, index2);
     const contentProvider = this.contentProviders.find(p => p.name === provider);
-
     alert(`EDIT panel ${index} pane ${index2}`);
   }
 

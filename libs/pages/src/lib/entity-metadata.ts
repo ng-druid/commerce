@@ -6,4 +6,7 @@ export const entityMetadata: EntityMetadataMap = {
     selectId: (p: Page) => `(${p.site})__(${p.path})`,
     entityName: 'Page'
   },
+  Layout: {
+    entityName: 'Layout'
+  },
 };
