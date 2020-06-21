@@ -1,16 +1,17 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
+import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 
 @Component({
-  selector: 'classifieds-ui-content-editor-overlay',
-  templateUrl: './content-editor-overlay.component.html',
-  styleUrls: ['./content-editor-overlay.component.scss']
+  selector: 'classifieds-ui-content-editor',
+  templateUrl: './content-editor.component.html',
+  styleUrls: ['./content-editor.component.scss']
 })
-export class ContentEditorOverlayComponent implements OnInit {
+export class ContentEditorComponent implements OnInit {
 
   panel: number;
 
@@ -19,6 +20,8 @@ export class ContentEditorOverlayComponent implements OnInit {
   });
 
   private contentProviders: Array<ContentProvider> = [];
+
+  @ViewChild(GridLayoutComponent, {static: true}) layoutComponent: GridLayoutComponent;
 
   get panels() {
     return (this.contentForm.get('panels') as FormArray);
@@ -50,8 +53,9 @@ export class ContentEditorOverlayComponent implements OnInit {
     this.panels.removeAt(index);
   }
 
-  onSave() {
-    alert('save');
+  submit() {
+    console.log("save");
+    console.log(this.layoutComponent.grid);
   }
 
   panelPanes(index: number): FormArray {

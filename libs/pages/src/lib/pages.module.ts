@@ -18,7 +18,7 @@ import { entityMetadata } from './entity-metadata';
 import { PageComponent } from './components/page/page.component';
 import { PageControllerComponent } from './components/page-controller/page-controller.component';
 import { PageRouterLinkComponent } from './components/page-router-link/page-router-link.component';
-import { LayoutConstructionFormComponent } from './components/layout-construction-form/layout-construction-form.component';
+import { GridLayoutComponent } from './components/grid-layout/grid-layout.component';
 import { CreateLayoutComponent } from './components/create-layout/create-layout.component';
 import { ContentSelectorComponent } from './components/content-selector/content-selector.component';
 import { PageSelectorComponent } from './components/page-selector/page-selector.component';
@@ -33,12 +33,12 @@ import { EditablePaneComponent } from './components/editable-pane/editable-pane.
 import { MarkdownEditorComponent } from './components/markdown-editor/markdown-editor.component';
 import { MarkdownPaneRendererComponent } from './components/markdown-pane-renderer/markdown-pane-renderer.component';
 import { PageManagerConstructComponent } from './components/page-manager-construct/page-manager-construct.component';
-import { ContentEditorOverlayComponent } from './components/content-editor-overlay/content-editor-overlay.component';
+import { ContentEditorComponent } from './components/content-editor/content-editor.component';
 
 const routes = [
   { path: 'create-page', component: CreatePageComponent },
   { path: 'create-layout', component: CreateLayoutComponent },
-  { path: 'content-editor', component: ContentEditorOverlayComponent },
+  { path: 'content-editor', component: ContentEditorComponent },
   { path: 'page-manager', component: PageManagerConstructComponent },
   { path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
@@ -60,7 +60,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [PageConstructionFormComponent, CreatePageComponent, PageComponent, PageControllerComponent, LayoutConstructionFormComponent, CreateLayoutComponent, ContentSelectorComponent, PageSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, PagePaneRendererComponent, EditablePaneComponent, MarkdownEditorComponent, MarkdownPaneRendererComponent, PageManagerConstructComponent, ContentEditorOverlayComponent],
+  declarations: [PageConstructionFormComponent, CreatePageComponent, PageComponent, PageControllerComponent, GridLayoutComponent, CreateLayoutComponent, ContentSelectorComponent, PageSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, PagePaneRendererComponent, EditablePaneComponent, MarkdownEditorComponent, MarkdownPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PageComponent , multi: true},

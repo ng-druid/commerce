@@ -3,11 +3,11 @@ import {DisplayGrid, GridsterConfig, GridType} from 'angular-gridster2';
 import { Layout } from '../../models/page.models';
 
 @Component({
-  selector: 'classifieds-ui-layout-construction-form',
-  templateUrl: './layout-construction-form.component.html',
-  styleUrls: ['./layout-construction-form.component.scss']
+  selector: 'classifieds-ui-grid-layout',
+  templateUrl: './grid-layout.component.html',
+  styleUrls: ['./grid-layout.component.scss']
 })
-export class LayoutConstructionFormComponent implements OnInit {
+export class GridLayoutComponent implements OnInit {
 
   /*@Output()
   saved = new EventEmitter<Layout>();*/
@@ -33,6 +33,10 @@ export class LayoutConstructionFormComponent implements OnInit {
   };
 
   dashboard = [];
+
+  get grid() {
+    return this.dashboard;
+  }
 
   @ContentChild('gridItemActions') gridItemActionsTmpl: TemplateRef<any>;
   @ContentChild('innerGridItem') innerGridItemTmpl: TemplateRef<any>;
