@@ -5,6 +5,8 @@ import { ContentSelectorComponent } from '../content-selector/content-selector.c
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Pane } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -12,8 +14,6 @@ import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
   styleUrls: ['./content-editor.component.scss']
 })
 export class ContentEditorComponent implements OnInit {
-
-  panel: number;
 
   contentForm = this.fb.group({
     panels: this.fb.array([])
@@ -30,7 +30,8 @@ export class ContentEditorComponent implements OnInit {
   constructor(
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private fb: FormBuilder,
-    private bs: MatBottomSheet
+    private bs: MatBottomSheet,
+    private dialog: MatDialog
   ) {
     this.contentPlugins = contentPlugins;
   }
@@ -39,8 +40,7 @@ export class ContentEditorComponent implements OnInit {
   }
 
   addContent(index: number) {
-    this.panel = index;
-    this.bs.open(ContentSelectorComponent, { data: this.panels.controls[this.panel] });
+    this.bs.open(ContentSelectorComponent, { data: this.panels.controls[index] });
   }
 
   onItemAdded() {
@@ -75,9 +75,12 @@ export class ContentEditorComponent implements OnInit {
   }
 
   onPaneEdit(index: number, index2: number) {
+    const pane = new Pane(this.panelPane(index, index2).value);
     const plugin = this.panelPanePlugin(index, index2);
     const contentPlugin = this.contentPlugins.find(p => p.name === plugin);
-    alert(`EDIT panel ${index} pane ${index2}`);
+    if(contentPlugin.editorComponent !== undefined) {
+      const dialogRef = this.dialog.open(contentPlugin.editorComponent, { data: { panelFormGroup: this.panels.at(index), paneIndex: index2, pane } });
+    }
   }
 
   onPaneDelete(index: number, index2: number) {

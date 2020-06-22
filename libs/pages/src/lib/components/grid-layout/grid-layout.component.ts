@@ -1,6 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, ContentChild, TemplateRef } from '@angular/core';
-import {DisplayGrid, GridsterConfig, GridType} from 'angular-gridster2';
-import { Layout } from '../../models/page.models';
+import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 
 @Component({
   selector: 'classifieds-ui-grid-layout',
@@ -8,9 +7,6 @@ import { Layout } from '../../models/page.models';
   styleUrls: ['./grid-layout.component.scss']
 })
 export class GridLayoutComponent implements OnInit {
-
-  /*@Output()
-  saved = new EventEmitter<Layout>();*/
 
   @Output()
   itemAdded = new EventEmitter();

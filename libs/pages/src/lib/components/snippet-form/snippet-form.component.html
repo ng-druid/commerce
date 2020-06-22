@@ -4,10 +4,20 @@
     <div class="content-inner">
       <as-split direction="vertical">
         <as-split-area size="50">
-          <textarea formControlName="content" cols="100" rows="40"></textarea>
+          <mat-form-field>
+            <mat-label>Content Type</mat-label>
+            <mat-select required formControlName="contentType">
+              <mat-option value="text/markdown">Markdown</mat-option>
+              <mat-option value="text/html">HTML</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div>
+            <textarea formControlName="content" cols="100" rows="40"></textarea>
+          </div>
         </as-split-area>
         <as-split-area size="50">
-          <classifieds-ui-dynamic-content-viewer [content]="preview | markdown"></classifieds-ui-dynamic-content-viewer>
+          <classifieds-ui-dynamic-content-viewer *ngIf="isMarkdown" [content]="preview | markdown"></classifieds-ui-dynamic-content-viewer>
+          <classifieds-ui-dynamic-content-viewer *ngIf="!isMarkdown" [content]="preview"></classifieds-ui-dynamic-content-viewer>
         </as-split-area>
       </as-split>
     </div>

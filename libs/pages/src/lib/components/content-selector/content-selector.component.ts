@@ -40,7 +40,7 @@ export class ContentSelectorComponent implements OnInit {
       this.renderSelectionComponent();
     } else if(this.plugin.editorComponent !== undefined) {
       this.bottomSheetRef.dismiss();
-      const dialogRef = this.dialog.open(this.plugin.editorComponent, { data: this.panelFormGroup });
+      const dialogRef = this.dialog.open(this.plugin.editorComponent, { data: { panelFormGroup: this.panelFormGroup, pane: undefined, paneIndex: undefined } });
     } else {
       (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
         contentProvider: this.plugin.name,
