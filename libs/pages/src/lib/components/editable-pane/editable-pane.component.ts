@@ -22,9 +22,9 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Output()
   delete = new EventEmitter();
 
-  preview = false;
-
   contentProvider: ContentProvider;
+
+  preview = false;
 
   private contentProviders: Array<ContentProvider> = [];
 

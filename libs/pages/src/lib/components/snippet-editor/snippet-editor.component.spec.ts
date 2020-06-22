@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageControllerComponent } from './page-controller.component';
+import { SnippetEditorComponent } from './snippet-editor.component';
 
-describe('PageControllerComponent', () => {
-  let component: PageControllerComponent;
-  let fixture: ComponentFixture<PageControllerComponent>;
+describe('SnippetEditorComponent', () => {
+  let component: SnippetEditorComponent;
+  let fixture: ComponentFixture<SnippetEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PageControllerComponent ]
+      declarations: [ SnippetEditorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageControllerComponent);
+    fixture = TestBed.createComponent(SnippetEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

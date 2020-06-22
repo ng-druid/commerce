@@ -7,11 +7,11 @@ import { ContentInstance } from '@classifieds-ui/content';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-  selector: 'classifieds-ui-markdown-editor',
-  templateUrl: './markdown-editor.component.html',
-  styleUrls: ['./markdown-editor.component.scss']
+  selector: 'classifieds-ui-snippet-editor',
+  templateUrl: './snippet-editor.component.html',
+  styleUrls: ['./snippet-editor.component.scss']
 })
-export class MarkdownEditorComponent implements OnInit {
+export class SnippetEditorComponent implements OnInit {
 
   contentForm = this.fb.group({
     content: this.fb.control('', Validators.required)
@@ -36,7 +36,7 @@ export class MarkdownEditorComponent implements OnInit {
 
   submit() {
     (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
-      contentProvider: 'markdown',
+      contentProvider: 'snippet',
       settings: this.fb.array([
         this.fb.group({
           name: new FormControl('content', Validators.required),
@@ -56,7 +56,7 @@ export class MarkdownEditorComponent implements OnInit {
       intValue: undefined,
       computedValue: undefined
     })];
-    this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: 'markdown', settings }));
+    this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: 'snippet', settings }));
   }
 
 }
