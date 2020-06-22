@@ -1,10 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl, FormArray } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AttributeTypes, AttributeValue } from '@classifieds-ui/attributes';
-import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
-import { ContentInstance } from '@classifieds-ui/content';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Snippet } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-snippet-form',
@@ -13,17 +10,16 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class SnippetFormComponent implements OnInit {
 
+  @Output()
+  submitted = new EventEmitter<Snippet>();
+
   contentForm = this.fb.group({
     content: this.fb.control('', Validators.required)
   });
 
   preview: string;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) private panelFormGroup: FormGroup,
-    private fb: FormBuilder,
-    private pageBuilderFacade: PageBuilderFacade
-  ) { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.contentForm.get("content").valueChanges.pipe(
@@ -35,28 +31,10 @@ export class SnippetFormComponent implements OnInit {
   }
 
   submit() {
-    (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
-      contentPlugin: 'snippet',
-      settings: this.fb.array([
-        this.fb.group({
-          name: new FormControl('content', Validators.required),
-          type: new FormControl(AttributeTypes.Text, Validators.required),
-          displayName: new FormControl('Content', Validators.required),
-          value: new FormControl(this.contentForm.get('content').value, Validators.required),
-          computedValue: new FormControl(this.contentForm.get('content').value, Validators.required),
-        })
-      ])
+    this.submitted.emit(new Snippet({
+      content: this.contentForm.get('content').value,
+      contentType: 'text/markdown',
     }));
-    const settings = [new AttributeValue({
-      name: 'content',
-      type: AttributeTypes.Text,
-      displayName: 'Content',
-      value: this.contentForm.get('content').value,
-      attributes: [],
-      intValue: undefined,
-      computedValue: undefined
-    })];
-    this.pageBuilderFacade.addContentInstance(new ContentInstance({ pluginName: 'snippet', settings }));
   }
 
 }

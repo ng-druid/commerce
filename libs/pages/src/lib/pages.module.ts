@@ -27,6 +27,7 @@ import { SnippetFormComponent } from './components/snippet-form/snippet-form.com
 import { SnippetPaneRendererComponent } from './components/snippet-pane-renderer/snippet-pane-renderer.component';
 import { PageManagerConstructComponent } from './components/page-manager-construct/page-manager-construct.component';
 import { ContentEditorComponent } from './components/content-editor/content-editor.component';
+import { SnippetEditorComponent } from './components/snippet-editor/snippet-editor.component';
 
 const routes = [
   { path: 'create-layout', component: CreateLayoutComponent },
@@ -52,10 +53,10 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent],
+  declarations: [GridLayoutComponent, CreateLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent, SnippetEditorComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
-    { provide: CONTENT_PLUGIN, useValue: new ContentPlugin({ title: 'Snippet', name: 'snippet', selectionComponent: undefined, renderComponent: SnippetPaneRendererComponent, editorComponent: SnippetFormComponent }), multi: true }
+    { provide: CONTENT_PLUGIN, useValue: new ContentPlugin({ title: 'Snippet', name: 'snippet', selectionComponent: undefined, renderComponent: SnippetPaneRendererComponent, editorComponent: SnippetEditorComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]
 })

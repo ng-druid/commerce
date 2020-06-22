@@ -1,4 +1,4 @@
-import { ContentInstance } from '@classifieds-ui/content';
+// import { ContentInstance } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
 
 export class Page {
@@ -18,6 +18,17 @@ export class Page {
       this.createdAt = data.createdAt;
       this.published = data.published;
       this.body = data.body;
+    }
+  }
+}
+
+export class Snippet {
+  content: string;
+  contentType: string;
+  constructor(data?: Snippet) {
+    if(data) {
+      this.content = data.content;
+      this.contentType = data.contentType;
     }
   }
 }
