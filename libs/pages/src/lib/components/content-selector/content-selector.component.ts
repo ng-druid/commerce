@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ComponentFactoryResolver, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { CONTENT_PROVIDER, ContentProvider, ContentInstance } from '@classifieds-ui/content';
+import { CONTENT_PLUGIN, ContentPlugin, ContentInstance } from '@classifieds-ui/content';
 import { ContentSelectionHostDirective } from '../../directives/content-selection-host.directive';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
@@ -14,14 +14,14 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 export class ContentSelectorComponent implements OnInit {
 
   selectedIndex = 0
-  provider: ContentProvider;
+  plugin: ContentPlugin;
 
-  contentProviders: Array<ContentProvider> = [];
+  contentPlugins: Array<ContentPlugin> = [];
 
   @ViewChild(ContentSelectionHostDirective, {static: true}) selectionHost: ContentSelectionHostDirective;
 
   constructor(
-    @Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>,
+    @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public panelFormGroup: FormGroup,
     private bottomSheetRef: MatBottomSheetRef<ContentSelectorComponent>,
     private dialog: MatDialog,
@@ -29,31 +29,31 @@ export class ContentSelectorComponent implements OnInit {
     private pageBuilderFacade: PageBuilderFacade,
     private fb: FormBuilder
   ) {
-    this.contentProviders = contentProviders;
+    this.contentPlugins = contentPlugins;
   }
 
   ngOnInit(): void {
   }
 
-  onEntitySelected(provider: ContentProvider) {
-    this.provider = provider;
-    if(this.provider.selectionComponent !== undefined) {
+  onEntitySelected(plugin: ContentPlugin) {
+    this.plugin = plugin;
+    if(this.plugin.selectionComponent !== undefined) {
       this.selectedIndex = 1;
       this.renderSelectionComponent();
-    } else if(this.provider.editorComponent !== undefined) {
+    } else if(this.plugin.editorComponent !== undefined) {
       this.bottomSheetRef.dismiss();
-      const dialogRef = this.dialog.open(this.provider.editorComponent, { data: this.panelFormGroup });
+      const dialogRef = this.dialog.open(this.plugin.editorComponent, { data: this.panelFormGroup });
     } else {
       (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
-        contentProvider: this.provider.name,
+        contentProvider: this.plugin.name,
         settings: this.fb.array([])
       }));
-      this.pageBuilderFacade.addContentInstance(new ContentInstance({ providerName: this.provider.name, settings: [] }));
+      this.pageBuilderFacade.addContentInstance(new ContentInstance({ pluginName: this.plugin.name, settings: [] }));
     }
   }
 
   renderSelectionComponent() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.provider.selectionComponent);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.plugin.selectionComponent);
 
     const viewContainerRef = this.selectionHost.viewContainerRef;
     viewContainerRef.clear();

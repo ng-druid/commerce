@@ -3,7 +3,7 @@ import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
+import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 
 @Component({
@@ -19,7 +19,7 @@ export class ContentEditorComponent implements OnInit {
     panels: this.fb.array([])
   });
 
-  private contentProviders: Array<ContentProvider> = [];
+  private contentPlugins: Array<ContentPlugin> = [];
 
   @ViewChild(GridLayoutComponent, {static: true}) layoutComponent: GridLayoutComponent;
 
@@ -28,11 +28,11 @@ export class ContentEditorComponent implements OnInit {
   }
 
   constructor(
-    @Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>,
+    @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private fb: FormBuilder,
     private bs: MatBottomSheet
   ) {
-    this.contentProviders = contentProviders;
+    this.contentPlugins = contentPlugins;
   }
 
   ngOnInit(): void {
@@ -66,8 +66,8 @@ export class ContentEditorComponent implements OnInit {
     return this.panelPanes(index).at(index2) as FormGroup;
   }
 
-  panelPaneProvider(index: number, index2: number): string {
-    return this.panelPane(index, index2).get('contentProvider').value;
+  panelPanePlugin(index: number, index2: number): string {
+    return this.panelPane(index, index2).get('contentPlugin').value;
   }
 
   panelPaneSettings(index: number, index2: number): string {
@@ -75,8 +75,8 @@ export class ContentEditorComponent implements OnInit {
   }
 
   onPaneEdit(index: number, index2: number) {
-    const provider = this.panelPaneProvider(index, index2);
-    const contentProvider = this.contentProviders.find(p => p.name === provider);
+    const plugin = this.panelPanePlugin(index, index2);
+    const contentPlugin = this.contentPlugins.find(p => p.name === plugin);
     alert(`EDIT panel ${index} pane ${index2}`);
   }
 

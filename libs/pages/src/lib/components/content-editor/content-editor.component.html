@@ -7,7 +7,7 @@
       <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
     </ng-template>
     <ng-template #innerGridItem let-i="i">
-      <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [providerName]="panelPaneProvider(i, j)" [settings]="panelPaneSettings(i, j)"></classifieds-ui-editable-pane>
+      <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)"></classifieds-ui-editable-pane>
     </ng-template>
   </classifieds-ui-grid-layout>
 </form>

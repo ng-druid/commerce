@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, EventEmitter, Output, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { ContentProvider, CONTENT_PROVIDER } from '@classifieds-ui/content';
+import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 
 @Component({
@@ -11,7 +11,7 @@ import { PaneContentHostDirective } from '../../directives/pane-content-host.dir
 export class EditablePaneComponent implements OnInit, OnChanges {
 
   @Input()
-  providerName: string;
+  pluginName: string;
 
   @Input()
   settings: Array<AttributeValue> = [];
@@ -22,24 +22,24 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Output()
   delete = new EventEmitter();
 
-  contentProvider: ContentProvider;
+  contentPlugin: ContentPlugin;
 
   preview = false;
 
-  private contentProviders: Array<ContentProvider> = [];
+  private contentPlugins: Array<ContentPlugin> = [];
 
   @ViewChild(PaneContentHostDirective, { static: true }) contentPaneHost: PaneContentHostDirective;
 
-  constructor(@Inject(CONTENT_PROVIDER) contentProviders: Array<ContentProvider>, private componentFactoryResolver: ComponentFactoryResolver) {
-    this.contentProviders = contentProviders;
+  constructor(@Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>, private componentFactoryResolver: ComponentFactoryResolver) {
+    this.contentPlugins = contentPlugins;
   }
 
   ngOnInit(): void {
-    this.contentProvider = this.contentProviders.find(p => p.name === this.providerName);
+    this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.contentProvider = this.contentProviders.find(p => p.name === this.providerName);
+    this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
   }
 
   onEditClick() {
@@ -66,7 +66,7 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   }
 
   renderPaneContent() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.contentProvider.renderComponent);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.contentPlugin.renderComponent);
 
     const viewContainerRef = this.contentPaneHost.viewContainerRef;
     viewContainerRef.clear();

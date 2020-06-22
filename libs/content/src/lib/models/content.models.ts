@@ -1,13 +1,13 @@
 import { Type } from '@angular/core';
 import { AttributeValue } from '@classifieds-ui/attributes';
 
-export class ContentProvider {
+export class ContentPlugin {
   name: string
   title: string;
   selectionComponent: Type<any>;
   renderComponent: Type<any>;
   editorComponent: Type<any>;
-  constructor(data?: ContentProvider) {
+  constructor(data?: ContentPlugin) {
     if (data) {
       this.name = data.name;
       this.title = data.title;
@@ -19,11 +19,11 @@ export class ContentProvider {
 }
 
 export class ContentInstance {
-  providerName: string;
+  pluginName: string;
   settings: Array<AttributeValue> = [];
   constructor(data?: ContentInstance) {
     if (data) {
-      this.providerName = data.providerName;
+      this.pluginName = data.pluginName;
       if(data.settings) {
         this.settings = data.settings.map(s => new AttributeValue(s));
       }

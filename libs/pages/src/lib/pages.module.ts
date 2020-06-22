@@ -8,7 +8,7 @@ import { AngularSplitModule } from 'angular-split';
 import { MaterialModule } from '@classifieds-ui/material';
 import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
 import { AttributesModule } from '@classifieds-ui/attributes';
-import { CONTENT_PROVIDER, ContentProvider } from '@classifieds-ui/content';
+import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
 import { GridsterModule } from 'angular-gridster2';
 import { EntityDefinitionService } from '@ngrx/data';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,7 +23,7 @@ import * as fromPageBuilder from './features/page-builder/page-builder.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { PageBuilderEffects } from './features/page-builder/page-builder.effects';
 import { EditablePaneComponent } from './components/editable-pane/editable-pane.component';
-import { SnippetEditorComponent } from './components/snippet-editor/snippet-editor.component';
+import { SnippetFormComponent } from './components/snippet-form/snippet-form.component';
 import { SnippetPaneRendererComponent } from './components/snippet-pane-renderer/snippet-pane-renderer.component';
 import { PageManagerConstructComponent } from './components/page-manager-construct/page-manager-construct.component';
 import { ContentEditorComponent } from './components/content-editor/content-editor.component';
@@ -52,10 +52,10 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetEditorComponent, SnippetPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent],
+  declarations: [GridLayoutComponent, CreateLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
-    { provide: CONTENT_PROVIDER, useValue: new ContentProvider({ title: 'Snippet', name: 'snippet', selectionComponent: undefined, renderComponent: SnippetPaneRendererComponent, editorComponent: SnippetEditorComponent }), multi: true }
+    { provide: CONTENT_PLUGIN, useValue: new ContentPlugin({ title: 'Snippet', name: 'snippet', selectionComponent: undefined, renderComponent: SnippetPaneRendererComponent, editorComponent: SnippetFormComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]
 })
