@@ -14,7 +14,7 @@ import { EntityDefinitionService } from '@ngrx/data';
 import { HttpClientModule } from '@angular/common/http';
 import { entityMetadata } from './entity-metadata';
 import { GridLayoutComponent } from './components/grid-layout/grid-layout.component';
-import { CreateLayoutComponent } from './components/create-layout/create-layout.component';
+import { CreateGridLayoutComponent } from './components/create-grid-layout/create-grid-layout.component';
 import { ContentSelectorComponent } from './components/content-selector/content-selector.component';
 import { ContentSelectionHostDirective } from './directives/content-selection-host.directive';
 import { PaneContentHostDirective } from './directives/pane-content-host.directive';
@@ -28,9 +28,10 @@ import { SnippetPaneRendererComponent } from './components/snippet-pane-renderer
 import { PageManagerConstructComponent } from './components/page-manager-construct/page-manager-construct.component';
 import { ContentEditorComponent } from './components/content-editor/content-editor.component';
 import { SnippetEditorComponent } from './components/snippet-editor/snippet-editor.component';
+import { GridLayoutFormComponent } from './components/grid-layout-form/grid-layout-form.component';
 
 const routes = [
-  { path: 'create-layout', component: CreateLayoutComponent },
+  { path: 'create-grid-layout', component: CreateGridLayoutComponent },
   { path: 'content-editor', component: ContentEditorComponent },
   { path: 'page-manager', component: PageManagerConstructComponent },
   //{ path: '**', component: PageControllerComponent, pathMatch: 'full' }
@@ -53,7 +54,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent, SnippetEditorComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: CONTENT_PLUGIN, useValue: new ContentPlugin({ title: 'Snippet', name: 'snippet', selectionComponent: undefined, renderComponent: SnippetPaneRendererComponent, editorComponent: SnippetEditorComponent }), multi: true }

@@ -33,18 +33,16 @@ export class Snippet {
   }
 }
 
-export class Layout {
+export class GridLayout {
   id: string;
+  site: string;
   gridItems: Array<GridItem> = [];
-  panels: Array<Panel> = [];
-  constructor(data?: Layout) {
+  constructor(data?: GridLayout) {
     if(data) {
-      if(data.panels) {
-        this.id = data.id;
-        this.panels = data.panels.map(p => new Panel(p));
-        if(data.gridItems) {
-          this.gridItems = data.gridItems.map(i => new GridItem(i));
-        }
+      this.id = data.id;
+      this.site = data.site;
+      if(data.gridItems) {
+        this.gridItems = data.gridItems.map(i => new GridItem(i));
       }
     }
   }
@@ -62,11 +60,11 @@ export class Panel {
 }
 
 export class Pane {
-  contentProvider: string;
+  contentPlugin: string;
   settings: Array<AttributeValue> = [];
   constructor(data?: Pane) {
     if(data) {
-      this.contentProvider = data.contentProvider;
+      this.contentPlugin = data.contentPlugin;
       if(data.settings) {
         this.settings = data.settings.map(a => new AttributeValue(a));
       }
@@ -79,12 +77,14 @@ export class GridItem {
   rows: number;
   x: number;
   y: number;
+  weight: number;
   constructor(data?: GridItem) {
     if(data) {
       this.cols = data.cols;
       this.rows = data.rows;
       this.x = data.x;
       this.y = data.y;
+      this.weight = data.weight;
     }
   }
 }

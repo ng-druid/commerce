@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateLayoutComponent } from './create-layout.component';
+import { CreateGridLayoutComponent } from './create-grid-layout.component';
 
-describe('CreateLayoutComponent', () => {
-  let component: CreateLayoutComponent;
-  let fixture: ComponentFixture<CreateLayoutComponent>;
+describe('CreateGridLayoutComponent', () => {
+  let component: CreateGridLayoutComponent;
+  let fixture: ComponentFixture<CreateGridLayoutComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateLayoutComponent ]
+      declarations: [ CreateGridLayoutComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateLayoutComponent);
+    fixture = TestBed.createComponent(CreateGridLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
