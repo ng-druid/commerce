@@ -1,10 +1,9 @@
 import { Component, OnInit, Inject, ComponentFactoryResolver, ViewChild } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { CONTENT_PLUGIN, ContentPlugin, ContentInstance } from '@classifieds-ui/content';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
 import { ContentSelectionHostDirective } from '../../directives/content-selection-host.directive';
-import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'classifieds-ui-content-selector',
@@ -26,7 +25,6 @@ export class ContentSelectorComponent implements OnInit {
     private bottomSheetRef: MatBottomSheetRef<ContentSelectorComponent>,
     private dialog: MatDialog,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private pageBuilderFacade: PageBuilderFacade,
     private fb: FormBuilder
   ) {
     this.contentPlugins = contentPlugins;
@@ -48,7 +46,6 @@ export class ContentSelectorComponent implements OnInit {
         contentProvider: this.plugin.name,
         settings: this.fb.array([])
       }));
-      this.pageBuilderFacade.addContentInstance(new ContentInstance({ pluginName: this.plugin.name, settings: [] }));
     }
   }
 
