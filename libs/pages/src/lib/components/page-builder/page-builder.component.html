@@ -1,0 +1,47 @@
+<mat-sidenav-container fxFill>
+  <mat-sidenav closed mode="side">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+      <mat-panel-title>Variant 1</mat-panel-title>
+      <!-- <mat-panel-description>Place Content In Layout</mat-panel-description> -->
+      </mat-expansion-panel-header>
+      Form Settings.
+    </mat-expansion-panel>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-sidenav-container fxFill>
+      <mat-sidenav opened mode="side">
+        <mat-vertical-stepper [linear]="true" #stepper>
+          <mat-step [stepControl]="layoutForm">
+            <form [formGroup]="layoutForm">
+              <ng-template matStepLabel>Layout</ng-template>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="contentForm">
+            <form [formGroup]="contentForm">
+              <ng-template matStepLabel>Content</ng-template>
+            </form>
+          </mat-step>
+        </mat-vertical-stepper>
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <classifieds-ui-content-editor></classifieds-ui-content-editor>
+        <div [hidden]="true" class="layout-wrapper">
+          <h3>Grid Layouts</h3>
+          <div>
+            <mat-radio-group>
+              <classifieds-ui-grid-layout-master>
+                <ng-template #bottom let-i="i" let-layout="layout">
+                  <mat-radio-button [value]="layout.id">
+                    Layout Name
+                  </mat-radio-button>
+                </ng-template>
+              </classifieds-ui-grid-layout-master>
+            </mat-radio-group>
+          </div>
+        </div>
+
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -4,4 +4,7 @@ export const entityMetadata: EntityMetadataMap = {
   GridLayout: {
     entityName: 'GridLayout'
   },
+  PanelPage: {
+    entityName: 'PanelPage'
+  },
 };

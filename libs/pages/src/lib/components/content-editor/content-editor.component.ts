@@ -6,7 +6,9 @@ import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Pane } from '../../models/page.models';
+import { Pane, PanelPage } from '../../models/page.models';
+import { EntityServices, EntityCollectionService } from '@ngrx/data';
+import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -19,9 +21,23 @@ export class ContentEditorComponent implements OnInit {
     panels: this.fb.array([])
   });
 
+  options: GridsterConfig = {
+    gridType: GridType.Fit,
+    displayGrid: DisplayGrid.Always,
+    pushItems: true,
+    draggable: {
+      enabled: true
+    },
+    resizable: {
+      enabled: true
+    }
+  };
+
   private contentPlugins: Array<ContentPlugin> = [];
 
-  @ViewChild(GridLayoutComponent, {static: true}) layoutComponent: GridLayoutComponent;
+  private panelPageService: EntityCollectionService<PanelPage>;
+
+  @ViewChild(GridLayoutComponent, {static: true}) gridLayout: GridLayoutComponent;
 
   get panels() {
     return (this.contentForm.get('panels') as FormArray);
@@ -31,9 +47,11 @@ export class ContentEditorComponent implements OnInit {
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private fb: FormBuilder,
     private bs: MatBottomSheet,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    es: EntityServices
   ) {
     this.contentPlugins = contentPlugins;
+    this.panelPageService = es.getEntityCollectionService('PanelPage');
   }
 
   ngOnInit(): void {
@@ -54,8 +72,14 @@ export class ContentEditorComponent implements OnInit {
   }
 
   submit() {
-    console.log("save");
-    console.log(this.layoutComponent.grid);
+    const panelPage = new PanelPage({
+      id: undefined,
+      gridItems: this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })),
+      panels: this.panels.value
+    });
+    this.panelPageService.add(panelPage).subscribe(() => {
+      alert('panel page created');
+    });
   }
 
   panelPanes(index: number): FormArray {

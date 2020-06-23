@@ -1,5 +1,5 @@
-import { Component, OnInit, EventEmitter, Output, ContentChild, TemplateRef } from '@angular/core';
-import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
+import { Component, OnInit, EventEmitter, Output, ContentChild, TemplateRef, Input } from '@angular/core';
+import { DisplayGrid, GridsterConfig, GridType, GridsterItem } from 'angular-gridster2';
 
 @Component({
   selector: 'classifieds-ui-grid-layout',
@@ -14,21 +14,19 @@ export class GridLayoutComponent implements OnInit {
   @Output()
   itemRemoved = new EventEmitter<number>();
 
+  @Input()
+  dashboard = []
+
+  @Input()
+  displayMainControls = true;
+
+  @Input()
+  displayItemHeader = true;
+
+  @Input()
+  options: GridsterConfig;
+
   rows = 0;
-
-  options: GridsterConfig = {
-    gridType: GridType.Fit,
-    displayGrid: DisplayGrid.Always,
-    pushItems: true,
-    draggable: {
-      enabled: true
-    },
-    resizable: {
-      enabled: true
-    }
-  };
-
-  dashboard = [];
 
   get grid() {
     return this.dashboard;

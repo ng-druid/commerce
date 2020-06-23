@@ -1,0 +1,7 @@
+  <classifieds-ui-grid-layout [dashboard]="panelPage?.gridItems" [displayMainControls]="false" [displayItemHeader]="false" [options]="options">
+    <ng-template #innerGridItem let-i="i">
+      <div *ngIf="panelPage">
+        <classifieds-ui-render-pane *ngFor="let pane of panelPage.panels[i].panes; let j = index" [pluginName]="pane.contentPlugin" [settings]="pane.settings"></classifieds-ui-render-pane>
+      </div>
+    </ng-template>
+  </classifieds-ui-grid-layout>

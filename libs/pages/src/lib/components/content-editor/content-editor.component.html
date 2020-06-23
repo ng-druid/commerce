@@ -1,5 +1,5 @@
 <form [formGroup]="contentForm" (ngSubmit)="submit()" class="content-editor-wrapper">
-  <classifieds-ui-grid-layout (itemAdded)="onItemAdded()" (itemRemoved)="onItemRemoved($event)">
+  <classifieds-ui-grid-layout (itemAdded)="onItemAdded()" (itemRemoved)="onItemRemoved($event)" [options]="options">
     <ng-template #extraActions>
       <button type="submit">Save</button>
     </ng-template>
@@ -7,7 +7,9 @@
       <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
     </ng-template>
     <ng-template #innerGridItem let-i="i">
-      <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)"></classifieds-ui-editable-pane>
+      <div class="panel-inner">
+        <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)"></classifieds-ui-editable-pane>
+      </div>
     </ng-template>
   </classifieds-ui-grid-layout>
 </form>

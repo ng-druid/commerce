@@ -1,23 +1,19 @@
 // import { ContentInstance } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
 
-export class Page {
-  site: string;
-  path: string;
-  page: string;
-  title: string;
-  createdAt: string;
-  published: boolean;
-  body: string;
-  constructor(data?: Page) {
+export class PanelPage {
+  id: string;
+  gridItems: Array<GridItem> = [];
+  panels: Array<Panel> = [];
+  constructor(data?: PanelPage) {
     if(data) {
-      this.site = data.site;
-      this.path = data.path;
-      this.page = data.page;
-      this.title = data.title;
-      this.createdAt = data.createdAt;
-      this.published = data.published;
-      this.body = data.body;
+      this.id = data.id;
+      if(data.panels) {
+        this.panels = data.panels.map(p => new Panel(p));
+      }
+      if(data.gridItems) {
+        this.gridItems = data.gridItems.map(i => new GridItem(i));
+      }
     }
   }
 }

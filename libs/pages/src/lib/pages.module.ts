@@ -25,15 +25,21 @@ import { PageBuilderEffects } from './features/page-builder/page-builder.effects
 import { EditablePaneComponent } from './components/editable-pane/editable-pane.component';
 import { SnippetFormComponent } from './components/snippet-form/snippet-form.component';
 import { SnippetPaneRendererComponent } from './components/snippet-pane-renderer/snippet-pane-renderer.component';
-import { PageManagerConstructComponent } from './components/page-manager-construct/page-manager-construct.component';
+import { PageBuilderComponent } from './components/page-builder/page-builder.component';
 import { ContentEditorComponent } from './components/content-editor/content-editor.component';
 import { SnippetEditorComponent } from './components/snippet-editor/snippet-editor.component';
 import { GridLayoutFormComponent } from './components/grid-layout-form/grid-layout-form.component';
+import { GridLayoutMasterComponent } from './components/grid-layout-master/grid-layout-master.component';
+import { PanelPageComponent } from './components/panel-page/panel-page.component';
+import { RenderPaneComponent } from './components/render-pane/render-pane.component';
+import { PanelPageRouterComponent } from './components/panel-page-router/panel-page-router.component';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
   { path: 'content-editor', component: ContentEditorComponent },
-  { path: 'page-manager', component: PageManagerConstructComponent },
+  { path: 'page-builder', component: PageBuilderComponent },
+  { path: 'grid-layouts', component: GridLayoutMasterComponent },
+  { path: 'panelpage/:panelPageId', component: PanelPageRouterComponent },
   //{ path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
 
@@ -54,9 +60,10 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageManagerConstructComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
+    { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
     { provide: CONTENT_PLUGIN, useValue: new ContentPlugin({ title: 'Snippet', name: 'snippet', selectionComponent: undefined, renderComponent: SnippetPaneRendererComponent, editorComponent: SnippetEditorComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]
