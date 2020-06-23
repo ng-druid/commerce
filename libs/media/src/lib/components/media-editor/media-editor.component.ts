@@ -6,6 +6,7 @@ import { AttributeTypes } from '@classifieds-ui/attributes';
 import { FilesService } from '../../services/files.service';
 import { MediaFile } from '../../models/media.models';
 import { MediaContentHandler } from '../../handlers/media-content.handler';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-media-editor',
@@ -28,14 +29,9 @@ export class MediaEditorComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.data.pane !== undefined) {
-      this.filesService.convertToFiles([new MediaFile({
-        path: this.data.pane.settings.find(s => s.name === 'path').value,
-        contentType: this.data.pane.settings.find(s => s.name === 'contentType').value,
-        contentDisposition: this.data.pane.settings.find(s => s.name === 'contentDisposition').value,
-        id: this.data.pane.settings.find(s => s.name === 'id').value,
-        length: parseInt(this.data.pane.settings.find(s => s.name === 'length').value),
-        fileName: this.data.pane.settings.find(s => s.name === 'fileName').value
-      })]).subscribe(files => {
+      this.handler.toObject(this.data.pane.settings).pipe(
+        switchMap((mediaFile: MediaFile) => this.filesService.convertToFiles([mediaFile]))
+      ).subscribe(files => {
         this.media = files[0];
       });
     }

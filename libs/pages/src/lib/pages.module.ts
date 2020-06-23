@@ -10,7 +10,7 @@ import { MaterialModule } from '@classifieds-ui/material';
 import { MediaModule } from '@classifieds-ui/media';
 import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
 import { AttributesModule } from '@classifieds-ui/attributes';
-import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
+import { CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { GridsterModule } from 'angular-gridster2';
 import { EntityDefinitionService } from '@ngrx/data';
 import { HttpClientModule } from '@angular/common/http';
@@ -37,6 +37,8 @@ import { RenderPaneComponent } from './components/render-pane/render-pane.compon
 import { PanelPageRouterComponent } from './components/panel-page-router/panel-page-router.component';
 import { CreatePanelPageComponent } from './components/create-panel-page/create-panel-page.component';
 import { EditPanelPageComponent } from './components/edit-panel-page/edit-panel-page.component';
+import { SnippetContentHandler } from './handlers/snippet-content.handler';
+import { snippetContentPluginFactory } from './pages.factories';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -71,7 +73,8 @@ const routes = [
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
-    { provide: CONTENT_PLUGIN, useValue: new ContentPlugin({ title: 'Snippet', name: 'snippet', selectionComponent: undefined, renderComponent: SnippetPaneRendererComponent, editorComponent: SnippetEditorComponent }), multi: true }
+    { provide: SnippetContentHandler, useClass: SnippetContentHandler },
+    { provide: CONTENT_PLUGIN, useFactory: snippetContentPluginFactory, multi: true, deps: [ SnippetContentHandler ] }
   ],
   // exports: [ConvertLinksDirective]
 })

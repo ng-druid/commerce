@@ -3,6 +3,7 @@ import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@ang
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AttributeTypes } from '@classifieds-ui/attributes';
 import { Snippet, Pane } from '../../models/page.models';
+import { SnippetContentHandler } from '../../handlers/snippet-content.handler';
 
 @Component({
   selector: 'classifieds-ui-snippet-editor',
@@ -13,13 +14,16 @@ export class SnippetEditorComponent implements OnInit {
 
   snippet: Snippet;
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number;  }, private fb: FormBuilder) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number;  },
+    private fb: FormBuilder,
+    private handler: SnippetContentHandler
+  ) { }
 
   ngOnInit(): void {
     if(this.data.pane !== undefined) {
-      this.snippet = new Snippet({
-        content: this.data.pane.settings.find(s => s.name === 'content').value,
-        contentType: this.data.pane.settings.find(s => s.name === 'contentType').value
+      this.handler.toObject(this.data.pane.settings).subscribe((snippet: Snippet) => {
+        this.snippet = snippet;
       });
     }
   }

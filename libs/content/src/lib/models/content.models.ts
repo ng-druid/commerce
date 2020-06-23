@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 export interface ContentHandler {
   handleFile(file: File): Observable<Array<AttributeValue>>;
   handlesType(type: string): boolean
+  toObject<T>(settings: Array<AttributeValue>): Observable<T>
+  buildSettings<T>(obj: T): Array<AttributeValue>
 }
 
 export class ContentPlugin {

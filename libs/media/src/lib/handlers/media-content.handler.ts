@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
 import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
 import { FilesService } from '../services/files.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MediaFile } from '../models/media.models';
 
@@ -23,7 +23,19 @@ export class MediaContentHandler implements ContentHandler {
     return this.types.find(t => t === type) !== undefined;
   }
 
-  buildSettings(mediaFile: MediaFile): Array<AttributeValue> {
+  toObject<MediaFile>(settings: Array<AttributeValue>): Observable<MediaFile> {
+    const mediaFile = new MediaFile({
+        path: settings.find(s => s.name === 'path').value,
+        contentType: settings.find(s => s.name === 'contentType').value,
+        contentDisposition: settings.find(s => s.name === 'contentDisposition').value,
+        id: settings.find(s => s.name === 'id').value,
+        length: parseInt(settings.find(s => s.name === 'length').value),
+        fileName: settings.find(s => s.name === 'fileName').value
+    });
+    return of(mediaFile as any);
+  }
+
+  buildSettings<MediaFile>(mediaFile): Array<AttributeValue> {
     return [
       new AttributeValue({
         name: 'id',
