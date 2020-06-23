@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
 import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
-import { FilesService } from '../services/files.service';
+import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MediaFile } from '../models/media.models';
 
 @Injectable()
 export class MediaContentHandler implements ContentHandler {
