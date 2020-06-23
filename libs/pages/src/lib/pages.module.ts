@@ -33,12 +33,15 @@ import { GridLayoutMasterComponent } from './components/grid-layout-master/grid-
 import { PanelPageComponent } from './components/panel-page/panel-page.component';
 import { RenderPaneComponent } from './components/render-pane/render-pane.component';
 import { PanelPageRouterComponent } from './components/panel-page-router/panel-page-router.component';
+import { CreatePanelPageComponent } from './components/create-panel-page/create-panel-page.component';
+import { EditPanelPageComponent } from './components/edit-panel-page/edit-panel-page.component';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
-  { path: 'content-editor', component: ContentEditorComponent },
+  { path: 'create-panel-page', component: CreatePanelPageComponent },
   { path: 'page-builder', component: PageBuilderComponent },
   { path: 'grid-layouts', component: GridLayoutMasterComponent },
+  { path: 'panelpage/:panelPageId/manage', component: EditPanelPageComponent },
   { path: 'panelpage/:panelPageId', component: PanelPageRouterComponent },
   //{ path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
@@ -60,7 +63,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },

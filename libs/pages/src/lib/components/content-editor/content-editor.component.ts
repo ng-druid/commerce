@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
+import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+import { FormBuilder, FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { AttributeValue } from '@classifieds-ui/attributes';
@@ -7,7 +7,6 @@ import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pane, PanelPage } from '../../models/page.models';
-import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 
 @Component({
@@ -16,6 +15,34 @@ import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
   styleUrls: ['./content-editor.component.scss']
 })
 export class ContentEditorComponent implements OnInit {
+
+  @Output()
+  submitted = new EventEmitter<PanelPage>();
+
+  @Input()
+  set panelPage(panelPage: PanelPage) {
+    if(panelPage !== undefined) {
+      this.panelPageId = panelPage.id;
+      this.dashboard = [ ...panelPage.gridItems ];
+      panelPage.panels.forEach((p, i) => {
+        this.panels.push(this.fb.group({
+          panes: this.fb.array([])
+        }));
+        p.panes.forEach((pp, i2) => {
+          (this.panels.at(i).get('panes') as FormArray).push(this.fb.group({
+            contentPlugin: pp.contentPlugin,
+            settings: new FormArray(this.buildSettings(pp.settings))
+          }));
+        });
+      });
+    } else {
+      this.panelPageId = undefined;
+      (this.contentForm.get('panels') as FormArray).clear();
+    }
+  }
+
+  panelPageId: string;
+  dashboard = [];
 
   contentForm = this.fb.group({
     panels: this.fb.array([])
@@ -35,8 +62,6 @@ export class ContentEditorComponent implements OnInit {
 
   private contentPlugins: Array<ContentPlugin> = [];
 
-  private panelPageService: EntityCollectionService<PanelPage>;
-
   @ViewChild(GridLayoutComponent, {static: true}) gridLayout: GridLayoutComponent;
 
   get panels() {
@@ -47,11 +72,9 @@ export class ContentEditorComponent implements OnInit {
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private fb: FormBuilder,
     private bs: MatBottomSheet,
-    private dialog: MatDialog,
-    es: EntityServices
+    private dialog: MatDialog
   ) {
     this.contentPlugins = contentPlugins;
-    this.panelPageService = es.getEntityCollectionService('PanelPage');
   }
 
   ngOnInit(): void {
@@ -73,13 +96,11 @@ export class ContentEditorComponent implements OnInit {
 
   submit() {
     const panelPage = new PanelPage({
-      id: undefined,
+      id: this.panelPageId,
       gridItems: this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })),
       panels: this.panels.value
     });
-    this.panelPageService.add(panelPage).subscribe(() => {
-      alert('panel page created');
-    });
+    this.submitted.emit(panelPage);
   }
 
   panelPanes(index: number): FormArray {
@@ -109,6 +130,16 @@ export class ContentEditorComponent implements OnInit {
 
   onPaneDelete(index: number, index2: number) {
     this.panelPanes(index).removeAt(index2);
+  }
+
+  buildSettings(settings: Array<AttributeValue>): Array<FormGroup> {
+    return settings.map(s => this.fb.group({
+      name: new FormControl(s.name, Validators.required),
+      type: new FormControl(s.type, Validators.required),
+      displayName: new FormControl(s.displayName, Validators.required),
+      value: new FormControl(s.value, Validators.required),
+      computedValue: new FormControl(s.computedValue, Validators.required),
+    }));
   }
 
 }
