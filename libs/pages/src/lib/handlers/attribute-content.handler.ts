@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
+import { AttributeValue } from '@classifieds-ui/attributes';
 import { Observable, of } from 'rxjs';
-import { AttributeValue } from '../models/attributes.models';
 
 @Injectable()
 export class AttributeContentHandler implements ContentHandler {

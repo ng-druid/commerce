@@ -11,20 +11,13 @@ import { AttributeWidget } from './models/attributes.models';
 import { ATTRIBUTE_WIDGET } from './attribute.tokens';
 import { MinMaxWidgetComponent } from './components/min-max-widget/min-max-widget.component';
 import { AttributePipe } from './pipes/attribute.pipe';
-import { AttributeEditorComponent } from './components/attribute-editor/attribute-editor.component';
-import { AttributePaneRendererComponent } from './components/attribute-pane-renderer/attribute-pane-renderer.component';
-import { AttributeContentHandler } from './handlers/attribute-content.handler';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, MaterialModule],
-  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent, MinMaxWidgetComponent, AttributePipe, AttributeEditorComponent, AttributePaneRendererComponent],
+  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent, MinMaxWidgetComponent, AttributePipe],
   exports: [AttributesBuilderComponent, AttributePipe],
   entryComponents: [ TextWidgetComponent, MinMaxWidgetComponent ],
   providers: [
-    {
-      provide: AttributeContentHandler,
-      useClass: AttributeContentHandler
-    },
     {
       provide: ATTRIBUTE_WIDGET,
       useValue: new AttributeWidget({ name: 'text', component: TextWidgetComponent }),
