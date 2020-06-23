@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MarkdownModule, MarkdownComponent } from 'ngx-markdown';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularSplitModule } from 'angular-split';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { MaterialModule } from '@classifieds-ui/material';
 import { MediaModule } from '@classifieds-ui/media';
 import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
@@ -58,6 +59,7 @@ const routes = [
     AngularSplitModule,
     RouterModule.forChild(routes),
     MarkdownModule.forChild(),
+    NgxDropzoneModule,
     GridsterModule,
     UtilsModule,
     AttributesModule,

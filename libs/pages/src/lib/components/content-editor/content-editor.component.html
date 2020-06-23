@@ -7,9 +7,9 @@
       <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
     </ng-template>
     <ng-template #innerGridItem let-i="i">
-      <div class="panel-inner">
+      <ngx-dropzone [multiple]="true" [disableClick]="true" (change)="onFileChange($event, i)">
         <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)"></classifieds-ui-editable-pane>
-      </div>
+      </ngx-dropzone>
     </ng-template>
   </classifieds-ui-grid-layout>
 </form>

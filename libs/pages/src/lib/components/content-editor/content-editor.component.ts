@@ -132,6 +132,25 @@ export class ContentEditorComponent implements OnInit {
     this.panelPanes(index).removeAt(index2);
   }
 
+  onFileChange(event: any, index: number) {
+    const file: File = event.addedFiles[0];
+    const plugin = this.contentPlugins.filter(p => p.handler !== undefined).find(p => p.handler.handlesType(file.type));
+    if(plugin !== undefined) {
+      plugin.handler.handleFile(file).subscribe(settings => {
+        this.panelPanes(index).push(this.fb.group({
+          contentPlugin: plugin.name,
+          settings: this.fb.array(settings.map(s => this.fb.group({
+            name: new FormControl(s.name, Validators.required),
+            type: new FormControl(s.type, Validators.required),
+            displayName: new FormControl(s.displayName, Validators.required),
+            value: new FormControl(s.value, Validators.required),
+            computedValue: new FormControl(s.value, Validators.required),
+          })))
+        }));
+      });
+    }
+  }
+
   buildSettings(settings: Array<AttributeValue>): Array<FormGroup> {
     return settings.map(s => this.fb.group({
       name: new FormControl(s.name, Validators.required),

@@ -5,3 +5,10 @@
 .panel-inner {
   padding: 1em;
 }
+
+form ::ng-deep ngx-dropzone {
+  height: 100%;
+  display: block;
+  padding: 1em;
+  border: none;
+}

@@ -6,12 +6,14 @@
   </div>
   <gridster [options]="options">
     <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index">
-      <div [hidden]="!displayItemHeader" class="grid-item-header">
-        <ng-container *ngTemplateOutlet="gridItemActionsTmpl,context: { i: i }"></ng-container>
-        <button type="button" class="delete" (mousedown)="removeItem(i)" (touchstart)="removeItem(i)">Delete</button>
-      </div>
-      <div class="grid-item-inner">
-        <ng-container *ngTemplateOutlet="innerGridItemTmpl,context: { i: i }"></ng-container>
+      <div fxLayout="column" fxFill>
+        <div fxFlex="0 1 auto" [hidden]="!displayItemHeader" class="grid-item-header">
+          <ng-container *ngTemplateOutlet="gridItemActionsTmpl,context: { i: i }"></ng-container>
+          <button type="button" class="delete" (mousedown)="removeItem(i)" (touchstart)="removeItem(i)">Delete</button>
+        </div>
+        <div fxFlex class="grid-item-inner">
+          <ng-container *ngTemplateOutlet="innerGridItemTmpl,context: { i: i }"></ng-container>
+        </div>
       </div>
     </gridster-item>
   </gridster>
