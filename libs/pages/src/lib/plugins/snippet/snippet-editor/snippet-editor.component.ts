@@ -2,8 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AttributeTypes } from '@classifieds-ui/attributes';
-import { Snippet, Pane } from '../../models/page.models';
-import { SnippetContentHandler } from '../../handlers/snippet-content.handler';
+import { Snippet, Pane } from '../../../models/page.models';
+import { SnippetContentHandler } from '../../../handlers/snippet-content.handler';
 
 @Component({
   selector: 'classifieds-ui-snippet-editor',

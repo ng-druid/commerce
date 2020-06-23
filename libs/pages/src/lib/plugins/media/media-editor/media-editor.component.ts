@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Pane } from '@classifieds-ui/pages';
 import { AttributeTypes } from '@classifieds-ui/attributes';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
-import { MediaContentHandler } from '../../handlers/media-content.handler';
+import { MediaContentHandler } from '../../../handlers/media-content.handler';
 import { switchMap } from 'rxjs/operators';
 
 @Component({

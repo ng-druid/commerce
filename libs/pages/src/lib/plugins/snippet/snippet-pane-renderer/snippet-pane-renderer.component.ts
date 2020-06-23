@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { SnippetContentHandler } from '../../handlers/snippet-content.handler';
-import { Snippet } from '../../models/page.models';
+import { SnippetContentHandler } from '../../../handlers/snippet-content.handler';
+import { Snippet } from '../../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-snippet-pane-renderer',

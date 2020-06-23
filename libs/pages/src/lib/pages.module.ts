@@ -26,10 +26,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { PageBuilderEffects } from './features/page-builder/page-builder.effects';
 import { EditablePaneComponent } from './components/editable-pane/editable-pane.component';
 import { SnippetFormComponent } from './components/snippet-form/snippet-form.component';
-import { SnippetPaneRendererComponent } from './components/snippet-pane-renderer/snippet-pane-renderer.component';
+import { SnippetPaneRendererComponent } from './plugins/snippet/snippet-pane-renderer/snippet-pane-renderer.component';
 import { PageBuilderComponent } from './components/page-builder/page-builder.component';
 import { ContentEditorComponent } from './components/content-editor/content-editor.component';
-import { SnippetEditorComponent } from './components/snippet-editor/snippet-editor.component';
+import { SnippetEditorComponent } from './plugins/snippet/snippet-editor/snippet-editor.component';
 import { GridLayoutFormComponent } from './components/grid-layout-form/grid-layout-form.component';
 import { GridLayoutMasterComponent } from './components/grid-layout-master/grid-layout-master.component';
 import { PanelPageComponent } from './components/panel-page/panel-page.component';
@@ -39,13 +39,13 @@ import { CreatePanelPageComponent } from './components/create-panel-page/create-
 import { EditPanelPageComponent } from './components/edit-panel-page/edit-panel-page.component';
 import { SnippetContentHandler } from './handlers/snippet-content.handler';
 import { snippetContentPluginFactory, attributeContentPluginFactory, mediaContentPluginFactory } from './pages.factories';
-import { AttributeSelectorComponent } from './components/attribute-selector/attribute-selector.component';
+import { AttributeSelectorComponent } from './plugins/attribute/attribute-selector/attribute-selector.component';
 import { AttributeContentHandler } from './handlers/attribute-content.handler';
-import { AttributeEditorComponent } from './components/attribute-editor/attribute-editor.component';
-import { AttributePaneRendererComponent } from './components/attribute-pane-renderer/attribute-pane-renderer.component';
+import { AttributeEditorComponent } from './plugins/attribute/attribute-editor/attribute-editor.component';
+import { AttributePaneRendererComponent } from './plugins/attribute/attribute-pane-renderer/attribute-pane-renderer.component';
 import { MediaContentHandler } from './handlers/media-content.handler';
-import { MediaEditorComponent } from './components/media-editor/media-editor.component';
-import { MediaPaneRendererComponent } from './components/media-pane-renderer/media-pane-renderer.component';
+import { MediaEditorComponent } from './plugins/media/media-editor/media-editor.component';
+import { MediaPaneRendererComponent } from './plugins/media/media-pane-renderer/media-pane-renderer.component';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
