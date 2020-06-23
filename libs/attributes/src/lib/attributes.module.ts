@@ -13,12 +13,11 @@ import { MinMaxWidgetComponent } from './components/min-max-widget/min-max-widge
 import { AttributePipe } from './pipes/attribute.pipe';
 import { AttributeEditorComponent } from './components/attribute-editor/attribute-editor.component';
 import { AttributePaneRendererComponent } from './components/attribute-pane-renderer/attribute-pane-renderer.component';
-import { AttributeSelectorComponent } from './components/attribute-selector/attribute-selector.component';
 import { AttributeContentHandler } from './handlers/attribute-content.handler';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, MaterialModule],
-  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent, MinMaxWidgetComponent, AttributePipe, AttributeEditorComponent, AttributePaneRendererComponent, AttributeSelectorComponent],
+  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent, MinMaxWidgetComponent, AttributePipe, AttributeEditorComponent, AttributePaneRendererComponent],
   exports: [AttributesBuilderComponent, AttributePipe],
   entryComponents: [ TextWidgetComponent, MinMaxWidgetComponent ],
   providers: [

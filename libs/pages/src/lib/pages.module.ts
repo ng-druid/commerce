@@ -8,6 +8,7 @@ import { AngularSplitModule } from 'angular-split';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { MaterialModule } from '@classifieds-ui/material';
 import { MediaModule } from '@classifieds-ui/media';
+import { AdsModule } from '@classifieds-ui/ads';
 import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
 import { AttributesModule, AttributeContentHandler } from '@classifieds-ui/attributes';
 import { CONTENT_PLUGIN } from '@classifieds-ui/content';
@@ -39,6 +40,7 @@ import { CreatePanelPageComponent } from './components/create-panel-page/create-
 import { EditPanelPageComponent } from './components/edit-panel-page/edit-panel-page.component';
 import { SnippetContentHandler } from './handlers/snippet-content.handler';
 import { snippetContentPluginFactory,attributeContentPluginFactory } from './pages.factories';
+import { AttributeSelectorComponent } from './components/attribute-selector/attribute-selector.component';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -66,10 +68,11 @@ const routes = [
     UtilsModule,
     AttributesModule,
     MediaModule,
+    AdsModule,
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },

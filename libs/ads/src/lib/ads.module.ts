@@ -45,7 +45,7 @@ import { AD_TYPE_PLUGIN } from './ad.tokens';
 import { AdTypePlugin } from './models/ads.models';
 
 const routes = [
-  { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
+  { path: 'adtype/:adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
     { path: 'ad/:adId/manage', component: ManageAdComponent },
     { path: 'ad/:adId', component: AdDetailComponent },
     { path: 'create-ad', component: CreateAdComponent, canActivate: [CreateAdGuard] },
