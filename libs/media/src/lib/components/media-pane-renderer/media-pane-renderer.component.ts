@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, Input } from '@angular/core';
 import { MEDIA_SETTINGS } from '../../media.tokens';
 import { MediaSettings, MediaFile } from '../../models/media.models';
 import { AttributeValue } from '@classifieds-ui/attributes';
+import { MediaContentHandler } from '../../handlers/media-content.handler';
 
 @Component({
   selector: 'classifieds-ui-media-pane-renderer',
@@ -16,29 +17,19 @@ export class MediaPaneRendererComponent implements OnInit {
   mediaFile: MediaFile;
   mediaBaseUrl: string;
 
-  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings) { }
+  constructor(@Inject(MEDIA_SETTINGS) private mediaSettings: MediaSettings, private handler: MediaContentHandler) { }
 
   ngOnInit(): void {
     this.mediaBaseUrl = this.mediaSettings.imageUrl;
-    this.mediaFile = new MediaFile({
-      path: this.settings.find(s => s.name === 'path').value,
-      contentType: this.settings.find(s => s.name === 'contentType').value,
-      contentDisposition: this.settings.find(s => s.name === 'contentDisposition').value,
-      id: this.settings.find(s => s.name === 'id').value,
-      length: parseInt(this.settings.find(s => s.name === 'length').value),
-      fileName: this.settings.find(s => s.name === 'fileName').value
+    this.handler.toObject(this.settings).subscribe((mediaFile: MediaFile) => {
+      this.mediaFile = mediaFile;
     });
   }
 
   ngOnChanges(): void {
     this.mediaBaseUrl = this.mediaSettings.imageUrl;
-    this.mediaFile = new MediaFile({
-      path: this.settings.find(s => s.name === 'path').value,
-      contentType: this.settings.find(s => s.name === 'contentType').value,
-      contentDisposition: this.settings.find(s => s.name === 'contentDisposition').value,
-      id: this.settings.find(s => s.name === 'id').value,
-      length: parseInt(this.settings.find(s => s.name === 'length').value),
-      fileName: this.settings.find(s => s.name === 'fileName').value
+    this.handler.toObject(this.settings).subscribe((mediaFile: MediaFile) => {
+      this.mediaFile = mediaFile;
     });
   }
 
