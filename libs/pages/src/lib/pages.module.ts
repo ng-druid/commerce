@@ -6,6 +6,7 @@ import { MarkdownModule, MarkdownComponent } from 'ngx-markdown';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularSplitModule } from 'angular-split';
 import { MaterialModule } from '@classifieds-ui/material';
+import { MediaModule } from '@classifieds-ui/media';
 import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
 import { AttributesModule } from '@classifieds-ui/attributes';
 import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
@@ -60,6 +61,7 @@ const routes = [
     GridsterModule,
     UtilsModule,
     AttributesModule,
+    MediaModule,
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
