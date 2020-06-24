@@ -8,9 +8,11 @@ export enum AttributeTypes {
 export class AttributeWidget {
   name: string;
   component: Type<any>;
+  schema?: Attribute;
   constructor(data?: AttributeWidget) {
     if (data) {
       this.name = data.name;
+      this.schema = data.schema ? new Attribute(data.schema) : undefined;
       this.component = data.component;
     }
   }

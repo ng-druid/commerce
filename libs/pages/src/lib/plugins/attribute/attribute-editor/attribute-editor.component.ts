@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AttributeTypes, AttributeWidget, Attribute, AttributeValue, ATTRIBUTE_WIDGET } from '@classifieds-ui/attributes';
+import { Pane } from '../../../models/page.models';
+import { AttributeContentHandler } from '../../../handlers/attribute-content.handler';
 
 @Component({
   selector: 'classifieds-ui-attribute-editor',
@@ -7,9 +12,63 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AttributeEditorComponent implements OnInit {
 
-  constructor() { }
+  widget: AttributeWidget;
+
+  attributes: Array<Attribute> = [];
+  attributeValues: Array<AttributeValue> = [];
+
+  attributesFormGroup = this.fb.group({
+    attributes: new FormControl('')
+  });
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number;  },
+    @Inject(ATTRIBUTE_WIDGET) attributeWidgets: Array<AttributeWidget>,
+    private dialogRef: MatDialogRef<AttributeEditorComponent>,
+    private fb: FormBuilder,
+    private handler: AttributeContentHandler
+  ) {
+    const widgetSetting = this.data.pane.settings.find(s => s.name === 'widget');
+    this.widget = attributeWidgets.find(w => w.name === widgetSetting.value);
+  }
 
   ngOnInit(): void {
+    this.attributes = [new Attribute({ ...this.widget.schema, label: 'Value', name: 'value' })];
+    this.attributeValues = [new AttributeValue({
+      name: 'value',
+      type: this.widget.schema.type,
+      displayName: 'Value',
+      value: '',
+      computedValue: '',
+      intValue: 0,
+      attributes: []
+    })];
+  }
+
+  submit() {
+    ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray).clear();
+    const pane = new Pane({ contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
+    ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray).push(this.buildWidgetGroup());
+    pane.settings.forEach(s => {
+      ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray).push(this.fb.group({
+        name: new FormControl(s.name, Validators.required),
+        type: new FormControl(s.type, Validators.required),
+        displayName: new FormControl(s.displayName, Validators.required),
+        value: new FormControl(s.value, Validators.required),
+        computedValue: new FormControl(s.value, Validators.required),
+      }));
+    });
+    this.dialogRef.close();
+  }
+
+  buildWidgetGroup(): FormGroup {
+    return this.fb.group({
+      name: new FormControl('widget', Validators.required),
+      type: new FormControl(AttributeTypes.Text, Validators.required),
+      displayName: new FormControl('Widget', Validators.required),
+      value: new FormControl(this.widget.name, Validators.required),
+      computedValue: new FormControl(this.widget.name, Validators.required),
+    });
   }
 
 }
