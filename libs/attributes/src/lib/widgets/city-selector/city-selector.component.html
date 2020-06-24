@@ -1,0 +1,12 @@
+<ng-container [formGroup]="fakeForm">
+  <mat-form-field>
+    <input matInput placeholder="Location" [matAutocomplete]="locationAuto" formControlName="city">
+    <mat-icon matSuffix>location_city</mat-icon>
+    <mat-autocomplete #locationAuto="matAutocomplete" [displayWith]="displayCity" (optionSelected)="onOptionSelected($event)">
+      <mat-option *ngIf="isLoadingCities" class="is-loading">Loading...</mat-option>
+      <ng-container *ngIf="!isLoadingCities">
+        <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }} ({{ city.zip }})</mat-option>
+      </ng-container>
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>

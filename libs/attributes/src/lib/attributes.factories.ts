@@ -2,6 +2,7 @@ import { TextWidgetComponent } from './widgets/text-widget/text-widget.component
 import { AttributeWidget, Attribute, AttributeTypes } from './models/attributes.models';
 import { MinMaxWidgetComponent } from './widgets/min-max-widget/min-max-widget.component';
 import { YmmSelectorComponent } from './widgets/ymm-selector/ymm-selector.component';
+import { CitySelectorComponent } from './widgets/city-selector/city-selector.component';
 
 export const textFactory = () => {
   const schema = new Attribute({
@@ -59,4 +60,17 @@ export const ymmFactory = () => {
     ]
   });
   return new AttributeWidget({ name: 'ymm_selector', component: YmmSelectorComponent, schema });
+};
+
+export const cityFactory = () => {
+  const schema = new Attribute({
+    name: '',
+    type: AttributeTypes.Complex,
+    label: '',
+    required: false,
+    widget: '',
+    options: {},
+    attributes: []
+  });
+  return new AttributeWidget({ name: 'city_selector', component: CitySelectorComponent, schema });
 };

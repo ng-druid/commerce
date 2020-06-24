@@ -57,23 +57,29 @@ export class AttributeEditorComponent implements OnInit {
     console.log(pane);
     const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
     formArray.clear();
-    [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => {
-      formArray.push(this.fb.group({
-        name: new FormControl(s.name, Validators.required),
-        type: new FormControl(s.type, Validators.required),
-        displayName: new FormControl(s.displayName, Validators.required),
-        value: new FormControl(s.value, Validators.required),
-        computedValue: new FormControl(s.value, Validators.required),
-        attributes: new FormArray(!s.attributes ? [] : s.attributes.map(s2 => new FormGroup({
-          name: new FormControl(s2.name, Validators.required),
-          type: new FormControl(s2.type, Validators.required),
-          displayName: new FormControl(s2.displayName, Validators.required),
-          value: new FormControl(s2.value, Validators.required),
-          computedValue: new FormControl(s2.value, Validators.required)
-        })))
-      }));
-    });
+    [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => formArray.push(this.convertToGroup(s)));
     this.dialogRef.close();
+  }
+
+  convertToGroup(setting: AttributeValue): FormGroup {
+
+    const fg = this.fb.group({
+      name: new FormControl(setting.name, Validators.required),
+      type: new FormControl(setting.type, Validators.required),
+      displayName: new FormControl(setting.displayName, Validators.required),
+      value: new FormControl(setting.value, Validators.required),
+      computedValue: new FormControl(setting.value, Validators.required),
+      attributes: new FormArray([])
+    });
+
+    if(setting.attributes && setting.attributes.length > 0) {
+      setting.attributes.forEach(s => {
+        (fg.get('attributes') as FormArray).push(this.convertToGroup(s));
+      })
+    }
+
+    return fg;
+
   }
 
 }

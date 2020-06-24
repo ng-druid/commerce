@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@classifieds-ui/material';
+import { CitiesModule } from '@classifieds-ui/cities';
 import { AttributesBuilderComponent } from './components/attributes-builder/attributes-builder.component';
 import { AttributeWidgetComponent } from './components/attribute-widget/attribute-widget.component';
 import { AttributeWidgetDirective } from './directives/attribute-widget.directive';
@@ -12,10 +13,11 @@ import { MinMaxWidgetComponent } from './widgets/min-max-widget/min-max-widget.c
 import { AttributePipe } from './pipes/attribute.pipe';
 import { YmmSelectorComponent } from './widgets/ymm-selector/ymm-selector.component';
 import * as attrFactories from './attributes.factories';
+import { CitySelectorComponent } from './widgets/city-selector/city-selector.component';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, MaterialModule, HttpClientModule, HttpClientJsonpModule],
-  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent, MinMaxWidgetComponent, AttributePipe, YmmSelectorComponent],
+  imports: [CommonModule, ReactiveFormsModule, MaterialModule, HttpClientModule, HttpClientJsonpModule, CitiesModule],
+  declarations: [AttributesBuilderComponent, AttributeWidgetComponent, AttributeWidgetDirective, TextWidgetComponent, MinMaxWidgetComponent, AttributePipe, YmmSelectorComponent, CitySelectorComponent],
   exports: [AttributesBuilderComponent, AttributePipe, AttributeWidgetComponent],
   entryComponents: [ TextWidgetComponent, MinMaxWidgetComponent, YmmSelectorComponent ],
   providers: [
@@ -32,6 +34,11 @@ import * as attrFactories from './attributes.factories';
     {
       provide: ATTRIBUTE_WIDGET,
       useFactory: attrFactories.ymmFactory,
+      multi: true
+    },
+    {
+      provide: ATTRIBUTE_WIDGET,
+      useFactory: attrFactories.cityFactory,
       multi: true
     }
   ]
