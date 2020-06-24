@@ -12,16 +12,21 @@
         <mat-panel-description>See Settings</mat-panel-description>
       </mat-expansion-panel-header>
       <div [hidden]="preview">
-        <ul *ngFor="let setting of settings">
-          <li *ngIf="setting.attributes.length == 0">{{ setting.displayName }}: {{ settings | attribute: setting.name }}</li>
-          <li *ngIf="setting.attributes.length != 0">{{ setting.displayName }}:
-            <ul>
-              <li *ngFor="let setting2 of setting.attributes">{{ setting2.displayName }}: {{ setting.attributes | attribute: setting2.name }}</li>
-            </ul>
-          </li>
+        <ul>
+          <ng-container *ngTemplateOutlet="settingsTmpl; context:{ settings: settings }"></ng-container>
         </ul>
       </div>
       <div class="preview-area" [ngClass]="{'visible': preview }"><ng-container><ng-template classifiedsUiPaneContentHost></ng-template></ng-container></div>
     </mat-expansion-panel>
   </div>
 </div>
+
+<ng-template #settingsTmpl let-settings="settings">
+  <li *ngFor="let setting of settings">
+    {{ setting.displayName }}:
+    <span *ngIf="setting.attributes.length == 0">{{ settings | attribute: setting.name }}</span>
+    <ul *ngIf="setting.attributes.length > 0">
+      <ng-container *ngTemplateOutlet="settingsTmpl; context:{ settings: setting.attributes }"></ng-container>
+    </ul>
+  </li>
+</ng-template>
