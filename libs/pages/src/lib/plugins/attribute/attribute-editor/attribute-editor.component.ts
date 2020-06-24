@@ -18,6 +18,8 @@ export class AttributeEditorComponent implements OnInit {
   attributeValues: Array<AttributeValue> = [];
 
   attributesFormGroup = this.fb.group({
+    name: new FormControl(''),
+    label: new FormControl(''),
     attributes: new FormControl('')
   });
 

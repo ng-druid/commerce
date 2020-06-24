@@ -1,1 +1,10 @@
-<p>attribute-pane-renderer works!</p>
+<ng-container *ngTemplateOutlet="settingsTmpl; context:{ settings: attributeValues }"></ng-container>
+<ng-template #settingsTmpl let-settings="settings">
+  <div *ngFor="let setting of settings">
+    <span *ngIf="setting.attributes.length == 0">{{ setting.displayName }}: </span>
+    <span *ngIf="setting.attributes.length == 0">{{ settings | attribute: setting.name }}</span>
+    <div *ngIf="setting.attributes.length > 0">
+      <ng-container *ngTemplateOutlet="settingsTmpl; context:{ settings: setting.attributes }"></ng-container>
+    </div>
+  </div>
+</ng-template>

@@ -8,6 +8,7 @@ import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pane, PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -92,6 +93,31 @@ export class ContentEditorComponent implements OnInit {
 
   onItemRemoved(index: number) {
     this.panels.removeAt(index);
+  }
+
+  onDrop(evt: CdkDragDrop<string[]>) {
+
+    const newPanelIndex = +evt.container.data;
+    const oldPanelIndex = +evt.previousContainer.data;
+
+    if(newPanelIndex === oldPanelIndex) {
+      const dir = evt.currentIndex > evt.previousIndex ? 1 : -1;
+
+      const from = evt.previousIndex;
+      const to = evt.currentIndex;
+
+      const temp = this.panelPanes(newPanelIndex).at(from);
+      for (let i = from; i * dir < to * dir; i = i + dir) {
+        const current = this.panelPanes(newPanelIndex).at(i + dir);
+        this.panelPanes(newPanelIndex).setControl(i, current);
+      }
+      this.panelPanes(newPanelIndex).setControl(to, temp);
+    } else {
+      const temp = this.panelPanes(oldPanelIndex).at(evt.previousIndex);
+      this.panelPanes(oldPanelIndex).removeAt(evt.previousIndex);
+      this.panelPanes(newPanelIndex).insert(evt.currentIndex, temp);
+    }
+
   }
 
   submit() {
