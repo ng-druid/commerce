@@ -15,9 +15,9 @@
         <ul *ngFor="let setting of settings">
           <li *ngIf="setting.attributes.length == 0">{{ setting.displayName }}: {{ settings | attribute: setting.name }}</li>
           <li *ngIf="setting.attributes.length != 0">{{ setting.displayName }}:
-            <ng-container *ngFor="let setting2 of setting.attributes">
-              {{ setting2.displayName }}: {{ setting.attributes | attribute: setting2.name }} |
-            </ng-container>
+            <ul>
+              <li *ngFor="let setting2 of setting.attributes">{{ setting2.displayName }}: {{ setting.attributes | attribute: setting2.name }}</li>
+            </ul>
           </li>
         </ul>
       </div>
