@@ -21,5 +21,42 @@ export const minmaxFactory = () => {
 };
 
 export const ymmFactory = () => {
-  return new AttributeWidget({ name: 'ymm_selector', component: YmmSelectorComponent, schema: undefined });
+  const schema = new Attribute({
+    name: '',
+    type: AttributeTypes.Complex,
+    label: '',
+    required: false,
+    widget: '',
+    options: {},
+    attributes: [
+      new Attribute({
+        name: 'year',
+        type: AttributeTypes.Number,
+        label: 'Year',
+        required: false,
+        widget: '',
+        options: {},
+        attributes: []
+      }),
+      new Attribute({
+        name: 'make',
+        type: AttributeTypes.Text,
+        label: 'Make',
+        required: false,
+        widget: '',
+        options: {},
+        attributes: []
+      }),
+      new Attribute({
+        name: 'model',
+        type: AttributeTypes.Text,
+        label: 'Model',
+        required: false,
+        widget: '',
+        options: {},
+        attributes: []
+      })
+    ]
+  });
+  return new AttributeWidget({ name: 'ymm_selector', component: YmmSelectorComponent, schema });
 };

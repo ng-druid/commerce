@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AttributeTypes, AttributeWidget, Attribute, AttributeValue, ATTRIBUTE_WIDGET } from '@classifieds-ui/attributes';
+import { AttributeWidget, Attribute, AttributeValue, ATTRIBUTE_WIDGET } from '@classifieds-ui/attributes';
 import { Pane } from '../../../models/page.models';
 import { AttributeContentHandler } from '../../../handlers/attribute-content.handler';
 
@@ -34,7 +34,7 @@ export class AttributeEditorComponent implements OnInit {
 
   ngOnInit(): void {
     const value = this.data.pane.settings.find(s => s.name === 'value');
-    this.attributes = [new Attribute({ ...this.widget.schema, label: 'Value', name: 'value' })];
+    this.attributes = [new Attribute({ ...this.widget.schema, widget: this.widget.name, label: 'Value', name: 'value' })];
     if(value !== undefined) {
       this.attributeValues = this.handler.valueSettings(this.data.pane.settings);
     } else {
@@ -52,6 +52,7 @@ export class AttributeEditorComponent implements OnInit {
 
   submit() {
     const pane = new Pane({ contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
+    console.log(pane);
     const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
     formArray.clear();
     [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => {
@@ -61,6 +62,13 @@ export class AttributeEditorComponent implements OnInit {
         displayName: new FormControl(s.displayName, Validators.required),
         value: new FormControl(s.value, Validators.required),
         computedValue: new FormControl(s.value, Validators.required),
+        attributes: new FormArray(!s.attributes ? [] : s.attributes.map(s2 => new FormGroup({
+          name: new FormControl(s2.name, Validators.required),
+          type: new FormControl(s2.type, Validators.required),
+          displayName: new FormControl(s2.displayName, Validators.required),
+          value: new FormControl(s2.value, Validators.required),
+          computedValue: new FormControl(s2.value, Validators.required)
+        })))
       }));
     });
     this.dialogRef.close();

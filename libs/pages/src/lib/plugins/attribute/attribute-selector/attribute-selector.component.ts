@@ -37,6 +37,7 @@ export class AttributeSelectorComponent implements OnInit {
   }
 
   onItemSelect(widget: AttributeWidget) {
+    console.log(widget);
     (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
       contentPlugin: 'attribute',
       settings: this.fb.array(this.handler.widgetSettings(widget).map(s => this.fb.group({

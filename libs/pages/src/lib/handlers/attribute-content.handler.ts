@@ -24,7 +24,7 @@ export class AttributeContentHandler implements ContentHandler {
   widgetSettings(widget: AttributeWidget) {
     return [new AttributeValue({
       name: 'widget',
-      type: AttributeTypes.Text,
+      type: widget.schema.type,
       displayName: 'Widget',
       value: widget.name,
       computedValue: widget.name,

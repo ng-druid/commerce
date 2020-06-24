@@ -2,7 +2,8 @@ import { Type } from '@angular/core';
 
 export enum AttributeTypes {
   Number,
-  Text
+  Text,
+  Complex
 }
 
 export class AttributeWidget {
@@ -29,7 +30,7 @@ export class Attribute {
   constructor(data?: Attribute) {
     if (data) {
       this.name = data.name;
-      this.widget = data.widget ? data.widget : 'text';
+      this.widget = data.widget !== undefined ? data.widget : 'text';
       this.type = data.type;
       this.label = data.label;
       this.required = data.required;

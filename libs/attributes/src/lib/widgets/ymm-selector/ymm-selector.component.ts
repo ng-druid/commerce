@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ControlContainer, FormArray } from "@angular/forms";
 import { Attribute } from '../../models/attributes.models';
 import { CarQueryService } from '../../services/car-query.service';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, iif, of } from 'rxjs';
 import { map, tap, switchMap, distinctUntilChanged, debounceTime, takeUntil } from 'rxjs/operators';
 import { Make, Model } from '../../models/carquery.models';
 
@@ -63,6 +63,25 @@ export class YmmSelectorComponent implements OnInit, OnDestroy {
     ).subscribe(models => {
       this.models$.next(models);
     });
+    if(this.attributes.controls[0].get('value').value) {
+      this.carQueryService.getMakes(this.attributes.controls[0].get('value').value).pipe(
+        switchMap(makes => iif(
+          () => this.attributes.controls[1].get('value').value,
+          this.carQueryService.getModels(this.attributes.controls[0].get('value').value, this.attributes.controls[1].get('value').value).pipe(
+            map(models => [makes, models])
+          ),
+          of().pipe(
+            map(() => [makes, undefined])
+          )
+        ))
+      ).subscribe(([makes, models]) => {
+        this.makes$.next(makes as Make[]);
+        if(models) {
+          console.log(models);
+          this.models$.next(models as Model[])
+        }
+      });
+    }
   }
 
   ngOnDestroy() {
