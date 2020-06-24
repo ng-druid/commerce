@@ -13,7 +13,12 @@
       </mat-expansion-panel-header>
       <div [hidden]="preview">
         <ul *ngFor="let setting of settings">
-          <li>{{ setting.displayName }}: {{ settings | attribute: setting.name }}</li>
+          <li *ngIf="setting.attributes.length == 0">{{ setting.displayName }}: {{ settings | attribute: setting.name }}</li>
+          <li *ngIf="setting.attributes.length != 0">{{ setting.displayName }}:
+            <ng-container *ngFor="let setting2 of setting.attributes">
+              {{ setting2.displayName }}: {{ setting.attributes | attribute: setting2.name }} |
+            </ng-container>
+          </li>
         </ul>
       </div>
       <div class="preview-area" [ngClass]="{'visible': preview }"><ng-container><ng-template classifiedsUiPaneContentHost></ng-template></ng-container></div>
