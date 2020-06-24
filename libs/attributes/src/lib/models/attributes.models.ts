@@ -3,7 +3,8 @@ import { Type } from '@angular/core';
 export enum AttributeTypes {
   Number,
   Text,
-  Complex
+  Complex,
+  Float
 }
 
 export class AttributeWidget {

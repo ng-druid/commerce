@@ -23,6 +23,14 @@ export class AttributeEditorComponent implements OnInit {
     attributes: new FormControl('')
   });
 
+  get name() {
+    return this.attributesFormGroup.get('name');
+  }
+
+  get label() {
+    return this.attributesFormGroup.get('label');
+  }
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number;  },
     @Inject(ATTRIBUTE_WIDGET) attributeWidgets: Array<AttributeWidget>,
@@ -54,7 +62,15 @@ export class AttributeEditorComponent implements OnInit {
 
   submit() {
     const pane = new Pane({ contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
-    console.log(pane);
+
+    if(this.name.value) {
+      //pane.settings[0].name = this.name.value;
+    }
+
+    if(this.label.value) {
+      //pane.settings[0].displayName = this.label.value;
+    }
+
     const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
     formArray.clear();
     [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => formArray.push(this.convertToGroup(s)));

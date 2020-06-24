@@ -99,7 +99,7 @@ export class CitySelectorComponent implements OnInit {
       name: new FormControl('zip', Validators.required),
       type: new FormControl(AttributeTypes.Text, Validators.required),
       displayName: new FormControl('Zip', Validators.required),
-      value: new FormControl(city.zip, Validators.required),
+      value: new FormControl(`${city.zip}`, Validators.required),
     }));
     this.attributes.push(this.fb.group({
       name: new FormControl('location', Validators.required),
@@ -109,15 +109,15 @@ export class CitySelectorComponent implements OnInit {
       attributes: this.fb.array([
         this.fb.group({
           name: new FormControl('lat', Validators.required),
-          type: new FormControl(AttributeTypes.Text, Validators.required),
+          type: new FormControl(AttributeTypes.Float, Validators.required),
           displayName: new FormControl('Lat', Validators.required),
-          value: new FormControl(city.location[0], Validators.required),
+          value: new FormControl(`${city.location[0]}`, Validators.required),
         }),
         this.fb.group({
           name: new FormControl('lng', Validators.required),
-          type: new FormControl(AttributeTypes.Text, Validators.required),
+          type: new FormControl(AttributeTypes.Float, Validators.required),
           displayName: new FormControl('Lng', Validators.required),
-          value: new FormControl(city.location[1], Validators.required),
+          value: new FormControl(`${city.location[1]}`, Validators.required),
         })
       ])
     }));
