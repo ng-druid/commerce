@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
-import { AttributeValue } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeWidget, AttributeTypes } from '@classifieds-ui/attributes';
 import { Observable, of } from 'rxjs';
 
 @Injectable()
@@ -12,11 +12,24 @@ export class AttributeContentHandler implements ContentHandler {
   handlesType(type: string): boolean {
     return false;
   }
-  toObject<AttributeValue>(settings): Observable<AttributeValue> {
-    const attributeValue = new AttributeValue();
-    return of(attributeValue as any);
+  valueSettings(attributeValues: Array<AttributeValue>): Array<AttributeValue> {
+    const settings = [];
+    attributeValues.forEach(attributeValue => {
+      if(attributeValue.name === 'value') {
+        settings.push(attributeValue);
+      }
+    });
+    return settings;
   }
-  buildSettings<AttributeValue>(attributeValue): Array<AttributeValue> {
-    return [];
+  widgetSettings(widget: AttributeWidget) {
+    return [new AttributeValue({
+      name: 'widget',
+      type: AttributeTypes.Text,
+      displayName: 'Widget',
+      value: widget.name,
+      computedValue: widget.name,
+      intValue: 0,
+      attributes: []
+    })];
   }
 }

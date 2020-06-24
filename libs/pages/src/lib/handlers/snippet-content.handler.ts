@@ -27,15 +27,15 @@ export class SnippetContentHandler implements ContentHandler {
     return this.types.find(t => t === type) !== undefined;
   }
 
-  toObject<Snippet>(settings: Array<AttributeValue>): Observable<Snippet> {
+  toObject(settings: Array<AttributeValue>): Observable<Snippet> {
     const snippet = new Snippet({
         content: settings.find(s => s.name === 'content').value,
         contentType: settings.find(s => s.name === 'contentType').value,
     });
-    return of(snippet as any);
+    return of(snippet);
   }
 
-  buildSettings<Snippet>(snippet): Array<AttributeValue> {
+  buildSettings(snippet: Snippet): Array<AttributeValue> {
     return [
       new AttributeValue({
         name: 'contentType',

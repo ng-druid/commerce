@@ -22,7 +22,7 @@ export class MediaContentHandler implements ContentHandler {
     return this.types.find(t => t === type) !== undefined;
   }
 
-  toObject<MediaFile>(settings: Array<AttributeValue>): Observable<MediaFile> {
+  toObject(settings: Array<AttributeValue>): Observable<MediaFile> {
     const mediaFile = new MediaFile({
         path: settings.find(s => s.name === 'path').value,
         contentType: settings.find(s => s.name === 'contentType').value,
@@ -31,10 +31,10 @@ export class MediaContentHandler implements ContentHandler {
         length: parseInt(settings.find(s => s.name === 'length').value),
         fileName: settings.find(s => s.name === 'fileName').value
     });
-    return of(mediaFile as any);
+    return of(mediaFile);
   }
 
-  buildSettings<MediaFile>(mediaFile): Array<AttributeValue> {
+  buildSettings(mediaFile: MediaFile): Array<AttributeValue> {
     return [
       new AttributeValue({
         name: 'id',

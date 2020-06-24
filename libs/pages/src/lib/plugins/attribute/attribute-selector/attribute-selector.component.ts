@@ -39,7 +39,7 @@ export class AttributeSelectorComponent implements OnInit {
   onItemSelect(widget: AttributeWidget) {
     (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
       contentPlugin: 'attribute',
-      settings: this.fb.array(this.buildSettings(widget).map(s => this.fb.group({
+      settings: this.fb.array(this.handler.widgetSettings(widget).map(s => this.fb.group({
         name: new FormControl(s.name, Validators.required),
         type: new FormControl(s.type, Validators.required),
         displayName: new FormControl(s.displayName, Validators.required),
@@ -47,24 +47,11 @@ export class AttributeSelectorComponent implements OnInit {
         computedValue: new FormControl(s.computedValue, Validators.required),
       })))
     }));
-    const paneIndex = (this.panelFormGroup.get('panes') as FormArray).length - 1;
-    const pane = new Pane((this.panelFormGroup.get('panes') as FormArray).at(paneIndex).value);
+    const formArray = (this.panelFormGroup.get('panes') as FormArray);
+    const paneIndex = formArray.length - 1;
+    const pane = new Pane(formArray.at(paneIndex).value);
     this.dialog.open(this.contentPlugin.editorComponent, { data: { panelFormGroup: this.panelFormGroup, pane, paneIndex } });
     this.bottomSheetRef.dismiss();
-  }
-
-  buildSettings(widget: AttributeWidget): Array<AttributeValue> {
-    return [
-      new AttributeValue({
-        name: 'widget',
-        type: AttributeTypes.Text,
-        displayName: 'Widget',
-        value: widget.name,
-        computedValue: widget.name,
-        intValue: 0,
-        attributes: []
-      })
-    ];
   }
 
 }

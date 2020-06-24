@@ -33,24 +33,29 @@ export class AttributeEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const value = this.data.pane.settings.find(s => s.name === 'value');
     this.attributes = [new Attribute({ ...this.widget.schema, label: 'Value', name: 'value' })];
-    this.attributeValues = [new AttributeValue({
-      name: 'value',
-      type: this.widget.schema.type,
-      displayName: 'Value',
-      value: '',
-      computedValue: '',
-      intValue: 0,
-      attributes: []
-    })];
+    if(value !== undefined) {
+      this.attributeValues = this.handler.valueSettings(this.data.pane.settings);
+    } else {
+      this.attributeValues = [new AttributeValue({
+        name: 'value',
+        type: this.widget.schema.type,
+        displayName: 'Value',
+        value: '',
+        computedValue: '',
+        intValue: 0,
+        attributes: []
+      })];
+    }
   }
 
   submit() {
-    ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray).clear();
     const pane = new Pane({ contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
-    ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray).push(this.buildWidgetGroup());
-    pane.settings.forEach(s => {
-      ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray).push(this.fb.group({
+    const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
+    formArray.clear();
+    [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => {
+      formArray.push(this.fb.group({
         name: new FormControl(s.name, Validators.required),
         type: new FormControl(s.type, Validators.required),
         displayName: new FormControl(s.displayName, Validators.required),
@@ -59,16 +64,6 @@ export class AttributeEditorComponent implements OnInit {
       }));
     });
     this.dialogRef.close();
-  }
-
-  buildWidgetGroup(): FormGroup {
-    return this.fb.group({
-      name: new FormControl('widget', Validators.required),
-      type: new FormControl(AttributeTypes.Text, Validators.required),
-      displayName: new FormControl('Widget', Validators.required),
-      value: new FormControl(this.widget.name, Validators.required),
-      computedValue: new FormControl(this.widget.name, Validators.required),
-    });
   }
 
 }
