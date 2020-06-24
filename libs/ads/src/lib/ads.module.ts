@@ -3,14 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { EntityDefinitionService, EntityDataService } from '@ngrx/data';
+import { EntityDefinitionService } from '@ngrx/data';
 import { MaterialModule } from '@classifieds-ui/material';
 import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 import { AttributesModule } from '@classifieds-ui/attributes';
 import { CitiesModule } from '@classifieds-ui/cities';
-import { AutosModule } from '@classifieds-ui/autos';
 import { UtilsModule } from '@classifieds-ui/utils';
-import { RealestateModule } from '@classifieds-ui/realestate';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
@@ -45,7 +43,7 @@ import { AD_TYPE_PLUGIN } from './ad.tokens';
 import { AdTypePlugin } from './models/ads.models';
 
 const routes = [
-  { path: 'adtype/:adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
+  { path: ':adType', component: AdBrowserComponent, resolve: { adType: AdTypeResolver }, children: [
     { path: 'ad/:adId/manage', component: ManageAdComponent },
     { path: 'ad/:adId', component: AdDetailComponent },
     { path: 'create-ad', component: CreateAdComponent, canActivate: [CreateAdGuard] },
@@ -87,8 +85,6 @@ const routes = [
     TaxonomyModule,
     CitiesModule,
     AttributesModule,
-    RealestateModule,
-    AutosModule,
     StoreModule.forFeature(fromAdBrowser.adBrowserFeatureKey, fromAdBrowser.reducer),
     EffectsModule.forFeature([AdBrowserEffects])
   ],

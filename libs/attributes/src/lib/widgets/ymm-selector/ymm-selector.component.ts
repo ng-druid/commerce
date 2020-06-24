@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ControlContainer, FormArray } from "@angular/forms";
-import { Attribute } from '@classifieds-ui/attributes';
+import { Attribute } from '../../models/attributes.models';
 import { CarQueryService } from '../../services/car-query.service';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { map, tap, switchMap, distinctUntilChanged, debounceTime, takeUntil } from 'rxjs/operators';

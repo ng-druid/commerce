@@ -59,7 +59,7 @@ export class ManageAdComponent implements OnInit {
       this.sb.open(`Ad has been created!`, 'Created', { duration: 3000 });
       setTimeout(() => {
         this.adBrowserFacade.getAdType$.pipe(take(1)).subscribe(adType => {
-          this.router.navigateByUrl(`/ads/adtype/${adType}/ad/${ad.id}`);
+          this.router.navigateByUrl(`/ads/${adType}/ad/${ad.id}`);
         });
       }, 2000)
     });
