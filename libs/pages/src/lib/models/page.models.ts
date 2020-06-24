@@ -57,9 +57,13 @@ export class Panel {
 
 export class Pane {
   contentPlugin: string;
+  name: string;
+  label: string;
   settings: Array<AttributeValue> = [];
   constructor(data?: Pane) {
     if(data) {
+      this.name = data.name;
+      this.label = data.label;
       this.contentPlugin = data.contentPlugin;
       if(data.settings) {
         this.settings = data.settings.map(a => new AttributeValue(a));

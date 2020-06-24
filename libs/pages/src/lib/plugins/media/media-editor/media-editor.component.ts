@@ -42,6 +42,8 @@ export class MediaEditorComponent implements OnInit {
       if(this.data.paneIndex === undefined) {
         (this.data.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
           contentPlugin: 'media',
+          name: new FormControl(''),
+          label: new FormControl(''),
           settings: new FormArray(settings.map(s => this.fb.group({
             name: new FormControl(s.name, Validators.required),
             type: new FormControl(s.type, Validators.required),

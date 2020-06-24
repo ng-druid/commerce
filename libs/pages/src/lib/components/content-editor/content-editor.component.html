@@ -8,7 +8,7 @@
     </ng-template>
     <ng-template #innerGridItem let-i="i">
       <ngx-dropzone [cdkDropListData]="i" class="panel-dropzone" [multiple]="true" [disableClick]="true" (change)="onFileChange($event, i)" cdkDropList (cdkDropListDropped)="onDrop($event)">
-        <classifieds-ui-editable-pane class="editable-pane" *ngFor="let pane of panelPanes(i).controls; let j = index" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
+        <classifieds-ui-editable-pane class="editable-pane" *ngFor="let pane of panelPanes(i).controls; let j = index" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
           <div class="custom-placeholder" *cdkDragPlaceholder></div>
         </classifieds-ui-editable-pane>
       </ngx-dropzone>

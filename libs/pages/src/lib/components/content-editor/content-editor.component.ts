@@ -145,6 +145,14 @@ export class ContentEditorComponent implements OnInit {
     return this.panelPane(index, index2).get('settings').value.map(s => new AttributeValue(s));
   }
 
+  panelPaneName(index: number, index2: number): string {
+    return this.panelPane(index, index2).get('name').value;
+  }
+
+  panelPaneLabel(index: number, index2: number): string {
+    return this.panelPane(index, index2).get('label').value;
+  }
+
   onPaneEdit(index: number, index2: number) {
     const pane = new Pane(this.panelPane(index, index2).value);
     const plugin = this.panelPanePlugin(index, index2);
@@ -165,6 +173,8 @@ export class ContentEditorComponent implements OnInit {
       plugin.handler.handleFile(file).subscribe(settings => {
         this.panelPanes(index).push(this.fb.group({
           contentPlugin: plugin.name,
+          name: new FormControl(''),
+          label: new FormControl(''),
           settings: this.fb.array(settings.map(s => this.fb.group({
             name: new FormControl(s.name, Validators.required),
             type: new FormControl(s.type, Validators.required),

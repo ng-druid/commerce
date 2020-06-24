@@ -32,6 +32,8 @@ export class SnippetEditorComponent implements OnInit {
     if(this.data.paneIndex === undefined) {
       (this.data.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
         contentPlugin: 'snippet',
+        name: new FormControl(''),
+        label: new FormControl(''),
         settings: new FormArray(this.buildSettings(snippet))
       }));
     } else {

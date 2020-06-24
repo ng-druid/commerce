@@ -16,6 +16,12 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Input()
   settings: Array<AttributeValue> = [];
 
+  @Input()
+  name: string;
+
+  @Input()
+  label: string;
+
   @Output()
   edit = new EventEmitter();
 

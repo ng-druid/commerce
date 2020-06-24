@@ -45,6 +45,10 @@ export class AttributeEditorComponent implements OnInit {
   ngOnInit(): void {
     const value = this.data.pane.settings.find(s => s.name === 'value');
     this.attributes = [new Attribute({ ...this.widget.schema, widget: this.widget.name, label: 'Value', name: 'value' })];
+    const name = (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('name').value;
+    const label = (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('label').value;
+    this.attributesFormGroup.get('name').setValue(name);
+    this.attributesFormGroup.get('label').setValue(label);
     if(value !== undefined) {
       this.attributeValues = this.handler.valueSettings(this.data.pane.settings);
     } else {
@@ -61,16 +65,11 @@ export class AttributeEditorComponent implements OnInit {
   }
 
   submit() {
-    const pane = new Pane({ contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
-
-    if(this.name.value) {
-      //pane.settings[0].name = this.name.value;
-    }
-
-    if(this.label.value) {
-      //pane.settings[0].displayName = this.label.value;
-    }
-
+    const name = this.name.value;
+    const label = this.label.value;
+    const pane = new Pane({ name, label, contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
+    (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('name').setValue(name);
+    (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('label').setValue(label);
     const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
     formArray.clear();
     [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => formArray.push(this.convertToGroup(s)));
