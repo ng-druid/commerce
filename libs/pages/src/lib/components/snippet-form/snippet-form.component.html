@@ -3,6 +3,9 @@
     <div class="content-inner">
       <as-split direction="vertical">
         <as-split-area size="50">
+          <ul [hidden]="true" *ngIf="tokens">
+            <li *ngFor="let token of tokens | keyvalue">{{ token.key }}</li>
+          </ul>
           <mat-form-field>
             <mat-label>Content Type</mat-label>
             <mat-select required formControlName="contentType">

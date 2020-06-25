@@ -26,6 +26,7 @@ export class AttributePaneRendererComponent implements OnInit {
   ngOnInit(): void {
     this.attributeValues = this.handler.valueSettings(this.settings);
     this.tokens = this.tokenizerService.generateTokens(this.attributeValues);
+    console.log(this.tokens);
     this.handler.rendererSnippet(this.settings).subscribe(snippet => {
       this.rendererOverride = snippet;
       if(snippet !== undefined) {
