@@ -17,7 +17,8 @@
         </ul>
       </div>
       <div class="preview-area" [ngClass]="{'visible': preview }">
-        <button class="override" type="button" (click)="onOverrideClick()">Override</button>
+        <button *ngIf="displayOverride && !hasOverride" class="override" type="button" (click)="onOverrideClick()">Override</button>
+        <button *ngIf="displayOverride && hasOverride" class="override" type="button" (click)="onRemoveOverrideClick()">Remove Override</button>
         <ng-container><ng-template classifiedsUiPaneContentHost></ng-template></ng-container>
       </div>
     </mat-expansion-panel>

@@ -31,6 +31,12 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Output()
   rendererOverride = new EventEmitter();
 
+  @Output()
+  removeRendererOverride = new EventEmitter();
+
+  displayOverride = false;
+  hasOverride = false;
+
   contentPlugin: ContentPlugin;
 
   preview = false;
@@ -45,10 +51,14 @@ export class EditablePaneComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
+    this.displayOverride = this.contentPlugin.handler.implementsRendererOverride();
+    this.contentPlugin.handler.hasRendererOverride(this.settings).subscribe(r => this.hasOverride = !!r);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
+    this.displayOverride = this.contentPlugin.handler.implementsRendererOverride();
+    this.contentPlugin.handler.hasRendererOverride(this.settings).subscribe(r => this.hasOverride = !!r);
   }
 
   onEditClick() {
@@ -68,6 +78,10 @@ export class EditablePaneComponent implements OnInit, OnChanges {
 
   onOverrideClick() {
     this.rendererOverride.emit();
+  }
+
+  onRemoveOverrideClick() {
+    this.removeRendererOverride.emit();
   }
 
   onDisablePreviewClick() {

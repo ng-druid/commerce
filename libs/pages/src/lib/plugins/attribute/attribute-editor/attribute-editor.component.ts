@@ -72,11 +72,16 @@ export class AttributeEditorComponent implements OnInit {
     (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('label').setValue(label);
     const pane = new Pane({ name, label, contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
     if(pane.settings.length !== 0) {
-      const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
-      formArray.clear();
-      [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => formArray.push(this.convertToGroup(s)));
+      this.handler.rendererSnippet(this.data.pane.settings).subscribe(r => {
+        const renderer = r !== undefined ? this.handler.rendererOverrideSettings(r) : [];
+        const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
+        formArray.clear();
+        [ ...this.handler.widgetSettings(this.widget), ...pane.settings, ...renderer].forEach(s => formArray.push(this.convertToGroup(s)));
+        this.dialogRef.close();
+      });
+    } else {
+      this.dialogRef.close();
     }
-    this.dialogRef.close();
   }
 
   convertToGroup(setting: AttributeValue): FormGroup {

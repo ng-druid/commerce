@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 export interface ContentHandler {
   handleFile(file: File): Observable<Array<AttributeValue>>;
   handlesType(type: string): boolean
+  implementsRendererOverride(): boolean
+  hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean>
 }
 
 export class ContentPlugin {

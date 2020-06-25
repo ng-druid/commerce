@@ -22,6 +22,14 @@ export class MediaContentHandler implements ContentHandler {
     return this.types.find(t => t === type) !== undefined;
   }
 
+  implementsRendererOverride(): boolean {
+    return false;
+  }
+
+  hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean> {
+    return of(false);
+  }
+
   toObject(settings: Array<AttributeValue>): Observable<MediaFile> {
     const mediaFile = new MediaFile({
         path: settings.find(s => s.name === 'path').value,

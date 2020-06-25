@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
 import { AttributeValue, AttributeWidget, AttributeTypes } from '@classifieds-ui/attributes';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Snippet } from '../models/page.models';
 import { SnippetContentHandler } from './snippet-content.handler';
 
@@ -13,6 +14,15 @@ export class AttributeContentHandler implements ContentHandler {
   }
   handlesType(type: string): boolean {
     return false;
+  }
+  implementsRendererOverride(): boolean {
+    return true;
+  }
+
+  hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean> {
+    return this.rendererSnippet(settings).pipe(
+      map(snippet => snippet !== undefined)
+    );
   }
   valueSettings(attributeValues: Array<AttributeValue>): Array<AttributeValue> {
     const settings = [];

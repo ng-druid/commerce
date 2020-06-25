@@ -126,6 +126,19 @@ export class ContentEditorComponent implements OnInit {
     this.dialog.open(RenderingEditorComponent, { data: { panelFormGroup: this.panels.at(index), paneIndex: index2, pane } });
   }
 
+  onRemoveOverrideRenderer(index: number, index2: number) {
+    const formArray = this.panelPane(index, index2).get('settings') as FormArray;
+    let rendererIndex;
+    formArray.controls.forEach((c, i) => {
+      if(c.get('name').value === '_renderer') {
+        rendererIndex = i;
+      }
+    });
+    if(rendererIndex !== undefined) {
+      formArray.removeAt(rendererIndex);
+    }
+  }
+
   submit() {
     const panelPage = new PanelPage({
       id: this.panelPageId,
