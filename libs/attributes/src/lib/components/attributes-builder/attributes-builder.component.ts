@@ -80,6 +80,7 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
 
   writeValue(val: any): void {
     if (val) {
+      console.log(`write value: ${val}`);
       this.attributesArray.setValue(val, { emitEvent: false });
     }
   }

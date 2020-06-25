@@ -51,6 +51,7 @@ export class AttributeEditorComponent implements OnInit {
     this.attributesFormGroup.get('label').setValue(label);
     if(value !== undefined) {
       this.attributeValues = this.handler.valueSettings(this.data.pane.settings);
+      console.log(this.attributeValues);
     } else {
       this.attributeValues = [new AttributeValue({
         name: 'value',
@@ -67,12 +68,14 @@ export class AttributeEditorComponent implements OnInit {
   submit() {
     const name = this.name.value;
     const label = this.label.value;
-    const pane = new Pane({ name, label, contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
     (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('name').setValue(name);
     (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('label').setValue(label);
-    const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
-    formArray.clear();
-    [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => formArray.push(this.convertToGroup(s)));
+    const pane = new Pane({ name, label, contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
+    if(pane.settings.length !== 0) {
+      const formArray = ((this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('settings') as FormArray);
+      formArray.clear();
+      [ ...this.handler.widgetSettings(this.widget), ...pane.settings].forEach(s => formArray.push(this.convertToGroup(s)));
+    }
     this.dialogRef.close();
   }
 
