@@ -1,2 +1,2 @@
-<classifieds-ui-dynamic-content-viewer *ngIf="snippet && snippet.contentType == 'text/markdown'" [content]="snippet.content | markdown"></classifieds-ui-dynamic-content-viewer>
-<classifieds-ui-dynamic-content-viewer *ngIf="snippet && snippet.contentType == 'text/html'" [content]="snippet.content"></classifieds-ui-dynamic-content-viewer>
+<classifieds-ui-dynamic-content-viewer *ngIf="contentType == 'text/markdown'" [content]="content | markdown"></classifieds-ui-dynamic-content-viewer>
+<classifieds-ui-dynamic-content-viewer *ngIf="contentType == 'text/html'" [content]="content"></classifieds-ui-dynamic-content-viewer>

@@ -13,20 +13,35 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   @Input()
   settings: Array<AttributeValue> = [];
 
-  snippet: Snippet;
+  @Input()
+  tokens: Map<string, any>;
+
+  contentType: string;
+  content: string;
 
   constructor(private handler: SnippetContentHandler) { }
 
   ngOnInit(): void {
     this.handler.toObject(this.settings).subscribe((snippet: Snippet) => {
-      this.snippet = snippet;
+      this.contentType = snippet.contentType;
+      this.content = this.replaceTokens(snippet.content);
     });
   }
 
   ngOnChanges(): void {
     this.handler.toObject(this.settings).subscribe((snippet: Snippet) => {
-      this.snippet = snippet;
+      this.contentType = snippet.contentType;
+      this.content = this.replaceTokens(snippet.content);
     });
+  }
+
+  replaceTokens(v: string): string {
+    if(this.tokens !== undefined) {
+      this.tokens.forEach((value, key) => {
+        v = v.replace(`[${key}]`, `${value}`);
+      });
+    }
+    return v;
   }
 
 }

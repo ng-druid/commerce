@@ -28,6 +28,9 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Output()
   delete = new EventEmitter();
 
+  @Output()
+  rendererOverride = new EventEmitter();
+
   contentPlugin: ContentPlugin;
 
   preview = false;
@@ -61,6 +64,10 @@ export class EditablePaneComponent implements OnInit, OnChanges {
     if(this.contentPaneHost !== undefined) {
       this.renderPaneContent();
     }
+  }
+
+  onOverrideClick() {
+    this.rendererOverride.emit();
   }
 
   onDisablePreviewClick() {

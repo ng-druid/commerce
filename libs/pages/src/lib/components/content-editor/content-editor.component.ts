@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Pane, PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { RenderingEditorComponent } from '../rendering-editor/rendering-editor.component';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -118,6 +119,11 @@ export class ContentEditorComponent implements OnInit {
       this.panelPanes(newPanelIndex).insert(evt.currentIndex, temp);
     }
 
+  }
+
+  onOverrideRenderer(index: number, index2: number) {
+    const pane = new Pane(this.panelPane(index, index2).value);
+    this.dialog.open(RenderingEditorComponent, { data: { panelFormGroup: this.panels.at(index), paneIndex: index2, pane } });
   }
 
   submit() {

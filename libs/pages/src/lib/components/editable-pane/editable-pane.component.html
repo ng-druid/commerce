@@ -16,7 +16,10 @@
           <ng-container *ngTemplateOutlet="settingsTmpl; context:{ settings: settings }"></ng-container>
         </ul>
       </div>
-      <div class="preview-area" [ngClass]="{'visible': preview }"><ng-container><ng-template classifiedsUiPaneContentHost></ng-template></ng-container></div>
+      <div class="preview-area" [ngClass]="{'visible': preview }">
+        <button class="override" type="button" (click)="onOverrideClick()">Override</button>
+        <ng-container><ng-template classifiedsUiPaneContentHost></ng-template></ng-container>
+      </div>
     </mat-expansion-panel>
   </div>
 </div>
