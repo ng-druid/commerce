@@ -37,6 +37,6 @@
 
 <ng-template #nestedPanelTpl>
   <div class="nested-panel-wrapper">
-    <classifieds-ui-content-editor #contentEditor [panelPage]="panelPage" [savable]="false" [nested]="true"></classifieds-ui-content-editor>
+    <classifieds-ui-content-editor #contentEditor [panelPage]="panelPage" [savable]="false" [nested]="true" (nestedUpdate)="onNestedUpdate($event)"></classifieds-ui-content-editor>
   </div>
 </ng-template>

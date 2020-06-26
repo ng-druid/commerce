@@ -20,7 +20,7 @@ export class PanelSelectorComponent implements OnInit {
   panelFormGroup: FormGroup;
 
   panels: Array<string> = [
-    'd45334a5-b70b-11ea-8743-9288aa7fe284'
+    /*'d45334a5-b70b-11ea-8743-9288aa7fe284'*/
   ];
 
   panelPagesService: EntityCollectionService<PanelPage>;

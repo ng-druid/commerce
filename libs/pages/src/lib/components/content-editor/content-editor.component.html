@@ -19,7 +19,7 @@
     <ng-template #innerGridItem let-i="i">
       <ngx-dropzone [cdkDropListData]="i" class="panel-dropzone" [multiple]="true" [disableClick]="true" (change)="onFileChange($event, i)" cdkDropList (cdkDropListDropped)="onDrop($event)">
         <div #panes>
-          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
+          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (nestedUpdate)="onNestedUpdate($event, i, j)" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
             <div class="custom-placeholder" *cdkDragPlaceholder></div>
           </classifieds-ui-editable-pane>
         </div>

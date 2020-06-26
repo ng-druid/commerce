@@ -42,6 +42,9 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Output()
   removeRendererOverride = new EventEmitter();
 
+  @Output()
+  nestedUpdate = new EventEmitter<PanelPage>();
+
   displayOverride = false;
   hasOverride = false;
 
@@ -102,6 +105,10 @@ export class EditablePaneComponent implements OnInit, OnChanges {
 
   onRemoveOverrideClick() {
     this.removeRendererOverride.emit();
+  }
+
+  onNestedUpdate(panelPage: PanelPage) {
+    this.nestedUpdate.emit(panelPage);
   }
 
   onDisablePreviewClick() {

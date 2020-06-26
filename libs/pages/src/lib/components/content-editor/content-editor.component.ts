@@ -24,6 +24,9 @@ export class ContentEditorComponent implements OnInit {
   @Output()
   submitted = new EventEmitter<PanelPage>();
 
+  @Output()
+  nestedUpdate = new EventEmitter<PanelPage>();
+
   @Input()
   set panelPage(panelPage: PanelPage) {
     if(panelPage !== undefined) {
@@ -120,6 +123,12 @@ export class ContentEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.contentForm.valueChanges.pipe(
+      filter(() => this.nested),
+      debounceTime(500)
+    ).subscribe(() => {
+      this.nestedUpdate.emit(this.packageFormData());
+    });
   }
 
   addContent(index: number) {
@@ -208,6 +217,13 @@ export class ContentEditorComponent implements OnInit {
     if(rendererIndex !== undefined) {
       formArray.removeAt(rendererIndex);
     }
+  }
+
+  onNestedUpdate(panelPage: PanelPage, index: number, index2: number) {
+    const settings = this.panelHandler.buildSettings(panelPage);
+    const formArray = (this.panelPane(index, index2).get('settings') as FormArray);
+    formArray.clear();
+    settings.forEach(s => formArray.push(this.convertToGroup(s)))
   }
 
   submit() {
