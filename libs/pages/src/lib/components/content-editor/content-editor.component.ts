@@ -8,9 +8,11 @@ import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pane, PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RenderingEditorComponent } from '../rendering-editor/rendering-editor.component';
 import { debounceTime, delay, filter } from 'rxjs/operators';
+import { PanelContentHandler } from '../../handlers/panel-content.handler';
+import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -84,11 +86,7 @@ export class ContentEditorComponent implements OnInit {
     },
     mobileBreakpoint: 0,
     itemChangeCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => {
-      /*console.log('item change callback');
-      console.log(item);
-      console.log(itemComponent);
-      console.log(itemComponent.height);*/
-      console.log(item);
+      // console.log(item);
     },
     itemInitCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => {
       if(this.nested && item.y !== 0) {
@@ -103,8 +101,9 @@ export class ContentEditorComponent implements OnInit {
 
   private contentPlugins: Array<ContentPlugin> = [];
 
-  @ViewChild(GridLayoutComponent, {static: true}) gridLayout: GridLayoutComponent;
+  @ViewChild(GridLayoutComponent, {static: false}) gridLayout: GridLayoutComponent;
   @ViewChildren('panes') paneContainers: QueryList<ElementRef>;
+  @ViewChildren(EditablePaneComponent) editablePanes: QueryList<EditablePaneComponent>;
 
   get panels() {
     return (this.contentForm.get('panels') as FormArray);
@@ -114,7 +113,8 @@ export class ContentEditorComponent implements OnInit {
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private fb: FormBuilder,
     private bs: MatBottomSheet,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private panelHandler: PanelContentHandler
   ) {
     this.contentPlugins = contentPlugins;
   }
@@ -127,6 +127,8 @@ export class ContentEditorComponent implements OnInit {
   }
 
   onItemAdded() {
+    console.log('item added');
+
     this.panels.push(this.fb.group({
       panes: this.fb.array([])
     }));
@@ -153,6 +155,14 @@ export class ContentEditorComponent implements OnInit {
 
   onItemRemoved(index: number) {
     this.panels.removeAt(index);
+
+    if(this.nested) {
+      setTimeout(() => {
+        this.paneContainers.forEach((p, i) => {
+          this.gridLayout.setItemContentHeight(i, p.nativeElement.offsetHeight);
+        });
+      });
+    }
   }
 
   onDrop(evt: CdkDragDrop<string[]>) {
@@ -201,12 +211,27 @@ export class ContentEditorComponent implements OnInit {
   }
 
   submit() {
-    const panelPage = new PanelPage({
+    this.submitted.emit(this.packageFormData());
+  }
+
+  packageFormData(): PanelPage {
+    this.syncNestedPanelPages();
+    return new PanelPage({
       id: this.panelPageId,
       gridItems: this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })),
       panels: this.panels.value
     });
-    this.submitted.emit(panelPage);
+  }
+
+  syncNestedPanelPages() {
+    this.editablePanes.forEach(p => {
+      if(p.contentEditor !== undefined) {
+        const settings = this.panelHandler.buildSettings((p.contentEditor as ContentEditorComponent).packageFormData());
+        const formArray = (this.panelPane(p.panelIndex, p.paneIndex).get('settings') as FormArray);
+        formArray.clear();
+        settings.forEach(s => formArray.push(this.convertToGroup(s)))
+      }
+    });
   }
 
   panelPanes(index: number): FormArray {
@@ -221,7 +246,7 @@ export class ContentEditorComponent implements OnInit {
     return this.panelPane(index, index2).get('contentPlugin').value;
   }
 
-  panelPaneSettings(index: number, index2: number): string {
+  panelPaneSettings(index: number, index2: number): Array<AttributeValue> {
     return this.panelPane(index, index2).get('settings').value.map(s => new AttributeValue(s));
   }
 
@@ -231,6 +256,18 @@ export class ContentEditorComponent implements OnInit {
 
   panelPaneLabel(index: number, index2: number): string {
     return this.panelPane(index, index2).get('label').value;
+  }
+
+  panelPaneIsNested(index: number, index2: number): boolean {
+    return this.panelPanePlugin(index, index2) === 'panel';
+  }
+
+  panelPanePanelPage(index: number, index2: number): PanelPage {
+    let panelPage;
+    this.panelHandler.toObject(this.panelPaneSettings(index, index2)).subscribe(p => {
+      panelPage = p;
+    });
+    return panelPage;
   }
 
   onPaneEdit(index: number, index2: number) {

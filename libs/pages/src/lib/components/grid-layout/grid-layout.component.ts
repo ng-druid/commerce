@@ -70,6 +70,7 @@ export class GridLayoutComponent implements OnInit {
   }
 
   addColumn() {
+    console.log('add column grid');
     this.dashboard.push({cols: 1, rows: 1, y: 0, x: this.dashboard.length});
     // this.itemHeights.push(undefined);
     this.itemAdded.emit();
@@ -83,12 +84,14 @@ export class GridLayoutComponent implements OnInit {
 
   setItemContentHeight(index: number, height: number) {
     this.itemHeights[index] = height + ( this.displayItemHeader ? this.itemHeaderHeight(index) : 0 );
+    console.log(`item height item: ${height} | header: ${this.itemHeaderHeight(index)}`);
     this.refreshGridHeight();
   }
 
   refreshGridHeight() {
     this.gridster.calculateLayout();
-    this.gridHeight = this.cumulativeHeight + ( this.displayMainControls ? this.mainControls.nativeElement.offsetHeight : 0 ) + (this.gridster.rows * 16);
+    console.log(`main controls: ${this.mainControls.nativeElement.offsetHeight} | cumulative height: ${this.cumulativeHeight}`);
+    this.gridHeight = this.cumulativeHeight /* + ( this.displayMainControls ? this.mainControls.nativeElement.offsetHeight : 0 )*/ + (this.gridster.rows * 16);
     console.log(`adjust height: ${this.gridHeight}`);
   }
 

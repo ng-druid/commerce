@@ -11,6 +11,7 @@ import { AttributePaneRendererComponent } from './plugins/attribute/attribute-pa
 import { MediaEditorComponent } from './plugins/media/media-editor/media-editor.component';
 import { MediaPaneRendererComponent } from './plugins/media/media-pane-renderer/media-pane-renderer.component';
 import { PanelSelectorComponent } from './plugins/panel/panel-selector/panel-selector.component';
+import { PanelEditorComponent } from './plugins/panel/panel-editor/panel-editor.component';
 
 export const snippetContentPluginFactory = (handler: SnippetContentHandler) => {
   return new ContentPlugin({
@@ -50,7 +51,7 @@ export const panelContentPluginFactory = (handler: PanelContentHandler) => {
     name: 'panel',
     title: 'Panel',
     selectionComponent: PanelSelectorComponent,
-    editorComponent: undefined,
+    editorComponent: PanelEditorComponent,
     renderComponent: undefined,
     handler
   })

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FlexGridComponent } from './flex-grid.component';
+import { PanelEditorComponent } from './panel-editor.component';
 
-describe('FlexGridComponent', () => {
-  let component: FlexGridComponent;
-  let fixture: ComponentFixture<FlexGridComponent>;
+describe('PanelEditorComponent', () => {
+  let component: PanelEditorComponent;
+  let fixture: ComponentFixture<PanelEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FlexGridComponent ]
+      declarations: [ PanelEditorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FlexGridComponent);
+    fixture = TestBed.createComponent(PanelEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

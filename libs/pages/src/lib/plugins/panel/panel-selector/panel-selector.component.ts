@@ -1,9 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject} from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup } from '@angular/forms';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { PanelPage } from '../../../models/page.models';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { PanelContentHandler } from '../../../handlers/panel-content.handler';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
+import { ContentSelectorComponent } from '../../../components/content-selector/content-selector.component';
 
 @Component({
   selector: 'classifieds-ui-panel-selector',
@@ -21,21 +25,44 @@ export class PanelSelectorComponent implements OnInit {
 
   panelPagesService: EntityCollectionService<PanelPage>;
 
-  constructor(private handler: PanelContentHandler, private fb: FormBuilder, es: EntityServices) {
+  private contentPlugin: ContentPlugin;
+
+  constructor(
+    @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
+    private bottomSheetRef: MatBottomSheetRef<ContentSelectorComponent>,
+    private handler: PanelContentHandler,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    es: EntityServices
+  ) {
     this.panelPagesService = es.getEntityCollectionService('PanelPage');
+    this.contentPlugin = contentPlugins.find(p => p.name === 'panel');
   }
 
   ngOnInit(): void {
   }
 
+  onNewSelect() {
+    const newPanel = new PanelPage({ id: undefined, gridItems: [], panels: [] });
+    (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
+      contentPlugin: 'panel',
+      name: '',
+      label: '',
+      settings: this.fb.array(this.handler.buildSettings(newPanel).map(s => this.convertToGroup(s)))
+    }));
+    this.bottomSheetRef.dismiss();
+  }
+
   onItemSelect(panel: string) {
     this.panelPagesService.getByKey(panel).subscribe(p => {
+      //this.dialog.open(this.contentPlugin.editorComponent, { data: { panelFormGroup: this.panelFormGroup, pane: undefined, paneIndex: undefined, panelPage: p } });
       (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
         contentPlugin: 'panel',
         name: '',
         label: '',
         settings: this.fb.array(this.handler.buildSettings(p).map(s => this.convertToGroup(s)))
       }));
+      this.bottomSheetRef.dismiss();
     });
   }
 

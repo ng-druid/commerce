@@ -24,6 +24,12 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Input()
   label: string;
 
+  @Input()
+  panelIndex: number;
+
+  @Input()
+  paneIndex: number;
+
   @Output()
   edit = new EventEmitter();
 
@@ -48,6 +54,7 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   panelPage: PanelPage;
 
   @ViewChild(PaneContentHostDirective, { static: false }) contentPaneHost: PaneContentHostDirective;
+  @ViewChild('contentEditor', { static: false }) contentEditor: any;
 
   constructor(
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,

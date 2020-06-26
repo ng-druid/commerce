@@ -50,7 +50,7 @@ import { MediaEditorComponent } from './plugins/media/media-editor/media-editor.
 import { MediaPaneRendererComponent } from './plugins/media/media-pane-renderer/media-pane-renderer.component';
 import { RenderingEditorComponent } from './components/rendering-editor/rendering-editor.component';
 import { PanelSelectorComponent } from './plugins/panel/panel-selector/panel-selector.component';
-import { FlexGridComponent } from './components/flex-grid/flex-grid.component';
+import { PanelEditorComponent } from './plugins/panel/panel-editor/panel-editor.component';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -58,8 +58,7 @@ const routes = [
   { path: 'page-builder', component: PageBuilderComponent },
   { path: 'grid-layouts', component: GridLayoutMasterComponent },
   { path: 'panelpage/:panelPageId/manage', component: EditPanelPageComponent },
-  { path: 'panelpage/:panelPageId', component: PanelPageRouterComponent },
-  { path: 'flex-grid', component: FlexGridComponent },
+  { path: 'panelpage/:panelPageId', component: PanelPageRouterComponent }
   //{ path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
 
@@ -83,7 +82,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, FlexGridComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
