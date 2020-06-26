@@ -1,6 +1,7 @@
 import { SnippetContentHandler } from './handlers/snippet-content.handler';
 import { AttributeContentHandler } from './handlers/attribute-content.handler';
 import { MediaContentHandler } from './handlers/media-content.handler';
+import { PanelContentHandler } from './handlers/panel-content.handler';
 import { ContentPlugin } from '@classifieds-ui/content';
 import { SnippetPaneRendererComponent } from './plugins/snippet/snippet-pane-renderer/snippet-pane-renderer.component';
 import { SnippetEditorComponent } from './plugins/snippet/snippet-editor/snippet-editor.component';
@@ -9,6 +10,7 @@ import { AttributeEditorComponent } from './plugins/attribute/attribute-editor/a
 import { AttributePaneRendererComponent } from './plugins/attribute/attribute-pane-renderer/attribute-pane-renderer.component';
 import { MediaEditorComponent } from './plugins/media/media-editor/media-editor.component';
 import { MediaPaneRendererComponent } from './plugins/media/media-pane-renderer/media-pane-renderer.component';
+import { PanelSelectorComponent } from './plugins/panel/panel-selector/panel-selector.component';
 
 export const snippetContentPluginFactory = (handler: SnippetContentHandler) => {
   return new ContentPlugin({
@@ -39,6 +41,17 @@ export const mediaContentPluginFactory = (handler: MediaContentHandler) => {
     selectionComponent: undefined,
     editorComponent: MediaEditorComponent,
     renderComponent: MediaPaneRendererComponent,
+    handler
+  })
+}
+
+export const panelContentPluginFactory = (handler: PanelContentHandler) => {
+  return new ContentPlugin({
+    name: 'panel',
+    title: 'Panel',
+    selectionComponent: PanelSelectorComponent,
+    editorComponent: undefined,
+    renderComponent: undefined,
     handler
   })
 }

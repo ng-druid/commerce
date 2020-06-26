@@ -6,7 +6,7 @@
   padding: 1em;
 }
 
-form ::ng-deep ngx-dropzone {
+.content-editor-wrapper ::ng-deep ngx-dropzone {
   height: 100%;
   display: block;
   padding: 1em;
@@ -38,4 +38,8 @@ form ::ng-deep ngx-dropzone {
   border: dotted 3px #999;
   //height: 100%;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.flex-grid-wrapper {
+  height: 100%;
 }

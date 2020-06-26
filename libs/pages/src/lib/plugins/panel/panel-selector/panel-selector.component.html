@@ -1,0 +1,5 @@
+<mat-nav-list>
+  <a *ngFor="let panel of panels" mat-list-item mat-list-item (click)="onItemSelect(panel)">
+    <span mat-line>{{ panel }}</span>
+  </a>
+</mat-nav-list>

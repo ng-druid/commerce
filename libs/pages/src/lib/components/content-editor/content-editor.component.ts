@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
@@ -7,9 +7,10 @@ import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pane, PanelPage } from '../../models/page.models';
-import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
+import { DisplayGrid, GridsterConfig, GridType, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { RenderingEditorComponent } from '../rendering-editor/rendering-editor.component';
+import { debounceTime, delay, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -30,18 +31,39 @@ export class ContentEditorComponent implements OnInit {
         this.panels.push(this.fb.group({
           panes: this.fb.array([])
         }));
+
+        this.panelPanes(this.panels.length - 1).valueChanges.pipe(
+          //filter(() => this.nested),
+          debounceTime(5),
+          delay(1)
+        ).subscribe(((panelIndex) => {
+          return () => {
+            const container = this.paneContainers.find((i, index) => index === panelIndex);
+            this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+          };
+        })(this.panels.length - 1));
+
         p.panes.forEach((pp, i2) => {
           (this.panels.at(i).get('panes') as FormArray).push(this.fb.group({
             contentPlugin: pp.contentPlugin,
-            settings: new FormArray(this.buildSettings(pp.settings))
+            name: new FormControl(pp.name),
+            label: new FormControl(pp.label),
+            settings: new FormArray(pp.settings.map(s => this.convertToGroup(s)))
           }));
         });
+
       });
     } else {
       this.panelPageId = undefined;
       (this.contentForm.get('panels') as FormArray).clear();
     }
   }
+
+  @Input()
+  savable = true;
+
+  @Input()
+  nested = false;
 
   panelPageId: string;
   dashboard = [];
@@ -59,12 +81,30 @@ export class ContentEditorComponent implements OnInit {
     },
     resizable: {
       enabled: true
-    }
+    },
+    mobileBreakpoint: 0,
+    itemChangeCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => {
+      /*console.log('item change callback');
+      console.log(item);
+      console.log(itemComponent);
+      console.log(itemComponent.height);*/
+      console.log(item);
+    },
+    itemInitCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => {
+      if(this.nested && item.y !== 0) {
+        const matchIndex = this.gridLayout.grid.findIndex(g => g.x === item.x && g.y === item.y && g.cols === item.cols && g.rows === item.rows);
+        if(this.panelPanes(matchIndex).length === 0) {
+          this.gridLayout.setItemContentHeight(matchIndex, 200);
+        } else {
+        }
+      }
+    },
   };
 
   private contentPlugins: Array<ContentPlugin> = [];
 
   @ViewChild(GridLayoutComponent, {static: true}) gridLayout: GridLayoutComponent;
+  @ViewChildren('panes') paneContainers: QueryList<ElementRef>;
 
   get panels() {
     return (this.contentForm.get('panels') as FormArray);
@@ -90,6 +130,25 @@ export class ContentEditorComponent implements OnInit {
     this.panels.push(this.fb.group({
       panes: this.fb.array([])
     }));
+
+    if(this.nested) {
+      setTimeout(() => {
+        this.paneContainers.forEach((p, i) => {
+          this.gridLayout.setItemContentHeight(i, p.nativeElement.offsetHeight);
+        });
+      });
+    }
+
+    this.panelPanes(this.panels.length - 1).valueChanges.pipe(
+      filter(() => this.nested),
+      debounceTime(5),
+      delay(1)
+    ).subscribe(((panelIndex) => {
+      return () => {
+        const container = this.paneContainers.find((i, index) => index === panelIndex);
+        this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+      };
+    })(this.panels.length - 1))
   }
 
   onItemRemoved(index: number) {
@@ -97,6 +156,8 @@ export class ContentEditorComponent implements OnInit {
   }
 
   onDrop(evt: CdkDragDrop<string[]>) {
+
+    console.log(evt);
 
     const newPanelIndex = +evt.container.data;
     const oldPanelIndex = +evt.previousContainer.data;
@@ -206,14 +267,25 @@ export class ContentEditorComponent implements OnInit {
     }
   }
 
-  buildSettings(settings: Array<AttributeValue>): Array<FormGroup> {
-    return settings.map(s => this.fb.group({
-      name: new FormControl(s.name, Validators.required),
-      type: new FormControl(s.type, Validators.required),
-      displayName: new FormControl(s.displayName, Validators.required),
-      value: new FormControl(s.value, Validators.required),
-      computedValue: new FormControl(s.computedValue, Validators.required),
-    }));
+  convertToGroup(setting: AttributeValue): FormGroup {
+
+    const fg = this.fb.group({
+      name: new FormControl(setting.name, Validators.required),
+      type: new FormControl(setting.type, Validators.required),
+      displayName: new FormControl(setting.displayName, Validators.required),
+      value: new FormControl(setting.value, Validators.required),
+      computedValue: new FormControl(setting.value, Validators.required),
+      attributes: new FormArray([])
+    });
+
+    if(setting.attributes && setting.attributes.length > 0) {
+      setting.attributes.forEach(s => {
+        (fg.get('attributes') as FormArray).push(this.convertToGroup(s));
+      })
+    }
+
+    return fg;
+
   }
 
 }

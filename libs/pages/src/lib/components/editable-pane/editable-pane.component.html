@@ -1,4 +1,4 @@
-<div class="editable-pane-wrapper">
+<div *ngIf="pluginName != 'panel'; else nestedPanelTpl" class="editable-pane-wrapper">
   <div class="pane-header">
     <button type="button" (click)="onEditClick()">Edit</button>
     <button *ngIf="!preview" type="button" (click)="onPreviewClick()">Preview</button>
@@ -33,4 +33,8 @@
       <ng-container *ngTemplateOutlet="settingsTmpl; context:{ settings: setting.attributes }"></ng-container>
     </ul>
   </li>
+</ng-template>
+
+<ng-template #nestedPanelTpl>
+  <classifieds-ui-content-editor [panelPage]="panelPage" [savable]="false" [nested]="true"></classifieds-ui-content-editor>
 </ng-template>

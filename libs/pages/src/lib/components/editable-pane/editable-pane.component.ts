@@ -2,6 +2,8 @@ import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, EventEmitte
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
+import { PanelContentHandler } from '../../handlers/panel-content.handler';
+import { PanelPage } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-editable-pane',
@@ -43,9 +45,15 @@ export class EditablePaneComponent implements OnInit, OnChanges {
 
   private contentPlugins: Array<ContentPlugin> = [];
 
-  @ViewChild(PaneContentHostDirective, { static: true }) contentPaneHost: PaneContentHostDirective;
+  panelPage: PanelPage;
 
-  constructor(@Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>, private componentFactoryResolver: ComponentFactoryResolver) {
+  @ViewChild(PaneContentHostDirective, { static: false }) contentPaneHost: PaneContentHostDirective;
+
+  constructor(
+    @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private panelHandler: PanelContentHandler
+  ) {
     this.contentPlugins = contentPlugins;
   }
 
@@ -53,6 +61,11 @@ export class EditablePaneComponent implements OnInit, OnChanges {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
     this.displayOverride = this.contentPlugin.handler.implementsRendererOverride();
     this.contentPlugin.handler.hasRendererOverride(this.settings).subscribe(r => this.hasOverride = !!r);
+    if(this.pluginName === 'panel') {
+      this.panelHandler.toObject(this.settings).subscribe(p => {
+        this.panelPage = p;
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
