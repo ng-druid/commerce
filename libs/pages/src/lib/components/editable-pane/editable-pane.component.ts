@@ -45,6 +45,9 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Output()
   nestedUpdate = new EventEmitter<PanelPage>();
 
+  @Output()
+  heightChange = new EventEmitter();
+
   displayOverride = false;
   hasOverride = false;
 
@@ -97,6 +100,7 @@ export class EditablePaneComponent implements OnInit, OnChanges {
     if(this.contentPaneHost !== undefined) {
       this.renderPaneContent();
     }
+    setTimeout(() => this.heightChange.emit());
   }
 
   onOverrideClick() {
@@ -115,8 +119,22 @@ export class EditablePaneComponent implements OnInit, OnChanges {
     this.preview = false;
     if(this.contentPaneHost !== undefined) {
       const viewContainerRef = this.contentPaneHost.viewContainerRef;
-      viewContainerRef.clear();;
+      viewContainerRef.clear();
     }
+    setTimeout(() => this.heightChange.emit());
+  }
+
+  onAfterCollapse() {
+    this.heightChange.emit();
+  }
+
+  onAfterExpand() {
+    this.heightChange.emit();
+  }
+
+  onDelete() {
+    console.log('editable pane delete');
+    this.delete.emit();
   }
 
   renderPaneContent() {

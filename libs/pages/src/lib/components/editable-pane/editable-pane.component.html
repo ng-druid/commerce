@@ -6,7 +6,7 @@
     <button type="button" class="delete" (click)="onDeleteClick()">Delete</button>
   </div>
   <div class="inner-pane-wrapper">
-    <mat-expansion-panel>
+    <mat-expansion-panel (afterCollapse)="onAfterCollapse()" (afterExpand)="onAfterExpand()">
       <mat-expansion-panel-header>
         <mat-panel-title>Content: {{ contentPlugin.title }}</mat-panel-title>
         <mat-panel-description>Name: {{ name }} | Label: {{ label }}</mat-panel-description>
@@ -37,6 +37,6 @@
 
 <ng-template #nestedPanelTpl>
   <div class="nested-panel-wrapper">
-    <classifieds-ui-content-editor #contentEditor [panelPage]="panelPage" [savable]="false" [nested]="true" (nestedUpdate)="onNestedUpdate($event)"></classifieds-ui-content-editor>
+    <classifieds-ui-content-editor #contentEditor [panelPage]="panelPage" [savable]="false" [nested]="true" (nestedUpdate)="onNestedUpdate($event)" (delete)="onDeleteClick()"></classifieds-ui-content-editor>
   </div>
 </ng-template>

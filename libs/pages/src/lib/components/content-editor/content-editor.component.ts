@@ -27,6 +27,9 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   @Output()
   nestedUpdate = new EventEmitter<PanelPage>();
 
+  @Output()
+  delete = new EventEmitter();
+
   @Input()
   panelPage: PanelPage;
   /*set panelPage(panelPage: PanelPage) {
@@ -246,6 +249,15 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     const formArray = (this.panelPane(index, index2).get('settings') as FormArray);
     formArray.clear();
     settings.forEach(s => formArray.push(this.convertToGroup(s)))
+  }
+
+  onPaneHeightChange(panelIndex: number) {
+    const container = this.paneContainers.find((i, index) => index === panelIndex);
+    this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+  }
+
+  onDeletePane(index: number, index2: number) {
+    console.log(`delete nested pane: ${index} | ${index2}`);
   }
 
   submit() {
