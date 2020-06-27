@@ -28,7 +28,7 @@ export class PanelPageComponent implements OnInit {
     }
   };
 
-  private panelPageService: EntityCollectionService<PanelPage>
+  private panelPageService: EntityCollectionService<PanelPage>;
 
   constructor(es: EntityServices) {
     this.panelPageService = es.getEntityCollectionService('PanelPage');

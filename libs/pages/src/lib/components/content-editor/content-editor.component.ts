@@ -263,8 +263,10 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   }
 
   onPaneHeightChange(panelIndex: number) {
-    const container = this.paneContainers.find((i, index) => index === panelIndex);
-    this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+    if(this.nested) {
+      const container = this.paneContainers.find((i, index) => index === panelIndex);
+      this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+    }
   }
 
   onDeleteClick() {

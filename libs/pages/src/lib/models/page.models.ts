@@ -45,9 +45,15 @@ export class GridLayout {
 }
 
 export class Panel {
+  stylePlugin: string;
+  settings: Array<AttributeValue> = [];
   panes: Array<Pane> = [];
   constructor(data?: Panel) {
     if(data) {
+      this.stylePlugin = data.stylePlugin;
+      if(data.settings) {
+        this.settings = data.settings.map(a => new AttributeValue(a));
+      }
       if(data.panes) {
         this.panes = data.panes.map(p => new Pane(p));
       }

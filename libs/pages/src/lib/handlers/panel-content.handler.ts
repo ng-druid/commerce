@@ -31,7 +31,11 @@ export class PanelContentHandler implements ContentHandler {
     return of(new PanelPage({
       id: settings.find(s => s.name === 'id').value,
       gridItems: settings.find(s => s.name === 'gridItems').attributes.map(a => a.attributes.reduce<any>((p, c) => ({ ...p, [c.name]: parseInt(c.value) }), {})),
-      panels: settings.find(s => s.name === 'panels').attributes.map(a => ({ panes: a.attributes.find(s => s.name === 'panes').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})) }))
+      panels: settings.find(s => s.name === 'panels').attributes.map(a => ({
+        stylePlugin: a.attributes.find(s => s.name === 'stylePlugin').value,
+        settings: a.attributes.find(s => s.name === 'settings').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})),
+        panes: a.attributes.find(s => s.name === 'panes').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {}))
+      }))
     }));
   }
 
