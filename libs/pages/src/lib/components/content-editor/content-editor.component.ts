@@ -4,6 +4,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
+import { StylePlugin, STYLE_PLUGIN } from '@classifieds-ui/style';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pane, PanelPage } from '../../models/page.models';
@@ -13,6 +14,7 @@ import { RenderingEditorComponent } from '../rendering-editor/rendering-editor.c
 import { debounceTime, delay, filter } from 'rxjs/operators';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
+import { StyleSelectorComponent } from '../style-selector/style-selector.component';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -95,6 +97,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   };
 
   private contentPlugins: Array<ContentPlugin> = [];
+  private stylePlugins: Array<StylePlugin> = [];
 
   @ViewChild(GridLayoutComponent, {static: false}) gridLayout: GridLayoutComponent;
   @ViewChildren('panes') paneContainers: QueryList<ElementRef>;
@@ -106,12 +109,14 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   constructor(
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
+    @Inject(STYLE_PLUGIN) stylePlugins: Array<StylePlugin>,
     private fb: FormBuilder,
     private bs: MatBottomSheet,
     private dialog: MatDialog,
     private panelHandler: PanelContentHandler
   ) {
     this.contentPlugins = contentPlugins;
+    this.stylePlugins = stylePlugins;
   }
 
   ngOnInit(): void {
@@ -160,10 +165,16 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     this.bs.open(ContentSelectorComponent, { data: this.panels.controls[index] });
   }
 
+  applyStyle(index: number) {
+    this.bs.open(StyleSelectorComponent, { data: this.panels.controls[index] });
+  }
+
   onItemAdded() {
     console.log('item added');
 
     this.panels.push(this.fb.group({
+      stylePlugin: new FormControl(''),
+      settings: new FormArray([]),
       panes: this.fb.array([])
     }));
 
@@ -322,6 +333,14 @@ export class ContentEditorComponent implements OnInit, OnChanges {
       panelPage = p;
     });
     return panelPage;
+  }
+
+  hasPanelStyle(index: number) {
+    return this.panels.at(index).get('stylePlugin').value !== '';
+  }
+
+  panelStyleTitle(index: number) {
+    return this.stylePlugins.find(s => s.name === this.panels.at(index).get('stylePlugin').value).title;
   }
 
   onPaneEdit(index: number, index2: number) {

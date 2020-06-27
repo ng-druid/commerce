@@ -33,7 +33,8 @@
       "@classifieds-ui/jsonschema": ["libs/jsonschema/src/index.ts"],
       "@classifieds-ui/pages": ["libs/pages/src/index.ts"],
       "@classifieds-ui/content": ["libs/content/src/index.ts"],
-      "@classifieds-ui/token": ["libs/token/src/index.ts"]
+      "@classifieds-ui/token": ["libs/token/src/index.ts"],
+      "@classifieds-ui/style": ["libs/style/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

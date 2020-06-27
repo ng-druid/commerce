@@ -16,6 +16,8 @@
     </ng-template>
     <ng-template #gridItemActions let-i="i">
       <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
+      <button *ngIf="!hasPanelStyle(i)" type="button" (mousedown)="applyStyle(i)" (touchstart)="applyStyle(i)">Apply Style</button>
+      <span *ngIf="hasPanelStyle(i)">Style: {{ panelStyleTitle(i) }}</span>
     </ng-template>
     <ng-template #innerGridItem let-i="i">
       <ngx-dropzone [cdkDropListData]="i" class="panel-dropzone" [multiple]="true" [disableClick]="true" (change)="onFileChange($event, i)" cdkDropList (cdkDropListDropped)="onDrop($event)">
