@@ -1,6 +1,7 @@
 import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
 
 import { Injectable } from '@angular/core';
+import { timingSafeEqual } from 'crypto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,12 @@ export class TokenizerService {
   generateTokens(settings: Array<AttributeValue>): Map<string, any> {
     const tokens = new Map<string, string>();
     this.attributeTokens(settings, tokens, '', 0);
+    return tokens;
+  }
+
+  generateGenericTokens(obj: any): Map<string, any> {
+    const tokens = new Map<string, string>();
+    this.genericTokens(obj, tokens, '', 0);
     return tokens;
   }
 
@@ -37,6 +44,24 @@ export class TokenizerService {
       }
     })
 
+  }
+
+  genericTokens(obj: any, tokens: Map<string,any>, prefix, level) {
+    for(const prop in obj) {
+      const type = typeof(obj[prop]);
+      if(type !== 'object') {
+        tokens.set(`${prefix}.${prop}`, obj[prop]);
+      } else if(Array.isArray(obj[prop]) && prop === 'attributes') {
+        this.attributeTokens(obj[prop], tokens, `${prefix}.${prop}`, level + 1);
+      } else if(Array.isArray(obj[prop])) {
+        var len = obj[prop].length;
+        for(let i = 0; i < len; i++) {
+          this.genericTokens(obj[prop][i], tokens, `${prefix}.${prop}.${i}`, level + 1);
+        }
+      } else {
+        this.genericTokens(obj[prop], tokens, `${prefix}.${prop}`, level + 1);
+      }
+    }
   }
 
 }

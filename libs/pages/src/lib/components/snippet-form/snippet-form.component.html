@@ -1,7 +1,7 @@
 <form [formGroup]="contentForm" (ngSubmit)="submit()">
   <mat-dialog-content>
     <div class="content-inner">
-      <as-split direction="vertical">
+      <as-split [direction]="splitDirection">
         <as-split-area size="50">
           <ul [hidden]="true" *ngIf="tokens">
             <li *ngFor="let token of tokens | keyvalue">{{ token.key }}</li>
@@ -14,7 +14,7 @@
             </mat-select>
           </mat-form-field>
           <div>
-            <textarea formControlName="content" cols="100" rows="40"></textarea>
+            <textarea formControlName="content" [cols]="cols" [rows]="rows"></textarea>
           </div>
         </as-split-area>
         <as-split-area size="50">

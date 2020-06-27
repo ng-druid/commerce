@@ -135,6 +135,8 @@ export class ContentEditorComponent implements OnInit, OnChanges {
       this.dashboard = [ ...changes.panelPage.currentValue.gridItems ];
       changes.panelPage.currentValue.panels.forEach((p, i) => {
         this.panels.push(this.fb.group({
+          stylePlugin: this.fb.control(p.stylePlugin),
+          settings: this.fb.array(p.settings !== undefined ? p.settings.map(s => this.convertToGroup(s)): []),
           panes: this.fb.array([])
         }));
         if(this.nested) {
@@ -338,7 +340,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   }
 
   hasPanelStyle(index: number) {
-    return this.panels.at(index).get('stylePlugin').value !== '';
+    return this.panels.at(index).get('stylePlugin').value !== undefined && this.panels.at(index).get('stylePlugin').value !== '';
   }
 
   panelStyleTitle(index: number) {

@@ -1,0 +1,53 @@
+<form class="rest-form" [formGroup]="restForm" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <as-split direction="vertical" class="content-inner">
+      <div as-split-area size="50">
+        <as-split direction="horizontal">
+          <div as-split-area size="50">
+            <mat-form-field>
+              <input matInput placeholder="Url" formControlName="url" required>
+            </mat-form-field>
+            <div formArrayName="params">
+              <div *ngFor="let param of params.controls; let i = index" [formGroupName]="i">
+                <div>{{ paramName(i) }}</div>
+                <mat-form-field formGroupName="mapping">
+                  <mat-label>Type</mat-label>
+                  <mat-select required formControlName="type">
+                    <mat-option value="static">Static</mat-option>
+                    <mat-option value="route">Route</mat-option>
+                    <mat-option value="context">Context</mat-option>
+                    <mat-option value="form">Form</mat-option>
+                    <mat-option value="store">Store</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="param.get('mapping').get('type').value == 'context'" formGroupName="mapping">
+                  <mat-label>Context</mat-label>
+                  <mat-select formControlName="context">
+                    <mat-option *ngFor="let context of contexts" [value]="context">Context Name</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field formGroupName="mapping">
+                  <input matInput formControlName="value" placeholder="value" required>
+                </mat-form-field>
+                <div formArrayName="flags">
+                  <div *ngFor="let flag of param.get('flags').controls; let j = index" [formGroupName]="j">
+                    <mat-checkbox formControlName="enabled">{{ flagsAsArray[j] }}</mat-checkbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <as-split-area size="50">
+            <ngx-json-viewer *ngIf="jsonData" [json]="jsonData" [expanded]="false"></ngx-json-viewer>
+          </as-split-area>
+        </as-split>
+      </div>
+      <as-split-area size="50">
+        <classifieds-ui-snippet-form splitDirection="horizontal" rows="10" cols="40" [tokens]="tokens"></classifieds-ui-snippet-form>
+      </as-split-area>
+    </as-split>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button type="submit" mat-raised-button color="primary" mat-dialog-close [disabled]="!restForm.valid">Save</button>
+  </mat-dialog-actions>
+</form>

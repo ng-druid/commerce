@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularSplitModule } from 'angular-split';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { MaterialModule } from '@classifieds-ui/material';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { MediaModule } from '@classifieds-ui/media';
 import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
 import { TokenModule } from '@classifieds-ui/token';
@@ -41,7 +42,7 @@ import { PanelPageRouterComponent } from './components/panel-page-router/panel-p
 import { CreatePanelPageComponent } from './components/create-panel-page/create-panel-page.component';
 import { EditPanelPageComponent } from './components/edit-panel-page/edit-panel-page.component';
 import { SnippetContentHandler } from './handlers/snippet-content.handler';
-import { snippetContentPluginFactory, attributeContentPluginFactory, mediaContentPluginFactory, panelContentPluginFactory } from './pages.factories';
+import { snippetContentPluginFactory, attributeContentPluginFactory, mediaContentPluginFactory, panelContentPluginFactory, restContentPluginFactory } from './pages.factories';
 import { AttributeSelectorComponent } from './plugins/attribute/attribute-selector/attribute-selector.component';
 import { AttributeContentHandler } from './handlers/attribute-content.handler';
 import { AttributeEditorComponent } from './plugins/attribute/attribute-editor/attribute-editor.component';
@@ -57,6 +58,9 @@ import { StyleSelectorComponent } from './components/style-selector/style-select
 import { GalleryEditorComponent } from './plugins/style/gallery-editor/gallery-editor.component';
 import { GalleryPanelRendererComponent } from './plugins/style/gallery-panel-renderer/gallery-panel-renderer.component';
 import { RenderPanelComponent } from './components/render-panel/render-panel.component';
+import { DatasourceSelectorComponent } from './plugins/datasource/datasource-selector/datasource-selector.component';
+import { RestEditorComponent } from './plugins/rest/rest-editor/rest-editor.component';
+import { RestFormComponent } from './components/rest-form/rest-form.component';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -78,6 +82,7 @@ const routes = [
     FlexLayoutModule,
     AngularSplitModule,
     RouterModule.forChild(routes),
+    NgxJsonViewerModule,
     MarkdownModule.forChild(),
     NgxDropzoneModule,
     GridsterModule,
@@ -89,7 +94,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
@@ -101,6 +106,7 @@ const routes = [
     { provide: CONTENT_PLUGIN, useFactory: attributeContentPluginFactory, multi: true, deps: [ AttributeContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: mediaContentPluginFactory, multi: true, deps: [ MediaContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: panelContentPluginFactory, multi: true, deps: [ PanelContentHandler ] },
+    { provide: CONTENT_PLUGIN, useFactory: restContentPluginFactory, multi: true  },
     { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'gallery', title: 'Gallery', editorComponent: undefined, renderComponent: GalleryPanelRendererComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]

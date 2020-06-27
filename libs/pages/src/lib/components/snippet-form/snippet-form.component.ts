@@ -17,6 +17,15 @@ export class SnippetFormComponent implements OnInit {
   tokens: Map<string, any>;
 
   @Input()
+  splitDirection = 'vertical';
+
+  @Input()
+  rows = 40;
+
+  @Input()
+  cols = 100;
+
+  @Input()
   set snippet(snippet: Snippet) {
     if(snippet !== undefined) {
       this.contentForm.setValue(snippet);

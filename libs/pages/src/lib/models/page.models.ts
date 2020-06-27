@@ -1,6 +1,10 @@
 // import { ContentInstance } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
 
+interface DatasourceModel<T> {
+  new (): T;
+}
+
 export class PanelPage {
   id: string;
   gridItems: Array<GridItem> = [];

@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NxModule } from '@nrwl/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { AD_SETTINGS, AdSettings } from '@classifieds-ui/ads';
 import { AuthModule, AuthInterceptor, LogoutInterceptor, CLIENT_SETTINGS, ClientSettings } from '@classifieds-ui/auth';
@@ -94,6 +95,7 @@ export function markedOptionsFactory(): MarkedOptions {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    NgxJsonViewerModule,
     MarkdownModule.forRoot({
       sanitize: SecurityContext.NONE,
       markedOptions: {

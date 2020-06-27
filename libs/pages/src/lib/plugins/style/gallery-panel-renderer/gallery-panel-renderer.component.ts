@@ -24,7 +24,7 @@ export class GalleryPanelRendererComponent implements OnInit {
   galleryOptions: Array<INgxGalleryOptions> = [
     {
       width: '100%',
-      // height: '400px',
+      //height: '400px',
       thumbnailsColumns: 4,
       previewFullscreen: true,
       imageAnimation: NgxGalleryAnimation.Slide
