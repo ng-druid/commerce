@@ -132,11 +132,6 @@ export class EditablePaneComponent implements OnInit, OnChanges {
     this.heightChange.emit();
   }
 
-  onDelete() {
-    console.log('editable pane delete');
-    this.delete.emit();
-  }
-
   renderPaneContent() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.contentPlugin.renderComponent);
 

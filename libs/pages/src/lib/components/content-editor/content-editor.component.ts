@@ -256,6 +256,10 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
   }
 
+  onDeleteClick() {
+    this.delete.emit();
+  }
+
   onDeletePane(index: number, index2: number) {
     console.log(`delete nested pane: ${index} | ${index2}`);
   }
