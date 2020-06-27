@@ -2,6 +2,8 @@ import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, ViewChild, 
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
+import { PanelContentHandler } from '../../handlers/panel-content.handler';
+import { PanelPage } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-render-pane',
@@ -18,22 +20,42 @@ export class RenderPaneComponent implements OnInit, OnChanges {
 
   contentPlugin: ContentPlugin;
 
+  panelPage: PanelPage;
+
   private contentPlugins: Array<ContentPlugin> = [];
 
   @ViewChild(PaneContentHostDirective, { static: true }) contentPaneHost: PaneContentHostDirective;
 
-  constructor(@Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>, private componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(
+    @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private panelHandler: PanelContentHandler
+  ) {
     this.contentPlugins = contentPlugins;
   }
 
   ngOnInit(): void {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
-    this.renderPaneContent();
+    if(this.pluginName === 'panel') {
+      this.resolveNestedPanelPage();
+    } else {
+      this.renderPaneContent();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
-    this.renderPaneContent();
+    if(this.pluginName === 'panel') {
+      this.resolveNestedPanelPage();
+    } else {
+      this.renderPaneContent();
+    }
+  }
+
+  resolveNestedPanelPage() {
+    this.panelHandler.toObject(this.settings).subscribe(p => {
+      this.panelPage = p;
+    });
   }
 
   renderPaneContent() {

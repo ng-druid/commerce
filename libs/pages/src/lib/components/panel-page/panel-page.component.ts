@@ -13,6 +13,7 @@ export class PanelPageComponent implements OnInit {
   @Input()
   id: string;
 
+  @Input()
   panelPage: PanelPage;
 
   options: GridsterConfig = {
@@ -34,9 +35,11 @@ export class PanelPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.panelPageService.getByKey(this.id).subscribe(p => {
-      this.panelPage = p;
-    });
+    if(this.id !== undefined) {
+      this.panelPageService.getByKey(this.id).subscribe(p => {
+        this.panelPage = p;
+      });
+    }
   }
 
 }

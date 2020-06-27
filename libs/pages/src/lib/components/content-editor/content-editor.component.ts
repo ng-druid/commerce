@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
@@ -19,7 +19,7 @@ import { EditablePaneComponent } from '../editable-pane/editable-pane.component'
   templateUrl: './content-editor.component.html',
   styleUrls: ['./content-editor.component.scss']
 })
-export class ContentEditorComponent implements OnInit {
+export class ContentEditorComponent implements OnInit, OnChanges {
 
   @Output()
   submitted = new EventEmitter<PanelPage>();
@@ -28,7 +28,8 @@ export class ContentEditorComponent implements OnInit {
   nestedUpdate = new EventEmitter<PanelPage>();
 
   @Input()
-  set panelPage(panelPage: PanelPage) {
+  panelPage: PanelPage;
+  /*set panelPage(panelPage: PanelPage) {
     if(panelPage !== undefined) {
       this.panelPageId = panelPage.id;
       this.dashboard = [ ...panelPage.gridItems ];
@@ -36,18 +37,6 @@ export class ContentEditorComponent implements OnInit {
         this.panels.push(this.fb.group({
           panes: this.fb.array([])
         }));
-
-        this.panelPanes(this.panels.length - 1).valueChanges.pipe(
-          //filter(() => this.nested),
-          debounceTime(5),
-          delay(1)
-        ).subscribe(((panelIndex) => {
-          return () => {
-            const container = this.paneContainers.find((i, index) => index === panelIndex);
-            this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
-          };
-        })(this.panels.length - 1));
-
         p.panes.forEach((pp, i2) => {
           (this.panels.at(i).get('panes') as FormArray).push(this.fb.group({
             contentPlugin: pp.contentPlugin,
@@ -62,7 +51,7 @@ export class ContentEditorComponent implements OnInit {
       this.panelPageId = undefined;
       (this.contentForm.get('panels') as FormArray).clear();
     }
-  }
+  }*/
 
   @Input()
   savable = true;
@@ -129,6 +118,39 @@ export class ContentEditorComponent implements OnInit {
     ).subscribe(() => {
       this.nestedUpdate.emit(this.packageFormData());
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.panelPage && changes.panelPage.previousValue !== changes.panelPage.currentValue) {
+      this.panels.clear();
+      this.panelPageId = changes.panelPage.currentValue.panelPageId;
+      this.dashboard = [ ...changes.panelPage.currentValue.gridItems ];
+      changes.panelPage.currentValue.panels.forEach((p, i) => {
+        this.panels.push(this.fb.group({
+          panes: this.fb.array([])
+        }));
+        if(this.nested) {
+          this.panelPanes(this.panels.length - 1).valueChanges.pipe(
+            //filter(() => this.nested),
+            debounceTime(5),
+            delay(1)
+          ).subscribe(((panelIndex) => {
+            return () => {
+              const container = this.paneContainers.find((i, index) => index === panelIndex);
+              this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+            };
+          })(this.panels.length - 1));
+        }
+        p.panes.forEach((pp, i2) => {
+          (this.panels.at(i).get('panes') as FormArray).push(this.fb.group({
+            contentPlugin: pp.contentPlugin,
+            name: new FormControl(pp.name),
+            label: new FormControl(pp.label),
+            settings: new FormArray(pp.settings.map(s => this.convertToGroup(s)))
+          }));
+        });
+      });
+    }
   }
 
   addContent(index: number) {
