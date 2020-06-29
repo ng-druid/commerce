@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ContentInstance } from '@classifieds-ui/content';
-import { Rest } from '../../models/datasource.models';
+import { Rest, Dataset } from '../../models/datasource.models';
 
 export const addContentInstance = createAction(
   '[PageBuilder] Add Content Instance',
@@ -10,6 +10,11 @@ export const addContentInstance = createAction(
 export const loadRestData = createAction(
   '[PageBuilder] Load Rest Data',
   props<{ tag: string; rest: Rest }>()
+);
+
+export const loadRestDataSuccess = createAction(
+  '[PageBuilder] Load Rest Data Success',
+  props<{ tag: string, data: Dataset }>()
 );
 
 

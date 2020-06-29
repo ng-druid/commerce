@@ -64,4 +64,13 @@ export class TokenizerService {
     }
   }
 
+  replaceTokens(v: string, tokens: Map<string, any>): string {
+    if(tokens) {
+      tokens.forEach((value, key) => {
+        v = v.replace(`[${key}]`, `${value}`);
+      });
+    }
+    return v;
+  }
+
 }

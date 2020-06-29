@@ -1,15 +1,28 @@
 import { Injectable } from '@angular/core';
+import { Store, select } from '@ngrx/store';
 import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
 import { ContentHandler } from '@classifieds-ui/content';
 import { SnippetContentHandler } from './snippet-content.handler';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 import { Rest, Param, Mapping } from '../models/datasource.models';
+import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
+import { selectDataset } from '../features/page-builder/page-builder.selectors';
+import { PageBuilderPartialState } from '../features/page-builder/page-builder.reducer';
+import { TokenizerService } from '@classifieds-ui/token';
+import { Panel, PanelPage, Snippet, Pane } from '../models/page.models';
+import { PanelContentHandler } from '../handlers/panel-content.handler';
 
 @Injectable()
 export class RestContentHandler implements ContentHandler {
 
-  constructor(private snippetHandler: SnippetContentHandler) { }
+  constructor(
+    private snippetHandler: SnippetContentHandler,
+    private pageBuilderFacade: PageBuilderFacade,
+    private store: Store<PageBuilderPartialState>,
+    private tokenizerService: TokenizerService,
+    private panelHandler: PanelContentHandler
+  ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
     return of([]);
@@ -22,6 +35,27 @@ export class RestContentHandler implements ContentHandler {
   }
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean> {
     return of(false);
+  }
+  isDynamic(): boolean {
+    return true;
+  }
+  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>> {
+    const subject = new Subject<Array<AttributeValue>>();
+    this.toObject(settings).subscribe(r => {
+      this.pageBuilderFacade.loadRestData(identity, r);
+      this.store.pipe(
+        select(selectDataset(identity)),
+        filter(dataset => dataset !== undefined),
+        map(dataset => dataset.results.map(row => this.tokenizerService.generateGenericTokens(row))),
+        map(tokens => tokens.map(t => new Pane({ contentPlugin: 'snippet', name: undefined, label: undefined, settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: this.tokenizerService.replaceTokens(r.renderer.data.content, t) }) })) as Array<Pane>),
+        map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),
+        map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, gridItems: [], panels: [ panel ] })))
+      ).subscribe(panelSettings => {
+        subject.next(panelSettings.find(s => s.name === 'panels').attributes[0].attributes.find(s => s.name === 'panes').attributes);
+        subject.complete();
+      });
+    });
+    return subject;
   }
   toObject(settings: Array<AttributeValue>): Observable<Rest> {
     const snip = settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'data').attributes;

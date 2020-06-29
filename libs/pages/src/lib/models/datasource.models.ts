@@ -66,5 +66,10 @@ export class Flag {
 }
 
 export class Dataset {
-
+  results: Array<any> = [];
+  constructor(data?: Dataset) {
+    if(data) {
+      this.results = data.results;
+    }
+  }
 }

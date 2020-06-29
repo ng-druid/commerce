@@ -35,6 +35,14 @@ export class SnippetContentHandler implements ContentHandler {
     return of(false);
   }
 
+  isDynamic(): boolean {
+    return false;
+  }
+
+  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>> {
+    return of([]);
+  }
+
   toObject(settings: Array<AttributeValue>): Observable<Snippet> {
     const snippet = new Snippet({
         content: settings.find(s => s.name === 'content').value,

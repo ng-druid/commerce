@@ -6,3 +6,12 @@ export const selectPageBuilderState = createFeatureSelector<fromPageBuilder.Stat
 );
 
 export const selectContentInstance = createSelector(selectPageBuilderState, state => state.contentInstance);
+
+export const selectDataset = (tag: string) => createSelector(selectPageBuilderState, state => {
+  const index = state.dataTags.findIndex(t => t === tag);
+  if(index > -1) {
+    return state.datasets[index][state.datasets[index].length - 1];
+  } else {
+    return undefined;
+  }
+})

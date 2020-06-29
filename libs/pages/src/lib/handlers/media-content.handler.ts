@@ -30,6 +30,14 @@ export class MediaContentHandler implements ContentHandler {
     return of(false);
   }
 
+  isDynamic(): boolean {
+    return false;
+  }
+
+  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>> {
+    return of([]);
+  }
+
   toObject(settings: Array<AttributeValue>): Observable<MediaFile> {
     const mediaFile = new MediaFile({
         path: settings.find(s => s.name === 'path').value,

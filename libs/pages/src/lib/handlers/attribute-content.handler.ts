@@ -24,6 +24,12 @@ export class AttributeContentHandler implements ContentHandler {
       map(snippet => snippet !== undefined)
     );
   }
+  isDynamic(): boolean {
+    return false;
+  }
+  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>> {
+    return of([]);
+  }
   valueSettings(attributeValues: Array<AttributeValue>): Array<AttributeValue> {
     const settings = [];
     attributeValues.forEach(attributeValue => {

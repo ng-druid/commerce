@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
 import { AttributeValue, AttributeTypes, Attribute } from '@classifieds-ui/attributes';
 import { of, Observable } from 'rxjs';
-import { PanelPage } from '../models/page.models';
+import { PanelPage, Pane, Panel } from '../models/page.models';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,14 @@ export class PanelContentHandler implements ContentHandler {
 
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean> {
     return of(false);
+  }
+
+  isDynamic(): boolean {
+    return false;
+  }
+
+  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>> {
+    return of([]);
   }
 
   toObject(settings: Array<AttributeValue>): Observable<PanelPage> {
@@ -146,6 +154,18 @@ export class PanelContentHandler implements ContentHandler {
         }))
       })
     ];
+  }
+
+  fromPanes(panesAsSettings: Array<AttributeValue>): Array<Pane> {
+    return panesAsSettings.map(a => new Pane(a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})));
+  }
+
+  wrapPanel(panes: Array<Pane>): Panel {
+    return new Panel({
+      stylePlugin: undefined,
+      settings: [],
+      panes: panes
+    });
   }
 
 }
