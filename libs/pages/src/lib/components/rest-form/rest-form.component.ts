@@ -27,7 +27,11 @@ export class RestFormComponent implements OnInit {
 
   restForm = this.fb.group({
     url: this.fb.control('', Validators.required),
-    params: this.fb.array([])
+    params: this.fb.array([]),
+    renderer: this.fb.group({
+      type: 'snippet',
+      data: this.fb.control('')
+    })
   });
 
   get params(): FormArray {

@@ -1,14 +1,26 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter, Input, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup,FormControl, FormBuilder, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Snippet } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-snippet-form',
   templateUrl: './snippet-form.component.html',
-  styleUrls: ['./snippet-form.component.scss']
+  styleUrls: ['./snippet-form.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SnippetFormComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => SnippetFormComponent),
+      multi: true
+    },
+  ]
 })
-export class SnippetFormComponent implements OnInit {
+export class SnippetFormComponent implements OnInit, ControlValueAccessor, Validator {
 
   @Output()
   submitted = new EventEmitter<Snippet>();
@@ -26,11 +38,16 @@ export class SnippetFormComponent implements OnInit {
   cols = 100;
 
   @Input()
+  rootForm = true;
+
+  @Input()
   set snippet(snippet: Snippet) {
     if(snippet !== undefined) {
       this.contentForm.setValue(snippet);
     }
   }
+
+  public onTouched: () => void = () => {};
 
   contentForm = this.fb.group({
     content: this.fb.control('', Validators.required),
@@ -53,6 +70,33 @@ export class SnippetFormComponent implements OnInit {
     this.contentForm.get("contentType").valueChanges.subscribe(v => {
       this.isMarkdown = v === 'text/markdown'
     })
+  }
+
+  writeValue(val: any): void {
+    if (val) {
+      console.log(`write value: ${val}`);
+      this.contentForm.setValue(val, { emitEvent: false });
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.contentForm.valueChanges.subscribe(fn);
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.contentForm.disable()
+    } else {
+      this.contentForm.enable()
+    }
+  }
+
+  validate(c: AbstractControl): ValidationErrors | null{
+    return this.contentForm.valid ? null : { invalidForm: {valid: false, message: "snippet is invalid"}};
   }
 
   submit() {

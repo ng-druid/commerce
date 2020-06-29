@@ -42,8 +42,8 @@
           </as-split-area>
         </as-split>
       </div>
-      <as-split-area size="50">
-        <classifieds-ui-snippet-form splitDirection="horizontal" rows="10" cols="40" [tokens]="tokens"></classifieds-ui-snippet-form>
+      <as-split-area size="50" formGroupName="renderer">
+        <classifieds-ui-snippet-form formControlName="data" [rootForm]="false" splitDirection="horizontal" rows="10" cols="40" [tokens]="tokens"></classifieds-ui-snippet-form>
       </as-split-area>
     </as-split>
   </mat-dialog-content>
