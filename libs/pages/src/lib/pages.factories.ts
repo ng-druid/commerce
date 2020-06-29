@@ -15,6 +15,7 @@ import { PanelEditorComponent } from './plugins/panel/panel-editor/panel-editor.
 import { DatasourceSelectorComponent } from './plugins/datasource/datasource-selector/datasource-selector.component';
 import { RestEditorComponent } from './plugins/rest/rest-editor/rest-editor.component';
 import { RestContentHandler } from './handlers/rest-content-handler.service';
+import { RestPaneRendererComponent } from './plugins/rest/rest-pane-renderer/rest-pane-renderer.component';
 
 export const snippetContentPluginFactory = (handler: SnippetContentHandler) => {
   return new ContentPlugin({
@@ -66,7 +67,7 @@ export const restContentPluginFactory = (handler: RestContentHandler) => {
     title: 'REST',
     selectionComponent: undefined,
     editorComponent: RestEditorComponent,
-    renderComponent: undefined,
+    renderComponent: RestPaneRendererComponent,
     handler
   })
 }

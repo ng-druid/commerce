@@ -64,3 +64,7 @@ export class Flag {
     }
   }
 }
+
+export class Dataset {
+
+}

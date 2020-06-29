@@ -1,11 +1,13 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as PageBuilderActions from './page-builder.actions';
 import { ContentInstance } from '@classifieds-ui/content';
+import { Dataset } from '../../models/datasource.models';
 
 export const pageBuilderFeatureKey = 'pageBuilder';
 
 export interface State {
   contentInstance: ContentInstance
+  datasets: Map<string, Array<Dataset>>
 }
 
 export interface PageBuilderPartialState {
@@ -13,7 +15,8 @@ export interface PageBuilderPartialState {
 }
 
 export const initialState: State = {
-  contentInstance: undefined
+  contentInstance: undefined,
+  datasets: new Map<string, Array<Dataset>>()
 };
 
 const pageBuilderReducer = createReducer(

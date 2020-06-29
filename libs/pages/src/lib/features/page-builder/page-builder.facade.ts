@@ -6,6 +6,7 @@ import { ContentInstance } from '@classifieds-ui/content';
 import { PageBuilderPartialState } from './page-builder.reducer';
 import { selectContentInstance } from './page-builder.selectors';
 import * as pageBuilderActions from './page-builder.actions';
+import { Rest } from '../../models/datasource.models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +16,8 @@ export class PageBuilderFacade {
   constructor(private store: Store<PageBuilderPartialState>) {}
   addContentInstance(contentInstance: ContentInstance) {
     this.store.dispatch(pageBuilderActions.addContentInstance({ contentInstance }));
+  }
+  loadRestData(tag: string, rest: Rest) {
+    this.store.dispatch(pageBuilderActions.loadRestData({ tag, rest }));
   }
 }

@@ -3,7 +3,8 @@ import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
 import { ContentHandler } from '@classifieds-ui/content';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of } from 'rxjs';
-import { Rest } from '../models/datasource.models';
+import { map } from 'rxjs/operators';
+import { Rest, Param, Mapping } from '../models/datasource.models';
 
 @Injectable()
 export class RestContentHandler implements ContentHandler {
@@ -21,6 +22,19 @@ export class RestContentHandler implements ContentHandler {
   }
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean> {
     return of(false);
+  }
+  toObject(settings: Array<AttributeValue>): Observable<Rest> {
+    const snip = settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'data').attributes;
+    return this.snippetHandler.toObject(snip).pipe(
+      map(data => new Rest({
+        url: settings.find(s => s.name === 'url').value,
+        params: settings.find(s => s.name === 'params').attributes.map(a => a.attributes.reduce<Param>((p, c) => new Param({ ...p, [c.name]: c.name === 'mapping' ? c.attributes.reduce<Mapping>((p, c) => new Mapping({ ...p, [c.name]: c.value }), new Mapping()) : c.name === 'flags' ? c.attributes.map(f => ({ enabled: true, name: f.value }) ) : c.value }), new Param())),
+        renderer: {
+          type: settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'type').value,
+          data
+        }
+      }))
+    );
   }
   buildSettings(rest: Rest): Array<AttributeValue> {
     return [
