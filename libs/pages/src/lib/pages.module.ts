@@ -61,6 +61,7 @@ import { RenderPanelComponent } from './components/render-panel/render-panel.com
 import { DatasourceSelectorComponent } from './plugins/datasource/datasource-selector/datasource-selector.component';
 import { RestEditorComponent } from './plugins/rest/rest-editor/rest-editor.component';
 import { RestFormComponent } from './components/rest-form/rest-form.component';
+import { RestContentHandler } from './handlers/rest-content-handler.service';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -102,11 +103,12 @@ const routes = [
     { provide: AttributeContentHandler, useClass: AttributeContentHandler },
     { provide: MediaContentHandler, useClass: MediaContentHandler },
     { provide: PanelContentHandler, useClass: PanelContentHandler },
+    { provide: RestContentHandler, useClass: RestContentHandler },
     { provide: CONTENT_PLUGIN, useFactory: snippetContentPluginFactory, multi: true, deps: [ SnippetContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: attributeContentPluginFactory, multi: true, deps: [ AttributeContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: mediaContentPluginFactory, multi: true, deps: [ MediaContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: panelContentPluginFactory, multi: true, deps: [ PanelContentHandler ] },
-    { provide: CONTENT_PLUGIN, useFactory: restContentPluginFactory, multi: true  },
+    { provide: CONTENT_PLUGIN, useFactory: restContentPluginFactory, multi: true, deps: [ RestContentHandler ]  },
     { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'gallery', title: 'Gallery', editorComponent: undefined, renderComponent: GalleryPanelRendererComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]

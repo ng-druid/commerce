@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { NEVER } from 'rxjs';
 import { debounceTime, filter, map, switchMap, catchError, tap } from 'rxjs/operators';
 import { DatasourceApiService } from '../../services/datasource-api.service';
-import { SnippetContentHandler } from '../../handlers/snippet-content.handler';
-import { Snippet } from '../../models/page.models';
 import { TokenizerService } from '@classifieds-ui/token';
+import { Rest } from '../../models/datasource.models';
 import * as qs from 'qs';
 
 @Component({
@@ -15,6 +14,9 @@ import * as qs from 'qs';
   styleUrls: ['./rest-form.component.scss']
 })
 export class RestFormComponent implements OnInit {
+
+  @Output()
+  submitted = new EventEmitter<Rest>();
 
   flags = new Map<string, string>();
 
@@ -49,7 +51,6 @@ export class RestFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private datasourceApi: DatasourceApiService,
-    private snippetHandler: SnippetContentHandler,
     private tokenizerService: TokenizerService
   ) {
     this.flags.set('page', 'Page');
@@ -74,6 +75,7 @@ export class RestFormComponent implements OnInit {
               context: this.fb.control('')
             }),
             flags: this.fb.array(this.flagsAsArray.map(k => this.fb.group({
+              name: k,
               enabled: this.fb.control(false)
             })))
           }));
@@ -122,7 +124,8 @@ export class RestFormComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.restForm.value);
+    const rest = new Rest(this.restForm.value);
+    this.submitted.emit(rest);
   }
 
 }
