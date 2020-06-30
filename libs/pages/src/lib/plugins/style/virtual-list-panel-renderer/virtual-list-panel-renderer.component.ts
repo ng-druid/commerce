@@ -41,9 +41,9 @@ export class VirtualListPanelRendererComponent implements OnInit {
     this.paneDatasource.pageChange$.pipe(
       skip(1),
       filter(() => this.originPanes !== undefined && this.originPanes[0] !== undefined),
-      map(() => this.contentPlugins.find(c => c.name === this.originPanes[0].contentPlugin)),
-      filter((contentPlugin?: ContentPlugin) => contentPlugin !== undefined && contentPlugin.handler !== undefined && contentPlugin.handler.isDynamic()),
-      concatMap(contentPlugin => contentPlugin.handler.buildDynamicItems(this.originPanes[0].settings, `dataset_${uuid.v4()}`)),
+      map(page => [this.contentPlugins.find(c => c.name === this.originPanes[0].contentPlugin, ), page]),
+      filter<[ContentPlugin, number]>(([contentPlugin, page]) => contentPlugin !== undefined && contentPlugin.handler !== undefined && contentPlugin.handler.isDynamic()),
+      concatMap(([contentPlugin, page]) => contentPlugin.handler.buildDynamicItems(this.originPanes[0].settings, new Map([ ...(this.originPanes[0].metadata === undefined ? [] : this.originPanes[0].metadata), ['tag', uuid.v4()], ['page', page] ]))),
       map(items => this.panelHandler.fromPanes(items)),
       map(panes => this.panelHandler.wrapPanel(panes).panes),
     ).subscribe((panes: Array<Pane>) => {

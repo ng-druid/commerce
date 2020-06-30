@@ -5,7 +5,7 @@ import { ContentHandler } from '@classifieds-ui/content';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of, Subject } from 'rxjs';
 import * as uuid from 'uuid';
-import { map, filter } from 'rxjs/operators';
+import { map, filter, switchMap } from 'rxjs/operators';
 import { Rest, Param, Mapping } from '../models/datasource.models';
 import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
 import { selectDataset } from '../features/page-builder/page-builder.selectors';
@@ -13,6 +13,7 @@ import { PageBuilderPartialState } from '../features/page-builder/page-builder.r
 import { TokenizerService } from '@classifieds-ui/token';
 import { Panel, PanelPage, Snippet, Pane } from '../models/page.models';
 import { PanelContentHandler } from '../handlers/panel-content.handler';
+import { UrlGeneratorService } from '../services/url-generator.service';
 
 @Injectable()
 export class RestContentHandler implements ContentHandler {
@@ -22,7 +23,8 @@ export class RestContentHandler implements ContentHandler {
     private pageBuilderFacade: PageBuilderFacade,
     private store: Store<PageBuilderPartialState>,
     private tokenizerService: TokenizerService,
-    private panelHandler: PanelContentHandler
+    private panelHandler: PanelContentHandler,
+    private urlGeneratorService: UrlGeneratorService
   ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
@@ -40,12 +42,16 @@ export class RestContentHandler implements ContentHandler {
   isDynamic(): boolean {
     return true;
   }
-  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>> {
+  buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     const subject = new Subject<Array<AttributeValue>>();
-    this.toObject(settings).subscribe(r => {
-      this.pageBuilderFacade.loadRestData(identity, r);
+    this.toObject(settings).pipe(
+      switchMap(r => this.urlGeneratorService.generateUrl(r.url, r.params, metadata).pipe(
+        map<string, [Rest, string]>(url => [r, url])
+      ))
+    ).subscribe(([r, url]) => {
+      this.pageBuilderFacade.loadRestData(`${metadata.get('tag')}`, new Rest({ ...r, url }));
       this.store.pipe(
-        select(selectDataset(identity)),
+        select(selectDataset(`${metadata.get('tag')}`)),
         filter(dataset => dataset !== undefined),
         map(dataset => dataset.results.map(row => this.tokenizerService.generateGenericTokens(row))),
         map(tokens => tokens.map(t => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: this.tokenizerService.replaceTokens(r.renderer.data.content, t) }) })) as Array<Pane>),

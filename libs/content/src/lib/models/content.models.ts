@@ -8,7 +8,7 @@ export interface ContentHandler {
   implementsRendererOverride(): boolean
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean>
   isDynamic(): boolean
-  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>>
+  buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>>
 }
 
 export class ContentPlugin {

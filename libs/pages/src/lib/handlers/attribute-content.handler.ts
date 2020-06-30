@@ -27,7 +27,7 @@ export class AttributeContentHandler implements ContentHandler {
   isDynamic(): boolean {
     return false;
   }
-  buildDynamicItems(settings: Array<AttributeValue>, identity: string): Observable<Array<AttributeValue>> {
+  buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     return of([]);
   }
   valueSettings(attributeValues: Array<AttributeValue>): Array<AttributeValue> {

@@ -70,11 +70,15 @@ export class Pane {
   name: string;
   label: string;
   settings: Array<AttributeValue> = [];
+  metadata?: Map<string, any>;
   constructor(data?: Pane) {
     if(data) {
       this.name = data.name;
       this.label = data.label;
       this.contentPlugin = data.contentPlugin;
+      if(data.metadata !== undefined) {
+        this.metadata = new Map(...data.metadata);
+      }
       if(data.settings) {
         this.settings = data.settings.map(a => new AttributeValue(a));
       }

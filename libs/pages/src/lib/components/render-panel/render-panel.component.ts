@@ -65,7 +65,7 @@ export class RenderPanelComponent implements OnInit, OnChanges {
     const panes$ = this.panel.panes.reduce<Array<Observable<Array<Pane>>>>((p, c, index) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
       if(plugin.handler !== undefined && plugin.handler.isDynamic()) {
-        return [ ...p, plugin.handler.buildDynamicItems(c.settings, `panel_${this.counter}_pane_${index}_data`).pipe(
+        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map([ ...(c.metadata === undefined ? [] : c.metadata) ])).pipe(
           map(items => this.panelHandler.fromPanes(items)),
           map(panes => this.panelHandler.wrapPanel(panes).panes),
           take(1)
