@@ -6,7 +6,7 @@ import { STYLE_PLUGIN, StylePlugin } from '@classifieds-ui/style';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { Pane } from '../../models/page.models';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
-import { switchMap, map, tap, take } from 'rxjs/operators';
+import { switchMap, map, tap, take, filter } from 'rxjs/operators';
 import { of, forkJoin, Observable } from 'rxjs';
 
 @Component({
@@ -68,17 +68,16 @@ export class RenderPanelComponent implements OnInit, OnChanges {
           take(1)
         )];
       } else {
-        return of([c]);
+        return [ ...p, of([c])];
       }
     }, []);
 
     forkJoin(panes$).pipe(
-      map(paneGroups => paneGroups.reduce<Array<Pane>>((p, c) => [ ...p, ...c ], []))
-    ).subscribe((panes: Array<Pane>) => {
-      this.panes = panes;
-      if(this.stylePlugin !== undefined) {
-        this.renderPanelContent();
-      }
+      map(paneGroups => paneGroups.reduce<Array<Pane>>((p, c) => [ ...p, ...c as Array<Pane> ], [])),
+      tap(panes => this.panes = panes),
+      filter(() => this.stylePlugin !== undefined)
+    ).subscribe(() => {
+      this.renderPanelContent();
     });
 
   }

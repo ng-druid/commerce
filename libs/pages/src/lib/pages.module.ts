@@ -63,6 +63,7 @@ import { RestEditorComponent } from './plugins/rest/rest-editor/rest-editor.comp
 import { RestFormComponent } from './components/rest-form/rest-form.component';
 import { RestContentHandler } from './handlers/rest-content-handler.service';
 import { RestPaneRendererComponent } from './plugins/rest/rest-pane-renderer/rest-pane-renderer.component';
+import { VirtualListPanelRendererComponent } from './plugins/style/virtual-list-panel-renderer/virtual-list-panel-renderer.component';
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -96,7 +97,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
@@ -110,7 +111,8 @@ const routes = [
     { provide: CONTENT_PLUGIN, useFactory: mediaContentPluginFactory, multi: true, deps: [ MediaContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: panelContentPluginFactory, multi: true, deps: [ PanelContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: restContentPluginFactory, multi: true, deps: [ RestContentHandler ]  },
-    { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'gallery', title: 'Gallery', editorComponent: undefined, renderComponent: GalleryPanelRendererComponent }), multi: true }
+    { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'gallery', title: 'Gallery', editorComponent: undefined, renderComponent: GalleryPanelRendererComponent }), multi: true },
+    { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'virtuallist', title: 'Virtual List', editorComponent: undefined, renderComponent: VirtualListPanelRendererComponent }), multi: true }
   ],
   // exports: [ConvertLinksDirective]
 })
