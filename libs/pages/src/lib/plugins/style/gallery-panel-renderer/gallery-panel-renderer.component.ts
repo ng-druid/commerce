@@ -19,6 +19,12 @@ export class GalleryPanelRendererComponent implements OnInit {
   @Input()
   panes: Array<Pane> = [];
 
+  @Input()
+  originPanes: Pane;
+
+  @Input()
+  originMappings: Array<number> = [];
+
   mediaBaseUrl: string;
 
   galleryOptions: Array<INgxGalleryOptions> = [

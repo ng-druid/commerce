@@ -28,7 +28,6 @@ export class DynamicContentViewer{
       const factory = componentFactoryResolver.resolveComponentFactory(component);
       this.embeddedComponentFactories.set(factory.selector, factory);
     })
-    console.log(this.embeddedComponentFactories)
   }
 
   @Input()

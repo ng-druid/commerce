@@ -23,6 +23,9 @@ export class RenderPanelComponent implements OnInit, OnChanges {
 
   panes: Array<Pane>;
 
+  resolvedPanes: Array<Pane>;
+  originMappings: Array<number> = [];
+
   stylePlugins: Array<StylePlugin> = [];
   stylePlugin: StylePlugin;
 
@@ -68,13 +71,19 @@ export class RenderPanelComponent implements OnInit, OnChanges {
           take(1)
         )];
       } else {
-        return [ ...p, of([c])];
+        return [ ...p, of([ c ])];
       }
     }, []);
 
     forkJoin(panes$).pipe(
-      map(paneGroups => paneGroups.reduce<Array<Pane>>((p, c) => [ ...p, ...c as Array<Pane> ], [])),
-      tap(panes => this.panes = panes),
+      tap(paneGroups => {
+        this.resolvedPanes = [];
+        this.originMappings = [];
+        paneGroups.forEach((panes, index) => {
+          this.resolvedPanes = [ ...(this.resolvedPanes === undefined ? [] : this.resolvedPanes), ...panes ];
+          this.originMappings = [ ...(this.originMappings ? [] : this.originMappings), ...panes.map(() => index)];
+        });
+      }),
       filter(() => this.stylePlugin !== undefined)
     ).subscribe(() => {
       this.renderPanelContent();
@@ -91,7 +100,9 @@ export class RenderPanelComponent implements OnInit, OnChanges {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as any).settings = this.panel.settings;
-    (componentRef.instance as any).panes = this.panes;
+    (componentRef.instance as any).panes = this.resolvedPanes;
+    (componentRef.instance as any).originPanes = this.panel.panes;
+    (componentRef.instance as any).originMappings = this.originMappings;
 
   }
 

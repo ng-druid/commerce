@@ -3,7 +3,7 @@ import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
-import { PanelPage } from '../../models/page.models';
+import { PanelPage, Pane } from '../../models/page.models';
 
 @Component({
   selector: 'classifieds-ui-render-pane',
@@ -17,6 +17,9 @@ export class RenderPaneComponent implements OnInit, OnChanges {
 
   @Input()
   settings: Array<AttributeValue> = [];
+
+  @Input()
+  originPane: Pane;
 
   contentPlugin: ContentPlugin;
 

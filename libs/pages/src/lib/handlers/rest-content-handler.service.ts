@@ -4,6 +4,7 @@ import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
 import { ContentHandler } from '@classifieds-ui/content';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of, Subject } from 'rxjs';
+import * as uuid from 'uuid';
 import { map, filter } from 'rxjs/operators';
 import { Rest, Param, Mapping } from '../models/datasource.models';
 import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
@@ -47,7 +48,7 @@ export class RestContentHandler implements ContentHandler {
         select(selectDataset(identity)),
         filter(dataset => dataset !== undefined),
         map(dataset => dataset.results.map(row => this.tokenizerService.generateGenericTokens(row))),
-        map(tokens => tokens.map(t => new Pane({ contentPlugin: 'snippet', name: undefined, label: undefined, settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: this.tokenizerService.replaceTokens(r.renderer.data.content, t) }) })) as Array<Pane>),
+        map(tokens => tokens.map(t => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: this.tokenizerService.replaceTokens(r.renderer.data.content, t) }) })) as Array<Pane>),
         map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),
         map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, gridItems: [], panels: [ panel ] })))
       ).subscribe(panelSettings => {

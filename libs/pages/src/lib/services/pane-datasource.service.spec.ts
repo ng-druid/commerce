@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RestDatasourceService } from './rest-datasource.service';
+import { RestDatasourceService } from './pane-datasource.service';
 
 describe('RestDatasourceService', () => {
   let service: RestDatasourceService;
