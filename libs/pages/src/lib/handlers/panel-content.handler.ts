@@ -98,7 +98,26 @@ export class PanelContentHandler implements ContentHandler {
           value: undefined,
           computedValue: undefined,
           intValue: 0,
-          attributes: [new AttributeValue({
+          attributes: [
+            new AttributeValue({
+              name: 'stylePlugin',
+              type: AttributeTypes.Text,
+              displayName: 'Style Plugin',
+              value: p.stylePlugin,
+              computedValue: p.stylePlugin,
+              intValue: 0,
+              attributes: []
+            }),
+            new AttributeValue({
+              name: 'settings',
+              type: AttributeTypes.Complex,
+              displayName: 'Settings',
+              value: undefined,
+              computedValue: undefined,
+              intValue: 0,
+              attributes: p.settings.map(s => new AttributeValue(s))
+            }),
+            new AttributeValue({
             name: 'panes',
             type: AttributeTypes.Complex,
             displayName: 'Panes',

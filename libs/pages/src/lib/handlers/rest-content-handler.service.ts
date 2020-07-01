@@ -55,7 +55,15 @@ export class RestContentHandler implements ContentHandler {
         select(selectDataset(`${metadata.get('tag')}`)),
         filter(dataset => dataset !== undefined),
         // map(dataset => dataset.results.map(row => this.tokenizerService.generateGenericTokens(row))),
-        map(dataset => dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>),
+        map(dataset => {
+          if(r.renderer.data.contentType === 'text') {
+            const pane = (metadata.get('panes') as Array<Pane>).find(p => p.name === r.renderer.data.content);
+            const name = uuid.v4();
+            return dataset.results.map(row => new Pane({ ...pane, name, label: name, contexts: [new InlineContext({ name: "_root", adaptor: 'data', data: row })] })) as Array<Pane>;
+          } else {
+            return dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>;
+          }
+        }),
         map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),
         map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, gridItems: [], panels: [ panel ] })))
       ).subscribe(panelSettings => {

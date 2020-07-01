@@ -71,3 +71,14 @@ export const restContentPluginFactory = (handler: RestContentHandler) => {
     handler
   })
 }
+
+export const sliceContentPluginFactory = () => {
+  return new ContentPlugin({
+    name: 'slice',
+    title: 'Slice',
+    selectionComponent: undefined,
+    editorComponent: undefined,
+    renderComponent: undefined,
+    handler: undefined
+  })
+}

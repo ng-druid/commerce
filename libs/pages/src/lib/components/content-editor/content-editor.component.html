@@ -13,6 +13,7 @@
     <ng-template #extraActions>
       <button *ngIf="savable" type="submit">Save</button>
       <button *ngIf="nested" type="button" (click)="onDeleteClick()">Delete</button>
+      <ng-container *ngTemplateOutlet="extraActionsAreaTmpl"></ng-container>
     </ng-template>
     <ng-template #gridItemActions let-i="i">
       <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>

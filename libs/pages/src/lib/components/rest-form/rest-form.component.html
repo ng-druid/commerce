@@ -43,7 +43,20 @@
         </as-split>
       </div>
       <as-split-area size="50" formGroupName="renderer">
-        <classifieds-ui-snippet-form formControlName="data" [rootForm]="false" splitDirection="horizontal" rows="10" cols="40" [tokens]="tokens"></classifieds-ui-snippet-form>
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <mat-select required formControlName="type">
+            <mat-option value="snippet">Snippet</mat-option>
+            <mat-option value="pane">Pane</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <classifieds-ui-snippet-form [hidden]="rendererType.value != 'snippet'" formControlName="data" [rootForm]="false" splitDirection="horizontal" rows="10" cols="40" [tokens]="tokens"></classifieds-ui-snippet-form>
+        <mat-form-field *ngIf="rendererType.value == 'pane'">
+          <mat-label>Panes</mat-label>
+          <mat-select required formControlName="pane">
+            <mat-option *ngFor="let pane of panes" [value]="pane">{{ pane }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </as-split-area>
     </as-split>
   </mat-dialog-content>

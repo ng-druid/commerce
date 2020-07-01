@@ -37,6 +37,10 @@
 
 <ng-template #nestedPanelTpl>
   <div class="nested-panel-wrapper">
-    <classifieds-ui-content-editor #contentEditor [panelPage]="panelPage" [savable]="false" [nested]="true" (nestedUpdate)="onNestedUpdate($event)" (delete)="onDeleteClick()"></classifieds-ui-content-editor>
+    <classifieds-ui-content-editor #contentEditor [panelPage]="panelPage" [savable]="false" [nested]="true" (nestedUpdate)="onNestedUpdate($event)" (delete)="onDeleteClick()">
+      <ng-template #extraActionsArea>
+        <div class="panel-name">{{ name }}</div>
+      </ng-template>
+    </classifieds-ui-content-editor>
   </div>
 </ng-template>

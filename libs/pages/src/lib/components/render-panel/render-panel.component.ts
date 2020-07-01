@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ComponentFactoryResolver, Inject, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ComponentFactoryResolver, Inject, ViewChild, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
 import { Panel } from '../../models/page.models';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
@@ -8,6 +8,7 @@ import { Pane } from '../../models/page.models';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { switchMap, map, tap, take, filter } from 'rxjs/operators';
 import { of, forkJoin, Observable } from 'rxjs';
+import { InlineContext } from '../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-render-panel',
@@ -20,6 +21,9 @@ export class RenderPanelComponent implements OnInit, OnChanges {
 
   @Input()
   panel: Panel;
+
+  @Input()
+  contexts: Array<InlineContext>;
 
   panes: Array<Pane>;
 
@@ -34,6 +38,7 @@ export class RenderPanelComponent implements OnInit, OnChanges {
   private counter: number;
 
   @ViewChild(PaneContentHostDirective, { static: true }) panelHost: PaneContentHostDirective;
+  // @ViewChild('panes', { static: false }) paneContainer: ElementRef;
 
   constructor(
     @Inject(STYLE_PLUGIN) stylePlugins: Array<StylePlugin>,
@@ -62,10 +67,22 @@ export class RenderPanelComponent implements OnInit, OnChanges {
 
   resolvePanes() {
 
+    const staticPanes = this.panel.panes.reduce<Array<Pane>>((p, c) => {
+      const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
+      if(plugin.handler === undefined || !plugin.handler.isDynamic()) {
+        return [ ...p, c ];
+      } else {
+        return [ ...p ];
+      }
+    }, []);
+
     const panes$ = this.panel.panes.reduce<Array<Observable<Array<Pane>>>>((p, c, index) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
+      if(c.name === 'a02522e4-dfa7-4f2f-ad64-b5a9d0130f03') {
+        return [ ...p ];
+      }
       if(plugin.handler !== undefined && plugin.handler.isDynamic()) {
-        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map([ ...(c.metadata === undefined ? [] : c.metadata) ])).pipe(
+        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata), ['panes', staticPanes] ])).pipe(
           map(items => this.panelHandler.fromPanes(items)),
           map(panes => this.panelHandler.wrapPanel(panes).panes),
           take(1)
@@ -82,6 +99,9 @@ export class RenderPanelComponent implements OnInit, OnChanges {
         paneGroups.forEach((panes, index) => {
           this.resolvedPanes = [ ...(this.resolvedPanes === undefined ? [] : this.resolvedPanes), ...panes ];
           this.originMappings = [ ...(this.originMappings ? [] : this.originMappings), ...panes.map(() => index)];
+          /*if(this.stylePlugin === undefined && this.paneContainer !== undefined) {
+            setTimeout(() => console.log(this.paneContainer.nativeElement.offsetHeight));
+          }*/
         });
       }),
       filter(() => this.stylePlugin !== undefined)
@@ -103,7 +123,12 @@ export class RenderPanelComponent implements OnInit, OnChanges {
     (componentRef.instance as any).panes = this.resolvedPanes;
     (componentRef.instance as any).originPanes = this.panel.panes;
     (componentRef.instance as any).originMappings = this.originMappings;
+    (componentRef.instance as any).contexts = this.contexts;
 
+  }
+
+  mergeContexts(contexts: Array<InlineContext>): Array<InlineContext> {
+    return [ ...( this.contexts !== undefined ? this.contexts : [] ), ...( contexts !== undefined ? contexts : [] ) ];
   }
 
 }

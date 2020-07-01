@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef, OnChanges, SimpleChanges, TemplateRef, ContentChild } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
@@ -102,6 +102,8 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   @ViewChild(GridLayoutComponent, {static: false}) gridLayout: GridLayoutComponent;
   @ViewChildren('panes') paneContainers: QueryList<ElementRef>;
   @ViewChildren(EditablePaneComponent) editablePanes: QueryList<EditablePaneComponent>;
+
+  @ContentChild('extraActionsArea') extraActionsAreaTmpl: TemplateRef<any>;
 
   get panels() {
     return (this.contentForm.get('panels') as FormArray);

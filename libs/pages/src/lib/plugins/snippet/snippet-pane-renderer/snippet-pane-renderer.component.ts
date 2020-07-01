@@ -44,7 +44,7 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.handler.toObject(this.settings).pipe(
-      switchMap(snippet => this.resolveContexts(this.contexts).pipe(
+      switchMap(snippet => this.resolveContexts(this.mergeContexts(this.contexts)).pipe(
         map<Map<string, any>, [Snippet, Map<string, any> | undefined]>(tokens => [snippet, tokens])
       ))
     ).subscribe(([snippet, tokens]) => {
@@ -80,6 +80,10 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
         obs.complete();
       }
     });
+  }
+
+  mergeContexts(contexts: Array<InlineContext>): Array<InlineContext> {
+    return [ ...( this.contexts !== undefined ? this.contexts : [] ), ...( contexts !== undefined ? contexts : [] ) ];
   }
 
 }

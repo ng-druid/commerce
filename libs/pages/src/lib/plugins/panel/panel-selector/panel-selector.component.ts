@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Inject} from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup } from '@angular/forms';
+import * as uuid from 'uuid';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { PanelPage } from '../../../models/page.models';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
@@ -43,11 +44,12 @@ export class PanelSelectorComponent implements OnInit {
   }
 
   onNewSelect() {
+    const name = uuid.v4();
     const newPanel = new PanelPage({ id: undefined, gridItems: [], panels: [] });
     (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
       contentPlugin: 'panel',
-      name: '',
-      label: '',
+      name: name,
+      label: name,
       settings: this.fb.array(this.handler.buildSettings(newPanel).map(s => this.convertToGroup(s)))
     }));
     this.bottomSheetRef.dismiss();

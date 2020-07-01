@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { NEVER } from 'rxjs';
@@ -14,6 +14,9 @@ import * as qs from 'qs';
   styleUrls: ['./rest-form.component.scss']
 })
 export class RestFormComponent implements OnInit {
+
+  @Input()
+  panes: Array<string> = [];
 
   @Output()
   submitted = new EventEmitter<Rest>();
@@ -32,9 +35,14 @@ export class RestFormComponent implements OnInit {
     params: this.fb.array([]),
     renderer: this.fb.group({
       type: 'snippet',
-      data: this.fb.control('')
+      data: this.fb.control(''),
+      pane: this.fb.control('')
     })
   });
+
+  get rendererType() {
+    return this.restForm.get('renderer').get('type');
+  }
 
   get params(): FormArray {
     return this.restForm.get('params') as FormArray;
@@ -95,6 +103,12 @@ export class RestFormComponent implements OnInit {
     ).subscribe(data => {
       this.jsonData = data;
       this.tokens = this.tokenizerService.generateGenericTokens(data[0]);
+    });
+    this.restForm.get('renderer').get('pane').valueChanges.subscribe(v => {
+      this.restForm.get('renderer').get('data').setValue({
+        contentType: 'text',
+        content: v
+      });
     });
   }
 
