@@ -82,7 +82,7 @@ export class RenderPanelComponent implements OnInit, OnChanges {
         return [ ...p ];
       }
       if(plugin.handler !== undefined && plugin.handler.isDynamic()) {
-        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata), ['panes', staticPanes] ])).pipe(
+        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata), ['panes', staticPanes], ['contexts', this.mergeContexts(c.contexts)] ])).pipe(
           map(items => this.panelHandler.fromPanes(items)),
           map(panes => this.panelHandler.wrapPanel(panes).panes),
           take(1)

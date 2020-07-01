@@ -38,7 +38,7 @@ export class PanelPageComponent implements OnInit {
     itemResizeCallback: (item: GridsterItem) => {
       if(this.nested) {
         const matchIndex = this.gridLayout.grid.findIndex(g => g.x === item.x && g.y === item.y && g.cols === item.cols && g.rows === item.rows);
-        this.gridLayout.setItemContentHeight(matchIndex, 300);
+        this.gridLayout.setItemContentHeight(matchIndex, 150);
       }
     }
   };

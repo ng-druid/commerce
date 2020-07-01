@@ -12,10 +12,11 @@ import { MediaEditorComponent } from './plugins/media/media-editor/media-editor.
 import { MediaPaneRendererComponent } from './plugins/media/media-pane-renderer/media-pane-renderer.component';
 import { PanelSelectorComponent } from './plugins/panel/panel-selector/panel-selector.component';
 import { PanelEditorComponent } from './plugins/panel/panel-editor/panel-editor.component';
-import { DatasourceSelectorComponent } from './plugins/datasource/datasource-selector/datasource-selector.component';
 import { RestEditorComponent } from './plugins/rest/rest-editor/rest-editor.component';
 import { RestContentHandler } from './handlers/rest-content-handler.service';
 import { RestPaneRendererComponent } from './plugins/rest/rest-pane-renderer/rest-pane-renderer.component';
+import { SliceContentHandler } from './handlers/slice-content.handler';
+import { SliceEditorComponent } from './plugins/slice/slice-editor/slice-editor.component';
 
 export const snippetContentPluginFactory = (handler: SnippetContentHandler) => {
   return new ContentPlugin({
@@ -72,13 +73,13 @@ export const restContentPluginFactory = (handler: RestContentHandler) => {
   })
 }
 
-export const sliceContentPluginFactory = () => {
+export const sliceContentPluginFactory = (handler: SliceContentHandler) => {
   return new ContentPlugin({
     name: 'slice',
     title: 'Slice',
     selectionComponent: undefined,
-    editorComponent: undefined,
+    editorComponent: SliceEditorComponent,
     renderComponent: undefined,
-    handler: undefined
+    handler
   })
 }
