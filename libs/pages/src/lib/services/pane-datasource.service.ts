@@ -19,6 +19,7 @@ export class PaneDatasourceService extends DataSource<Pane> {
 
   set panes(panes: Array<Pane>) {
     this.paneItems = [ ...this.paneItems, ...panes];
+    console.log(this.paneItems);
     this.dataStream.next(this.paneItems);
   }
 

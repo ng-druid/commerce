@@ -1,5 +1,6 @@
 // import { ContentInstance } from '@classifieds-ui/content';
 import { AttributeValue } from '@classifieds-ui/attributes';
+import { InlineContext } from './context.models';
 
 interface DatasourceModel<T> {
   new (): T;
@@ -71,6 +72,7 @@ export class Pane {
   label: string;
   settings: Array<AttributeValue> = [];
   metadata?: Map<string, any>;
+  contexts?: Array<InlineContext> = [];
   constructor(data?: Pane) {
     if(data) {
       this.name = data.name;
@@ -81,6 +83,9 @@ export class Pane {
       }
       if(data.settings) {
         this.settings = data.settings.map(a => new AttributeValue(a));
+      }
+      if(data.contexts) {
+        this.contexts = data.contexts.map(c => new InlineContext(c));
       }
     }
   }

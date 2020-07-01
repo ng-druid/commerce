@@ -3,6 +3,7 @@ import { ContentHandler } from '@classifieds-ui/content';
 import { AttributeValue, AttributeTypes, Attribute } from '@classifieds-ui/attributes';
 import { of, Observable } from 'rxjs';
 import { PanelPage, Pane, Panel } from '../models/page.models';
+import { InlineContext } from '../models/context.models';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class PanelContentHandler implements ContentHandler {
       panels: settings.find(s => s.name === 'panels').attributes.map(a => ({
         stylePlugin: a.attributes.find(s => s.name === 'stylePlugin').value,
         settings: a.attributes.find(s => s.name === 'settings').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})),
-        panes: a.attributes.find(s => s.name === 'panes').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {}))
+        panes: a.attributes.find(s => s.name === 'panes').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'contexts' ? { ...p, contexts: c.attributes.map(ctx => JSON.parse(ctx.value)) } : c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {}))
       }))
     }));
   }
@@ -147,6 +148,23 @@ export class PanelContentHandler implements ContentHandler {
                   computedValue: undefined,
                   intValue: 0,
                   attributes: pp.settings.map(s => new AttributeValue(s))
+                }),
+                new AttributeValue({
+                  name: 'contexts',
+                  type: AttributeTypes.Complex,
+                  displayName: 'Contexts',
+                  value: undefined,
+                  computedValue: undefined,
+                  intValue: 0,
+                  attributes: pp.contexts === undefined ? [] : pp.contexts.map((c, index) => new AttributeValue({
+                    name: `${index}`,
+                    type: AttributeTypes.Text,
+                    displayName: `${index}`,
+                    value: JSON.stringify(c),
+                    computedValue: JSON.stringify(c),
+                    intValue: 0,
+                    attributes: []
+                  }))
                 })
               ]
             }))
@@ -157,7 +175,7 @@ export class PanelContentHandler implements ContentHandler {
   }
 
   fromPanes(panesAsSettings: Array<AttributeValue>): Array<Pane> {
-    return panesAsSettings.map(a => new Pane(a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})));
+    return panesAsSettings.map(a => new Pane(a.attributes.reduce<any>((p, c) => ( c.name === 'contexts' ? { ...p, contexts: c.attributes.map(ctx => new InlineContext(JSON.parse(ctx.value))) } : c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})));
   }
 
   wrapPanel(panes: Array<Pane>): Panel {

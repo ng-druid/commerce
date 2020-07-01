@@ -12,6 +12,7 @@ import { selectDataset } from '../features/page-builder/page-builder.selectors';
 import { PageBuilderPartialState } from '../features/page-builder/page-builder.reducer';
 import { TokenizerService } from '@classifieds-ui/token';
 import { Panel, PanelPage, Snippet, Pane } from '../models/page.models';
+import { InlineContext } from '../models/context.models';
 import { PanelContentHandler } from '../handlers/panel-content.handler';
 import { UrlGeneratorService } from '../services/url-generator.service';
 
@@ -53,8 +54,8 @@ export class RestContentHandler implements ContentHandler {
       this.store.pipe(
         select(selectDataset(`${metadata.get('tag')}`)),
         filter(dataset => dataset !== undefined),
-        map(dataset => dataset.results.map(row => this.tokenizerService.generateGenericTokens(row))),
-        map(tokens => tokens.map(t => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: this.tokenizerService.replaceTokens(r.renderer.data.content, t) }) })) as Array<Pane>),
+        // map(dataset => dataset.results.map(row => this.tokenizerService.generateGenericTokens(row))),
+        map(dataset => dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>),
         map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),
         map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, gridItems: [], panels: [ panel ] })))
       ).subscribe(panelSettings => {

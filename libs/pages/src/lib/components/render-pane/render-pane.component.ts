@@ -4,6 +4,7 @@ import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { PanelPage, Pane } from '../../models/page.models';
+import { InlineContext } from '../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-render-pane',
@@ -17,6 +18,9 @@ export class RenderPaneComponent implements OnInit, OnChanges {
 
   @Input()
   settings: Array<AttributeValue> = [];
+
+  @Input()
+  contexts: Array<InlineContext> = [];
 
   @Input()
   originPane: Pane;
@@ -69,6 +73,7 @@ export class RenderPaneComponent implements OnInit, OnChanges {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as any).settings = this.settings;
+    (componentRef.instance as any).contexts = this.contexts;
   }
 
 }
