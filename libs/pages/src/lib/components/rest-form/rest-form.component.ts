@@ -80,6 +80,7 @@ export class RestFormComponent implements OnInit {
             mapping: this.fb.group({
               type: this.fb.control('', Validators.required),
               value: this.fb.control('', Validators.required),
+              testValue: this.fb.control(''),
               context: this.fb.control('')
             }),
             flags: this.fb.array(this.flagsAsArray.map(k => this.fb.group({
@@ -132,7 +133,7 @@ export class RestFormComponent implements OnInit {
       return url;
     }
     const parsed = qs.parse(url.substring(url.indexOf('?') + 1));
-    const params = this.params.controls.reduce<any>((p, c, i) => ({ ...p, [this.paramName(i)]: c.get('mapping').get('value').value }), {});
+    const params = this.params.controls.reduce<any>((p, c, i) => ({ ...p, [this.paramName(i)]: (c.get('mapping').get('value').value === 'static' ? c.get('mapping').get('value').value : c.get('mapping').get('testValue').value) }), {});
     const apiUrl = url.substring(0, url.indexOf('?') + 1) + qs.stringify({ ...parsed, ...params });
     return apiUrl;
   }

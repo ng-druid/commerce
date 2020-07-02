@@ -30,6 +30,9 @@
                 <mat-form-field formGroupName="mapping">
                   <input matInput formControlName="value" placeholder="value" required>
                 </mat-form-field>
+                <mat-form-field formGroupName="mapping">
+                  <input matInput formControlName="testValue" placeholder="Test Value" required>
+                </mat-form-field>
                 <div formArrayName="flags">
                   <div *ngFor="let flag of param.get('flags').controls; let j = index" [formGroupName]="j">
                     <mat-checkbox formControlName="enabled">{{ flagsAsArray[j] }}</mat-checkbox>

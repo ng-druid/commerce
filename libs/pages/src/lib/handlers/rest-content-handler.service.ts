@@ -149,6 +149,15 @@ export class RestContentHandler implements ContentHandler {
                   computedValue: p.mapping.value,
                   intValue: 0,
                   attributes: []
+                }),
+                new AttributeValue({
+                  name: 'testValue',
+                  type: AttributeTypes.Text,
+                  displayName: 'Test Value',
+                  value: p.mapping.testValue,
+                  computedValue: p.mapping.testValue,
+                  intValue: 0,
+                  attributes: []
                 })
               ]
             }),

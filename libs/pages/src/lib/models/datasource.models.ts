@@ -45,10 +45,12 @@ export class Mapping {
   type: string;
   value: string;
   context: string;
+  testValue: string;
   constructor(data?: Mapping) {
     if(data) {
       this.type = data.type;
       this.value = data.value;
+      this.testValue = data.testValue;
       this.context = data.context;
     }
   }
