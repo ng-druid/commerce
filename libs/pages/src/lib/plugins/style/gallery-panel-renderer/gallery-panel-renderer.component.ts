@@ -33,7 +33,8 @@ export class GalleryPanelRendererComponent implements OnInit {
       //height: '400px',
       thumbnailsColumns: 4,
       previewFullscreen: true,
-      imageAnimation: NgxGalleryAnimation.Slide
+      imageAnimation: NgxGalleryAnimation.Slide,
+      lazyLoading: false
     },
     // max-width 800
     /*{

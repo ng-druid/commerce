@@ -39,6 +39,7 @@ export class PanelContentHandler implements ContentHandler {
   toObject(settings: Array<AttributeValue>): Observable<PanelPage> {
     return of(new PanelPage({
       id: settings.find(s => s.name === 'id').value,
+      layoutType: settings.find(s => s.name === 'layoutType').value,
       gridItems: settings.find(s => s.name === 'gridItems').attributes.map(a => a.attributes.reduce<any>((p, c) => ({ ...p, [c.name]: parseInt(c.value) }), {})),
       panels: settings.find(s => s.name === 'panels').attributes.map(a => ({
         stylePlugin: a.attributes.find(s => s.name === 'stylePlugin').value,
@@ -56,6 +57,15 @@ export class PanelContentHandler implements ContentHandler {
         displayName: 'id',
         value: panelPage.id,
         computedValue: panelPage.id,
+        intValue: 0,
+        attributes: []
+      }),
+      new AttributeValue({
+        name: 'layoutType',
+        type: AttributeTypes.Text,
+        displayName: 'Layout Type',
+        value: panelPage.layoutType,
+        computedValue: panelPage.layoutType,
         intValue: 0,
         attributes: []
       }),

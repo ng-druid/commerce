@@ -1,5 +1,16 @@
-  <classifieds-ui-grid-layout [dashboard]="panelPage?.gridItems" [displayMainControls]="false" [displayItemHeader]="false" [options]="options">
-    <ng-template #innerGridItem let-i="i">
-      <classifieds-ui-render-panel *ngIf="panelPage" (heightChange)="onHeightChange($event, i)" [panel]="panelPage.panels[i]" [nested]="nested" [contexts]="contexts"></classifieds-ui-render-panel>
-    </ng-template>
-  </classifieds-ui-grid-layout>
+<ng-container [ngSwitch]="panelPage?.layoutType">
+  <ng-container *ngSwitchCase="'grid'">
+    <classifieds-ui-grid-layout [dashboard]="panelPage?.gridItems" [displayMainControls]="false" [displayItemHeader]="false" [options]="options">
+      <ng-template #innerGridItem let-i="i">
+        <classifieds-ui-render-panel (heightChange)="onHeightChange($event, i)" [panel]="panelPage.panels[i]" [nested]="nested" [contexts]="contexts"></classifieds-ui-render-panel>
+      </ng-template>
+    </classifieds-ui-grid-layout>
+  </ng-container>
+  <ng-container *ngSwitchCase="'gridless'">
+    <classifieds-ui-gridless-layout [displayMainControls]="false" [displayItemHeader]="false">
+      <ng-template #innerGridItem let-i="i">
+        <classifieds-ui-render-panel [panel]="panelPage.panels[i]" [nested]="nested" [contexts]="contexts"></classifieds-ui-render-panel>
+      </ng-template>
+    </classifieds-ui-gridless-layout>
+  </ng-container>
+</ng-container>

@@ -68,6 +68,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   dashboard = [];
 
   contentForm = this.fb.group({
+    layoutType: this.fb.control('grid', Validators.required),
     panels: this.fb.array([])
   });
 
@@ -109,6 +110,10 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     return (this.contentForm.get('panels') as FormArray);
   }
 
+  get layoutType() {
+    return this.contentForm.get('layoutType');
+  }
+
   constructor(
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     @Inject(STYLE_PLUGIN) stylePlugins: Array<StylePlugin>,
@@ -128,6 +133,17 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     ).subscribe(() => {
       this.nestedUpdate.emit(this.packageFormData());
     });
+    this.contentForm.get('layoutType').valueChanges.pipe(
+      filter(v => v === 'gridless')
+    ).subscribe(v => {
+      if(this.panels.length === 0) {
+        this.panels.push(this.fb.group({
+          stylePlugin: new FormControl(''),
+          settings: new FormArray([]),
+          panes: this.fb.array([])
+        }));
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -135,6 +151,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
       this.panels.clear();
       this.panelPageId = changes.panelPage.currentValue.panelPageId;
       this.dashboard = [ ...changes.panelPage.currentValue.gridItems ];
+      this.layoutType.setValue(this.panelPage.layoutType);
       changes.panelPage.currentValue.panels.forEach((p, i) => {
         this.panels.push(this.fb.group({
           stylePlugin: this.fb.control(p.stylePlugin),
@@ -289,7 +306,8 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     this.syncNestedPanelPages();
     return new PanelPage({
       id: this.panelPageId,
-      gridItems: this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })),
+      layoutType: this.layoutType.value,
+      gridItems: this.gridLayout ? this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })) : [],
       panels: this.panels.value
     });
   }

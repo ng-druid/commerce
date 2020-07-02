@@ -47,7 +47,7 @@ export class SliceContentHandler implements ContentHandler {
       map(([slice, context]) => [slice, context, this.extractDataArray(context, slice.query)]),
       switchMap(([slice, context, dataArray]) => this.transformDataArray(dataArray, slice.plugin)),
       map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),
-      map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, gridItems: [], panels: [ panel ] }))),
+      map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, layoutType: 'grid', gridItems: [], panels: [ panel ] }))),
       map(panelSettings => panelSettings.find(s => s.name === 'panels').attributes[0].attributes.find(s => s.name === 'panes').attributes)
     );
   }

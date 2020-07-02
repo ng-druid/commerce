@@ -67,7 +67,7 @@ export class RestContentHandler implements ContentHandler {
           }
         }),
         map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),
-        map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, gridItems: [], panels: [ panel ] })))
+        map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, layoutType: 'grid', gridItems: [], panels: [ panel ] })))
       ).subscribe(panelSettings => {
         subject.next(panelSettings.find(s => s.name === 'panels').attributes[0].attributes.find(s => s.name === 'panes').attributes);
         subject.complete();

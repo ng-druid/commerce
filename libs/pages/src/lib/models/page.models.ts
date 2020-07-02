@@ -8,11 +8,13 @@ interface DatasourceModel<T> {
 
 export class PanelPage {
   id: string;
+  layoutType: string;
   gridItems: Array<GridItem> = [];
   panels: Array<Panel> = [];
   constructor(data?: PanelPage) {
     if(data) {
       this.id = data.id;
+      this.layoutType = data.layoutType;
       if(data.panels) {
         this.panels = data.panels.map(p => new Panel(p));
       }

@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, UrlSegment, Router } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MarkdownModule, MarkdownComponent } from 'ngx-markdown';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -67,6 +67,26 @@ import { VirtualListPanelRendererComponent } from './plugins/style/virtual-list-
 import { SliceContentHandler } from './handlers/slice-content.handler';
 import { SliceEditorComponent } from './plugins/slice/slice-editor/slice-editor.component';
 import { SliceFormComponent } from './components/slice-form/slice-form.component';
+import { GridlessLayoutComponent } from './components/gridless-layout/gridless-layout.component';
+
+const panePageMatcher = (url: UrlSegment[]) => {
+  if(url[0] !== undefined && url[0].path === 'panelpage') {
+    return {
+      consumed: url,
+      posParams: url.reduce<{}>((p, c, index) => {
+        if(index === 1) {
+          return { ...p, panelPageId: new UrlSegment(c.path, {}) }
+        } else if(index > 1) {
+          return { ...p, [`arg${index - 2}`]: new UrlSegment(c.path, {}) };
+        } else {
+          return { ...p };
+        }
+      }, {})
+    };
+  } else {
+    return null;
+  }
+}
 
 const routes = [
   { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -74,8 +94,8 @@ const routes = [
   { path: 'page-builder', component: PageBuilderComponent },
   { path: 'grid-layouts', component: GridLayoutMasterComponent },
   { path: 'panelpage/:panelPageId/manage', component: EditPanelPageComponent },
-  { path: 'panelpage/:panelPageId', component: PanelPageRouterComponent }
-  //{ path: '**', component: PageControllerComponent, pathMatch: 'full' }
+  { /*path: 'panelpage/:panelPageId',*/ matcher: panePageMatcher, component: PanelPageRouterComponent }
+  // { path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -100,7 +120,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent],
   providers: [
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
