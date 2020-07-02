@@ -20,7 +20,7 @@ export class RenderPaneComponent implements OnInit, OnChanges {
   settings: Array<AttributeValue> = [];
 
   @Input()
-  contexts: Array<InlineContext> = [];
+  contexts: Array<InlineContext>;
 
   @Input()
   originPane: Pane;
@@ -60,12 +60,17 @@ export class RenderPaneComponent implements OnInit, OnChanges {
   }
 
   resolveNestedPanelPage() {
+    //console.log('resolve nested');
+    //console.log(this.contexts);
     this.panelHandler.toObject(this.settings).subscribe(p => {
       this.panelPage = p;
     });
   }
 
   renderPaneContent() {
+
+    //console.log('render pane');
+
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.contentPlugin.renderComponent);
 
     const viewContainerRef = this.contentPaneHost.viewContainerRef;

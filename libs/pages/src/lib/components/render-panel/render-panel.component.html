@@ -1,6 +1,6 @@
-<div class="render-panel">
+<div class="render-panel" #panes>
   <ng-container><ng-template classifiedsUiPaneContentHost></ng-template></ng-container>
-  <div *ngIf="!stylePlugin && resolvedPanes" #panes>
-    <classifieds-ui-render-pane *ngFor="let pane of resolvedPanes; let j = index" [pluginName]="pane.contentPlugin" [settings]="pane.settings" [contexts]="mergeContexts(pane.contexts)" [originPane]="panel.panes[originMappings[i]]"></classifieds-ui-render-pane>
+  <div *ngIf="!stylePlugin && resolvedPanes">
+    <classifieds-ui-render-pane *ngFor="let pane of resolvedPanes; let j = index" [pluginName]="pane.contentPlugin" [settings]="pane.settings" [originPane]="panel.panes[originMappings[i]]" [contexts]="contexts"></classifieds-ui-render-pane>
   </div>
 </div>

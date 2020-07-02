@@ -61,8 +61,10 @@ export class GalleryPanelRendererComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //console.log('gallery panel');
     const mediaFiles$ = this.panes.map(p => this.mediaHandler.toObject(p.settings));
     forkJoin(mediaFiles$).subscribe((mediaFiles) => {
+      //console.log(mediaFiles);
       this.galleryImages = mediaFiles.map(i => ({
         small: `${this.mediaBaseUrl}/${i.path}`,
         medium: `${this.mediaBaseUrl}/${i.path}`,

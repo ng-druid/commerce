@@ -1,5 +1,5 @@
   <classifieds-ui-grid-layout [dashboard]="panelPage?.gridItems" [displayMainControls]="false" [displayItemHeader]="false" [options]="options">
     <ng-template #innerGridItem let-i="i">
-      <classifieds-ui-render-panel *ngIf="panelPage" [panel]="panelPage.panels[i]" [contexts]="contexts"></classifieds-ui-render-panel>
+      <classifieds-ui-render-panel *ngIf="panelPage" (heightChange)="onHeightChange($event, i)" [panel]="panelPage.panels[i]" [nested]="nested" [contexts]="contexts"></classifieds-ui-render-panel>
     </ng-template>
   </classifieds-ui-grid-layout>

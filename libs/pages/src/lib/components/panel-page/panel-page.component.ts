@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType, GridsterItem } from 'angular-gridster2';
@@ -34,13 +34,7 @@ export class PanelPageComponent implements OnInit {
     resizable: {
       enabled: false
     },
-    mobileBreakpoint: 0,
-    itemResizeCallback: (item: GridsterItem) => {
-      if(this.nested) {
-        const matchIndex = this.gridLayout.grid.findIndex(g => g.x === item.x && g.y === item.y && g.cols === item.cols && g.rows === item.rows);
-        this.gridLayout.setItemContentHeight(matchIndex, 150);
-      }
-    }
+    mobileBreakpoint: 0
   };
 
   private panelPageService: EntityCollectionService<PanelPage>;
@@ -52,11 +46,23 @@ export class PanelPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // console.log(this.contexts);
     if(this.id !== undefined) {
       this.panelPageService.getByKey(this.id).subscribe(p => {
         this.panelPage = p;
       });
     }
+  }
+
+  /*ngOnChanges(changes: SimpleChanges) {
+    if(this.nested) {
+      console.log(`panel page change ${this.nested?'y':'n'}`);
+      console.log(changes);
+    }
+  }*/
+
+  onHeightChange(height: number, index: number) {
+    this.gridLayout.setItemContentHeight(index, height);
   }
 
 }

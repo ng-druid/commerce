@@ -84,15 +84,15 @@ export class GridLayoutComponent implements OnInit {
 
   setItemContentHeight(index: number, height: number) {
     this.itemHeights[index] = height + ( this.displayItemHeader ? this.itemHeaderHeight(index) : 0 );
-    console.log(`item height item: ${height} | header: ${this.itemHeaderHeight(index)}`);
+    // console.log(`item height item: ${height} | header: ${this.itemHeaderHeight(index)}`);
     this.refreshGridHeight();
   }
 
   refreshGridHeight() {
     this.gridster.calculateLayout();
-    console.log(`main controls: ${this.mainControls.nativeElement.offsetHeight} | cumulative height: ${this.cumulativeHeight}`);
+    // console.log(`main controls: ${this.mainControls.nativeElement.offsetHeight} | cumulative height: ${this.cumulativeHeight}`);
     this.gridHeight = this.cumulativeHeight /* + ( this.displayMainControls ? this.mainControls.nativeElement.offsetHeight : 0 )*/ + (this.gridster.rows * 16);
-    console.log(`adjust height: ${this.gridHeight}`);
+    // console.log(`adjust height: ${this.gridHeight}`);
   }
 
   itemHeaderHeight(index: number) {

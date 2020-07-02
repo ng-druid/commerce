@@ -95,6 +95,9 @@ export class SliceContentHandler implements ContentHandler {
   extractDataArray(context: InlineContext, query: string): Array<any> {
     const pieces = query.split('.');
     const len = pieces.length;
+    if(context === undefined) {
+      return [];
+    }
     let current = context.data;
     for(let i = 0; i < len; i++) {
       if(pieces[i] === '') {
