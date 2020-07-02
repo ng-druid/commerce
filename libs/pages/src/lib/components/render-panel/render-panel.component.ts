@@ -89,13 +89,13 @@ export class RenderPanelComponent implements OnInit, OnChanges {
         return [ ...p ];
       }*/
       if(plugin.handler !== undefined && plugin.handler.isDynamic()) {
-        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata),['tag', uuid.v4()], ['panes', staticPanes], ['contexts', this.mergeContexts(c.contexts)] ])).pipe(
+        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata),['tag', uuid.v4()], ['panes', staticPanes], ['contexts', this.contexts !== undefined ? this.contexts: [] ] ])).pipe(
           map(items => this.panelHandler.fromPanes(items)),
           map(panes => this.panelHandler.wrapPanel(panes).panes),
           take(1)
         )];
       } else {
-        return [ ...p, of([ c ])];
+        return [ ...p, of([ new Pane({ ...c, contexts: this.mergeContexts(c.contexts) }) ])];
       }
     }, []);
 
@@ -115,11 +115,9 @@ export class RenderPanelComponent implements OnInit, OnChanges {
     ).subscribe(() => {
       this.renderPanelContent();
     });
-
   }
 
   renderPanelContent() {
-
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.stylePlugin.renderComponent);
 
     const viewContainerRef = this.panelHost.viewContainerRef;
@@ -130,8 +128,7 @@ export class RenderPanelComponent implements OnInit, OnChanges {
     (componentRef.instance as any).panes = this.resolvedPanes;
     (componentRef.instance as any).originPanes = this.panel.panes;
     (componentRef.instance as any).originMappings = this.originMappings;
-    (componentRef.instance as any).contexts = this.contexts;
-
+    (componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
   }
 
   mergeContexts(contexts: Array<InlineContext>): Array<InlineContext> {

@@ -14,7 +14,7 @@ import { InlineContext } from '../../../models/context.models';
   styleUrls: ['./virtual-list-panel-renderer.component.scss'],
   providers: [ PaneDatasourceService ]
 })
-export class VirtualListPanelRendererComponent implements OnInit, OnChanges {
+export class VirtualListPanelRendererComponent implements OnInit {
 
   @Input()
   settings: Array<AttributeValue> = [];
@@ -43,8 +43,6 @@ export class VirtualListPanelRendererComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    // console.log(this.contexts);
-
     const staticPanes = this.originPanes.reduce<Array<Pane>>((p, c) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
       if(plugin.handler === undefined || !plugin.handler.isDynamic()) {
@@ -64,15 +62,10 @@ export class VirtualListPanelRendererComponent implements OnInit, OnChanges {
       map(items => this.panelHandler.fromPanes(items)),
       map(panes => this.panelHandler.wrapPanel(panes).panes),
     ).subscribe((panes: Array<Pane>) => {
-      console.log('render panes');
       this.paneDatasource.panes = panes;
     });
     this.paneDatasource.panes = this.panes;
 
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('change virtual list');
   }
 
   trackByName(index: number, pane: Pane): string {

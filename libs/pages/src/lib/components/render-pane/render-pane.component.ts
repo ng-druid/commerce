@@ -60,17 +60,12 @@ export class RenderPaneComponent implements OnInit, OnChanges {
   }
 
   resolveNestedPanelPage() {
-    //console.log('resolve nested');
-    //console.log(this.contexts);
     this.panelHandler.toObject(this.settings).subscribe(p => {
       this.panelPage = p;
     });
   }
 
   renderPaneContent() {
-
-    //console.log('render pane');
-
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.contentPlugin.renderComponent);
 
     const viewContainerRef = this.contentPaneHost.viewContainerRef;
@@ -78,7 +73,7 @@ export class RenderPaneComponent implements OnInit, OnChanges {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as any).settings = this.settings;
-    (componentRef.instance as any).contexts = this.contexts;
+    (componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
   }
 
 }

@@ -45,7 +45,6 @@ export class UrlGeneratorService {
 
   paramValue(param: Param, metadata: Map<string, any>): string {
     const route = metadata.get('_route') as ActivatedRoute;
-    console.log(route);
     if(param.flags.findIndex(f => f.enabled) > -1 && metadata.has('page')) {
       return `${metadata.get('page')}`;
     } else if(param.mapping.type === 'route') {

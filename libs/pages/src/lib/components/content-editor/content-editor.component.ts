@@ -160,13 +160,14 @@ export class ContentEditorComponent implements OnInit, OnChanges {
         }));
         if(this.nested) {
           this.panelPanes(this.panels.length - 1).valueChanges.pipe(
-            //filter(() => this.nested),
             debounceTime(5),
             delay(1)
           ).subscribe(((panelIndex) => {
             return () => {
-              const container = this.paneContainers.find((i, index) => index === panelIndex);
-              this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+              if(this.gridLayout !== undefined) {
+                const container = this.paneContainers.find((i, index) => index === panelIndex);
+                this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
+              }
             };
           })(this.panels.length - 1));
         }

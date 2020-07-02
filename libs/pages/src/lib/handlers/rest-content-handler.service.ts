@@ -5,7 +5,7 @@ import { ContentHandler } from '@classifieds-ui/content';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of, Subject } from 'rxjs';
 import * as uuid from 'uuid';
-import { map, filter, switchMap } from 'rxjs/operators';
+import { map, filter, switchMap, tap } from 'rxjs/operators';
 import { Rest, Param, Mapping } from '../models/datasource.models';
 import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
 import { selectDataset } from '../features/page-builder/page-builder.selectors';
@@ -54,16 +54,17 @@ export class RestContentHandler implements ContentHandler {
       this.store.pipe(
         select(selectDataset(`${metadata.get('tag')}`)),
         filter(dataset => dataset !== undefined),
-        // map(dataset => dataset.results.map(row => this.tokenizerService.generateGenericTokens(row))),
         map(dataset => {
+          const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === r.renderer.data.content);
+          const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
+          const mergedContexts = [ ...(attachedPane !== undefined && attachedPane.contexts !== undefined ? attachedPane.contexts : []), ...contexts ];
           if(r.renderer.data.contentType === 'text') {
-            const pane = (metadata.get('panes') as Array<Pane>).find(p => p.name === r.renderer.data.content);
             return dataset.results.map(row => {
               const name = uuid.v4();
-              return new Pane({ ...pane, label: name, contexts: [new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
+              return new Pane({ ...attachedPane, label: name, contexts: [ ...mergedContexts, new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
             }) as Array<Pane>;
           } else {
-            return dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>;
+            return dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [ ...mergedContexts,new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>;
           }
         }),
         map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),

@@ -83,10 +83,10 @@ export class Pane {
       if(data.metadata !== undefined) {
         this.metadata = new Map(...data.metadata);
       }
-      if(data.settings) {
+      if(data.settings !== undefined) {
         this.settings = data.settings.map(a => new AttributeValue(a));
       }
-      if(data.contexts) {
+      if(data.contexts !== undefined) {
         this.contexts = data.contexts.map(c => new InlineContext(c));
       }
     }

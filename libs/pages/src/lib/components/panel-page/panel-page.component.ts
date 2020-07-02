@@ -46,9 +46,9 @@ export class PanelPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.contexts);
     if(this.id !== undefined) {
       this.panelPageService.getByKey(this.id).subscribe(p => {
+        this.contexts = [];
         this.panelPage = p;
       });
     }
