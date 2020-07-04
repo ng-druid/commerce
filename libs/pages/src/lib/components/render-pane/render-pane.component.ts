@@ -1,4 +1,5 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, ViewChild, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, ViewChild, ComponentFactoryResolver, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, FormGroup,FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
@@ -9,9 +10,21 @@ import { InlineContext } from '../../models/context.models';
 @Component({
   selector: 'classifieds-ui-render-pane',
   templateUrl: './render-pane.component.html',
-  styleUrls: ['./render-pane.component.scss']
+  styleUrls: ['./render-pane.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => RenderPaneComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => RenderPaneComponent),
+      multi: true
+    },
+  ]
 })
-export class RenderPaneComponent implements OnInit, OnChanges {
+export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
   @Input()
   pluginName: string;
@@ -25,9 +38,18 @@ export class RenderPaneComponent implements OnInit, OnChanges {
   @Input()
   originPane: Pane;
 
+  @Input()
+  displayType: string;
+
   contentPlugin: ContentPlugin;
 
   panelPage: PanelPage;
+
+  paneForm = this.fb.group({
+    settings: this.fb.control('')
+  });
+
+  public onTouched: () => void = () => {};
 
   private contentPlugins: Array<ContentPlugin> = [];
 
@@ -36,7 +58,8 @@ export class RenderPaneComponent implements OnInit, OnChanges {
   constructor(
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private panelHandler: PanelContentHandler
+    private panelHandler: PanelContentHandler,
+    private fb: FormBuilder
   ) {
     this.contentPlugins = contentPlugins;
   }
@@ -45,7 +68,7 @@ export class RenderPaneComponent implements OnInit, OnChanges {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
     if(this.pluginName === 'panel') {
       this.resolveNestedPanelPage();
-    } else {
+    } else  {
       this.renderPaneContent();
     }
   }
@@ -57,6 +80,32 @@ export class RenderPaneComponent implements OnInit, OnChanges {
     } else {
       this.renderPaneContent();
     }
+  }
+
+  writeValue(val: any): void {
+    if (val) {
+      this.paneForm.setValue(val, { emitEvent: false });
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.paneForm.valueChanges.subscribe(fn);
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.paneForm.disable()
+    } else {
+      this.paneForm.enable()
+    }
+  }
+
+  validate(c: AbstractControl): ValidationErrors | null{
+    return this.paneForm.valid ? null : { invalidForm: {valid: false, message: "pane is invalid"}};
   }
 
   resolveNestedPanelPage() {
@@ -74,6 +123,7 @@ export class RenderPaneComponent implements OnInit, OnChanges {
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as any).settings = this.settings;
     (componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
+    (componentRef.instance as any).displayType = this.displayType;
   }
 
 }

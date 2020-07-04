@@ -69,6 +69,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   contentForm = this.fb.group({
     layoutType: this.fb.control('grid', Validators.required),
+    displayType: this.fb.control('page', Validators.required),
     panels: this.fb.array([])
   });
 
@@ -112,6 +113,10 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   get layoutType() {
     return this.contentForm.get('layoutType');
+  }
+
+  get displayType() {
+    return this.contentForm.get('displayType');
   }
 
   constructor(
@@ -307,6 +312,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     this.syncNestedPanelPages();
     return new PanelPage({
       id: this.panelPageId,
+      displayType: this.displayType.value,
       layoutType: this.layoutType.value,
       gridItems: this.gridLayout ? this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })) : [],
       panels: this.panels.value

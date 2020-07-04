@@ -10,7 +10,7 @@ export const textFactory = () => {
     type: AttributeTypes.Text,
     label: '',
     required: false,
-    widget: '',
+    widget: 'text',
     options: {},
     attributes: []
   });
@@ -27,7 +27,7 @@ export const ymmFactory = () => {
     type: AttributeTypes.Complex,
     label: '',
     required: false,
-    widget: '',
+    widget: 'ymm_selector',
     options: {},
     attributes: [
       new Attribute({
@@ -68,7 +68,7 @@ export const cityFactory = () => {
     type: AttributeTypes.Complex,
     label: '',
     required: false,
-    widget: '',
+    widget: 'city_selector',
     options: {},
     attributes: []
   });

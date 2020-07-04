@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, ComponentFactoryResolver, Inject, ViewChild, OnChanges, SimpleChanges, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ComponentFactoryResolver, Inject, ViewChild, OnChanges, SimpleChanges, ElementRef, Output, EventEmitter, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, FormGroup,FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { Panel } from '../../models/page.models';
 import * as uuid from 'uuid';
 import { AttributeValue } from '@classifieds-ui/attributes';
@@ -14,9 +15,21 @@ import { InlineContext } from '../../models/context.models';
 @Component({
   selector: 'classifieds-ui-render-panel',
   templateUrl: './render-panel.component.html',
-  styleUrls: ['./render-panel.component.scss']
+  styleUrls: ['./render-panel.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => RenderPanelComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => RenderPanelComponent),
+      multi: true
+    },
+  ]
 })
-export class RenderPanelComponent implements OnInit, OnChanges {
+export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAccessor, Validator  {
 
   static COUNTER = 0;
 
@@ -29,8 +42,15 @@ export class RenderPanelComponent implements OnInit, OnChanges {
   @Input()
   nested = false;
 
+  @Input()
+  displayType: string;
+
   @Output()
   heightChange = new EventEmitter<number>();
+
+  panelForm = this.fb.group({
+    panes: this.fb.array([])
+  });
 
   panes: Array<Pane>;
 
@@ -42,16 +62,23 @@ export class RenderPanelComponent implements OnInit, OnChanges {
 
   contentPlugins: Array<ContentPlugin> = [];
 
+  public onTouched: () => void = () => {};
+
   private counter: number;
 
   @ViewChild(PaneContentHostDirective, { static: true }) panelHost: PaneContentHostDirective;
   @ViewChild('panes', { static: true }) paneContainer: ElementRef;
 
+  get panesArray(): FormArray {
+    return this.panelForm.get('panes') as FormArray;
+  }
+
   constructor(
     @Inject(STYLE_PLUGIN) stylePlugins: Array<StylePlugin>,
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private panelHandler: PanelContentHandler
+    private panelHandler: PanelContentHandler,
+    private fb: FormBuilder
   ) {
     this.counter = RenderPanelComponent.COUNTER++;
     this.stylePlugins = stylePlugins;
@@ -70,6 +97,39 @@ export class RenderPanelComponent implements OnInit, OnChanges {
     if(this.panel !== undefined && this.panelHost !== undefined) {
       this.resolvePanes();
     }
+  }
+
+  writeValue(val: any): void {
+    if (val) {
+      this.panelForm.setValue(val, { emitEvent: false });
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.panelForm.valueChanges.subscribe(fn);
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.panelForm.disable()
+    } else {
+      this.panelForm.enable()
+    }
+  }
+
+  validate(c: AbstractControl): ValidationErrors | null{
+    return this.panelForm.valid ? null : { invalidForm: {valid: false, message: "panel are invalid"}};
+  }
+
+  populatePanesFormArray() {
+    this.panesArray.clear();
+    this.resolvedPanes.forEach((p, i) => {
+      this.panesArray.push(this.fb.control(''));
+    });
   }
 
   resolvePanes() {
@@ -110,6 +170,7 @@ export class RenderPanelComponent implements OnInit, OnChanges {
             setTimeout(() => this.heightChange.emit(this.paneContainer.nativeElement.offsetHeight));
           }
         });
+        this.populatePanesFormArray();
       }),
       filter(() => this.stylePlugin !== undefined)
     ).subscribe(() => {
@@ -129,6 +190,7 @@ export class RenderPanelComponent implements OnInit, OnChanges {
     (componentRef.instance as any).originPanes = this.panel.panes;
     (componentRef.instance as any).originMappings = this.originMappings;
     (componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
+    (componentRef.instance as any).displayType = this.displayType;
   }
 
   mergeContexts(contexts: Array<InlineContext>): Array<InlineContext> {

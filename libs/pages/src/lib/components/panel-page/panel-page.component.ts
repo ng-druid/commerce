@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType, GridsterItem } from 'angular-gridster2';
@@ -24,6 +25,10 @@ export class PanelPageComponent implements OnInit {
   @Input()
   contexts: Array<InlineContext>;
 
+  pageForm = this.fb.group({
+    panels: this.fb.array([])
+  });
+
   options: GridsterConfig = {
     gridType: GridType.Fit,
     displayGrid: DisplayGrid.None,
@@ -41,7 +46,11 @@ export class PanelPageComponent implements OnInit {
 
   @ViewChild(GridLayoutComponent, {static: false}) gridLayout: GridLayoutComponent;
 
-  constructor(es: EntityServices) {
+  get panelsArray(): FormArray {
+    return this.pageForm.get('panels') as FormArray;
+  }
+
+  constructor(es: EntityServices, private fb: FormBuilder) {
     this.panelPageService = es.getEntityCollectionService('PanelPage');
   }
 
@@ -50,7 +59,10 @@ export class PanelPageComponent implements OnInit {
       this.panelPageService.getByKey(this.id).subscribe(p => {
         this.contexts = [];
         this.panelPage = p;
+        this.populatePanelsFormArray();
       });
+    } else if(this.panelPage !== undefined) {
+      this.populatePanelsFormArray();
     }
   }
 
@@ -63,6 +75,18 @@ export class PanelPageComponent implements OnInit {
 
   onHeightChange(height: number, index: number) {
     this.gridLayout.setItemContentHeight(index, height);
+  }
+
+  populatePanelsFormArray() {
+    this.panelsArray.clear();
+    this.panelPage.panels.forEach((p, i) => {
+      this.panelsArray.push(this.fb.control(''));
+    });
+  }
+
+  submit() {
+    const panelPage = new PanelPage(this.pageForm.value);
+    console.log(panelPage);
   }
 
 }

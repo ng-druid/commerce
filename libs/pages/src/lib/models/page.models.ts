@@ -9,12 +9,14 @@ interface DatasourceModel<T> {
 export class PanelPage {
   id: string;
   layoutType: string;
+  displayType: string;
   gridItems: Array<GridItem> = [];
   panels: Array<Panel> = [];
   constructor(data?: PanelPage) {
     if(data) {
       this.id = data.id;
       this.layoutType = data.layoutType;
+      this.displayType = data.displayType;
       if(data.panels) {
         this.panels = data.panels.map(p => new Panel(p));
       }

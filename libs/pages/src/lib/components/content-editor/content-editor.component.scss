@@ -21,7 +21,7 @@
   border-bottom: 1px solid white;
 }
 
-.layout-type {
+.layout-type, .display-type {
   float: right;
 
   & ::ng-deep .mat-form-field-wrapper {
