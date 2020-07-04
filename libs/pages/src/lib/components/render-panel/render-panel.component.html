@@ -5,12 +5,12 @@
       <ng-container *ngSwitchCase="'form'">
         <div [formGroup]="panelForm">
           <div formArrayName="panes">
-            <classifieds-ui-render-pane *ngFor="let pane of resolvedPanes; let j = index" [formControlName]="j" [pluginName]="pane.contentPlugin" [settings]="pane.settings" [originPane]="panel.panes[originMappings[i]]" [contexts]="pane.contexts" [displayType]="displayType"></classifieds-ui-render-pane>
+            <classifieds-ui-render-pane *ngFor="let pane of resolvedPanes; let j = index" [formControlName]="j" [pluginName]="pane.contentPlugin" [settings]="pane.settings" [name]="pane.name" [label]="pane.label" [originPane]="panel.panes[originMappings[i]]" [contexts]="pane.contexts" [displayType]="displayType"></classifieds-ui-render-pane>
           </div>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'page'">
-        <classifieds-ui-render-pane *ngFor="let pane of resolvedPanes; let j = index" [pluginName]="pane.contentPlugin" [settings]="pane.settings" [originPane]="panel.panes[originMappings[i]]" [contexts]="pane.contexts" [displayType]="displayType"></classifieds-ui-render-pane>
+        <classifieds-ui-render-pane *ngFor="let pane of resolvedPanes; let j = index" [pluginName]="pane.contentPlugin" [settings]="pane.settings" [name]="pane.name" [label]="pane.label" [originPane]="panel.panes[originMappings[i]]" [contexts]="pane.contexts" [displayType]="displayType"></classifieds-ui-render-pane>
       </ng-container>
     </ng-container>
   </div>

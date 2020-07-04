@@ -41,11 +41,20 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
   @Input()
   displayType: string;
 
+  @Input()
+  name: string;
+
+  @Input()
+  label: string;
+
   contentPlugin: ContentPlugin;
 
   panelPage: PanelPage;
 
   paneForm = this.fb.group({
+    contentPlugin: this.fb.control('', Validators.required),
+    name: this.fb.control(''),
+    label: this.fb.control(''),
     settings: this.fb.control('')
   });
 
@@ -66,6 +75,9 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
 
   ngOnInit(): void {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
+    this.paneForm.get('contentPlugin').setValue(this.contentPlugin.name);
+    this.paneForm.get('name').setValue(this.name);
+    this.paneForm.get('label').setValue(this.label);
     if(this.pluginName === 'panel') {
       this.resolveNestedPanelPage();
     } else  {
@@ -75,6 +87,9 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
 
   ngOnChanges(changes: SimpleChanges) {
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
+    this.paneForm.get('contentPlugin').setValue(this.contentPlugin.name);
+    this.paneForm.get('name').setValue(this.name);
+    this.paneForm.get('label').setValue(this.label);
     if(this.pluginName === 'panel') {
       this.resolveNestedPanelPage();
     } else {
@@ -122,6 +137,8 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as any).settings = this.settings;
+    (componentRef.instance as any).name = this.name;
+    (componentRef.instance as any).label = this.label;
     (componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
     (componentRef.instance as any).displayType = this.displayType;
   }
