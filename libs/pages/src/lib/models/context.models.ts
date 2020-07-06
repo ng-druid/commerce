@@ -1,5 +1,5 @@
 import { Rest } from './datasource.models';
-import { Snippet } from './page.models';
+import { Snippet } from './plugin.models';
 
 export class InlineContext {
   name: string;

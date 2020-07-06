@@ -30,7 +30,7 @@
                 <mat-option *ngFor="let city of cities" [value]="city">{{ city.city }}, {{ city.stateId }} ({{ city.zip }})</mat-option>
               </ng-container>
             </mat-autocomplete>
-        </mat-form-field>
+          </mat-form-field>
           <mat-form-field fxFlex="35">
             <input matInput placeholder="Marketing Profile" [matAutocomplete]="profileAuto" formControlName="profile">
             <mat-icon matSuffix>person</mat-icon>

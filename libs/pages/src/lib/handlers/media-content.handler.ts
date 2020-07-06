@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
-import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -10,7 +10,7 @@ export class MediaContentHandler implements ContentHandler {
 
   types = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
 
-  constructor(private filesService: FilesService) { }
+  constructor(private filesService: FilesService, private attributeSerializer: AttributeSerializerService) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
     return this.filesService.bulkUpload([file]).pipe(
@@ -30,7 +30,7 @@ export class MediaContentHandler implements ContentHandler {
     return of(false);
   }
 
-  isDynamic(): boolean {
+  isDynamic(settings: Array<AttributeValue>): boolean {
     return false;
   }
 
@@ -51,7 +51,10 @@ export class MediaContentHandler implements ContentHandler {
   }
 
   buildSettings(mediaFile: MediaFile): Array<AttributeValue> {
-    return [
+    console.log(mediaFile);
+    mediaFile.fileName = 'placeholdername';
+    return this.attributeSerializer.serialize(mediaFile, 'root').attributes;
+    /*return [
       new AttributeValue({
         name: 'id',
         type: AttributeTypes.Text,
@@ -106,7 +109,7 @@ export class MediaContentHandler implements ContentHandler {
         intValue: 0,
         attributes: []
       })
-    ];
+    ];*/
   }
 
 }

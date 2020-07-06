@@ -4,7 +4,8 @@ export enum AttributeTypes {
   Number,
   Text,
   Complex,
-  Float
+  Float,
+  Array
 }
 
 export class AttributeWidget {

@@ -7,7 +7,7 @@ export interface ContentHandler {
   handlesType(type: string): boolean
   implementsRendererOverride(): boolean
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean>
-  isDynamic(): boolean
+  isDynamic(settings: Array<AttributeValue>): boolean
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>>
 }
 

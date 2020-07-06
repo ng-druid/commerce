@@ -136,7 +136,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
 
     const staticPanes = this.panel.panes.reduce<Array<Pane>>((p, c) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
-      if(plugin.handler === undefined || !plugin.handler.isDynamic()) {
+      if(plugin.handler === undefined || !plugin.handler.isDynamic(c.settings)) {
         return [ ...p, c ];
       } else {
         return [ ...p ];
@@ -148,7 +148,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
       /*if(staticPanes.findIndex(sp => sp.name === c.name) > -1) {
         return [ ...p ];
       }*/
-      if(plugin.handler !== undefined && plugin.handler.isDynamic()) {
+      if(plugin.handler !== undefined && plugin.handler.isDynamic(c.settings)) {
         return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata),['tag', uuid.v4()], ['panes', staticPanes], ['contexts', this.contexts !== undefined ? this.contexts: [] ] ])).pipe(
           map(items => this.panelHandler.fromPanes(items)),
           map(panes => this.panelHandler.wrapPanel(panes).panes),

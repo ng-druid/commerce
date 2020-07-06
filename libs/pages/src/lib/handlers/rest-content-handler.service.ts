@@ -11,7 +11,7 @@ import { PageBuilderFacade } from '../features/page-builder/page-builder.facade'
 import { selectDataset } from '../features/page-builder/page-builder.selectors';
 import { PageBuilderPartialState } from '../features/page-builder/page-builder.reducer';
 import { TokenizerService } from '@classifieds-ui/token';
-import { Panel, PanelPage, Snippet, Pane } from '../models/page.models';
+import { Panel, PanelPage, Pane } from '../models/page.models';
 import { InlineContext } from '../models/context.models';
 import { PanelContentHandler } from '../handlers/panel-content.handler';
 import { UrlGeneratorService } from '../services/url-generator.service';
@@ -40,8 +40,8 @@ export class RestContentHandler implements ContentHandler {
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean> {
     return of(false);
   }
-  isDynamic(): boolean {
-    return true;
+  isDynamic(settings: Array<AttributeValue>): boolean {
+    return ['snippet','pane'].indexOf(this.getRenderType(settings)) > -1;
   }
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     const subject = new Subject<Array<AttributeValue>>();
@@ -210,5 +210,9 @@ export class RestContentHandler implements ContentHandler {
         ]
       })
     ];
+  }
+  getRenderType(settings: Array<AttributeValue>) : string {
+    const renderType = [settings.find(s => s.name === 'renderer')].map(r => r.attributes.find(s => s.name === 'type'));
+    return renderType.length > 0 ? renderType[0].value: undefined;
   }
 }

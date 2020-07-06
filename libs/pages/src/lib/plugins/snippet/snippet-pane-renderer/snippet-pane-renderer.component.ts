@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { TokenizerService } from '@classifieds-ui/token';
 import { SnippetContentHandler } from '../../../handlers/snippet-content.handler';
-import { Snippet } from '../../../models/page.models';
+import { Snippet } from '../../../models/plugin.models';
 import { InlineContext } from '../../../models/context.models';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';

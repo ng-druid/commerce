@@ -47,6 +47,9 @@ export class TokenizerService {
   }
 
   genericTokens(obj: any, tokens: Map<string,any>, prefix, level) {
+    if(level === 0) {
+      tokens.set('.', obj);
+    }
     for(const prop in obj) {
       const type = typeof(obj[prop]);
       if(type !== 'object') {

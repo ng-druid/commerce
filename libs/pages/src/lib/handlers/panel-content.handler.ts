@@ -28,7 +28,7 @@ export class PanelContentHandler implements ContentHandler {
     return of(false);
   }
 
-  isDynamic(): boolean {
+  isDynamic(settings: Array<AttributeValue>): boolean {
     return false;
   }
 

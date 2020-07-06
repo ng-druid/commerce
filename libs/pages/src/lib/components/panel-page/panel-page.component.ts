@@ -85,6 +85,7 @@ export class PanelPageComponent implements OnInit {
   }
 
   submit() {
+    console.log(this.pageForm.value);
     const panelPage = new PanelPage(this.pageForm.value);
     console.log(panelPage);
   }

@@ -1,0 +1,44 @@
+<div [formGroup]="selectionForm">
+  <div formArrayName="attributes">
+    <div formGroupName="0">
+      <div formArrayName="attributes">
+        <ng-container [ngSwitch]="renderType">
+          <ng-container *ngSwitchCase="'select'">
+              <mat-form-field formGroupName="0">
+                <mat-label>{{ label }}</mat-label>
+                <mat-select formControlName="value">
+                  <mat-option *ngFor="let opt of options; let i = index" [value]="opt.value">{{ opt.label }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+          </ng-container>
+          <ng-container *ngSwitchCase="'radiogroup'">
+            <div formGroupName="0">
+              <label>{{ label }}</label>
+              <mat-radio-group formControlName="value">
+                <mat-radio-button *ngFor="let opt of options; let i = index" [value]="opt.value">{{ opt.label }}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'checkboxgroup'">
+            <div formGroupName="0">
+              <div formArrayName="attributes">
+                <div *ngFor="let opt of options; let i = index" [formGroupName]="i">
+                  <mat-checkbox [formControlName]="value">{{ opt.label }}</mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'autocomplete'">
+            <mat-form-field>
+              <input matInput [placeholder]="label" [matAutocomplete]="autocomplete" formControlName="value">
+              <!-- <mat-icon matSuffix>location_city</mat-icon> -->
+              <mat-autocomplete #autocomplete="matAutocomplete">
+                <mat-option *ngFor="let opt of options; let i = index" [value]="opt.value">{{ opt.label }}</mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

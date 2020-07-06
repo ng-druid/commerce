@@ -1,4 +1,4 @@
-import { Snippet } from './page.models';
+import { Snippet } from './plugin.models';
 
 export class Rest {
   url: string;

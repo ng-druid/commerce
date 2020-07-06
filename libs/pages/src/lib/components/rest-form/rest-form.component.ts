@@ -1,12 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { NEVER } from 'rxjs';
-import { debounceTime, filter, map, switchMap, catchError, tap } from 'rxjs/operators';
-import { DatasourceApiService } from '../../services/datasource-api.service';
+import { FormBuilder } from '@angular/forms';
 import { TokenizerService } from '@classifieds-ui/token';
 import { Rest } from '../../models/datasource.models';
-import * as qs from 'qs';
 
 @Component({
   selector: 'classifieds-ui-rest-form',
@@ -21,22 +16,21 @@ export class RestFormComponent implements OnInit {
   @Output()
   submitted = new EventEmitter<Rest>();
 
-  flags = new Map<string, string>();
-
   contexts = [];
   forms = [];
 
   tokens: Map<string, any>;
 
-  jsonData: Array<any>;
-
   restForm = this.fb.group({
-    url: this.fb.control('', Validators.required),
-    params: this.fb.array([]),
+    source: this.fb.control(''),
     renderer: this.fb.group({
       type: 'snippet',
       data: this.fb.control(''),
-      pane: this.fb.control('')
+      pane: this.fb.control(''),
+      select: this.fb.group({
+        value: this.fb.control(''),
+        label: this.fb.control('')
+      })
     })
   });
 
@@ -44,102 +38,41 @@ export class RestFormComponent implements OnInit {
     return this.restForm.get('renderer').get('type');
   }
 
-  get params(): FormArray {
-    return this.restForm.get('params') as FormArray;
-  }
-
-  get flagsAsArray(): Array<string> {
-    const flags = [];
-    this.flags.forEach((f, k) => {
-      flags.push(k);
-    });
-    return flags;
+  get isSelectable() {
+    return this.restForm.get('renderer').get('type').value && this.restForm.get('renderer').get('type').value !== 'snippet' && this.restForm.get('renderer').get('type').value !== 'pane';
   }
 
   constructor(
     private fb: FormBuilder,
-    private datasourceApi: DatasourceApiService,
     private tokenizerService: TokenizerService
   ) {
-    this.flags.set('page', 'Page');
-    this.flags.set('limit', 'Limit');
-    this.flags.set('offset', 'Offset');
   }
 
   ngOnInit(): void {
-    this.restForm.get('url').valueChanges.pipe(
-      debounceTime(500),
-      filter(v => v.indexOf('?') > -1),
-      map(v => v.substring(v.indexOf('?') + 1))
-    ).subscribe(queryString => {
-      const parsed = qs.parse(queryString);
-      this.params.clear();
-      for(const param in parsed) {
-        if(parsed[param].indexOf(':') === 0) {
-          this.params.push(this.fb.group({
-            mapping: this.fb.group({
-              type: this.fb.control('', Validators.required),
-              value: this.fb.control('', Validators.required),
-              testValue: this.fb.control(''),
-              context: this.fb.control('')
-            }),
-            flags: this.fb.array(this.flagsAsArray.map(k => this.fb.group({
-              name: k,
-              enabled: this.fb.control(false)
-            })))
-          }));
-        }
-      }
-    });
-    this.restForm.valueChanges.pipe(
-      debounceTime(1000),
-      map(() => this.generateUrl()),
-      tap(v => console.log(v)),
-      switchMap((url: string) => this.datasourceApi.getData(url).pipe(
-        catchError((e: HttpErrorResponse) => {
-          console.log(e);
-          return NEVER;
-        })
-      ))
-    ).subscribe(data => {
-      this.jsonData = data;
-      this.tokens = this.tokenizerService.generateGenericTokens(data[0]);
-    });
     this.restForm.get('renderer').get('pane').valueChanges.subscribe(v => {
       this.restForm.get('renderer').get('data').setValue({
         contentType: 'text',
         content: v
       });
     });
+    this.restForm.get('renderer').get('select').valueChanges.subscribe(v => {
+      this.restForm.get('renderer').get('data').setValue({
+        contentType: 'application/json',
+        content: JSON.stringify({ value: v.value, label: v.label })
+      });
+    });
   }
 
-  paramName(index: number) {
-    const url = this.restForm.get('url').value;
-    const parsed = qs.parse(url.substring(url.indexOf('?') + 1));
-    let i = 0;
-    for(const param in parsed) {
-      if(parsed[param].indexOf(':') === 0) {
-        if(i === index) {
-          return param;
-        }
-        i++;
-      }
-    }
-  }
-
-  generateUrl(): string {
-    const url = this.restForm.get('url').value;
-    if(url.indexOf('?') === -1) {
-      return url;
-    }
-    const parsed = qs.parse(url.substring(url.indexOf('?') + 1));
-    const params = this.params.controls.reduce<any>((p, c, i) => ({ ...p, [this.paramName(i)]: (c.get('mapping').get('value').value === 'static' ? c.get('mapping').get('value').value : c.get('mapping').get('testValue').value) }), {});
-    const apiUrl = url.substring(0, url.indexOf('?') + 1) + qs.stringify({ ...parsed, ...params });
-    return apiUrl;
+  onDataChange(data: any) {
+    this.tokens = this.tokenizerService.generateGenericTokens(data[0]);
   }
 
   submit() {
-    const rest = new Rest(this.restForm.value);
+    const rest = new Rest({
+      ...this.restForm.value,
+      url: this.restForm.value.source.url,
+      params: this.restForm.value.source.params
+    });
     this.submitted.emit(rest);
   }
 

@@ -37,7 +37,7 @@ export class SliceContentHandler implements ContentHandler {
     return of(false);
   }
 
-  isDynamic(): boolean {
+  isDynamic(settings: Array<AttributeValue>): boolean {
     return true;
   }
 

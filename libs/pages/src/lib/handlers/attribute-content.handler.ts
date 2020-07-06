@@ -3,7 +3,7 @@ import { ContentHandler } from '@classifieds-ui/content';
 import { AttributeValue, AttributeWidget, AttributeTypes } from '@classifieds-ui/attributes';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Snippet } from '../models/page.models';
+import { Snippet } from '../models/plugin.models';
 import { SnippetContentHandler } from './snippet-content.handler';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class AttributeContentHandler implements ContentHandler {
       map(snippet => snippet !== undefined)
     );
   }
-  isDynamic(): boolean {
+  isDynamic(settings: Array<AttributeValue>): boolean {
     return false;
   }
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {

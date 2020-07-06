@@ -45,7 +45,7 @@ export class VirtualListPanelRendererComponent implements OnInit {
 
     const staticPanes = this.originPanes.reduce<Array<Pane>>((p, c) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
-      if(plugin.handler === undefined || !plugin.handler.isDynamic()) {
+      if(plugin.handler === undefined || !plugin.handler.isDynamic(c.settings)) {
         return [ ...p, c ];
       } else {
         return [ ...p ];
@@ -57,7 +57,7 @@ export class VirtualListPanelRendererComponent implements OnInit {
       tap(page => console.log(page)),
       filter(() => this.originPanes !== undefined && this.originPanes[0] !== undefined),
       map(page => [this.contentPlugins.find(c => c.name === this.originPanes[0].contentPlugin, ), page]),
-      filter<[ContentPlugin, number]>(([contentPlugin, page]) => contentPlugin !== undefined && contentPlugin.handler !== undefined && contentPlugin.handler.isDynamic()),
+      filter<[ContentPlugin, number]>(([contentPlugin, page]) => contentPlugin !== undefined && contentPlugin.handler !== undefined && this.originPanes.length > 0 && contentPlugin.handler.isDynamic(this.originPanes[0].settings)),
       concatMap(([contentPlugin, page]) => contentPlugin.handler.buildDynamicItems(this.originPanes[0].settings, new Map([ ...(this.originPanes[0].metadata === undefined ? [] : this.originPanes[0].metadata), ['tag', uuid.v4()], ['page', page], ['panes', staticPanes], ['contexts', this.contexts] ]))),
       map(items => this.panelHandler.fromPanes(items)),
       map(panes => this.panelHandler.wrapPanel(panes).panes),

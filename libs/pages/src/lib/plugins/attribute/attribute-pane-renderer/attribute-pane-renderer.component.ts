@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Inject } from '@angular/core';
 import { ControlContainer, FormBuilder, Validators } from '@angular/forms';
 import { ATTRIBUTE_WIDGET, AttributeValue, AttributeWidget, Attribute, AttributeTypes } from '@classifieds-ui/attributes';
 import { AttributeContentHandler } from '../../../handlers/attribute-content.handler';
-import { Snippet } from '../../../models/page.models';
+import { Snippet } from '../../../models/plugin.models';
 import { TokenizerService } from '@classifieds-ui/token';
 
 @Component({

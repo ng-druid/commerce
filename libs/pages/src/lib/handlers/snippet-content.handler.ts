@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
-import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Snippet } from '../models/page.models';
+import { Snippet } from '../models/plugin.models';
 
 @Injectable()
 export class SnippetContentHandler implements ContentHandler {
 
   types = ['text/markdown', 'text/html'];
 
-  constructor() { }
+  constructor(private attributeSerializer: AttributeSerializerService) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
     return new Observable(obs => {
@@ -35,7 +35,7 @@ export class SnippetContentHandler implements ContentHandler {
     return of(false);
   }
 
-  isDynamic(): boolean {
+  isDynamic(settings: Array<AttributeValue>): boolean {
     return false;
   }
 
@@ -52,7 +52,8 @@ export class SnippetContentHandler implements ContentHandler {
   }
 
   buildSettings(snippet: Snippet): Array<AttributeValue> {
-    return [
+    return this.attributeSerializer.serialize(snippet, 'root').attributes;
+    /*return [
       new AttributeValue({
         name: 'contentType',
         type: AttributeTypes.Text,
@@ -71,7 +72,7 @@ export class SnippetContentHandler implements ContentHandler {
         intValue: 0,
         attributes: []
       }),
-    ];
+    ];*/
   }
 
 }
