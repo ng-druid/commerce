@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Inject, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, FormGroup, FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
+import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { SelectOption } from '../../models/plugin.models';
 
@@ -29,7 +29,10 @@ export class SelectionComponent implements OnInit, ControlValueAccessor, Validat
   label: string;
 
   @Input()
-  options: Array<SelectOption>;
+  set values(values: Array<SelectOption>) {
+    this.options = values;
+    this.buildOptions();
+  }
 
   @Input()
   renderType: string;
@@ -37,6 +40,8 @@ export class SelectionComponent implements OnInit, ControlValueAccessor, Validat
   selectionForm = this.fb.group({
     attributes: this.fb.array([])
   });
+
+  options: Array<SelectOption>;
 
   public onTouched: () => void = () => {};
 
@@ -54,26 +59,16 @@ export class SelectionComponent implements OnInit, ControlValueAccessor, Validat
     }
   }
 
-  constructor(private fb: FormBuilder, private attributesSerializer: AttributeSerializerService) { }
+  constructor(private fb: FormBuilder, private attributeSerializer: AttributeSerializerService) { }
 
   ngOnInit(): void {
     this.attributesArray.push(this.fb.group({
       name: new FormControl('value', Validators.required),
-      type: new FormControl(this.attributeType, Validators.required),
+      type: new FormControl(AttributeTypes.Array, Validators.required),
       displayName: new FormControl('Value', Validators.required),
       value: new FormControl(''),
-      attributes: this.fb.array([])
+      attributes: ['checkboxgroup'].findIndex(r => r === this.renderType) > -1 ? this.fb.array([]) : new FormControl('')
     }));
-    (this.attributesArray.controls[0].get('attributes') as FormArray).push(this.fb.group({
-      name: new FormControl('value', Validators.required),
-      type: new FormControl(this.attributeType, Validators.required),
-      displayName: new FormControl('Value', Validators.required),
-      value: new FormControl(''),
-      attributes: this.fb.array([])
-    }));
-    (this.attributesArray.controls[0].get('attributes') as FormArray).controls[0].get('value').valueChanges.subscribe(v => {
-      console.log(this.attributesSerializer.serialize([v], 'value'));
-    });
   }
 
   writeValue(val: any): void {
@@ -100,6 +95,18 @@ export class SelectionComponent implements OnInit, ControlValueAccessor, Validat
 
   validate(c: AbstractControl): ValidationErrors | null{
     return this.selectionForm.valid ? null : { invalidForm: {valid: false, message: "selection is invalid"}};
+  }
+
+  buildOptions() {
+    if(this.renderType === 'checkboxgroup' && this.options !== undefined) {
+      const formArray = (this.attributesArray.controls[0].get('attributes') as FormArray);
+      formArray.clear();
+      this.options.forEach(option => {
+        const group = this.attributeSerializer.convertToGroup(option.value);
+        group.addControl('_store', new FormControl(false));
+        formArray.push(group);
+      });
+    }
   }
 
 }

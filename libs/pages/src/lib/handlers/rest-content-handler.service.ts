@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { ContentHandler } from '@classifieds-ui/content';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of, Subject } from 'rxjs';
 import * as uuid from 'uuid';
 import { map, filter, switchMap, tap } from 'rxjs/operators';
-import { Rest, Param, Mapping } from '../models/datasource.models';
+import { Rest, Param, Mapping, Dataset } from '../models/datasource.models';
 import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
 import { selectDataset } from '../features/page-builder/page-builder.selectors';
 import { PageBuilderPartialState } from '../features/page-builder/page-builder.reducer';
@@ -15,6 +15,7 @@ import { Panel, PanelPage, Pane } from '../models/page.models';
 import { InlineContext } from '../models/context.models';
 import { PanelContentHandler } from '../handlers/panel-content.handler';
 import { UrlGeneratorService } from '../services/url-generator.service';
+import { SelectMapping, SelectOption, Snippet } from '../models/plugin.models';
 
 @Injectable()
 export class RestContentHandler implements ContentHandler {
@@ -25,7 +26,8 @@ export class RestContentHandler implements ContentHandler {
     private store: Store<PageBuilderPartialState>,
     private tokenizerService: TokenizerService,
     private panelHandler: PanelContentHandler,
-    private urlGeneratorService: UrlGeneratorService
+    private urlGeneratorService: UrlGeneratorService,
+    private attributeSerializer: AttributeSerializerService
   ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
@@ -75,6 +77,23 @@ export class RestContentHandler implements ContentHandler {
       });
     });
     return subject;
+  }
+  buildSelectOptionItems(settings: Array<AttributeValue>, metadata: Map<string, any>) {
+    this.toObject(settings).pipe(
+      switchMap(r => this.urlGeneratorService.generateUrl(r.url, r.params, metadata).pipe(
+        map(url => [r, url])
+      )),
+      map<[Rest, string], Rest>(([r, url]) => new Rest({ ...r, url }))
+    ).subscribe(r => {
+      this.pageBuilderFacade.loadRestData(`${metadata.get('tag')}`, r);
+    });
+    return this.store.pipe(
+      select(selectDataset(`${metadata.get('tag')}`)),
+      filter(d => d !== undefined),
+      map(d => [d, d.results.map(r => this.tokenizerService.generateGenericTokens(r))]),
+      map<[Dataset, Array<Map<string, any>>],[Dataset, Array<Map<string,any>>, SelectMapping]>(([d, tokens]) => [d, tokens, (new SelectMapping(JSON.parse((metadata.get('snippet') as Snippet).content)))]),
+      map(([d, tokens, mapping]) => tokens.map((t,i) => new SelectOption({ value: mapping.value === '[.]'  ? this.attributeSerializer.serialize(d.results[i], 'value') : this.attributeSerializer.serialize(this.tokenizerService.replaceTokens(mapping.value, t), 'value'), label: this.tokenizerService.replaceTokens(mapping.label, t) })))
+    );
   }
   toObject(settings: Array<AttributeValue>): Observable<Rest> {
     const snip = settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'data').attributes;

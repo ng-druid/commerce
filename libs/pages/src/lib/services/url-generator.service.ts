@@ -47,6 +47,8 @@ export class UrlGeneratorService {
     const route = metadata.get('_route') as ActivatedRoute;
     if(param.flags.findIndex(f => f.enabled) > -1 && metadata.has('page')) {
       return `${metadata.get('page')}`;
+    } else if(param.flags.findIndex(f => f.enabled) > -1 && metadata.has('searchString')) {
+      return `${metadata.get('searchString')}`;
     } else if(param.mapping.type === 'route') {
       return route.params[param.mapping.value];
     } else if(param.mapping.type === 'querystring') {

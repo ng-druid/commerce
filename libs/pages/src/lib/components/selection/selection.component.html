@@ -1,29 +1,31 @@
 <div [formGroup]="selectionForm">
   <div formArrayName="attributes">
     <div formGroupName="0">
-      <div formArrayName="attributes">
+      <div>
         <ng-container [ngSwitch]="renderType">
           <ng-container *ngSwitchCase="'select'">
-              <mat-form-field formGroupName="0">
+              <mat-form-field>
                 <mat-label>{{ label }}</mat-label>
-                <mat-select formControlName="value">
+                <mat-select formControlName="attributes">
                   <mat-option *ngFor="let opt of options; let i = index" [value]="opt.value">{{ opt.label }}</mat-option>
                 </mat-select>
               </mat-form-field>
           </ng-container>
           <ng-container *ngSwitchCase="'radiogroup'">
-            <div formGroupName="0">
+            <div>
               <label>{{ label }}</label>
-              <mat-radio-group formControlName="value">
+              <mat-radio-group formControlName="attributes">
                 <mat-radio-button *ngFor="let opt of options; let i = index" [value]="opt.value">{{ opt.label }}</mat-radio-button>
               </mat-radio-group>
             </div>
           </ng-container>
           <ng-container *ngSwitchCase="'checkboxgroup'">
-            <div formGroupName="0">
+            <div>
               <div formArrayName="attributes">
-                <div *ngFor="let opt of options; let i = index" [formGroupName]="i">
-                  <mat-checkbox [formControlName]="value">{{ opt.label }}</mat-checkbox>
+                <div *ngFor="let opt of options; let i = index">
+                  <div [formGroupName]="i">
+                    <mat-checkbox formControlName="_store">{{ opt.label }}</mat-checkbox>
+                  </div>
                 </div>
               </div>
             </div>

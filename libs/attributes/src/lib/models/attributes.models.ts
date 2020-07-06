@@ -61,7 +61,18 @@ export class AttributeValue {
       this.intValue = data.intValue;
       this.computedValue = data.computedValue;
       if (data.attributes) {
-        this.attributes = data.attributes.map(a => new AttributeValue(a));
+        if(Array.isArray(data.attributes)) {
+          this.attributes = data.attributes.reduce<Array<AttributeValue>>((p, a) => ((a as any)._store === undefined || (a as any)._store) ? [ ...p, new AttributeValue(a) ] : p, []);
+        } else if((data.attributes as any)._store === undefined || (data.attributes as any)._store) {
+          this.attributes = [data.attributes];
+        }
+      }
+      if(data.value && typeof(data.value) === 'object') {
+        this.value = undefined;
+        this.type = AttributeTypes.Complex;
+        (data.value as AttributeValue).attributes.reduce<Array<AttributeValue>>((p, a) => ((a as any)._store === undefined || (a as any)._store) ? [ ...p, new AttributeValue(a) ] : p, []);
+      } else {
+        this.value = data.value;
       }
     }
   }

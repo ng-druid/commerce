@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject, Optional } from '@angular/core';
 import { ControlContainer, FormBuilder, Validators } from '@angular/forms';
 import { ATTRIBUTE_WIDGET, AttributeValue, AttributeWidget, Attribute, AttributeTypes } from '@classifieds-ui/attributes';
 import { AttributeContentHandler } from '../../../handlers/attribute-content.handler';
@@ -45,7 +45,7 @@ export class AttributePaneRendererComponent implements OnInit {
     private handler: AttributeContentHandler,
     private tokenizerService: TokenizerService,
     private fb: FormBuilder,
-    public controlContainer: ControlContainer
+    @Optional() public controlContainer?: ControlContainer
   ) { }
 
   ngOnInit(): void {
