@@ -32,10 +32,10 @@
           </ng-container>
           <ng-container *ngSwitchCase="'autocomplete'">
             <mat-form-field>
-              <input matInput [placeholder]="label" [matAutocomplete]="autocomplete" formControlName="attributes">
+              <input matInput [placeholder]="label" [matAutocomplete]="autocomplete" formControlName="_proxy">
               <!-- <mat-icon matSuffix>location_city</mat-icon> -->
-              <mat-autocomplete #autocomplete="matAutocomplete">
-                <mat-option *ngFor="let opt of options; let i = index" [value]="opt.value">{{ opt.label }}</mat-option>
+              <mat-autocomplete #autocomplete="matAutocomplete" [displayWith]="displayAuto" (optionSelected)="onOptionSelected($event)">
+                <mat-option *ngFor="let opt of options; let i = index" [value]="opt">{{ opt.label }}</mat-option>
               </mat-autocomplete>
             </mat-form-field>
           </ng-container>

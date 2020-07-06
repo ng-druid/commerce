@@ -29,10 +29,13 @@
         </mat-form-field>
         <div *ngIf="isSelectable" formGroupName="select">
           <mat-form-field>
-            <input matInput formControlName="value" placeholder="value" required>
+            <input matInput formControlName="id" placeholder="Id" required>
           </mat-form-field>
           <mat-form-field>
-            <input matInput formControlName="label" placeholder="label" required>
+            <input matInput formControlName="value" placeholder="Value" required>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput formControlName="label" placeholder="Label" required>
           </mat-form-field>
         </div>
       </as-split-area>

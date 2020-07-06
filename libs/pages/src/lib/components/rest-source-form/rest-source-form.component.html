@@ -21,7 +21,8 @@
         <mat-form-field *ngIf="param.get('mapping').get('type').value == 'context'" formGroupName="mapping">
           <mat-label>Context</mat-label>
           <mat-select formControlName="context">
-            <mat-option *ngFor="let context of contexts" [value]="context">Context Name</mat-option>
+            <mat-option value="_root">_root</mat-option>
+            <!-- <mat-option *ngFor="let context of contexts" [value]="context"></mat-option> -->
           </mat-select>
         </mat-form-field>
         <mat-form-field formGroupName="mapping">

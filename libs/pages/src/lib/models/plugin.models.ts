@@ -1,3 +1,5 @@
+import { AttributeValue } from '@classifieds-ui/attributes';
+
 export class Snippet {
   content: string;
   contentType: string;
@@ -23,12 +25,16 @@ export class DataSlice {
 }
 
 export class SelectOption {
-  value: any;
+  value: AttributeValue;
   label: string;
+  dataItem: any;
   constructor(data?: SelectOption) {
     if(data) {
-      this.value = data.value;
       this.label = data.label;
+      this.dataItem = data.dataItem;
+      if(data.value !== undefined) {
+        this.value = new AttributeValue(data.value);
+      }
     }
   }
 }
@@ -36,10 +42,12 @@ export class SelectOption {
 export class SelectMapping {
   value: string;
   label: string;
+  id: string;
   constructor(data?: SelectMapping) {
     if(data) {
       this.value = data.value;
       this.label = data.label;
+      this.id = data.id;
     }
   }
 }

@@ -92,7 +92,7 @@ export class RestContentHandler implements ContentHandler {
       filter(d => d !== undefined),
       map(d => [d, d.results.map(r => this.tokenizerService.generateGenericTokens(r))]),
       map<[Dataset, Array<Map<string, any>>],[Dataset, Array<Map<string,any>>, SelectMapping]>(([d, tokens]) => [d, tokens, (new SelectMapping(JSON.parse((metadata.get('snippet') as Snippet).content)))]),
-      map(([d, tokens, mapping]) => tokens.map((t,i) => new SelectOption({ value: mapping.value === '[.]'  ? this.attributeSerializer.serialize(d.results[i], 'value') : this.attributeSerializer.serialize(this.tokenizerService.replaceTokens(mapping.value, t), 'value'), label: this.tokenizerService.replaceTokens(mapping.label, t) })))
+      map(([d, tokens, mapping]) => tokens.map((t,i) => new SelectOption({ dataItem: d.results[i], value: mapping.value === '[.]'  ? this.attributeSerializer.serialize(d.results[i], 'value') : this.attributeSerializer.serialize(this.tokenizerService.replaceTokens(mapping.value, t), 'value'), label: this.tokenizerService.replaceTokens(mapping.label, t) })))
     );
   }
   toObject(settings: Array<AttributeValue>): Observable<Rest> {

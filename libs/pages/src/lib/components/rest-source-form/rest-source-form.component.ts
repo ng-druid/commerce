@@ -61,10 +61,14 @@ export class RestSourceFormComponent implements OnInit, ControlValueAccessor, Va
   ngOnInit(): void {
     this.sourceForm.get('url').valueChanges.pipe(
       debounceTime(500),
-      filter(v => v.indexOf('?') > -1),
-      map(v => v.substring(v.indexOf('?') + 1))
-    ).subscribe(queryString => {
-      const parsed = qs.parse(queryString);
+      map(url => [url, url.indexOf('?')]),
+      map(([url, index]) => [(index > -1 ? url.substring(0, index) : url), (index > -1 ? url.substring(index + 1) : '')])
+    ).subscribe(([path, queryString])=> {
+      console.log(path);
+      console.log((path as string).split('/'));
+      const pathParsed = (path as string).split('/').reduce<any>((p, c, i) => (c.indexOf(':') === 0 ? { ...p, [c.substr(1)]: c } : p ), {});
+      const parsed = { ...(pathParsed as any), ...qs.parse(queryString) };
+      console.log(parsed);
       this.params.clear();
       for(const param in parsed) {
         if(parsed[param].indexOf(':') === 0) {
@@ -127,7 +131,9 @@ export class RestSourceFormComponent implements OnInit, ControlValueAccessor, Va
 
   paramName(index: number) {
     const url = this.sourceForm.get('url').value;
-    const parsed = qs.parse(url.substring(url.indexOf('?') + 1));
+    const indexPos = url.indexOf('?');
+    const pathParsed = ((indexPos > -1 ? url.substring(0, indexPos) : url) as string).split('/').reduce<any>((p, c, i) => (c.indexOf(':') === 0 ? { ...p, [c.substr(1)]: c } : p ), {});
+    const parsed = { ...pathParsed, ...qs.parse(url.substring(url.indexOf('?') + 1)) };
     let i = 0;
     for(const param in parsed) {
       if(parsed[param].indexOf(':') === 0) {

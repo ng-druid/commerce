@@ -71,6 +71,12 @@ export class AttributeSerializerService {
 
   }
 
+  deserialize(attrValue: AttributeValue): any {
+    let obj: any;
+    console.log(attrValue);
+    return obj;
+  }
+
   convertToGroup(setting: AttributeValue): FormGroup {
 
     const fg = new FormGroup({

@@ -5,8 +5,7 @@ import { RestContentHandler } from '../../../handlers/rest-content-handler.servi
 import { Subject } from 'rxjs';
 import { switchMap, filter, tap } from 'rxjs/operators';
 import { ControlContainer } from '@angular/forms';
-import { SelectOption, Snippet } from '../../../models/plugin.models';
-import { SnippetPaneRendererComponent } from '../../snippet/snippet-pane-renderer/snippet-pane-renderer.component';
+import { SelectOption, Snippet, SelectMapping } from '../../../models/plugin.models';
 
 @Component({
   selector: 'classifieds-ui-rest-pane-renderer',
@@ -35,6 +34,8 @@ export class RestPaneRendererComponent implements OnInit {
 
   snippet: Snippet;
 
+  selectMapping: SelectMapping;
+
   get renderType() {
     return this.restHandler.getRenderType(this.settings);
   }
@@ -46,7 +47,10 @@ export class RestPaneRendererComponent implements OnInit {
 
   ngOnInit(): void {
     this.restHandler.toObject(this.settings).pipe(
-      tap(r => this.snippet = r.renderer.data),
+      tap(r => {
+        this.snippet = r.renderer.data;
+        this.selectMapping = new SelectMapping(JSON.parse(this.snippet.content));
+      }),
       filter(() => this.renderType !== 'autocomplete'),
       switchMap(r => this.restHandler.buildSelectOptionItems(this.settings, new Map<string, any>([ ['tag', this.tag], [ 'snippet', r.renderer.data ] ])))
     ).subscribe(options => {

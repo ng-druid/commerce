@@ -29,7 +29,8 @@ export class RestFormComponent implements OnInit {
       pane: this.fb.control(''),
       select: this.fb.group({
         value: this.fb.control(''),
-        label: this.fb.control('')
+        label: this.fb.control(''),
+        id: this.fb.control('')
       })
     })
   });
