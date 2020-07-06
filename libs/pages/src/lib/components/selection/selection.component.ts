@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { SelectOption } from '../../models/plugin.models';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-selection',
@@ -21,6 +22,9 @@ import { SelectOption } from '../../models/plugin.models';
   ]
 })
 export class SelectionComponent implements OnInit, ControlValueAccessor, Validator {
+
+  @Output()
+  searchChange = new EventEmitter<string>();
 
   @Input()
   name: string;
@@ -69,6 +73,15 @@ export class SelectionComponent implements OnInit, ControlValueAccessor, Validat
       value: new FormControl(''),
       attributes: ['checkboxgroup'].findIndex(r => r === this.renderType) > -1 ? this.fb.array([]) : new FormControl('')
     }));
+    if(this.renderType === 'autocomplete') {
+      console.log('attach');
+      this.attributesArray.at(0).get('attributes').valueChanges.pipe(
+        distinctUntilChanged(),
+        debounceTime(500),
+      ).subscribe(v => {
+        this.searchChange.emit(v);
+      });
+    }
   }
 
   writeValue(val: any): void {

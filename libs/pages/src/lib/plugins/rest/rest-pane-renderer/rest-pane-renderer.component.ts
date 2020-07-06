@@ -1,9 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
+import * as uuid from 'uuid';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { RestContentHandler } from '../../../handlers/rest-content-handler.service';
-import { switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { switchMap, filter, tap } from 'rxjs/operators';
 import { ControlContainer } from '@angular/forms';
-import { SelectOption } from '../../../models/plugin.models';
+import { SelectOption, Snippet } from '../../../models/plugin.models';
+import { SnippetPaneRendererComponent } from '../../snippet/snippet-pane-renderer/snippet-pane-renderer.component';
 
 @Component({
   selector: 'classifieds-ui-rest-pane-renderer',
@@ -11,8 +14,6 @@ import { SelectOption } from '../../../models/plugin.models';
   styleUrls: ['./rest-pane-renderer.component.scss']
 })
 export class RestPaneRendererComponent implements OnInit {
-
-  static counter = 0;
 
   @Input()
   settings: Array<AttributeValue> = [];
@@ -26,7 +27,13 @@ export class RestPaneRendererComponent implements OnInit {
   @Input()
   displayType: string;
 
+  tag = uuid.v4();
+
   options: Array<SelectOption>;
+
+  searchChange$ = new Subject<string>();
+
+  snippet: Snippet;
 
   get renderType() {
     return this.restHandler.getRenderType(this.settings);
@@ -38,12 +45,22 @@ export class RestPaneRendererComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const tag = `data_${RestPaneRendererComponent.counter++}`;
     this.restHandler.toObject(this.settings).pipe(
-      switchMap(r => this.restHandler.buildSelectOptionItems(this.settings, new Map<string, any>([ ['tag', tag], [ 'snippet', r.renderer.data ] ])))
+      tap(r => this.snippet = r.renderer.data),
+      filter(() => this.renderType !== 'autocomplete'),
+      switchMap(r => this.restHandler.buildSelectOptionItems(this.settings, new Map<string, any>([ ['tag', this.tag], [ 'snippet', r.renderer.data ] ])))
     ).subscribe(options => {
       this.options = options;
     });
+    this.searchChange$.pipe(
+      switchMap(r => this.restHandler.buildSelectOptionItems(this.settings, new Map<string, any>([ ['tag', uuid.v4()], [ 'snippet', this.snippet ] ])))
+    ).subscribe(options => {
+      this.options = options;
+    });
+  }
+
+  onSearchChange(searchString: string) {
+    this.searchChange$.next(searchString);
   }
 
 }
