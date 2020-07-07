@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
 import { TokenizerService } from '@classifieds-ui/token';
 import { MediaFile } from '@classifieds-ui/media';
-import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { DataSlice } from '../models/plugin.models';
@@ -18,7 +18,8 @@ export class SliceContentHandler implements ContentHandler {
   constructor(
     private tokenizerService: TokenizerService,
     private panelHandler: PanelContentHandler,
-    private mediaHandler: MediaContentHandler
+    private mediaHandler: MediaContentHandler,
+    private attributeSerializer: AttributeSerializerService
   ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
@@ -53,15 +54,17 @@ export class SliceContentHandler implements ContentHandler {
   }
 
   toObject(settings: Array<AttributeValue>): Observable<DataSlice> {
-    return of(new DataSlice({
+    return of(this.attributeSerializer.deserializeAsObject(settings));
+    /*return of(new DataSlice({
       context: settings.find(s => s.name === 'context').value,
       query: settings.find(s => s.name === 'query').value,
       plugin: settings.find(s => s.name === 'plugin').value
-    }));
+    }));*/
   }
 
   buildSettings(dataSlice: DataSlice): Array<AttributeValue> {
-    return [
+    return this.attributeSerializer.serialize(dataSlice, 'root').attributes;
+    /*return [
       new AttributeValue({
         name: 'context',
         type: AttributeTypes.Text,
@@ -89,7 +92,7 @@ export class SliceContentHandler implements ContentHandler {
         intValue: 0,
         attributes: []
       })
-    ];
+    ];*/
   }
 
   extractDataArray(context: InlineContext, query: string): Array<any> {

@@ -44,11 +44,12 @@ export class SnippetContentHandler implements ContentHandler {
   }
 
   toObject(settings: Array<AttributeValue>): Observable<Snippet> {
-    const snippet = new Snippet({
+    /*const snippet = new Snippet({
         content: settings.find(s => s.name === 'content').value,
         contentType: settings.find(s => s.name === 'contentType').value,
     });
-    return of(snippet);
+    return of(snippet);*/
+    return of(new Snippet(this.attributeSerializer.deserializeAsObject(settings)));
   }
 
   buildSettings(snippet: Snippet): Array<AttributeValue> {

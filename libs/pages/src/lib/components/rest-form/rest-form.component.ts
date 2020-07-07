@@ -30,7 +30,9 @@ export class RestFormComponent implements OnInit {
       select: this.fb.group({
         value: this.fb.control(''),
         label: this.fb.control(''),
-        id: this.fb.control('')
+        id: this.fb.control(''),
+        multiple: this.fb.control(''),
+        limit: this.fb.control('')
       })
     })
   });
@@ -59,7 +61,7 @@ export class RestFormComponent implements OnInit {
     this.restForm.get('renderer').get('select').valueChanges.subscribe(v => {
       this.restForm.get('renderer').get('data').setValue({
         contentType: 'application/json',
-        content: JSON.stringify({ value: v.value, label: v.label })
+        content: JSON.stringify({ value: v.value, label: v.label , id: v.id, multiple: v.multiple, limit: v.limit})
       });
     });
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler } from '@classifieds-ui/content';
-import { AttributeValue, AttributeTypes, Attribute } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { of, Observable } from 'rxjs';
 import { PanelPage, Pane, Panel } from '../models/page.models';
 import { InlineContext } from '../models/context.models';
@@ -10,7 +10,7 @@ import { InlineContext } from '../models/context.models';
 })
 export class PanelContentHandler implements ContentHandler {
 
-  constructor() { }
+  constructor(private attributeSerializer: AttributeSerializerService) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
     return of();
@@ -37,7 +37,8 @@ export class PanelContentHandler implements ContentHandler {
   }
 
   toObject(settings: Array<AttributeValue>): Observable<PanelPage> {
-    return of(new PanelPage({
+    return of(this.attributeSerializer.deserializeAsObject(settings));
+    /*return of(new PanelPage({
       id: settings.find(s => s.name === 'id').value,
       displayType: settings.find(s => s.name === 'displayType').value,
       layoutType: settings.find(s => s.name === 'layoutType').value,
@@ -47,11 +48,12 @@ export class PanelContentHandler implements ContentHandler {
         settings: a.attributes.find(s => s.name === 'settings').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})),
         panes: a.attributes.find(s => s.name === 'panes').attributes.map(a => a.attributes.reduce<any>((p, c) => (c.name === 'contexts' ? { ...p, contexts: c.attributes.map(ctx => JSON.parse(ctx.value)) } : c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {}))
       }))
-    }));
+    }));*/
   }
 
   buildSettings(panelPage: PanelPage): Array<AttributeValue> {
-    return [
+    return this.attributeSerializer.serialize(panelPage, 'root').attributes;
+    /*return [
       new AttributeValue({
         name: 'id',
         type: AttributeTypes.Text,
@@ -210,11 +212,13 @@ export class PanelContentHandler implements ContentHandler {
           })]
         }))
       })
-    ];
+    ];*/
   }
 
   fromPanes(panesAsSettings: Array<AttributeValue>): Array<Pane> {
-    return panesAsSettings.map(a => new Pane(a.attributes.reduce<any>((p, c) => ( c.name === 'contexts' ? { ...p, contexts: c.attributes.map(ctx => new InlineContext(JSON.parse(ctx.value))) } : c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})));
+    // return panesAsSettings.map(a => new Pane(a.attributes.reduce<any>((p, c) => ( c.name === 'contexts' ? { ...p, contexts: c.attributes.map(ctx => new InlineContext(JSON.parse(ctx.value))) } : c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})));
+    //return panesAsSettings.map(a => new Pane(a.attributes.reduce<any>((p, c) => ( c.name === 'contexts' ? { ...p, contexts: c.attributes } : c.name === 'settings' ? { ...p, settings: c.attributes } : { ...p, [c.name]: c.value }), {})));
+    return panesAsSettings.map(p => new Pane(this.attributeSerializer.deserialize(p)));
   }
 
   wrapPanel(panes: Array<Pane>): Panel {

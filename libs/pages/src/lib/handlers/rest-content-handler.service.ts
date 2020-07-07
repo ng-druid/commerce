@@ -96,7 +96,8 @@ export class RestContentHandler implements ContentHandler {
     );
   }
   toObject(settings: Array<AttributeValue>): Observable<Rest> {
-    const snip = settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'data').attributes;
+    return of(this.attributeSerializer.deserializeAsObject(settings));
+    /*const snip = settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'data').attributes;
     return this.snippetHandler.toObject(snip).pipe(
       map(data => new Rest({
         url: settings.find(s => s.name === 'url').value,
@@ -106,10 +107,11 @@ export class RestContentHandler implements ContentHandler {
           data
         }
       }))
-    );
+    );*/
   }
   buildSettings(rest: Rest): Array<AttributeValue> {
-    return [
+    return this.attributeSerializer.serialize(rest, 'root').attributes;
+    /*return [
       new AttributeValue({
         name: 'url',
         type: AttributeTypes.Text,
@@ -228,7 +230,7 @@ export class RestContentHandler implements ContentHandler {
           })
         ]
       })
-    ];
+    ];*/
   }
   getRenderType(settings: Array<AttributeValue>) : string {
     const renderType = [settings.find(s => s.name === 'renderer')].map(r => r.attributes.find(s => s.name === 'type'));

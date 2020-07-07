@@ -29,13 +29,19 @@
         </mat-form-field>
         <div *ngIf="isSelectable" formGroupName="select">
           <mat-form-field>
-            <input matInput formControlName="id" placeholder="Id" required>
+            <input matInput formControlName="id" placeholder="Id">
           </mat-form-field>
           <mat-form-field>
-            <input matInput formControlName="value" placeholder="Value" required>
+            <input matInput formControlName="value" placeholder="Value">
           </mat-form-field>
           <mat-form-field>
-            <input matInput formControlName="label" placeholder="Label" required>
+            <input matInput formControlName="label" placeholder="Label">
+          </mat-form-field>
+          <div>
+            <mat-checkbox formControlName="multiple">{{ Multiple }}</mat-checkbox>
+          </div>
+          <mat-form-field>
+            <input matInput formControlName="limit" placeholder="Limit">
           </mat-form-field>
         </div>
       </as-split-area>

@@ -1,7 +1,8 @@
-import { Injectable, Attribute } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { AttributeValue, AttributeTypes } from '../models/attributes.models';
 import { ValueComputerService } from '../services/value-computer.service';
+import * as numeral from 'numeral';
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +18,14 @@ export class AttributeSerializerService {
     if(type !== 'object') {
       return new AttributeValue({
         name: prop,
-        type: type !== 'string' ? AttributeTypes.Number : AttributeTypes.Text,
+        type: type !== 'string' ? type !== 'boolean' ? AttributeTypes.Number: AttributeTypes.Bool : AttributeTypes.Text,
         displayName: prop,
         value: `${obj}`,
         intValue: undefined,
-        computedValue: this.valueComputer.resolveComputedValue(`${obj}`, type !== 'string' ? AttributeTypes.Number : AttributeTypes.Text),
+        computedValue: this.valueComputer.resolveComputedValue(`${obj}`, type !== 'string' ? type !== 'boolean' ? AttributeTypes.Number : AttributeTypes.Bool : AttributeTypes.Text),
         attributes: []
       });
-    } else if(Array.isArray(obj) && prop === 'attributes') {
+    } else if(Array.isArray(obj) && (prop === 'attributes' || prop === 'settings')) {
       return new AttributeValue({
         name: prop,
         type: AttributeTypes.Complex,
@@ -39,7 +40,8 @@ export class AttributeSerializerService {
       const attrValues: Array<AttributeValue> = [];
       for(let i=0; i < len; i++) {
         if(typeof(obj[i]) !== 'object') {
-          attrValues.push(this.serialize({ value: obj[i] }, `${i}`));
+          // attrValues.push(this.serialize({ value: obj[i] }, `${i}`));
+          attrValues.push(this.serialize( obj[i], `${i}`));
         } else {
           attrValues.push(this.serialize(obj[i], `${i}`));
         }
@@ -71,9 +73,55 @@ export class AttributeSerializerService {
 
   }
 
+  deserializeAsObject(attrValues: Array<AttributeValue>): any {
+    return this.deserialize(new AttributeValue({
+      name: 'root',
+      type: AttributeTypes.Complex,
+      displayName: 'root',
+      value: undefined,
+      computedValue: undefined,
+      intValue: 0,
+      attributes: attrValues
+    }));
+  }
+
   deserialize(attrValue: AttributeValue): any {
     let obj: any;
-    console.log(attrValue);
+    let len: number;
+    switch(attrValue.type) {
+      case AttributeTypes.Complex:
+        if(attrValue.name === 'attributes' || attrValue.name === 'settings') {
+          obj = attrValue.attributes.map(a => new AttributeValue(a));
+        } else {
+          len = attrValue.attributes.length;
+          for(let i = 0; i < len; i++) {
+            obj = { ...obj, [attrValue.attributes[i].name]: this.deserialize(attrValue.attributes[i]) }
+          }
+        }
+        break;
+      case AttributeTypes.Bool:
+        obj = attrValue.value !== undefined ? ['1','true','on'].findIndex(b => b === attrValue.value) > -1 : undefined;
+        break;
+      case AttributeTypes.Number:
+      case AttributeTypes.Float:
+        obj = attrValue.value !== undefined && attrValue.value !== '' ? numeral(attrValue.value.trim()).value() : undefined;
+        break;
+      case AttributeTypes.Text:
+        obj = attrValue.value;
+        break;
+      case AttributeTypes.Array:
+        if(attrValue.name === 'attributes' || attrValue.name === 'settings') {
+          obj = attrValue.attributes.map(a => new AttributeValue(a));
+        } else {
+          len = attrValue.attributes.length;
+          obj = [];
+          for(let i = 0; i < len; i ++) {
+            obj = [ ...obj, this.deserialize(attrValue.attributes[i]) ];
+          }
+        }
+        break;
+      default:
+    }
     return obj;
   }
 

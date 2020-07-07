@@ -39,7 +39,7 @@ export class MediaContentHandler implements ContentHandler {
   }
 
   toObject(settings: Array<AttributeValue>): Observable<MediaFile> {
-    const mediaFile = new MediaFile({
+    /*const mediaFile = new MediaFile({
         path: settings.find(s => s.name === 'path').value,
         contentType: settings.find(s => s.name === 'contentType').value,
         contentDisposition: settings.find(s => s.name === 'contentDisposition').value,
@@ -47,7 +47,8 @@ export class MediaContentHandler implements ContentHandler {
         length: parseInt(settings.find(s => s.name === 'length').value),
         fileName: settings.find(s => s.name === 'fileName').value
     });
-    return of(mediaFile);
+    return of(mediaFile);*/
+    return of(this.attributeSerializer.deserializeAsObject(settings));
   }
 
   buildSettings(mediaFile: MediaFile): Array<AttributeValue> {

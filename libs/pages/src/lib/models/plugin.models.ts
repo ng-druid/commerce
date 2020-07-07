@@ -43,11 +43,15 @@ export class SelectMapping {
   value: string;
   label: string;
   id: string;
+  multiple: boolean;
+  limit: number;
   constructor(data?: SelectMapping) {
     if(data) {
       this.value = data.value;
       this.label = data.label;
       this.id = data.id;
+      this.multiple = data.multiple;
+      this.limit = data.limit;
     }
   }
 }
