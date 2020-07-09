@@ -19,6 +19,7 @@ export class CreatePanelPageComponent implements OnInit {
   }
 
   onSubmit(panelPage: PanelPage) {
+    console.log(panelPage);
     this.panelPageService.add(panelPage).subscribe(() => {
       alert('panel page created');
     });

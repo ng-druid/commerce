@@ -35,6 +35,7 @@ export class SnippetEditorComponent implements OnInit {
         contentPlugin: 'snippet',
         name: new FormControl(''),
         label: new FormControl(''),
+        rule: new FormControl(''),
         settings: new FormArray(this.buildSettings(snippet))
       }));
     } else {

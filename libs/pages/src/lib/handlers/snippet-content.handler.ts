@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ContentHandler } from '@classifieds-ui/content';
+import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
 import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Snippet } from '../models/plugin.models';
+import { Dataset } from '../models/datasource.models';
 
 @Injectable()
 export class SnippetContentHandler implements ContentHandler {
@@ -37,6 +38,14 @@ export class SnippetContentHandler implements ContentHandler {
 
   isDynamic(settings: Array<AttributeValue>): boolean {
     return false;
+  }
+
+  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
+    return of([]);
+  }
+
+  fetchDynamicData(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<any> {
+    return of(new Dataset());
   }
 
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {

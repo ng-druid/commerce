@@ -34,6 +34,7 @@ export class RestEditorComponent implements OnInit {
       contentPlugin: 'rest',
       name: new FormControl(''),
       label: new FormControl(''),
+      rule: new FormControl(''),
       settings: this.fb.array(this.handler.buildSettings(rest).map(s => this.convertToGroup(s)))
     }));
     this.dialogRef.close();

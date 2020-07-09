@@ -8,6 +8,8 @@ export interface ContentHandler {
   implementsRendererOverride(): boolean
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean>
   isDynamic(settings: Array<AttributeValue>): boolean
+  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>>;
+  fetchDynamicData(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<any>;
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>>
 }
 
@@ -27,6 +29,17 @@ export class ContentPlugin {
       this.selectionComponent = data.selectionComponent ? data.selectionComponent : undefined;
       this.renderComponent = data.renderComponent ? data.renderComponent: undefined;
       this.editorComponent = data.editorComponent ? data.editorComponent: undefined;
+    }
+  }
+}
+
+export class ContentBinding {
+  type: string;
+  id: string;
+  constructor(data?: ContentBinding) {
+    if(data) {
+      this.type = data.type;
+      this.id = data.id;
     }
   }
 }

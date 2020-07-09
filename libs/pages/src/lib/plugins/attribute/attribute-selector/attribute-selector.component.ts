@@ -42,6 +42,7 @@ export class AttributeSelectorComponent implements OnInit {
       contentPlugin: 'attribute',
       name: new FormControl(''),
       label: new FormControl(''),
+      rule: new FormControl(''),
       settings: this.fb.array(this.handler.widgetSettings(widget).map(s => this.fb.group({
         name: new FormControl(s.name, Validators.required),
         type: new FormControl(s.type, Validators.required),

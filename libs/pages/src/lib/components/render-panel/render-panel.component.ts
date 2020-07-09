@@ -11,6 +11,8 @@ import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { switchMap, map, tap, take, filter } from 'rxjs/operators';
 import { of, forkJoin, Observable } from 'rxjs';
 import { InlineContext } from '../../models/context.models';
+import { RuleSet } from 'angular2-query-builder';
+import { RulesResolverService } from '../../services/rules-resolver.service';
 
 @Component({
   selector: 'classifieds-ui-render-panel',
@@ -78,7 +80,8 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
     private componentFactoryResolver: ComponentFactoryResolver,
     private panelHandler: PanelContentHandler,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private rulesResolver: RulesResolverService
   ) {
     this.counter = RenderPanelComponent.COUNTER++;
     this.stylePlugins = stylePlugins;
@@ -142,6 +145,15 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
         return [ ...p ];
       }
     }, []);
+
+    /*this.panel.panes.forEach(p => {
+      if(p.rule !== undefined && p.rule !== null && p.rule.condition !== '') {
+        this.rulesResolver.evaluate(p.rule, p.contexts).subscribe(res => {
+          console.log('evaluate rule');
+          console.log(res);
+        });
+      }
+    });*/
 
     const panes$ = this.panel.panes.reduce<Array<Observable<Array<Pane>>>>((p, c, index) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);

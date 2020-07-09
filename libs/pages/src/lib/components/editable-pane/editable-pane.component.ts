@@ -37,6 +37,9 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   delete = new EventEmitter();
 
   @Output()
+  rules = new EventEmitter();
+
+  @Output()
   rendererOverride = new EventEmitter();
 
   @Output()
@@ -89,6 +92,10 @@ export class EditablePaneComponent implements OnInit, OnChanges {
 
   onEditClick() {
     this.edit.emit();
+  }
+
+  onRulesClick() {
+    this.rules.emit();
   }
 
   onDeleteClick() {

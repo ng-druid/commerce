@@ -44,6 +44,7 @@ export class MediaEditorComponent implements OnInit {
           contentPlugin: 'media',
           name: new FormControl(''),
           label: new FormControl(''),
+          rule: new FormControl(''),
           settings: new FormArray(settings.map(s => this.fb.group({
             name: new FormControl(s.name, Validators.required),
             type: new FormControl(s.type, Validators.required),

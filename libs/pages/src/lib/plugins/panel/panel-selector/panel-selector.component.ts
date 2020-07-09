@@ -50,6 +50,7 @@ export class PanelSelectorComponent implements OnInit {
       contentPlugin: 'panel',
       name: name,
       label: name,
+      rule: new FormControl(''),
       settings: this.fb.array(this.handler.buildSettings(newPanel).map(s => this.convertToGroup(s)))
     }));
     this.bottomSheetRef.dismiss();
@@ -62,6 +63,7 @@ export class PanelSelectorComponent implements OnInit {
         contentPlugin: 'panel',
         name: '',
         label: '',
+        rule: new FormControl(''),
         settings: this.fb.array(this.handler.buildSettings(p).map(s => this.convertToGroup(s)))
       }));
       this.bottomSheetRef.dismiss();

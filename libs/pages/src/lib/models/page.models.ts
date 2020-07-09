@@ -1,4 +1,5 @@
 // import { ContentInstance } from '@classifieds-ui/content';
+import { RuleSet } from 'angular2-query-builder';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { InlineContext } from './context.models';
 
@@ -66,6 +67,7 @@ export class Pane {
   settings: Array<AttributeValue> = [];
   metadata?: Map<string, any>;
   contexts?: Array<InlineContext> = [];
+  rule?: RuleSet;
   constructor(data?: Pane) {
     if(data) {
       this.name = data.name;
@@ -79,6 +81,9 @@ export class Pane {
       }
       if(data.contexts !== undefined) {
         this.contexts = data.contexts.map(c => new InlineContext(c));
+      }
+      if(data.rule !== undefined && typeof(data.rule) !== 'string') {
+        this.rule = { ...data.rule } as RuleSet;
       }
     }
   }

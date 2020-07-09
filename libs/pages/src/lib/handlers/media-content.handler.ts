@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ContentHandler } from '@classifieds-ui/content';
+import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
 import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Dataset } from '../models/datasource.models';
 
 @Injectable()
 export class MediaContentHandler implements ContentHandler {
@@ -35,6 +36,14 @@ export class MediaContentHandler implements ContentHandler {
   }
 
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
+    return of([]);
+  }
+
+  fetchDynamicData(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<any> {
+    return of(new Dataset());
+  }
+
+  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
     return of([]);
   }
 

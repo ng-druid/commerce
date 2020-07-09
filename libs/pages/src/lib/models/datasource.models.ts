@@ -1,4 +1,5 @@
 import { Snippet } from './plugin.models';
+import { ContentBinding } from '@classifieds-ui/content';
 
 export class Rest {
   url: string;
@@ -20,10 +21,14 @@ export class Rest {
 export class Renderer {
   type: string;
   data: Snippet;
+  bindings: Array<ContentBinding>;
   constructor(data?: Renderer) {
     if(data) {
       this.type = data.type;
       this.data = new Snippet(data.data);
+      if(data.bindings !== undefined) {
+        this.bindings = data.bindings.map(b => new ContentBinding(b));
+      }
     }
   }
 }

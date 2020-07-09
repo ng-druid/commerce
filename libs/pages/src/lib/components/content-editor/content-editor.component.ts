@@ -1,9 +1,11 @@
 import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef, OnChanges, SimpleChanges, TemplateRef, ContentChild } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
+import * as uuid from 'uuid';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
+import { ContentPlugin, CONTENT_PLUGIN, ContentBinding } from '@classifieds-ui/content';
+import { TokenizerService } from '@classifieds-ui/token';
 import { StylePlugin, STYLE_PLUGIN } from '@classifieds-ui/style';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,10 +13,14 @@ import { Pane, PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RenderingEditorComponent } from '../rendering-editor/rendering-editor.component';
-import { debounceTime, delay, filter } from 'rxjs/operators';
+import { Observable, forkJoin, iif, of } from 'rxjs';
+import { debounceTime, delay, filter, map, tap, switchMap } from 'rxjs/operators';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
 import { StyleSelectorComponent } from '../style-selector/style-selector.component';
+import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
+import { Dataset } from '../../models/datasource.models';
+import { InlineContext } from '../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -31,6 +37,9 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   @Output()
   delete = new EventEmitter();
+
+  @Output()
+  rules = new EventEmitter();
 
   @Input()
   panelPage: PanelPage;
@@ -125,7 +134,8 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private bs: MatBottomSheet,
     private dialog: MatDialog,
-    private panelHandler: PanelContentHandler
+    private panelHandler: PanelContentHandler,
+    private tokenizerService: TokenizerService
   ) {
     this.contentPlugins = contentPlugins;
     this.stylePlugins = stylePlugins;
@@ -181,6 +191,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
             contentPlugin: pp.contentPlugin,
             name: new FormControl(pp.name),
             label: new FormControl(pp.label),
+            rule: new FormControl(''),
             settings: new FormArray(pp.settings.map(s => this.convertToGroup(s)))
           }));
         });
@@ -300,6 +311,46 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     this.delete.emit();
   }
 
+  onRulesClick() {
+    this.rules.emit();
+  }
+
+  onRulesPane(index: number, index2: number) {
+    const pane = new Pane(this.panelPane(index, index2).value);
+
+    const bindings$: Array<Observable<[number, Array<ContentBinding>]>> = [];
+    this.panelPanes(index).controls.forEach((c, i) => {
+      if(i !== index2) {
+        const pane = new Pane({ ...c.value });
+        const plugin = this.contentPlugins.find(p => p.name === pane.contentPlugin);
+        if(plugin.handler !== undefined && plugin.handler.isDynamic(pane.settings)) {
+          bindings$.push(plugin.handler.getBindings(pane.settings).pipe(
+            map(bindings => [i, bindings])
+          ));
+        }
+      }
+    });
+
+    forkJoin(bindings$).pipe(
+      map(pb => pb.reduce<Array<number>>((p, [i, b]) => [ ...p, ...(b.findIndex(cb => cb.type === 'pane' && cb.id === pane.name) > -1 ? [ i ] : []) ], [])),
+      map(indexes => indexes.length === 0 ? undefined : indexes[0]),
+      switchMap(i => iif(
+        () => i !== undefined,
+        this.contentPlugins.find(c => c.name === new Pane({ ...this.panelPane(index, i).value }).contentPlugin).handler.fetchDynamicData(new Pane({ ...this.panelPane(index, i).value }).settings, new Map<string, any>([ ['tag', uuid.v4()] ])),
+        of(new Dataset())
+      ))
+    ).subscribe(dataset => {
+      const contexts = [ ...(dataset.results.length > 0 ? [new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })] : []) ];
+      this.dialog
+        .open(RulesDialogComponent, { data: { contexts } })
+        .afterClosed()
+        .subscribe(r => {
+          this.panelPane(index, index2).get('rule').setValue(r);
+        });
+    });
+
+  }
+
   onDeletePane(index: number, index2: number) {
     console.log(`delete nested pane: ${index} | ${index2}`);
   }
@@ -310,6 +361,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   packageFormData(): PanelPage {
     this.syncNestedPanelPages();
+    console.log(this.panels.value);
     return new PanelPage({
       id: this.panelPageId,
       displayType: this.displayType.value,

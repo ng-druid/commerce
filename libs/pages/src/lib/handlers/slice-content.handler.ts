@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ContentHandler } from '@classifieds-ui/content';
+import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
 import { TokenizerService } from '@classifieds-ui/token';
 import { MediaFile } from '@classifieds-ui/media';
 import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
@@ -10,7 +10,7 @@ import { InlineContext } from '../models/context.models';
 import { MediaContentHandler } from './media-content.handler';
 import { PanelContentHandler } from './panel-content.handler';
 import { Pane, Panel, PanelPage } from '../models/page.models';
-import { POINT_CONVERSION_UNCOMPRESSED } from 'constants';
+import { Dataset } from '../models/datasource.models';
 
 @Injectable()
 export class SliceContentHandler implements ContentHandler {
@@ -42,6 +42,10 @@ export class SliceContentHandler implements ContentHandler {
     return true;
   }
 
+  fetchDynamicData(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<any> {
+    return of(new Dataset());
+  }
+
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     return this.toObject(settings).pipe(
       map(slice => [slice, metadata.get('contexts').find((c: InlineContext)  => c.name === slice.context)]),
@@ -51,6 +55,10 @@ export class SliceContentHandler implements ContentHandler {
       map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, layoutType: 'grid', displayType: 'page', gridItems: [], panels: [ panel ] }))),
       map(panelSettings => panelSettings.find(s => s.name === 'panels').attributes[0].attributes.find(s => s.name === 'panes').attributes)
     );
+  }
+
+  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
+    return of([]);
   }
 
   toObject(settings: Array<AttributeValue>): Observable<DataSlice> {

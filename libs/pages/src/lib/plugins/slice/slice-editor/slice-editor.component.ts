@@ -30,6 +30,7 @@ export class SliceEditorComponent implements OnInit {
       contentPlugin: 'slice',
       name: new FormControl(''),
       label: new FormControl(''),
+      rule: new FormControl(''),
       settings: this.fb.array(this.handler.buildSettings(dataSlice).map(s => this.convertToGroup(s)))
     }));
     this.dialogRef.close();
