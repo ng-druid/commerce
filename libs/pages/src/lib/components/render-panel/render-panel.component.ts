@@ -146,48 +146,50 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
       }
     }, []);
 
-    /*this.panel.panes.forEach(p => {
-      if(p.rule !== undefined && p.rule !== null && p.rule.condition !== '') {
-        this.rulesResolver.evaluate(p.rule, p.contexts).subscribe(res => {
-          console.log('evaluate rule');
-          console.log(res);
-        });
-      }
-    });*/
-
-    const panes$ = this.panel.panes.reduce<Array<Observable<Array<Pane>>>>((p, c, index) => {
+    forkJoin(this.panel.panes.reduce<Array<Observable<Array<string>>>>((p, c) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
-      /*if(staticPanes.findIndex(sp => sp.name === c.name) > -1) {
-        return [ ...p ];
-      }*/
-      if(plugin.handler !== undefined && plugin.handler.isDynamic(c.settings)) {
-        return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata),['tag', uuid.v4()], ['panes', staticPanes], ['contexts', this.contexts !== undefined ? this.contexts: [] ] ])).pipe(
-          map(items => this.panelHandler.fromPanes(items)),
-          map(panes => this.panelHandler.wrapPanel(panes).panes),
-          take(1)
-        )];
+      if(plugin.handler !== undefined) {
+        return [ ...p, plugin.handler.getBindings(c.settings).pipe(
+          map(c => c.map(c => c.id))
+        ) ];
       } else {
-        return [ ...p, of([ new Pane({ ...c, contexts: this.mergeContexts(c.contexts) }) ])];
+        return [ ...p, of([])];
       }
-    }, []);
-
-    forkJoin(panes$).pipe(
-      tap(paneGroups => {
-        this.resolvedPanes = [];
-        this.originMappings = [];
-        paneGroups.forEach((panes, index) => {
-          this.resolvedPanes = [ ...(this.resolvedPanes === undefined ? [] : this.resolvedPanes), ...panes ];
-          this.originMappings = [ ...(this.originMappings ? [] : this.originMappings), ...panes.map(() => index)];
-          if(this.paneContainer && this.stylePlugin === undefined) {
-            setTimeout(() => this.heightChange.emit(this.paneContainer.nativeElement.offsetHeight));
+    }, [])).pipe(
+      map(groups => groups.reduce<Array<string>>((p, c) => [ ...p, ...c ], [])),
+      switchMap(bindings => forkJoin(
+        this.panel.panes.reduce<Array<Observable<Array<Pane>>>>((p, c) => {
+          const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
+          if(plugin.handler !== undefined && plugin.handler.isDynamic(c.settings)) {
+            return [ ...p, plugin.handler.buildDynamicItems(c.settings, new Map<string, any>([ ...(c.metadata === undefined ? [] : c.metadata),['tag', uuid.v4()], ['panes', staticPanes], ['contexts', this.contexts !== undefined ? this.contexts: [] ] ])).pipe(
+              map(items => this.panelHandler.fromPanes(items)),
+              map<Array<Pane>, Array<Pane>>(panes => this.panelHandler.wrapPanel(panes).panes),
+              take(1)
+            )];
+          } else if(c.name === '' || bindings.findIndex(n => n === c.name) === -1) {
+            return [ ...p , of([ new Pane({ ...c, contexts: this.mergeContexts(c.contexts) }) ]) ];
+          } else {
+            return [ ...p ];
           }
-        });
-        this.populatePanesFormArray();
-      }),
-      filter(() => this.stylePlugin !== undefined)
+        }, [])
+      ).pipe(
+        tap(paneGroups => {
+          this.resolvedPanes = [];
+          this.originMappings = [];
+          paneGroups.forEach((panes, index) => {
+            this.resolvedPanes = [ ...(this.resolvedPanes === undefined ? [] : this.resolvedPanes), ...panes ];
+            this.originMappings = [ ...(this.originMappings ? [] : this.originMappings), ...panes.map(() => index)];
+            if(this.paneContainer && this.stylePlugin === undefined) {
+              setTimeout(() => this.heightChange.emit(this.paneContainer.nativeElement.offsetHeight));
+            }
+          });
+          this.populatePanesFormArray();
+        }),
+        filter(() => this.stylePlugin !== undefined)
+      ))
     ).subscribe(() => {
       this.renderPanelContent();
-    });
+    })
   }
 
   renderPanelContent() {
