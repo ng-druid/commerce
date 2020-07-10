@@ -18,21 +18,40 @@ export class UrlGeneratorService {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
     return this.routerStore.pipe(
       select(selectCurrentRoute),
-      map(route => {
-        console.log(route);
-        if(url.indexOf('?') === -1) {
-          return url;
+      map(route => [route, url, url.indexOf('?')]),
+      map(([route, url, index]) => [route, (index > -1 ? url.substring(0, index) : url), (index > -1 ? url.substring(index + 1) : '')]),
+      map(([route, path, queryString]) => {
+        const qsParsed = qs.parse(queryString);
+        const qsOverrides = {};
+        const pathPieces = path.split('/');
+        const len = pathPieces.length;
+        const rebuildUrl = [];
+        const newMeta = new Map<string, any>([ ...metadata, ['_route', route] ]);
+        let pathParams = 0;
+        for(let i = 0; i < len; i++) {
+          if(pathPieces[i].indexOf(':') > -1) {
+            rebuildUrl.push(this.paramValue(params[pathParams], newMeta));
+            pathParams++;
+          } else {
+            rebuildUrl.push(pathPieces[i]);
+          }
         }
-        const parsed = qs.parse(url.substring(url.indexOf('?') + 1));
-        const params2 = params.reduce<any>((p, c, i) => ({ ...p, [this.paramName(url, i)]: this.paramValue(c, new Map<string, any>([ ...metadata, ['_route', route] ])) }), {});
-        const apiUrl = url.substring(0, url.indexOf('?') + 1) + qs.stringify({ ...parsed, ...params2 });
+        for(const prop in qsParsed) {
+          if(qsParsed[prop].indexOf(':') > -1) {
+            qsOverrides[prop] = this.paramValue(params[pathParams], newMeta);
+            pathParams++;
+          }
+        }
+        const apiUrl = rebuildUrl.join('/') + (queryString !== '' ? '?' + qs.stringify({ ...qsParsed, ...qsOverrides }) : '');
         return apiUrl;
       })
     );
   }
 
   paramName(url: string, index: number): string {
-    const parsed = qs.parse(url.substring(url.indexOf('?') + 1));
+    const indexPos = url.indexOf('?');
+    const pathParsed = ((indexPos > -1 ? url.substring(0, indexPos) : url) as string).split('/').reduce<any>((p, c, i) => (c.indexOf(':') === 0 ? { ...p, [c.substr(1)]: c } : p ), {});
+    const parsed = { ...pathParsed, ...qs.parse(url.substring(url.indexOf('?') + 1)) };
     let i = 0;
     for(const param in parsed) {
       if(parsed[param].indexOf(':') === 0) {

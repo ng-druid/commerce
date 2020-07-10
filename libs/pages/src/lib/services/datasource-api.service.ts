@@ -10,8 +10,8 @@ import { map } from 'rxjs/operators';
 export class DatasourceApiService {
   constructor(private config: DefaultDataServiceConfig, private http: HttpClient) { }
   getData(url: string): Observable<Array<any>> {
-    return this.http.get<Array<any>>(`${this.config.root}${url}`)/*.pipe(
-      map(data => Object.assign(new c(), data))
-    );*/
+    return this.http.get<Array<any>>(`${this.config.root}${url}`).pipe(
+      map(data => Array.isArray(data) ? data: [data])
+    );
   }
 }
