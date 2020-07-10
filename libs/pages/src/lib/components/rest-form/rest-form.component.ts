@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormArray, Validators } from '@angular/forms';
 import { TokenizerService } from '@classifieds-ui/token';
 import { Rest } from '../../models/datasource.models';
 
@@ -19,6 +19,8 @@ export class RestFormComponent implements OnInit {
   contexts = [];
   forms = [];
 
+  snippetValidation = true;
+
   tokens: Map<string, any>;
 
   restForm = this.fb.group({
@@ -26,7 +28,7 @@ export class RestFormComponent implements OnInit {
     renderer: this.fb.group({
       type: 'snippet',
       data: this.fb.control(''),
-      pane: this.fb.control(''),
+      bindings: this.fb.array([]),
       select: this.fb.group({
         value: this.fb.control(''),
         label: this.fb.control(''),
@@ -45,6 +47,14 @@ export class RestFormComponent implements OnInit {
     return this.restForm.get('renderer').get('type').value && this.restForm.get('renderer').get('type').value !== 'snippet' && this.restForm.get('renderer').get('type').value !== 'pane';
   }
 
+  get bindings() {
+    return this.restForm.get('renderer').get('bindings') as FormArray;
+  }
+
+  get valid() {
+    return this.restForm.valid;
+  }
+
   constructor(
     private fb: FormBuilder,
     private tokenizerService: TokenizerService
@@ -52,10 +62,15 @@ export class RestFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.restForm.get('renderer').get('pane').valueChanges.subscribe(v => {
+    this.restForm.get('renderer').get('type').valueChanges.subscribe(v => {
+      if(this.rendererType.value === 'pane') {
+        this.restForm.get('renderer').get('data').disable();
+      } else {
+        this.restForm.get('renderer').get('data').enable();
+      }
       this.restForm.get('renderer').get('data').setValue({
-        contentType: 'text',
-        content: v
+        contentType: '',
+        content: ''
       });
     });
     this.restForm.get('renderer').get('select').valueChanges.subscribe(v => {
@@ -68,6 +83,13 @@ export class RestFormComponent implements OnInit {
 
   onDataChange(data: any) {
     this.tokens = this.tokenizerService.generateGenericTokens(data[0]);
+  }
+
+  addPane() {
+    this.bindings.push(this.fb.group({
+      type: this.fb.control('pane', Validators.required),
+      id: this.fb.control('', Validators.required)
+    }));
   }
 
   submit() {

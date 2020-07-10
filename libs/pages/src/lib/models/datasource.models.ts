@@ -25,7 +25,9 @@ export class Renderer {
   constructor(data?: Renderer) {
     if(data) {
       this.type = data.type;
-      this.data = new Snippet(data.data);
+      if(data.data !== undefined) {
+        this.data = new Snippet(data.data);
+      }
       if(data.bindings !== undefined) {
         this.bindings = data.bindings.map(b => new ContentBinding(b));
       }

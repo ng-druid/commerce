@@ -5,7 +5,7 @@ import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of, Subject, iif, forkJoin, from } from 'rxjs';
 import * as uuid from 'uuid';
-import { map, filter, switchMap, tap, first } from 'rxjs/operators';
+import { map, filter, switchMap, tap, take, defaultIfEmpty } from 'rxjs/operators';
 import { Rest, Param, Mapping, Dataset } from '../models/datasource.models';
 import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
 import { selectDataset } from '../features/page-builder/page-builder.selectors';
@@ -84,12 +84,19 @@ export class RestContentHandler implements ContentHandler {
           forkJoin(
             dataset.results.map(row => from(bindings).pipe(
               map(binding => (metadata.get('panes') as Array<Pane>).find(p => p.name === binding.id)),
-              switchMap(pane => this.rulesResolver.evaluate(pane.rule,[ ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
-                map<boolean, [Pane, boolean]>(res => [pane, res])
+              switchMap(pane => iif(
+                () => pane.rule && pane.rule !== null && pane.rule.condition !== '',
+                this.rulesResolver.evaluate(pane.rule,[ ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
+                  map<boolean, [Pane, boolean]>(res => [pane, res])
+                ),
+                of(false).pipe(
+                  map<boolean, [Pane, boolean]>(b => [pane, b])
+                )
               )),
-              filter(([pane, res]) => !!res),
+              filter(([pane, res]) => res),
               map(([pane, res]) => pane.name),
-              first()
+              defaultIfEmpty(bindings[0].id),
+              take(1)
             ))
           ).pipe(
             map<Array<string>, [Dataset, Array<string>]>(groups => [dataset, groups])
@@ -99,7 +106,7 @@ export class RestContentHandler implements ContentHandler {
           )
         )),
         map(([dataset, paneMappings]) => {
-          if(r.renderer.data.contentType === 'text') {
+          if(r.renderer.type === 'pane') {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);
               const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
@@ -142,7 +149,7 @@ export class RestContentHandler implements ContentHandler {
     return this.toObject(settings).pipe(
       switchMap(rest => iif(
         () => rest.renderer.type === 'pane',
-        of([new ContentBinding({ type: 'pane', id: rest.renderer.data.content })]),
+        of(rest.renderer.bindings),
         of([])
       ))
     );

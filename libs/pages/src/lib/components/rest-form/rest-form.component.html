@@ -21,12 +21,19 @@
           </mat-select>
         </mat-form-field>
         <classifieds-ui-snippet-form [hidden]="rendererType.value != 'snippet'" formControlName="data" [rootForm]="false" splitDirection="horizontal" rows="10" cols="40" [tokens]="tokens"></classifieds-ui-snippet-form>
-        <mat-form-field *ngIf="rendererType.value == 'pane'">
-          <mat-label>Panes</mat-label>
-          <mat-select required formControlName="pane">
-            <mat-option *ngFor="let pane of panes" [value]="pane">{{ pane }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div *ngIf="rendererType.value == 'pane'" formArrayName="bindings">
+          <button type="button" (click)="addPane()">Add Pane</button>
+          <div>
+            <div *ngFor="let binding of bindings.controls; let i = index">
+              <mat-form-field [formGroupName]="i">
+                <mat-label>Pane</mat-label>
+                <mat-select required formControlName="id">
+                  <mat-option *ngFor="let pane of panes" [value]="pane">{{ pane }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
         <div *ngIf="isSelectable" formGroupName="select">
           <mat-form-field>
             <input matInput formControlName="id" placeholder="Id">
@@ -48,6 +55,6 @@
     </as-split>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button type="submit" mat-raised-button color="primary" mat-dialog-close [disabled]="!restForm.valid">Save</button>
+    <button type="submit" mat-raised-button color="primary" mat-dialog-close [disabled]="!valid">Save</button>
   </mat-dialog-actions>
 </form>

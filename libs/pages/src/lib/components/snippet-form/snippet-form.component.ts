@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormGroup,FormControl, FormBuilder, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Snippet } from '../../models/plugin.models';
 
@@ -66,10 +66,10 @@ export class SnippetFormComponent implements OnInit, ControlValueAccessor, Valid
       map(v => this.tokens !== undefined ? this.replaceTokens(v) : v)
     ).subscribe(v => {
       this.preview = v;
-    })
+    });
     this.contentForm.get("contentType").valueChanges.subscribe(v => {
       this.isMarkdown = v === 'text/markdown'
-    })
+    });
   }
 
   writeValue(val: any): void {
