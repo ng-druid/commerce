@@ -34,7 +34,8 @@
       "@classifieds-ui/pages": ["libs/pages/src/index.ts"],
       "@classifieds-ui/content": ["libs/content/src/index.ts"],
       "@classifieds-ui/token": ["libs/token/src/index.ts"],
-      "@classifieds-ui/style": ["libs/style/src/index.ts"]
+      "@classifieds-ui/style": ["libs/style/src/index.ts"],
+      "@classifieds-ui/context": ["libs/context/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

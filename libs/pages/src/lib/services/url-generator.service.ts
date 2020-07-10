@@ -19,6 +19,7 @@ export class UrlGeneratorService {
     return this.routerStore.pipe(
       select(selectCurrentRoute),
       map(route => {
+        console.log(route);
         if(url.indexOf('?') === -1) {
           return url;
         }

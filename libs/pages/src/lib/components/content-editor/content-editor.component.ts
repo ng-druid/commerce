@@ -7,6 +7,7 @@ import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN, ContentBinding } from '@classifieds-ui/content';
 import { TokenizerService } from '@classifieds-ui/token';
 import { StylePlugin, STYLE_PLUGIN } from '@classifieds-ui/style';
+import { ContextManagerService } from '@classifieds-ui/context';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pane, PanelPage } from '../../models/page.models';
@@ -22,6 +23,7 @@ import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 import { Dataset } from '../../models/datasource.models';
 import { InlineContext } from '../../models/context.models';
 import { Rule as NgRule } from 'angular2-query-builder';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -136,7 +138,8 @@ export class ContentEditorComponent implements OnInit, OnChanges {
     private bs: MatBottomSheet,
     private dialog: MatDialog,
     private panelHandler: PanelContentHandler,
-    private tokenizerService: TokenizerService
+    private tokenizerService: TokenizerService,
+    private contextManager: ContextManagerService
   ) {
     this.contentPlugins = contentPlugins;
     this.stylePlugins = stylePlugins;
@@ -319,6 +322,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   onRulesPane(index: number, index2: number) {
     const pane = new Pane(this.panelPane(index, index2).value);
     const rule = this.panelPane(index, index2).get('rule').value !== '' ? this.panelPane(index, index2).get('rule').value as NgRule : undefined;
+    const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
 
     const bindings$: Array<Observable<[number, Array<ContentBinding>]>> = [];
     this.panelPanes(index).controls.forEach((c, i) => {
@@ -343,7 +347,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
           of(new Dataset())
         ))
       ).subscribe(dataset => {
-        const contexts = [ ...(dataset.results.length > 0 ? [new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })] : []) ];
+        const contexts = [ ...(dataset.results.length > 0 ? [ ...globalContexts, new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })] : [ ...globalContexts ]) ];
         this.dialog
           .open(RulesDialogComponent, { data: { rule, contexts } })
           .afterClosed()
@@ -352,7 +356,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
           });
       });
     } else {
-      const contexts = [new InlineContext({ name: '_root', adaptor: 'data', data: { test: 0 } })];
+      const contexts = [ ...globalContexts, new InlineContext({ name: '_root', adaptor: 'data', data: { test: 0 } })];
       this.dialog
       .open(RulesDialogComponent, { data: { rule, contexts: (pane.contexts !== undefined ? [ ...contexts, pane.contexts ] : contexts)  } })
       .afterClosed()

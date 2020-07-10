@@ -15,6 +15,7 @@ import { UtilsModule, CorrelationInterceptor } from '@classifieds-ui/utils';
 import { MaterialModule } from '@classifieds-ui/material';
 import { LOGGING_SETTINGS, LoggingSettings, LoggingModule, HttpErrorInterceptor, GlobalErrorHandler } from '@classifieds-ui/logging';
 import { TokenModule } from '@classifieds-ui/token';
+import { ContextModule } from '@classifieds-ui/context';
 import { CHAT_SETTINGS, ChatSettings } from '@classifieds-ui/chat';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { PROFILE_SETTINGS, ProfileSettings } from '@classifieds-ui/profiles';
@@ -128,6 +129,7 @@ export function markedOptionsFactory(): MarkedOptions {
     UtilsModule,
     LoggingModule,
     TokenModule,
+    ContextModule,
     AuthModule.forRoot(),
     MediaModule,
     NxModule.forRoot(),

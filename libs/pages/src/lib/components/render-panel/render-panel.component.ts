@@ -3,13 +3,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, Fo
 import { Panel } from '../../models/page.models';
 import * as uuid from 'uuid';
 import { AttributeValue } from '@classifieds-ui/attributes';
+import { ContextManagerService } from '@classifieds-ui/context';
 import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
 import { STYLE_PLUGIN, StylePlugin } from '@classifieds-ui/style';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { Pane } from '../../models/page.models';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { switchMap, map, tap, take, filter } from 'rxjs/operators';
-import { of, forkJoin, Observable } from 'rxjs';
+import { of, forkJoin, Observable, iif } from 'rxjs';
 import { InlineContext } from '../../models/context.models';
 import { RuleSet } from 'angular2-query-builder';
 import { RulesResolverService } from '../../services/rules-resolver.service';
@@ -81,7 +82,8 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     private componentFactoryResolver: ComponentFactoryResolver,
     private panelHandler: PanelContentHandler,
     private fb: FormBuilder,
-    private rulesResolver: RulesResolverService
+    private rulesResolver: RulesResolverService,
+    private contextManager: ContextManagerService
   ) {
     this.counter = RenderPanelComponent.COUNTER++;
     this.stylePlugins = stylePlugins;
@@ -137,6 +139,8 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
 
   resolvePanes() {
 
+    const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
+
     const staticPanes = this.panel.panes.reduce<Array<Pane>>((p, c) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
       if(plugin.handler === undefined || !plugin.handler.isDynamic(c.settings)) {
@@ -167,7 +171,15 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
               take(1)
             )];
           } else if(c.name === '' || bindings.findIndex(n => n === c.name) === -1) {
-            return [ ...p , of([ new Pane({ ...c, contexts: this.mergeContexts(c.contexts) }) ]) ];
+            return [ ...p , of([ new Pane({ ...c, contexts: this.mergeContexts(c.contexts) }) ]).pipe(
+              switchMap(panes => iif(
+                () => panes[0].rule !== undefined && panes[0].rule !== null && panes[0].rule.condition !== '',
+                this.rulesResolver.evaluate(panes[0].rule, [ ...globalContexts, ...(panes[0].contexts !== undefined ? panes[0].contexts : []) ]).pipe(
+                  map(res => res ? panes: [])
+                ),
+                of(panes)
+              ))
+            ) ];
           } else {
             return [ ...p ];
           }
