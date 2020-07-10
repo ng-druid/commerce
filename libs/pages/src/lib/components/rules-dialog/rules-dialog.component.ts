@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { QueryBuilderConfig } from 'angular2-query-builder';
+import { QueryBuilderConfig, Rule as NgRule } from 'angular2-query-builder';
 import { Pane } from '../../models/page.models';
 import { InlineContext } from '../../models/context.models';
 import { RulesParserService } from '../../services/rules-parser.service';
@@ -32,7 +32,7 @@ export class RulesDialogComponent implements OnInit {
   }
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { contexts: Array<InlineContext> },
+    @Inject(MAT_DIALOG_DATA) private data: { rule: undefined | NgRule,contexts: Array<InlineContext> },
     private dialogRef: MatDialogRef<RulesDialogComponent>,
     private fb: FormBuilder,
     private rulesParser:  RulesParserService
@@ -44,9 +44,9 @@ export class RulesDialogComponent implements OnInit {
         this.config.fields[k] = f;
       });
     });
-    /*this.rulesForm.get('rules').valueChanges.subscribe(v => {
-      console.log(this.rulesParser.toEngineRule(v).toJSON());
-    });*/
+    if(this.data.rule !== undefined) {
+      this.rulesForm.get('rules').setValue(this.data.rule);
+    }
   }
 
   submit() {

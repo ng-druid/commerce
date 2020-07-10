@@ -14,13 +14,14 @@ import { DisplayGrid, GridsterConfig, GridType, GridsterItem, GridsterItemCompon
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RenderingEditorComponent } from '../rendering-editor/rendering-editor.component';
 import { Observable, forkJoin, iif, of } from 'rxjs';
-import { debounceTime, delay, filter, map, tap, switchMap } from 'rxjs/operators';
+import { debounceTime, delay, filter, map, tap, switchMap, take } from 'rxjs/operators';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
 import { StyleSelectorComponent } from '../style-selector/style-selector.component';
 import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 import { Dataset } from '../../models/datasource.models';
 import { InlineContext } from '../../models/context.models';
+import { Rule as NgRule } from 'angular2-query-builder';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -317,6 +318,7 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   onRulesPane(index: number, index2: number) {
     const pane = new Pane(this.panelPane(index, index2).value);
+    const rule = this.panelPane(index, index2).get('rule').value !== '' ? this.panelPane(index, index2).get('rule').value as NgRule : undefined;
 
     const bindings$: Array<Observable<[number, Array<ContentBinding>]>> = [];
     this.panelPanes(index).controls.forEach((c, i) => {
@@ -331,23 +333,33 @@ export class ContentEditorComponent implements OnInit, OnChanges {
       }
     });
 
-    forkJoin(bindings$).pipe(
-      map(pb => pb.reduce<Array<number>>((p, [i, b]) => [ ...p, ...(b.findIndex(cb => cb.type === 'pane' && cb.id === pane.name) > -1 ? [ i ] : []) ], [])),
-      map(indexes => indexes.length === 0 ? undefined : indexes[0]),
-      switchMap(i => iif(
-        () => i !== undefined,
-        this.contentPlugins.find(c => c.name === new Pane({ ...this.panelPane(index, i).value }).contentPlugin).handler.fetchDynamicData(new Pane({ ...this.panelPane(index, i).value }).settings, new Map<string, any>([ ['tag', uuid.v4()] ])),
-        of(new Dataset())
-      ))
-    ).subscribe(dataset => {
-      const contexts = [ ...(dataset.results.length > 0 ? [new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })] : []) ];
+    if(bindings$.length !== 0) {
+      forkJoin(bindings$).pipe(
+        map(pb => pb.reduce<Array<number>>((p, [i, b]) => [ ...p, ...(b.findIndex(cb => cb.type === 'pane' && cb.id === pane.name) > -1 ? [ i ] : []) ], [])),
+        map(indexes => indexes.length === 0 ? undefined : indexes[0]),
+        switchMap(i => iif(
+          () => i !== undefined,
+          this.contentPlugins.find(c => c.name === new Pane({ ...this.panelPane(index, i).value }).contentPlugin).handler.fetchDynamicData(new Pane({ ...this.panelPane(index, i).value }).settings, new Map<string, any>([ ['tag', uuid.v4()] ])),
+          of(new Dataset())
+        ))
+      ).subscribe(dataset => {
+        const contexts = [ ...(dataset.results.length > 0 ? [new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })] : []) ];
+        this.dialog
+          .open(RulesDialogComponent, { data: { rule, contexts } })
+          .afterClosed()
+          .subscribe(r => {
+            this.panelPane(index, index2).get('rule').setValue(r ? r : rule ? rule : undefined);
+          });
+      });
+    } else {
+      const contexts = [new InlineContext({ name: '_root', adaptor: 'data', data: { test: 0 } })];
       this.dialog
-        .open(RulesDialogComponent, { data: { contexts } })
-        .afterClosed()
-        .subscribe(r => {
-          this.panelPane(index, index2).get('rule').setValue(r);
-        });
-    });
+      .open(RulesDialogComponent, { data: { rule, contexts: (pane.contexts !== undefined ? [ ...contexts, pane.contexts ] : contexts)  } })
+      .afterClosed()
+      .subscribe(r => {
+        this.panelPane(index, index2).get('rule').setValue(r ? r : rule ? rule : undefined);
+      });
+    }
 
   }
 
