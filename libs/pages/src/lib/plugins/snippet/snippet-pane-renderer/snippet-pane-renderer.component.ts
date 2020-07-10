@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { TokenizerService } from '@classifieds-ui/token';
+import { ContextManagerService } from '@classifieds-ui/context';
 import { SnippetContentHandler } from '../../../handlers/snippet-content.handler';
 import { Snippet } from '../../../models/plugin.models';
 import { InlineContext } from '../../../models/context.models';
-import { Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { switchMap, map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-snippet-pane-renderer',
@@ -26,7 +27,11 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   contentType: string;
   content: string;
 
-  constructor(private handler: SnippetContentHandler, private tokenizerService: TokenizerService) { }
+  constructor(
+    private handler: SnippetContentHandler,
+    private tokenizerService: TokenizerService,
+    private contextManager: ContextManagerService
+  ) { }
 
   ngOnInit(): void {
     this.handler.toObject(this.settings).pipe(
@@ -59,27 +64,26 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   replaceTokens(v: string): string {
     if(this.tokens !== undefined) {
       this.tokens.forEach((value, key) => {
-        v = v.replace(`[${key}]`, `${value}`);
+        //v = v.replaceAll(`[${key}]`, `${value}`);
+        v = v.split(`[${key}]`).join(`${value}`)
       });
     }
     return v;
   }
 
   resolveContexts(contexts: Array<InlineContext>): Observable<undefined | Map<string, any>> {
-    return new Observable(obs => {
-      if(this.contexts === undefined || this.contexts.length === 0) {
-        obs.next();
-        obs.complete();
-      } else {
+    return forkJoin([
+      ...this.contextManager.getAll().map(c => c.resolver.resolve().pipe(map(d => [c, d], take(1)))),
+      ...(contexts === undefined || contexts.length === 0 ? [] : contexts.map(c => of(c).pipe(map(c => [c, c.data]), take(1))))
+    ]).pipe(
+      map(resolved => {
         let tokens = new Map<string, any>();
-        const root = contexts.find(c => c.name === '_root');
-        if(root !== undefined && root.adaptor === 'data' && root.data) {
-          tokens = new Map<string, any>([ ...tokens, ...this.tokenizerService.generateGenericTokens(root.data) ])
-        }
-        obs.next(tokens);
-        obs.complete();
-      }
-    });
+        resolved.forEach(([c, r]) => {
+          tokens = new Map<string, any>([ ...tokens, ...this.tokenizerService.generateGenericTokens(r, c.name === '_root' ? '' : c.name) ]);
+        });
+        return tokens;
+      })
+    );
   }
 
   mergeContexts(contexts: Array<InlineContext>): Array<InlineContext> {

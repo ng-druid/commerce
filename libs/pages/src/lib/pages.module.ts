@@ -73,6 +73,7 @@ import { GridlessLayoutComponent } from './components/gridless-layout/gridless-l
 import { RestSourceFormComponent } from './components/rest-source-form/rest-source-form.component';
 import { SelectionComponent } from './components/selection/selection.component';
 import { RulesDialogComponent } from './components/rules-dialog/rules-dialog.component';
+import { PageRouterLinkComponent } from './components/page-router-link/page-router-link.component';
 
 const panePageMatcher = (url: UrlSegment[]) => {
   if(url[0] !== undefined && url[0].path === 'panelpage') {
@@ -129,6 +130,7 @@ const routes = [
   ],
   declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent],
   providers: [
+    { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
     { provide: SnippetContentHandler, useClass: SnippetContentHandler },
@@ -146,7 +148,7 @@ const routes = [
     { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'gallery', title: 'Gallery', editorComponent: undefined, renderComponent: GalleryPanelRendererComponent }), multi: true },
     { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'virtuallist', title: 'Virtual List', editorComponent: undefined, renderComponent: VirtualListPanelRendererComponent }), multi: true }
   ],
-  // exports: [ConvertLinksDirective]
+  //exports: [NavigationHostDirective]
 })
 export class PagesModule {
   constructor(eds: EntityDefinitionService) {

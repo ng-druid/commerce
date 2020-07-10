@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ComponentFactoryResolver, Inject, ViewChild, OnChanges, SimpleChanges, ElementRef, Output, EventEmitter, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, FormGroup,FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
+import { ActivatedRoute } from '@angular/router';
 import { Panel } from '../../models/page.models';
 import * as uuid from 'uuid';
 import { AttributeValue } from '@classifieds-ui/attributes';
@@ -9,11 +10,12 @@ import { STYLE_PLUGIN, StylePlugin } from '@classifieds-ui/style';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { Pane } from '../../models/page.models';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
-import { switchMap, map, tap, take, filter } from 'rxjs/operators';
+import { switchMap, map, tap, take, filter, distinctUntilChanged } from 'rxjs/operators';
 import { of, forkJoin, Observable, iif } from 'rxjs';
 import { InlineContext } from '../../models/context.models';
 import { RuleSet } from 'angular2-query-builder';
 import { RulesResolverService } from '../../services/rules-resolver.service';
+import { RulesParserService } from '../../services/rules-parser.service';
 
 @Component({
   selector: 'classifieds-ui-render-panel',
@@ -83,7 +85,9 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     private panelHandler: PanelContentHandler,
     private fb: FormBuilder,
     private rulesResolver: RulesResolverService,
-    private contextManager: ContextManagerService
+    private rulesParser: RulesParserService,
+    private contextManager: ContextManagerService,
+    private route: ActivatedRoute
   ) {
     this.counter = RenderPanelComponent.COUNTER++;
     this.stylePlugins = stylePlugins;
@@ -94,6 +98,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     this.stylePlugin = this.panel.stylePlugin !== undefined && this.panel.stylePlugin !== '' ? this.stylePlugins.find(p => p.name === this.panel.stylePlugin) : undefined;
     if(this.panel !== undefined && this.panelHost !== undefined) {
       this.resolvePanes();
+      this.handlePanelRefresh();
     }
   }
 
@@ -217,6 +222,35 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     (componentRef.instance as any).originMappings = this.originMappings;
     (componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
     (componentRef.instance as any).displayType = this.displayType;
+  }
+
+  handlePanelRefresh() {
+
+    const facts = new Map<string, Array<string>>();
+
+    this.panel.panes.forEach(p => {
+      if(p.rule !== undefined && p.rule !== null && p.rule.condition !== '') {
+        this.rulesParser.extractConditions(p.rule).forEach(c => {
+          if((c as any).fact === '_route') {
+            facts.set(
+              (c as any).fact,
+              [ ...(facts.has((c as any).fact) ? facts.get((c as any).fact) : []), (c as any).path.substr(2) ]
+            );
+          }
+        });
+      }
+    });
+
+    if(facts.has('_route')) {
+      this.route.paramMap.pipe(
+        //map(p => facts.get('_route').findIndex(r => r === p)),
+        distinctUntilChanged()
+      ).subscribe(() => {
+        console.log('resolve panes');
+        this.resolvePanes();
+      });
+    }
+
   }
 
   mergeContexts(contexts: Array<InlineContext>): Array<InlineContext> {

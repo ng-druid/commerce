@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AttributeValue, AttributeTypes } from '@classifieds-ui/attributes';
 import { Field, RuleSet, Rule as NgRule } from 'angular2-query-builder';
 import { Rule, NestedCondition } from 'json-rules-engine'
+import { RulesResolverService } from './rules-resolver.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ import { Rule, NestedCondition } from 'json-rules-engine'
 export class RulesParserService {
 
   operatorsMap = new Map<string, string>([
-    ['=', 'equal']
+    ['=', 'equal'],
+    ['!=', 'notEqual']
   ]);
 
   constructor() { }
@@ -83,6 +85,14 @@ export class RulesParserService {
     } else {
       return new Rule({ conditions: { any: conditions }, event: ( level === 0 ? { type: 'visible' } : undefined ) } );
     }
+  }
+
+  extractConditions(ngRule: RuleSet, level = 0): Array<NestedCondition> {
+    const rule = this.toEngineRule(ngRule);
+    return [
+      ...( (rule.conditions as any).any !== undefined ? (rule.conditions as any).any : [] ),
+      ...( (rule.conditions as any).all !== undefined ? (rule.conditions as any).all : [] )
+    ];
   }
 
   resolveNativeType(type: string) {

@@ -16,9 +16,9 @@ export class TokenizerService {
     return tokens;
   }
 
-  generateGenericTokens(obj: any): Map<string, any> {
+  generateGenericTokens(obj: any, prefix = ''): Map<string, any> {
     const tokens = new Map<string, string>();
-    this.genericTokens(obj, tokens, '', 0);
+    this.genericTokens(obj, tokens, prefix, 0);
     return tokens;
   }
 

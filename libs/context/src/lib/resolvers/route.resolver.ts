@@ -15,7 +15,10 @@ export class RouteResolver implements ContextResolver {
     return this.routerStore.pipe(
       select(selectCurrentRoute),
       map(route => {
-        const obj = {};
+        const obj = {
+          path: `/pages/panelpage/${route.params.panelPageId}`
+        };
+        //console.log(route);
         for(const prop in route.params) {
           if(prop.indexOf('arg') === 0) {
             obj[prop] = route.params[prop];

@@ -74,7 +74,7 @@ export function markedOptionsFactory(): MarkedOptions {
   const renderer = new MarkedRenderer();
   renderer.link = (href: string, title: string, text: string) => {
     if(text === 'page') {
-      return `<classifieds-ui-page path="${href}"></classifieds-ui-page>`;
+      return `<classifieds-ui-panel-page id="${href}"></classifieds-ui-panel-page>`;
     } else {
       return `<classifieds-ui-page-router-link href="${href}" text="${text}"></classifieds-ui-page-router-link>`;
     }

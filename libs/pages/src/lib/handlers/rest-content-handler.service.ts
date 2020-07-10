@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
+import { ContextManagerService } from '@classifieds-ui/context';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of, Subject, iif, forkJoin, from } from 'rxjs';
 import * as uuid from 'uuid';
@@ -29,7 +30,8 @@ export class RestContentHandler implements ContentHandler {
     private panelHandler: PanelContentHandler,
     private urlGeneratorService: UrlGeneratorService,
     private attributeSerializer: AttributeSerializerService,
-    private rulesResolver: RulesResolverService
+    private rulesResolver: RulesResolverService,
+    private contextManager: ContextManagerService
   ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
@@ -67,6 +69,7 @@ export class RestContentHandler implements ContentHandler {
   }
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     const subject = new Subject<Array<AttributeValue>>();
+    const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
     this.toObject(settings).pipe(
       switchMap(r => this.urlGeneratorService.generateUrl(r.url, r.params, metadata).pipe(
         map<string, [Rest, string]>(url => [r, url])
@@ -86,7 +89,7 @@ export class RestContentHandler implements ContentHandler {
               map(binding => (metadata.get('panes') as Array<Pane>).find(p => p.name === binding.id)),
               switchMap(pane => iif(
                 () => pane.rule && pane.rule !== null && pane.rule.condition !== '',
-                this.rulesResolver.evaluate(pane.rule,[ ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
+                this.rulesResolver.evaluate(pane.rule,[ ...globalContexts, ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
                   map<boolean, [Pane, boolean]>(res => [pane, res])
                 ),
                 of(false).pipe(

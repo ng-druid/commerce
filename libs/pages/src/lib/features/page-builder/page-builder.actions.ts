@@ -17,6 +17,11 @@ export const loadRestDataSuccess = createAction(
   props<{ tag: string, data: Dataset }>()
 );
 
+export const loadRestDataError = createAction(
+  '[PageBuilder] Load Rest Data Error',
+  props<{ tag: string }>()
+);
+
 
 
 
