@@ -33,6 +33,9 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
   settings: Array<AttributeValue> = [];
 
   @Input()
+  linkedPageId: string;
+
+  @Input()
   contexts: Array<InlineContext>;
 
   @Input()

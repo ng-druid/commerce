@@ -11,7 +11,7 @@ import { PaneContentHostDirective } from '../../directives/pane-content-host.dir
 import { Pane } from '../../models/page.models';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { switchMap, map, tap, take, filter, distinctUntilChanged } from 'rxjs/operators';
-import { of, forkJoin, Observable, iif } from 'rxjs';
+import { of, forkJoin, Observable, iif, Subscription } from 'rxjs';
 import { InlineContext } from '../../models/context.models';
 import { RuleSet } from 'angular2-query-builder';
 import { RulesResolverService } from '../../services/rules-resolver.service';
@@ -67,6 +67,8 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
 
   contentPlugins: Array<ContentPlugin> = [];
 
+  refreshSubscription$: Subscription;
+
   public onTouched: () => void = () => {};
 
   private counter: number;
@@ -98,7 +100,9 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     this.stylePlugin = this.panel.stylePlugin !== undefined && this.panel.stylePlugin !== '' ? this.stylePlugins.find(p => p.name === this.panel.stylePlugin) : undefined;
     if(this.panel !== undefined && this.panelHost !== undefined) {
       this.resolvePanes();
-      this.handlePanelRefresh();
+      if(!this.refreshSubscription$) {
+        this.handlePanelRefresh();
+      }
     }
   }
 
@@ -228,6 +232,10 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
 
     const facts = new Map<string, Array<string>>();
 
+    if(this.refreshSubscription$) {
+      this.refreshSubscription$.unsubscribe();
+    }
+
     this.panel.panes.forEach(p => {
       if(p.rule !== undefined && p.rule !== null && p.rule.condition !== '') {
         this.rulesParser.extractConditions(p.rule).forEach(c => {
@@ -242,11 +250,10 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     });
 
     if(facts.has('_route')) {
-      this.route.paramMap.pipe(
+      this.refreshSubscription$ = this.route.paramMap.pipe(
         //map(p => facts.get('_route').findIndex(r => r === p)),
         distinctUntilChanged()
       ).subscribe(() => {
-        console.log('resolve panes');
         this.resolvePanes();
       });
     }

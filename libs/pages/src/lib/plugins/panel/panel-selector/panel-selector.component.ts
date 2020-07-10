@@ -22,6 +22,7 @@ export class PanelSelectorComponent implements OnInit {
 
   panels: Array<string> = [
     /*'d45334a5-b70b-11ea-8743-9288aa7fe284'*/
+    '2dfe09d7-c2f5-11ea-8364-8ad81b571387'
   ];
 
   panelPagesService: EntityCollectionService<PanelPage>;
@@ -57,17 +58,21 @@ export class PanelSelectorComponent implements OnInit {
   }
 
   onItemSelect(panel: string) {
-    this.panelPagesService.getByKey(panel).subscribe(p => {
+    const name = uuid.v4();
+    //this.panelPagesService.getByKey(panel).subscribe(p => {
       //this.dialog.open(this.contentPlugin.editorComponent, { data: { panelFormGroup: this.panelFormGroup, pane: undefined, paneIndex: undefined, panelPage: p } });
       (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
         contentPlugin: 'panel',
-        name: '',
-        label: '',
+        name: name,
+        label: name,
         rule: new FormControl(''),
-        settings: this.fb.array(this.handler.buildSettings(p).map(s => this.convertToGroup(s)))
+        linkedPageId: new FormControl(panel, Validators.required),
+        locked: new FormControl(true),
+        // settings: this.fb.array(this.handler.buildSettings(p).map(s => this.convertToGroup(s)))
+        settings: this.fb.array([])
       }));
       this.bottomSheetRef.dismiss();
-    });
+    //});
   }
 
   convertToGroup(setting: AttributeValue): FormGroup {

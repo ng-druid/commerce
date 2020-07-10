@@ -76,6 +76,9 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   @Input()
   nested = false;
 
+  @Input()
+  locked = false;
+
   panelPageId: string;
   dashboard = [];
 
@@ -377,14 +380,15 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   packageFormData(): PanelPage {
     this.syncNestedPanelPages();
-    console.log(this.panels.value);
-    return new PanelPage({
+    const panelPage = new PanelPage({
       id: this.panelPageId,
       displayType: this.displayType.value,
       layoutType: this.layoutType.value,
       gridItems: this.gridLayout ? this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })) : [],
       panels: this.panels.value
     });
+    console.log(panelPage);
+    return panelPage;
   }
 
   syncNestedPanelPages() {
@@ -420,6 +424,14 @@ export class ContentEditorComponent implements OnInit, OnChanges {
 
   panelPaneLabel(index: number, index2: number): string {
     return this.panelPane(index, index2).get('label').value;
+  }
+
+  panelPaneLocked(index: number, index2: number): boolean {
+    if(this.locked) {
+      return this.locked;
+    }
+    const locked = this.panelPane(index, index2).get('locked');
+    return locked !== null ? locked.value: false;
   }
 
   panelPaneIsNested(index: number, index2: number): boolean {

@@ -65,6 +65,8 @@ export class Pane {
   name: string;
   label: string;
   settings: Array<AttributeValue> = [];
+  locked = false;
+  linkedPageId?: string;
   metadata?: Map<string, any>;
   contexts?: Array<InlineContext> = [];
   rule?: RuleSet;
@@ -73,6 +75,10 @@ export class Pane {
       this.name = data.name;
       this.label = data.label;
       this.contentPlugin = data.contentPlugin;
+      this.locked = data.locked !== undefined ? data.locked : false;
+      if(data.linkedPageId) {
+        this.linkedPageId = data.linkedPageId;
+      }
       if(data.metadata !== undefined) {
         this.metadata = new Map(...data.metadata);
       }

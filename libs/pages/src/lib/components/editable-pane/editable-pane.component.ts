@@ -30,6 +30,9 @@ export class EditablePaneComponent implements OnInit, OnChanges {
   @Input()
   paneIndex: number;
 
+  @Input()
+  locked = false;
+
   @Output()
   edit = new EventEmitter();
 

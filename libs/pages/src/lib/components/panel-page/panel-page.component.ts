@@ -95,6 +95,11 @@ export class PanelPageComponent implements OnInit, OnChanges {
 
   fetchPage() {
     this.panelPageService.getByKey(this.id).subscribe(p => {
+      /*if(this.nested) {
+        this.contexts =
+      } else {
+        this.contexts = [];
+      }*/
       this.contexts = [];
       this.panelPage = p;
       this.populatePanelsFormArray();
