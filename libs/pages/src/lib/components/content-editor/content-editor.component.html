@@ -1,4 +1,4 @@
-<form *ngIf="!nested; else nestedTpl" [formGroup]="contentForm" (ngSubmit)="submit()" class="content-editor-wrapper" [ngClass]="{'nested': nested}">
+<form *ngIf="!nested && !pageBuilder; else nestedTpl" [formGroup]="contentForm" (ngSubmit)="submit()" class="content-editor-wrapper" [ngClass]="{'nested': nested}">
     <ng-container [ngSwitch]="layoutType.value">
       <ng-container *ngSwitchCase="'grid'"><ng-container *ngTemplateOutlet="gridLayoutTpl"></ng-container></ng-container>
       <ng-container *ngSwitchCase="'gridless'"><ng-container *ngTemplateOutlet="gridlessLayoutTpl"></ng-container></ng-container>

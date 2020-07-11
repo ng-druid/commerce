@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef, OnChanges, SimpleChanges, TemplateRef, ContentChild } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ViewChild, Output, EventEmitter, Input, ViewChildren, QueryList, ElementRef, OnChanges, SimpleChanges, TemplateRef, ContentChild, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, Validator, Validators, AbstractControl, ValidationErrors, FormArray, FormControl, FormGroup } from "@angular/forms";
 import * as uuid from 'uuid';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ContentSelectorComponent } from '../content-selector/content-selector.component';
@@ -28,9 +28,21 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 @Component({
   selector: 'classifieds-ui-content-editor',
   templateUrl: './content-editor.component.html',
-  styleUrls: ['./content-editor.component.scss']
+  styleUrls: ['./content-editor.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ContentEditorComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ContentEditorComponent),
+      multi: true
+    },
+  ]
 })
-export class ContentEditorComponent implements OnInit, OnChanges {
+export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
   @Output()
   submitted = new EventEmitter<PanelPage>();
@@ -79,8 +91,13 @@ export class ContentEditorComponent implements OnInit, OnChanges {
   @Input()
   locked = false;
 
+  @Input()
+  pageBuilder = false;
+
   panelPageId: string;
   dashboard = [];
+
+  public onTouched: () => void = () => {};
 
   contentForm = this.fb.group({
     layoutType: this.fb.control('grid', Validators.required),
@@ -486,6 +503,32 @@ export class ContentEditorComponent implements OnInit, OnChanges {
         }));
       });
     }
+  }
+
+  writeValue(val: any): void {
+    if (val) {
+      this.contentForm.setValue(val, { emitEvent: false });
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.contentForm.valueChanges.subscribe(fn);
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.contentForm.disable()
+    } else {
+      this.contentForm.enable()
+    }
+  }
+
+  validate(c: AbstractControl): ValidationErrors | null{
+    return this.contentForm.valid ? null : { invalidForm: {valid: false, message: "content is invalid"}};
   }
 
   convertToGroup(setting: AttributeValue): FormGroup {

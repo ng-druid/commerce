@@ -9,20 +9,30 @@ interface DatasourceModel<T> {
 
 export class PanelPage {
   id: string;
+  name?: string;
+  title?: string;
+  path?: string;
   layoutType: string;
   displayType: string;
   gridItems: Array<GridItem> = [];
   panels: Array<Panel> = [];
+  contexts?: Array<InlineContext> = [];
   constructor(data?: PanelPage) {
     if(data) {
       this.id = data.id;
       this.layoutType = data.layoutType;
       this.displayType = data.displayType;
+      this.name = data.name ? data.name : undefined;
+      this.title = data.title ? data.title: undefined;
+      this.path = data.path ? data.path : undefined;
       if(data.panels) {
         this.panels = data.panels.map(p => new Panel(p));
       }
       if(data.gridItems) {
         this.gridItems = data.gridItems.map(i => new GridItem(i));
+      }
+      if(data.contexts) {
+        this.contexts = data.contexts.map(c => new InlineContext(c));
       }
     }
   }
@@ -65,7 +75,7 @@ export class Pane {
   name: string;
   label: string;
   settings: Array<AttributeValue> = [];
-  locked = false;
+  locked? = false;
   linkedPageId?: string;
   metadata?: Map<string, any>;
   contexts?: Array<InlineContext> = [];

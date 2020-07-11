@@ -117,7 +117,7 @@ export class AttributesBuilderComponent implements OnChanges, ControlValueAccess
         c.updateValueAndValidity();
       }
       (c.get('attributes') as FormArray).controls.forEach(c => {
-        const attrValue = this.attributeValues ? this.attributeValues[index].attributes.find(av => av.name === c.get('name').value) : undefined;
+        const attrValue = this.attributeValues && this.attributeValues[index] !== undefined ? this.attributeValues[index].attributes.find(av => av.name === c.get('name').value) : undefined;
         if(attrValue !== undefined) {
           c.get('value').setValue(attrValue.value);
           c.updateValueAndValidity();

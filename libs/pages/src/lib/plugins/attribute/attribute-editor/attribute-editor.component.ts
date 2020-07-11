@@ -70,7 +70,7 @@ export class AttributeEditorComponent implements OnInit {
     const label = this.label.value;
     (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('name').setValue(name);
     (this.data.panelFormGroup.get('panes') as FormArray).at(this.data.paneIndex).get('label').setValue(label);
-    const pane = new Pane({ name, label, contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value });
+    const pane = new Pane({ name, label, contentPlugin: 'attribute', settings: this.attributesFormGroup.get('attributes').value === '' ? [] : this.attributesFormGroup.get('attributes').value });
     if(pane.settings.length !== 0) {
       this.handler.rendererSnippet(this.data.pane.settings).subscribe(r => {
         const renderer = r !== undefined ? this.handler.rendererOverrideSettings(r) : [];

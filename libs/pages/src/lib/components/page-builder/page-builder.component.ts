@@ -8,32 +8,28 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class PageBuilderComponent implements OnInit {
 
+  section = '';
+
   pageForm = this.fb.group({
-    context: this.fb.group({}),
-    rules: this.fb.group({}),
-    layout: this.fb.group({}),
-    content: this.fb.group({})
+    name: this.fb.control(''),
+    title: this.fb.control(''),
+    contexts: this.fb.control(''),
+    path: this.fb.control(''),
+    rule: this.fb.control(''),
+    content: this.fb.control('')
   });
-
-  get contextForm(): FormGroup {
-    return this.pageForm.get('context') as FormGroup;
-  }
-
-  get rulesForm(): FormGroup {
-    return this.pageForm.get('rules') as FormGroup;
-  }
-
-  get layoutForm(): FormGroup {
-    return this.pageForm.get('layout') as FormGroup;
-  }
-
-  get contentForm(): FormGroup {
-    return this.pageForm.get('content') as FormGroup;
-  }
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+  }
+
+  changeSection(section: string) {
+    this.section = section;
+  }
+
+  onSubmit() {
+    console.log(this.pageForm.value);
   }
 
 }

@@ -1,28 +1,13 @@
-
 :host {
   height: 100%;
 }
 
-mat-horizontal-stepper {
-  height: 100%;
+mat-sidenav {
+  background-color: white;
 }
 
-form {
-  height: 100%;
-}
-
-.mat-horizontal-stepper-content {
-  height: 100%;
-}
-
-.mat-horizontal-content-container {
-  height: 100%;
-}
-
-.layout-wrapper {
+.general-wrapper,
+.contexts-wrapper,
+.routing-wrapper {
   padding: 1em;
-}
-
-.content-wrapper {
-  height: 100%;
 }
