@@ -11,7 +11,7 @@
       </div>
       <div class="rows-inner">
         <as-split unit="percent" direction="horizontal" (dragEnd)="dragEnd(i, $event)">
-          <as-split-area *for="totalColumns(i); let j = index">
+          <as-split-area *for="totalColumns(i); let j = index" [size]="itemSize(i, j)">
             <div fxLayout="column" fxFill>
               <div #itemHeader fxFlex="0 1 auto" [hidden]="!displayItemHeader" class="grid-item-header">
                 <ng-container *ngTemplateOutlet="gridItemActionsTmpl,context: { i: itemIndex(i, j) }"></ng-container>

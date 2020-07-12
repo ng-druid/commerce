@@ -1,8 +1,8 @@
-import { Component, OnInit, forwardRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, forwardRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { HttpErrorResponse } from '@angular/common/http';
-import { NEVER } from 'rxjs';
-import { debounceTime, filter, map, switchMap, catchError, tap } from 'rxjs/operators';
+import { NEVER, Subject, Subscription } from 'rxjs';
+import { debounceTime, filter, map, switchMap, catchError, tap, takeUntil } from 'rxjs/operators';
 import { DatasourceApiService } from '../../services/datasource-api.service';
 import * as qs from 'qs';
 
@@ -23,7 +23,7 @@ import * as qs from 'qs';
     },
   ]
 })
-export class RestSourceFormComponent implements OnInit, ControlValueAccessor, Validator {
+export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
   @Output()
   dataChange = new EventEmitter<any>();
@@ -36,6 +36,23 @@ export class RestSourceFormComponent implements OnInit, ControlValueAccessor, Va
   });
 
   jsonData: Array<any>;
+
+  componentDestroyed = new Subject();
+
+  refreshData$ = new Subject();
+  refreshSubscription = this.refreshData$.pipe(
+    map(() => this.generateUrl()),
+    switchMap((url: string) => this.datasourceApi.getData(url).pipe(
+      catchError((e: HttpErrorResponse) => {
+        console.log(e);
+        return NEVER;
+      })
+    )),
+    takeUntil(this.componentDestroyed)
+  ).subscribe(data => {
+    this.jsonData = data;
+    this.dataChange.emit(data);
+  });
 
   public onTouched: () => void = () => {};
 
@@ -88,19 +105,15 @@ export class RestSourceFormComponent implements OnInit, ControlValueAccessor, Va
       }
     });
     this.sourceForm.valueChanges.pipe(
-      debounceTime(1000),
-      map(() => this.generateUrl()),
-      tap(v => console.log(v)),
-      switchMap((url: string) => this.datasourceApi.getData(url).pipe(
-        catchError((e: HttpErrorResponse) => {
-          console.log(e);
-          return NEVER;
-        })
-      ))
-    ).subscribe(data => {
-      this.jsonData = data;
-      this.dataChange.emit(data);
+      debounceTime(1000)
+    ).subscribe(() => {
+      this.refreshData$.next();
     });
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed.next();
+    this.componentDestroyed.complete();
   }
 
   writeValue(val: any): void {
@@ -143,6 +156,10 @@ export class RestSourceFormComponent implements OnInit, ControlValueAccessor, Va
         i++;
       }
     }
+  }
+
+  refreshData() {
+
   }
 
   generateUrl(): string {

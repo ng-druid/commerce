@@ -1,20 +1,59 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormArray, Validators } from '@angular/forms';
 import { TokenizerService } from '@classifieds-ui/token';
 import { Rest } from '../../models/datasource.models';
+import { RestSourceFormComponent } from '../rest-source-form/rest-source-form.component';
 
 @Component({
   selector: 'classifieds-ui-rest-form',
   templateUrl: './rest-form.component.html',
   styleUrls: ['./rest-form.component.scss']
 })
-export class RestFormComponent implements OnInit {
+export class RestFormComponent implements OnInit, AfterViewInit {
 
   @Input()
   panes: Array<string> = [];
 
   @Output()
   submitted = new EventEmitter<Rest>();
+
+  @Input()
+  set rest(rest: Rest) {
+    if(rest!== undefined) {
+      const defaultSelect = { value: '', label: '', id: '', multiple: '', limit: '' };
+      this.restForm.setValue({
+        renderer: {
+          ...rest.renderer,
+          data: rest.renderer.data ? rest.renderer.data : { content: '', contentType: '' },
+          select: ['pane', 'snippet'].findIndex(t => t === rest.renderer.type) > -1 ? defaultSelect : JSON.parse(rest.renderer.data.content),
+          bindings: []
+        },
+        source: {
+          url: rest.url,
+          params: rest.params
+        }
+      });
+      if(rest.renderer.type === 'pane') {
+        this.bindings.clear();
+        rest.renderer.bindings.forEach(b => {
+          if(b.type === 'pane') {
+            this.bindings.push(this.fb.group({
+              id: this.fb.control(b.id, Validators.required),
+              type: this.fb.control(b.type, Validators.required)
+            }));
+          }
+        });
+      }
+      if(rest.renderer.type === 'pane') {
+        this.restForm.get('renderer').get('data').disable();
+      } else {
+        this.restForm.get('renderer').get('data').enable();
+      }
+      setTimeout(() => this.sourceForm.refreshData$.next());
+    }
+  }
+
+  @ViewChild(RestSourceFormComponent, {static: true}) sourceForm: RestSourceFormComponent;
 
   contexts = [];
   forms = [];
@@ -79,6 +118,13 @@ export class RestFormComponent implements OnInit {
         content: JSON.stringify({ value: v.value, label: v.label , id: v.id, multiple: v.multiple, limit: v.limit})
       });
     });
+  }
+
+  ngAfterViewInit() {
+    /*if(this.rest !== undefined) {
+      console.log('rest next');
+      this.sourceForm.refreshData$.next();
+    }*/
   }
 
   onDataChange(data: any) {

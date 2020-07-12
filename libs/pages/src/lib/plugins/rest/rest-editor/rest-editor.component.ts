@@ -17,6 +17,8 @@ export class RestEditorComponent implements OnInit {
 
   panes: Array<string> = [];
 
+  rest: Rest;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number;  },
     private dialogRef: MatDialogRef<RestEditorComponent>,
@@ -26,7 +28,11 @@ export class RestEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.panes = (this.data.panelFormGroup.get('panes') as FormArray).controls.reduce<Array<string>>((p, c) => (c.get('name').value ? [ ...p, c.get('name').value ] : [ ...p ]), []);
-    console.log(this.panes);
+    if(this.data.pane !== undefined) {
+      this.handler.toObject(this.data.pane.settings).subscribe((rest: Rest) => {
+        this.rest = rest;
+      });
+    }
   }
 
   submitted(rest: Rest) {

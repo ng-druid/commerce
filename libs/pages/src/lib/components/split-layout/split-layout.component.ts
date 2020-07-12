@@ -46,6 +46,15 @@ export class SplitLayoutComponent implements OnInit  {
   ngOnInit(): void {
     if(this.dashboard.length === 0) {
       this.addRow();
+    } else {
+      for(let i = 0; i < this.totalRows; i++) {
+        const totalColumns = this.totalColumns(i);
+        this.sizes.push([]);
+        for(let j = 0; j < totalColumns; j++) {
+          const index = this.itemIndex(i, j);
+          this.sizes[i].push(this.dashboard[index].cols);
+        }
+      }
     }
   }
 
@@ -99,6 +108,10 @@ export class SplitLayoutComponent implements OnInit  {
 
   itemIndex(rIndex: number, cIndex: number): any {
     return this.dashboard.findIndex(c => c.y === rIndex && c.x === cIndex);
+  }
+
+  itemSize(rIndex: number, cIndex: number): number {
+    return this.dashboard[this.itemIndex(rIndex, cIndex)].cols;
   }
 
   totalColumns(rowIndex: number): number {
