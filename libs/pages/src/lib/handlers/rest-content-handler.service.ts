@@ -82,7 +82,6 @@ export class RestContentHandler implements ContentHandler {
         switchMap(dataset => this.getBindings(settings).pipe(
           map<Array<ContentBinding>, [Dataset, Array<ContentBinding>]>(bindings => [dataset, bindings])
         )),
-        tap(([dataset, bindings]) => console.log(bindings)),
         switchMap(([dataset, bindings]) => iif(
           () => bindings.length > 0,
           new Observable<[Dataset, Array<string>]>(obs => {
@@ -116,7 +115,6 @@ export class RestContentHandler implements ContentHandler {
           })
         )),
         map(([dataset, paneMappings]) => {
-          console.log('map renderer');
           if(r.renderer.type === 'pane') {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);

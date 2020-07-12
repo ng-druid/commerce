@@ -82,7 +82,6 @@ import { CatchAllRouterComponent } from './components/catch-all-router/catch-all
 import { CatchAllGuard } from './guards/catchall.guard';
 
 const panePageMatcher = (url: UrlSegment[]) => {
-  console.log(url);
   if(url[0] !== undefined && url[0].path === 'panelpage') {
     return {
       consumed: url,

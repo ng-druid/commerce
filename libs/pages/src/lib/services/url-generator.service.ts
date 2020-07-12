@@ -21,7 +21,6 @@ export class UrlGeneratorService {
       map(route => [route, url, url.indexOf('?')]),
       map(([route, url, index]) => [route, (index > -1 ? url.substring(0, index) : url), (index > -1 ? url.substring(index + 1) : '')]),
       map(([route, path, queryString]) => {
-        console.log(route);
         const qsParsed = qs.parse(queryString);
         const qsOverrides = {};
         const pathPieces = path.split('/');
