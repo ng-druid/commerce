@@ -14,6 +14,7 @@ import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
 import { TokenModule } from '@classifieds-ui/token';
 import { AttributesModule } from '@classifieds-ui/attributes';
 import { CONTENT_PLUGIN } from '@classifieds-ui/content';
+import { CONTEXT_PLUGIN, ContextManagerService } from '@classifieds-ui/context';
 import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 import { STYLE_PLUGIN, StylePlugin } from '@classifieds-ui/style';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
@@ -44,7 +45,7 @@ import { PanelPageRouterComponent } from './components/panel-page-router/panel-p
 import { CreatePanelPageComponent } from './components/create-panel-page/create-panel-page.component';
 import { EditPanelPageComponent } from './components/edit-panel-page/edit-panel-page.component';
 import { SnippetContentHandler } from './handlers/snippet-content.handler';
-import { snippetContentPluginFactory, attributeContentPluginFactory, mediaContentPluginFactory, panelContentPluginFactory, restContentPluginFactory, sliceContentPluginFactory } from './pages.factories';
+import { snippetContentPluginFactory, attributeContentPluginFactory, mediaContentPluginFactory, panelContentPluginFactory, restContentPluginFactory, sliceContentPluginFactory, pageContextFactory } from './pages.factories';
 import { AttributeSelectorComponent } from './plugins/attribute/attribute-selector/attribute-selector.component';
 import { AttributeContentHandler } from './handlers/attribute-content.handler';
 import { AttributeEditorComponent } from './plugins/attribute/attribute-editor/attribute-editor.component';
@@ -80,6 +81,7 @@ import { TabsPanelRendererComponent } from './plugins/style/tabs-panel-renderer/
 import { PropertiesDialogComponent } from './components/properties-dialog/properties-dialog.component';
 import { CatchAllRouterComponent } from './components/catch-all-router/catch-all-router.component';
 import { CatchAllGuard } from './guards/catchall.guard';
+import { PageContextResolver } from './contexts/page-context.resolver';
 
 const panePageMatcher = (url: UrlSegment[]) => {
   if(url[0] !== undefined && url[0].path === 'panelpage') {
@@ -140,6 +142,7 @@ const routes = [
   declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent, SplitLayoutComponent, FlexLayoutComponent, TabsPanelRendererComponent, PropertiesDialogComponent, CatchAllRouterComponent],
   providers: [
     CatchAllGuard,
+    PageContextResolver,
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
@@ -149,6 +152,7 @@ const routes = [
     { provide: PanelContentHandler, useClass: PanelContentHandler },
     { provide: RestContentHandler, useClass: RestContentHandler },
     { provide: SliceContentHandler, useClass:  SliceContentHandler },
+    //{ provide: CONTEXT_PLUGIN, useFactory: pageContextFactory, multi: true, deps: [ PageContextResolver ] },
     { provide: CONTENT_PLUGIN, useFactory: snippetContentPluginFactory, multi: true, deps: [ SnippetContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: attributeContentPluginFactory, multi: true, deps: [ AttributeContentHandler ] },
     { provide: CONTENT_PLUGIN, useFactory: mediaContentPluginFactory, multi: true, deps: [ MediaContentHandler ] },
@@ -162,7 +166,12 @@ const routes = [
   //exports: [NavigationHostDirective]
 })
 export class PagesModule {
-  constructor(eds: EntityDefinitionService) {
+  constructor(
+    eds: EntityDefinitionService,
+    contextManager: ContextManagerService,
+    pageContextResolver: PageContextResolver
+  ) {
     eds.registerMetadataMap(entityMetadata);
+    contextManager.register(pageContextFactory(pageContextResolver));
   }
 }

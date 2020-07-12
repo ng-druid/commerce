@@ -37,7 +37,6 @@ export class CatchAllRouterComponent implements OnInit {
       )),
       take(1)
     ).subscribe(([panelPage, route]) => {
-      console.log(route);
       const argPath = (route as ActivatedRouteSnapshot).url.map(s => s.path).slice(panelPage.path.split('/').length - 1).join('/');
       this.router.navigateByUrl(`/pages/panelpage/${panelPage.id}/${argPath}?${qs.stringify(route.queryParams)}`, {skipLocationChange: true, queryParams: { ...((route as ActivatedRouteSnapshot).queryParams) }, fragment: (route as ActivatedRouteSnapshot).fragment });
     });

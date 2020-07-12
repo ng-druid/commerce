@@ -3,6 +3,7 @@ import { AttributeContentHandler } from './handlers/attribute-content.handler';
 import { MediaContentHandler } from './handlers/media-content.handler';
 import { PanelContentHandler } from './handlers/panel-content.handler';
 import { ContentPlugin } from '@classifieds-ui/content';
+import { ContextPlugin } from '@classifieds-ui/context';
 import { SnippetPaneRendererComponent } from './plugins/snippet/snippet-pane-renderer/snippet-pane-renderer.component';
 import { SnippetEditorComponent } from './plugins/snippet/snippet-editor/snippet-editor.component';
 import { AttributeSelectorComponent } from './plugins/attribute/attribute-selector/attribute-selector.component';
@@ -17,6 +18,7 @@ import { RestContentHandler } from './handlers/rest-content-handler.service';
 import { RestPaneRendererComponent } from './plugins/rest/rest-pane-renderer/rest-pane-renderer.component';
 import { SliceContentHandler } from './handlers/slice-content.handler';
 import { SliceEditorComponent } from './plugins/slice/slice-editor/slice-editor.component';
+import { PageContextResolver } from './contexts/page-context.resolver';
 
 export const snippetContentPluginFactory = (handler: SnippetContentHandler) => {
   return new ContentPlugin({
@@ -83,3 +85,10 @@ export const sliceContentPluginFactory = (handler: SliceContentHandler) => {
     handler
   })
 }
+
+export const pageContextFactory = (resolver: PageContextResolver) => {
+  const baseObject = {
+    path: '',
+  };
+  return new ContextPlugin({ name: '_page', title: 'Page', baseObject, resolver });
+};

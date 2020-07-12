@@ -19,4 +19,7 @@ export class ContextManagerService {
   lookupContext(name: string): ContextPlugin {
     return this.contextPlugins.find(c => c.name === name);
   }
+  register(contextPlugin: ContextPlugin) {
+    this.contextPlugins.push(contextPlugin);
+  }
 }

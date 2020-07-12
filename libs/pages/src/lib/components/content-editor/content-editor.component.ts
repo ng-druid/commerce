@@ -391,9 +391,9 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
           });
       });
     } else {
-      const contexts = [ ...globalContexts, new InlineContext({ name: '_root', adaptor: 'data', data: { test: 0 } })];
+      // const contexts = [ ...globalContexts, new InlineContext({ name: '_root', adaptor: 'data', data: { test: 0 } })];
       this.dialog
-      .open(RulesDialogComponent, { data: { rule, contexts: (pane.contexts !== undefined ? [ ...contexts, pane.contexts ] : contexts)  } })
+      .open(RulesDialogComponent, { data: { rule, contexts: (pane.contexts !== undefined ? [ ...globalContexts, pane.contexts ] : globalContexts)  } })
       .afterClosed()
       .subscribe(r => {
         this.panelPane(index, index2).get('rule').setValue(r ? r : rule ? rule : undefined);
