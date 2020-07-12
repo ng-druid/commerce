@@ -23,7 +23,7 @@ import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 import { Dataset } from '../../models/datasource.models';
 import { InlineContext } from '../../models/context.models';
 import { Rule as NgRule } from 'angular2-query-builder';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { SplitLayoutComponent } from '../split-layout/split-layout.component';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -134,6 +134,8 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   private stylePlugins: Array<StylePlugin> = [];
 
   @ViewChild(GridLayoutComponent, {static: false}) gridLayout: GridLayoutComponent;
+  @ViewChild(SplitLayoutComponent, {static: false}) splitLayout: SplitLayoutComponent;
+
   @ViewChildren('panes') paneContainers: QueryList<ElementRef>;
   @ViewChildren(EditablePaneComponent) editablePanes: QueryList<EditablePaneComponent>;
 
@@ -240,7 +242,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
       panes: this.fb.array([])
     }));
 
-    if(this.nested) {
+    if(this.nested && this.gridLayout !== undefined) {
       setTimeout(() => {
         this.paneContainers.forEach((p, i) => {
           this.gridLayout.setItemContentHeight(i, p.nativeElement.offsetHeight);
@@ -249,7 +251,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     }
 
     this.panelPanes(this.panels.length - 1).valueChanges.pipe(
-      filter(() => this.nested),
+      filter(() => this.nested && this.gridLayout !== undefined),
       debounceTime(5),
       delay(1)
     ).subscribe(((panelIndex) => {
@@ -263,7 +265,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   onItemRemoved(index: number) {
     this.panels.removeAt(index);
 
-    if(this.nested) {
+    if(this.nested && this.gridLayout !== undefined) {
       setTimeout(() => {
         this.paneContainers.forEach((p, i) => {
           this.gridLayout.setItemContentHeight(i, p.nativeElement.offsetHeight);
@@ -397,11 +399,21 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
 
   packageFormData(): PanelPage {
     this.syncNestedPanelPages();
+    let gridItems = [];
+    switch(this.layoutType.value) {
+      case 'grid':
+        gridItems = this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i }));
+        break;
+      case 'split':
+        gridItems = this.splitLayout.dashboard.map((gi, i) => ({ ...gi, cols: Math.floor(gi.cols), weight: i }));
+        break;
+      default:
+    }
     const panelPage = new PanelPage({
       id: this.panelPageId,
       displayType: this.displayType.value,
       layoutType: this.layoutType.value,
-      gridItems: this.gridLayout ? this.gridLayout.grid.map((gi, i) => ({ ...gi, weight: i })) : [],
+      gridItems,
       panels: this.panels.value
     });
     console.log(panelPage);
