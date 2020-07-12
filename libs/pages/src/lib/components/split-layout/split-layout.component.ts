@@ -41,7 +41,7 @@ export class SplitLayoutComponent implements OnInit  {
     return this.dashboard.length == 0 ? 0 : this.dashboard.reduce<number>((p, c) => c.y > p ? c.y : p, 0) + 1;
   }
 
-  constructor() { }
+  constructor(private el: ElementRef) { }
 
   ngOnInit(): void {
     if(this.dashboard.length === 0) {
@@ -84,6 +84,7 @@ export class SplitLayoutComponent implements OnInit  {
     this.sizes[rowIndex][totalColumns] = size;
     this.dashboard.push({cols: size, rows: 1, y: rowIndex, x: totalColumns });
     this.itemAdded.emit();
+    setTimeout(() => this.resetGutter());
   }
 
   dragEnd(rowIndex: number, {sizes}) {
@@ -102,6 +103,12 @@ export class SplitLayoutComponent implements OnInit  {
 
   totalColumns(rowIndex: number): number {
     return this.dashboard.reduce<number>((p, c) => c.y === rowIndex ? p + 1 : p, 0);
+  }
+
+  resetGutter() {
+    this.el.nativeElement.querySelectorAll('.as-split-gutter').forEach(e => {
+      e.style.height = 'auto';
+    });
   }
 
 }
