@@ -5,7 +5,7 @@ import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { Store, select } from '@ngrx/store';
 import { take, map, switchMap } from 'rxjs/operators';
 import { PanelPageListItem } from '../../models/page.models';
-import { url } from 'inspector';
+import * as qs from 'qs';
 
 @Component({
   selector: 'classifieds-ui-catch-all-router',
@@ -37,8 +37,9 @@ export class CatchAllRouterComponent implements OnInit {
       )),
       take(1)
     ).subscribe(([panelPage, route]) => {
+      console.log(route);
       const argPath = (route as ActivatedRouteSnapshot).url.map(s => s.path).slice(panelPage.path.split('/').length - 1).join('/');
-      this.router.navigateByUrl(`/pages/panelpage/${panelPage.id}/${argPath}`, {skipLocationChange: true});
+      this.router.navigateByUrl(`/pages/panelpage/${panelPage.id}/${argPath}?${qs.stringify(route.queryParams)}`, {skipLocationChange: true, queryParams: { ...((route as ActivatedRouteSnapshot).queryParams) }, fragment: (route as ActivatedRouteSnapshot).fragment });
     });
   }
 
