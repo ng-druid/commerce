@@ -2,13 +2,14 @@ import { Component, OnInit, Input, Inject} from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup } from '@angular/forms';
 import * as uuid from 'uuid';
 import { AttributeValue } from '@classifieds-ui/attributes';
-import { PanelPage } from '../../../models/page.models';
+import { PanelPage, PanelPageListItem } from '../../../models/page.models';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { PanelContentHandler } from '../../../handlers/panel-content.handler';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
 import { ContentSelectorComponent } from '../../../components/content-selector/content-selector.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'classifieds-ui-panel-selector',
@@ -20,12 +21,12 @@ export class PanelSelectorComponent implements OnInit {
   @Input()
   panelFormGroup: FormGroup;
 
-  panels: Array<string> = [
-    /*'d45334a5-b70b-11ea-8743-9288aa7fe284'*/
-    '2dfe09d7-c2f5-11ea-8364-8ad81b571387'
-  ];
+  selectedIndex: number = 0;
+
+  panels$: Observable<Array<PanelPageListItem>>;
 
   panelPagesService: EntityCollectionService<PanelPage>;
+  panelPageListItemsService: EntityCollectionService<PanelPageListItem>;
 
   private contentPlugin: ContentPlugin;
 
@@ -38,6 +39,7 @@ export class PanelSelectorComponent implements OnInit {
     es: EntityServices
   ) {
     this.panelPagesService = es.getEntityCollectionService('PanelPage');
+    this.panelPageListItemsService = es.getEntityCollectionService('PanelPageListItem');
     this.contentPlugin = contentPlugins.find(p => p.name === 'panel');
   }
 
@@ -55,6 +57,11 @@ export class PanelSelectorComponent implements OnInit {
       settings: this.fb.array(this.handler.buildSettings(newPanel).map(s => this.convertToGroup(s)))
     }));
     this.bottomSheetRef.dismiss();
+  }
+
+  onLinkSelect() {
+    this.selectedIndex = 1;
+    this.panels$ = this.panelPageListItemsService.getAll();
   }
 
   onItemSelect(panel: string) {

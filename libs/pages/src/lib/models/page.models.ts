@@ -38,6 +38,9 @@ export class PanelPage {
   }
 }
 
+export class PanelPageListItem extends PanelPage {
+}
+
 export class GridLayout {
   id: string;
   site: string;

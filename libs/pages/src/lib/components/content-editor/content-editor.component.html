@@ -20,6 +20,7 @@
   <classifieds-ui-grid-layout cdkDropListGroup (itemAdded)="onItemAdded()" (itemRemoved)="onItemRemoved($event)" [options]="options" [dashboard]="dashboard">
     <ng-template #extraActions>
       <button *ngIf="savable" type="submit">Save</button>
+      <button *ngIf="savable" type="button" (click)="onPropertiesClick()">Propeties</button>
       <button *ngIf="nested" type="button" (click)="onRulesClick()">Rules</button>
       <button *ngIf="nested" type="button" (click)="onDeleteClick()">Delete</button>
       <div class="layout-type">
@@ -62,6 +63,7 @@
   <classifieds-ui-gridless-layout cdkDropListGroup>
     <ng-template #extraActions>
       <button *ngIf="savable" type="submit">Save</button>
+      <button *ngIf="savable" type="button" (click)="onPropertiesClick()">Propeties</button>
       <button *ngIf="nested" type="button" (click)="onDeleteClick()">Delete</button>
       <button *ngIf="nested" type="button" (click)="onRulesClick()">Rules</button>
       <button type="button" (mousedown)="addContent(0)" (touchstart)="addContent(0)">Add Content</button>
@@ -95,6 +97,7 @@
   <classifieds-ui-split-layout cdkDropListGroup (itemAdded)="onItemAdded()" (itemRemoved)="onItemRemoved($event)" [dashboard]="dashboard">
     <ng-template #extraActions>
       <button *ngIf="savable" type="submit">Save</button>
+      <button *ngIf="savable" type="button" (click)="onPropertiesClick()">Propeties</button>
       <button *ngIf="nested" type="button" (click)="onRulesClick()">Rules</button>
       <button *ngIf="nested" type="button" (click)="onDeleteClick()">Delete</button>
       <div class="layout-type">

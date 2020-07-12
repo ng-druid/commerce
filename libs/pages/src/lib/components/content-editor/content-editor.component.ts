@@ -24,6 +24,8 @@ import { Dataset } from '../../models/datasource.models';
 import { InlineContext } from '../../models/context.models';
 import { Rule as NgRule } from 'angular2-query-builder';
 import { SplitLayoutComponent } from '../split-layout/split-layout.component';
+import { PropertiesDialogComponent } from '../properties-dialog/properties-dialog.component';
+import { PropertiesFormPayload } from '../../models/form.models';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -96,6 +98,8 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
 
   panelPageId: string;
   dashboard = [];
+
+  pageProperties = new PropertiesFormPayload();
 
   public onTouched: () => void = () => {};
 
@@ -341,6 +345,15 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     this.rules.emit();
   }
 
+  onPropertiesClick() {
+    this.dialog
+      .open(PropertiesDialogComponent, { data: { panelPage: this.panelPage } })
+      .afterClosed()
+      .subscribe((props: PropertiesFormPayload) => {
+        this.pageProperties = new PropertiesFormPayload({ ...props });
+      });
+  }
+
   onRulesPane(index: number, index2: number) {
     const pane = new Pane(this.panelPane(index, index2).value);
     const rule = this.panelPane(index, index2).get('rule').value !== '' ? this.panelPane(index, index2).get('rule').value as NgRule : undefined;
@@ -411,6 +424,9 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     }
     const panelPage = new PanelPage({
       id: this.panelPageId,
+      title: this.pageProperties.title,
+      name: this.pageProperties.name,
+      path: this.pageProperties.path,
       displayType: this.displayType.value,
       layoutType: this.layoutType.value,
       gridItems,

@@ -7,4 +7,7 @@ export const entityMetadata: EntityMetadataMap = {
   PanelPage: {
     entityName: 'PanelPage'
   },
+  PanelPageListItem: {
+    entityName: 'PanelPageListItem'
+  }
 };

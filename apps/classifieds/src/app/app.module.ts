@@ -49,9 +49,10 @@ const routes = [
   { path: 'ads', loadChildren: () => import('@classifieds-ui/ads').then(m => m.AdsModule) },
   { path: 'vocabularies', loadChildren: () => import('@classifieds-ui/vocabulary').then(m => m.VocabularyModule) },
   { path: 'profiles', loadChildren: () => import('@classifieds-ui/profiles').then(m => m.ProfilesModule) },
-  { path: 'pages', loadChildren: () => import('@classifieds-ui/pages').then(m => m.PagesModule) },
-  { path: '', component: HomeComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: '', loadChildren: () => import('@classifieds-ui/pages').then(m => m.PagesModule) },
+  //{ path: '', component: HomeComponent },
+  //{ path: '**', component: NotFoundComponent }
+  //{ path: '', redirectTo: 'pages', pathMatch: "full" }
 ];
 
 // @todo: just get this to work for now deal with actual endpoints later.

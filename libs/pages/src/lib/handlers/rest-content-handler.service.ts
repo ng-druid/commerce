@@ -82,33 +82,41 @@ export class RestContentHandler implements ContentHandler {
         switchMap(dataset => this.getBindings(settings).pipe(
           map<Array<ContentBinding>, [Dataset, Array<ContentBinding>]>(bindings => [dataset, bindings])
         )),
+        tap(([dataset, bindings]) => console.log(bindings)),
         switchMap(([dataset, bindings]) => iif(
           () => bindings.length > 0,
-          forkJoin(
-            dataset.results.map(row => from(bindings).pipe(
-              map(binding => (metadata.get('panes') as Array<Pane>).find(p => p.name === binding.id)),
-              switchMap(pane => iif(
-                () => pane.rule && pane.rule !== null && pane.rule.condition !== '',
-                this.rulesResolver.evaluate(pane.rule,[ ...globalContexts, ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
-                  map<boolean, [Pane, boolean]>(res => [pane, res])
-                ),
-                of(false).pipe(
-                  map<boolean, [Pane, boolean]>(b => [pane, b])
-                )
-              )),
-              filter(([pane, res]) => res),
-              map(([pane, res]) => pane.name),
-              defaultIfEmpty(bindings[0].id),
-              take(1)
-            ))
-          ).pipe(
-            map<Array<string>, [Dataset, Array<string>]>(groups => [dataset, groups])
-          ),
-          of().pipe(
-            map(() => [dataset])
-          )
+          new Observable<[Dataset, Array<string>]>(obs => {
+            forkJoin(
+              dataset.results.map(row => from(bindings).pipe(
+                map(binding => (metadata.get('panes') as Array<Pane>).find(p => p.name === binding.id)),
+                switchMap(pane => iif(
+                  () => pane.rule && pane.rule !== null && pane.rule.condition !== '',
+                  this.rulesResolver.evaluate(pane.rule,[ ...globalContexts, ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
+                    map<boolean, [Pane, boolean]>(res => [pane, res])
+                  ),
+                  of(false).pipe(
+                    map<boolean, [Pane, boolean]>(b => [pane, b])
+                  )
+                )),
+                filter(([pane, res]) => res),
+                map(([pane, res]) => pane.name),
+                defaultIfEmpty(bindings[0].id),
+                take(1)
+              ))
+            ).pipe(
+              map<Array<string>, [Dataset, Array<string>]>(groups => [dataset, groups])
+            ).subscribe(d => {
+              obs.next(d);
+              obs.complete();
+            });
+          }),
+          new Observable<[Dataset]>(obs => {
+            obs.next([dataset]);
+            obs.complete();
+          })
         )),
         map(([dataset, paneMappings]) => {
+          console.log('map renderer');
           if(r.renderer.type === 'pane') {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);

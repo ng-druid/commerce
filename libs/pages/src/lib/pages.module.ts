@@ -76,8 +76,13 @@ import { RulesDialogComponent } from './components/rules-dialog/rules-dialog.com
 import { PageRouterLinkComponent } from './components/page-router-link/page-router-link.component';
 import { SplitLayoutComponent } from './components/split-layout/split-layout.component';
 import { FlexLayoutComponent } from './components/flex-layout/flex-layout.component';
+import { TabsPanelRendererComponent } from './plugins/style/tabs-panel-renderer/tabs-panel-renderer.component';
+import { PropertiesDialogComponent } from './components/properties-dialog/properties-dialog.component';
+import { CatchAllRouterComponent } from './components/catch-all-router/catch-all-router.component';
+import { CatchAllGuard } from './guards/catchall.guard';
 
 const panePageMatcher = (url: UrlSegment[]) => {
+  console.log(url);
   if(url[0] !== undefined && url[0].path === 'panelpage') {
     return {
       consumed: url,
@@ -97,12 +102,15 @@ const panePageMatcher = (url: UrlSegment[]) => {
 }
 
 const routes = [
-  { path: 'create-grid-layout', component: CreateGridLayoutComponent },
-  { path: 'create-panel-page', component: CreatePanelPageComponent },
-  { path: 'page-builder', component: PageBuilderComponent },
-  { path: 'grid-layouts', component: GridLayoutMasterComponent },
-  { path: 'panelpage/:panelPageId/manage', component: EditPanelPageComponent },
-  { /*path: 'panelpage/:panelPageId',*/ matcher: panePageMatcher, component: PanelPageRouterComponent }
+  { path: 'pages', children: [
+    { path: 'create-grid-layout', component: CreateGridLayoutComponent },
+    { path: 'create-panel-page', component: CreatePanelPageComponent },
+    { path: 'page-builder', component: PageBuilderComponent },
+    { path: 'grid-layouts', component: GridLayoutMasterComponent },
+    { matcher: panePageMatcher, component: PanelPageRouterComponent },
+    { path: 'panelpage/:panelPageId/manage', component: EditPanelPageComponent },
+  ]},
+  { path: '**', component: CatchAllRouterComponent /*, canActivate: [ CatchAllGuard ]*/ }
   // { path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
 
@@ -130,8 +138,9 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent, SplitLayoutComponent, FlexLayoutComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent, SplitLayoutComponent, FlexLayoutComponent, TabsPanelRendererComponent, PropertiesDialogComponent, CatchAllRouterComponent],
   providers: [
+    CatchAllGuard,
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
@@ -148,7 +157,8 @@ const routes = [
     { provide: CONTENT_PLUGIN, useFactory: restContentPluginFactory, multi: true, deps: [ RestContentHandler ]  },
     { provide: CONTENT_PLUGIN, useFactory: sliceContentPluginFactory, multi: true, deps: [ SliceContentHandler ]  },
     { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'gallery', title: 'Gallery', editorComponent: undefined, renderComponent: GalleryPanelRendererComponent }), multi: true },
-    { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'virtuallist', title: 'Virtual List', editorComponent: undefined, renderComponent: VirtualListPanelRendererComponent }), multi: true }
+    { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'virtuallist', title: 'Virtual List', editorComponent: undefined, renderComponent: VirtualListPanelRendererComponent }), multi: true },
+    { provide: STYLE_PLUGIN, useValue: new StylePlugin({ name: 'tabs', title: 'Tabs', editorComponent: undefined, renderComponent: TabsPanelRendererComponent }), multi: true }
   ],
   //exports: [NavigationHostDirective]
 })

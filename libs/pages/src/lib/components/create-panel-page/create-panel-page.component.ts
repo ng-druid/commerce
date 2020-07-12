@@ -16,6 +16,7 @@ export class CreatePanelPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('here');
   }
 
   onSubmit(panelPage: PanelPage) {
