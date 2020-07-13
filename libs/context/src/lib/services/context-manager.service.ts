@@ -19,6 +19,9 @@ export class ContextManagerService {
   lookupContext(name: string): ContextPlugin {
     return this.contextPlugins.find(c => c.name === name);
   }
+  matchAdaptor(adaptor: string): Array<ContextPlugin> {
+    return this.contextPlugins.filter(c => c.adaptor === adaptor);
+  }
   register(contextPlugin: ContextPlugin) {
     this.contextPlugins.push(contextPlugin);
   }

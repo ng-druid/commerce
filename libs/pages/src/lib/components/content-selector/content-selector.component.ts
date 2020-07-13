@@ -4,6 +4,7 @@ import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
 import { ContentSelectionHostDirective } from '../../directives/content-selection-host.directive';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
+import { InlineContext } from '../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-content-selector',
@@ -21,7 +22,7 @@ export class ContentSelectorComponent implements OnInit {
 
   constructor(
     @Inject(CONTENT_PLUGIN) contentPlugins: Array<ContentPlugin>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public panelFormGroup: FormGroup,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: { panelForm:FormGroup, contexts: Array<InlineContext> },
     private bottomSheetRef: MatBottomSheetRef<ContentSelectorComponent>,
     private dialog: MatDialog,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -40,9 +41,9 @@ export class ContentSelectorComponent implements OnInit {
       this.renderSelectionComponent();
     } else if(this.plugin.editorComponent !== undefined) {
       this.bottomSheetRef.dismiss();
-      const dialogRef = this.dialog.open(this.plugin.editorComponent, { data: { panelFormGroup: this.panelFormGroup, pane: undefined, paneIndex: undefined } });
+      const dialogRef = this.dialog.open(this.plugin.editorComponent, { data: { panelFormGroup: this.data.panelForm, pane: undefined, paneIndex: undefined, contexts: this.data.contexts } });
     } else {
-      (this.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
+      (this.data.panelForm.get('panes') as FormArray).push(this.fb.group({
         contentProvider: this.plugin.name,
         settings: this.fb.array([])
       }));
@@ -56,7 +57,8 @@ export class ContentSelectorComponent implements OnInit {
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
-    (componentRef.instance as any).panelFormGroup = this.panelFormGroup;
+    (componentRef.instance as any).panelFormGroup = this.data.panelForm;
+    (componentRef.instance as any).contents = this.data.contexts;
 
   }
 

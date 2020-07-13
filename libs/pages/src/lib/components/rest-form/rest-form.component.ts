@@ -3,6 +3,7 @@ import { FormBuilder, FormArray, Validators } from '@angular/forms';
 import { TokenizerService } from '@classifieds-ui/token';
 import { Rest } from '../../models/datasource.models';
 import { RestSourceFormComponent } from '../rest-source-form/rest-source-form.component';
+import { InlineContext } from '../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-rest-form',
@@ -16,6 +17,9 @@ export class RestFormComponent implements OnInit, AfterViewInit {
 
   @Output()
   submitted = new EventEmitter<Rest>();
+
+  @Input()
+  contexts: Array<InlineContext> = [];
 
   @Input()
   set rest(rest: Rest) {
@@ -55,7 +59,6 @@ export class RestFormComponent implements OnInit, AfterViewInit {
 
   @ViewChild(RestSourceFormComponent, {static: true}) sourceForm: RestSourceFormComponent;
 
-  contexts = [];
   forms = [];
 
   snippetValidation = true;

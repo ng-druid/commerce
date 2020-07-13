@@ -1,9 +1,10 @@
-import { Component, OnInit, forwardRef, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, forwardRef, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { HttpErrorResponse } from '@angular/common/http';
 import { NEVER, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, switchMap, catchError, tap, takeUntil } from 'rxjs/operators';
 import { DatasourceApiService } from '../../services/datasource-api.service';
+import { InlineContext } from '../../models/context.models';
 import * as qs from 'qs';
 
 @Component({
@@ -27,6 +28,9 @@ export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueA
 
   @Output()
   dataChange = new EventEmitter<any>();
+
+  @Input()
+  contexts: Array<InlineContext> = [];
 
   flags = new Map<string, string>();
 

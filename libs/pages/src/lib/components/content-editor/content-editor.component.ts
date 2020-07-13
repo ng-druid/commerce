@@ -26,6 +26,7 @@ import { Rule as NgRule } from 'angular2-query-builder';
 import { SplitLayoutComponent } from '../split-layout/split-layout.component';
 import { PropertiesDialogComponent } from '../properties-dialog/properties-dialog.component';
 import { PropertiesFormPayload } from '../../models/form.models';
+import { ContextDialogComponent } from '../context-dialog/context-dialog.component';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -98,6 +99,8 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
 
   panelPageId: string;
   dashboard = [];
+
+  contexts: Array<InlineContext> = [];
 
   pageProperties = new PropertiesFormPayload();
 
@@ -230,7 +233,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   }
 
   addContent(index: number) {
-    this.bs.open(ContentSelectorComponent, { data: this.panels.controls[index] });
+    this.bs.open(ContentSelectorComponent, { data: { panelForm: this.panels.controls[index], contexts: this.contexts } });
   }
 
   applyStyle(index: number) {
@@ -406,6 +409,14 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     console.log(`delete nested pane: ${index} | ${index2}`);
   }
 
+  onAddContextClick() {
+    this.dialog.open(ContextDialogComponent, { data: { } })
+    .afterClosed()
+    .subscribe((context: InlineContext) => {
+      this.contexts.push(context);
+    });
+  }
+
   submit() {
     this.submitted.emit(this.packageFormData());
   }
@@ -430,6 +441,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
       displayType: this.displayType.value,
       layoutType: this.layoutType.value,
       gridItems,
+      contexts: this.contexts,
       panels: this.panels.value
     });
     console.log(panelPage);

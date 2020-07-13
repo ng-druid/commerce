@@ -14,7 +14,7 @@ import { UtilsModule, EMBEDDABLE_COMPONENT  } from '@classifieds-ui/utils';
 import { TokenModule } from '@classifieds-ui/token';
 import { AttributesModule } from '@classifieds-ui/attributes';
 import { CONTENT_PLUGIN } from '@classifieds-ui/content';
-import { CONTEXT_PLUGIN, ContextManagerService } from '@classifieds-ui/context';
+import { CONTEXT_PLUGIN, ContextManagerService, ContextModule } from '@classifieds-ui/context';
 import { TaxonomyModule } from '@classifieds-ui/taxonomy';
 import { STYLE_PLUGIN, StylePlugin } from '@classifieds-ui/style';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
@@ -45,7 +45,7 @@ import { PanelPageRouterComponent } from './components/panel-page-router/panel-p
 import { CreatePanelPageComponent } from './components/create-panel-page/create-panel-page.component';
 import { EditPanelPageComponent } from './components/edit-panel-page/edit-panel-page.component';
 import { SnippetContentHandler } from './handlers/snippet-content.handler';
-import { snippetContentPluginFactory, attributeContentPluginFactory, mediaContentPluginFactory, panelContentPluginFactory, restContentPluginFactory, sliceContentPluginFactory, pageContextFactory } from './pages.factories';
+import { snippetContentPluginFactory, attributeContentPluginFactory, mediaContentPluginFactory, panelContentPluginFactory, restContentPluginFactory, sliceContentPluginFactory, pageContextFactory, restContextFactory } from './pages.factories';
 import { AttributeSelectorComponent } from './plugins/attribute/attribute-selector/attribute-selector.component';
 import { AttributeContentHandler } from './handlers/attribute-content.handler';
 import { AttributeEditorComponent } from './plugins/attribute/attribute-editor/attribute-editor.component';
@@ -82,6 +82,8 @@ import { PropertiesDialogComponent } from './components/properties-dialog/proper
 import { CatchAllRouterComponent } from './components/catch-all-router/catch-all-router.component';
 import { CatchAllGuard } from './guards/catchall.guard';
 import { PageContextResolver } from './contexts/page-context.resolver';
+import { ContextDialogComponent } from './components/context-dialog/context-dialog.component';
+import { ContextEditorComponent } from './components/context-editor/context-editor.component';
 
 const panePageMatcher = (url: UrlSegment[]) => {
   if(url[0] !== undefined && url[0].path === 'panelpage') {
@@ -131,6 +133,7 @@ const routes = [
     GridsterModule,
     UtilsModule,
     TokenModule,
+    ContextModule,
     AttributesModule,
     MediaModule,
     NgxGalleryModule,
@@ -139,7 +142,7 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent, SplitLayoutComponent, FlexLayoutComponent, TabsPanelRendererComponent, PropertiesDialogComponent, CatchAllRouterComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent, SplitLayoutComponent, FlexLayoutComponent, TabsPanelRendererComponent, PropertiesDialogComponent, CatchAllRouterComponent, ContextDialogComponent, ContextEditorComponent],
   providers: [
     CatchAllGuard,
     PageContextResolver,
@@ -173,5 +176,6 @@ export class PagesModule {
   ) {
     eds.registerMetadataMap(entityMetadata);
     contextManager.register(pageContextFactory(pageContextResolver));
+    contextManager.register(restContextFactory());
   }
 }

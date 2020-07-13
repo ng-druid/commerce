@@ -5,6 +5,7 @@ import { RestContentHandler } from '../../../handlers/rest-content-handler.servi
 import { Rest } from '../../../models/datasource.models';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Pane } from '../../../models/page.models';
+import { InlineContext } from '../../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-rest-editor',
@@ -19,12 +20,16 @@ export class RestEditorComponent implements OnInit {
 
   rest: Rest;
 
+  contexts: Array<InlineContext> = [];
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number;  },
+    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number; contexts: Array<InlineContext> },
     private dialogRef: MatDialogRef<RestEditorComponent>,
     private fb: FormBuilder,
     private handler: RestContentHandler
-  ) { }
+  ) {
+    this.contexts = this.data.contexts;
+  }
 
   ngOnInit(): void {
     this.panes = (this.data.panelFormGroup.get('panes') as FormArray).controls.reduce<Array<string>>((p, c) => (c.get('name').value ? [ ...p, c.get('name').value ] : [ ...p ]), []);
