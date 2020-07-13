@@ -92,12 +92,12 @@ export const pageContextFactory = (resolver: PageContextResolver) => {
   const baseObject = {
     path: '',
   };
-  return new ContextPlugin({ name: '_page', title: 'Page', adaptor: 'default', baseObject, resolver });
+  return new ContextPlugin({ name: '_page', global: true, title: 'Page', adaptor: 'default', baseObject, resolver });
 };
 
 export const restContextFactory = () => {
   const baseObject = {
     dataset: new Dataset(),
   };
-  return new ContextPlugin({ name: '_rest', title: 'Rest', adaptor: 'rest', baseObject, resolver: undefined, editorComponent: ContextEditorComponent });
+  return new ContextPlugin({ name: '_rest', title: 'Rest', global: false, adaptor: 'rest', baseObject, resolver: undefined, editorComponent: ContextEditorComponent });
 };

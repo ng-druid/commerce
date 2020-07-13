@@ -10,5 +10,5 @@ export const routeContextFactory = (resolver: RouteResolver) => {
     arg4: '',
     arg5: ''
   };
-  return new ContextPlugin({ name: '_route', title: 'Route', adaptor: 'default', baseObject, resolver });
+  return new ContextPlugin({ name: '_route', title: 'Route', global: true, adaptor: 'default', baseObject, resolver });
 };

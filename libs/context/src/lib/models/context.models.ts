@@ -11,7 +11,8 @@ export class ContextPlugin {
   baseObject: any;
   resolver: ContextResolver;
   adaptor: string;
-  editorComponent?: Type<any>
+  editorComponent?: Type<any>;
+  global? = false;
   constructor(data?: ContextPlugin) {
     if (data) {
       this.name = data.name;
@@ -19,6 +20,7 @@ export class ContextPlugin {
       this.adaptor = data.adaptor;
       this.baseObject = data.baseObject;
       this.resolver = data.resolver;
+      this.global = data.global === undefined ? false: data.global;
       if(data.editorComponent) {
         this.editorComponent = data.editorComponent;
       }

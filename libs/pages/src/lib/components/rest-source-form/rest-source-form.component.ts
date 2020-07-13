@@ -1,7 +1,7 @@
 import { Component, OnInit, forwardRef, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { HttpErrorResponse } from '@angular/common/http';
-import { NEVER, Subject, Subscription } from 'rxjs';
+import { NEVER, Subject, Subscription, of } from 'rxjs';
 import { debounceTime, filter, map, switchMap, catchError, tap, takeUntil } from 'rxjs/operators';
 import { DatasourceApiService } from '../../services/datasource-api.service';
 import { InlineContext } from '../../models/context.models';
@@ -49,7 +49,7 @@ export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueA
     switchMap((url: string) => this.datasourceApi.getData(url).pipe(
       catchError((e: HttpErrorResponse) => {
         console.log(e);
-        return NEVER;
+        return of([]);
       })
     )),
     takeUntil(this.componentDestroyed)
@@ -111,6 +111,7 @@ export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueA
     this.sourceForm.valueChanges.pipe(
       debounceTime(1000)
     ).subscribe(() => {
+      console.log('refresh data')
       this.refreshData$.next();
     });
   }
@@ -167,13 +168,33 @@ export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueA
   }
 
   generateUrl(): string {
+    console.log('generate url');
     const url = this.sourceForm.get('url').value;
-    if(url.indexOf('?') === -1) {
-      return url;
+    const [path, queryString] = url.split('?', 2);
+    const qsParsed = qs.parse(queryString);
+    const qsOverrides = {};
+    const pathPieces = path.split('/');
+    const len = pathPieces.length;
+    const rebuildUrl = [];
+    let pathParams = 0;
+    for(let i = 0; i < len; i++) {
+      if(pathPieces[i].indexOf(':') > -1) {
+        const mapping = this.params.at(pathParams).get('mapping');
+        rebuildUrl.push(mapping.value.type === 'static' ? mapping.value.value : mapping.value.testValue);
+        pathParams++;
+      } else {
+        rebuildUrl.push(pathPieces[i]);
+      }
     }
-    const parsed = qs.parse(url.substring(url.indexOf('?') + 1));
-    const params = this.params.controls.reduce<any>((p, c, i) => ({ ...p, [this.paramName(i)]: (c.get('mapping').get('value').value === 'static' ? c.get('mapping').get('value').value : c.get('mapping').get('testValue').value) }), {});
-    const apiUrl = url.substring(0, url.indexOf('?') + 1) + qs.stringify({ ...parsed, ...params });
+    for(const prop in qsParsed) {
+      if(qsParsed[prop].indexOf(':') > -1) {
+        const mapping = this.params.at(pathParams).get('mapping');
+        qsOverrides[prop] = mapping.value.type === 'static' ? mapping.value.value : mapping.value.testValue;
+        pathParams++;
+      }
+    }
+    const apiUrl = rebuildUrl.join('/') + (queryString !== '' ? '?' + qs.stringify({ ...qsParsed, ...qsOverrides }) : '');
+    console.log(apiUrl);
     return apiUrl;
   }
 

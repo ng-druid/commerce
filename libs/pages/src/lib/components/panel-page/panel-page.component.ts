@@ -100,7 +100,7 @@ export class PanelPageComponent implements OnInit, OnChanges {
       } else {
         this.contexts = [];
       }*/
-      this.contexts = [];
+      this.contexts = p.contexts.map(c => new InlineContext(c));
       this.panelPage = p;
       this.populatePanelsFormArray();
     });

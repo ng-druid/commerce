@@ -3,9 +3,10 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { Store, select } from '@ngrx/store';
-import { take, map, switchMap } from 'rxjs/operators';
+import { take, map, switchMap, catchError } from 'rxjs/operators';
 import { PanelPageListItem } from '../../models/page.models';
 import * as qs from 'qs';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'classifieds-ui-catch-all-router',
@@ -33,12 +34,15 @@ export class CatchAllRouterComponent implements OnInit {
       map(route => [(route as ActivatedRouteSnapshot).url.reduce<Array<string>>((p, c) => [ ...p, `${p.join('/')}/${c.path}` ], []), route]),
       map(([paths, route])  => ['path=' + paths.join('&path='), route]),
       switchMap(([qs, route]) => this.panelPageListItemsService.getWithQuery(qs).pipe(
+        catchError(e => of<Array<PanelPageListItem>>([])),
         map(pages => [pages.reduce<PanelPageListItem>((p, c) => p === undefined ? c : p.path.split('/').length < c.path.split('/').length ? c : p , undefined), route])
       )),
       take(1)
     ).subscribe(([panelPage, route]) => {
-      const argPath = (route as ActivatedRouteSnapshot).url.map(s => s.path).slice(panelPage.path.split('/').length - 1).join('/');
-      this.router.navigateByUrl(`/pages/panelpage/${panelPage.id}/${argPath}?${qs.stringify(route.queryParams)}`, {skipLocationChange: true, queryParams: { ...((route as ActivatedRouteSnapshot).queryParams) }, fragment: (route as ActivatedRouteSnapshot).fragment });
+      if(panelPage) {
+        const argPath = (route as ActivatedRouteSnapshot).url.map(s => s.path).slice(panelPage.path.split('/').length - 1).join('/');
+        this.router.navigateByUrl(`/pages/panelpage/${panelPage.id}/${argPath}?${qs.stringify(route.queryParams)}`, {skipLocationChange: true, queryParams: { ...((route as ActivatedRouteSnapshot).queryParams) }, fragment: (route as ActivatedRouteSnapshot).fragment });
+      }
     });
   }
 

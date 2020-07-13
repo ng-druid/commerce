@@ -124,7 +124,8 @@ export class RestContentHandler implements ContentHandler {
               return new Pane({ ...attachedPane, rule: undefined, label: name, contexts: [ ...mergedContexts, new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
             }) as Array<Pane>;
           } else {
-            const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
+            //const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
+            const contexts = [];
             return dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [ ...contexts,new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>;
           }
         }),
