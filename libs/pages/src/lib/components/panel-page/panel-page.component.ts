@@ -71,6 +71,7 @@ export class PanelPageComponent implements OnInit, OnChanges {
         tap(() => alert('Hello'))
       );
     }*/
+    console.log('Panel Page: OnInit');
     if(this.id !== undefined) {
       this.fetchPage();
     } else if(this.panelPage !== undefined) {
@@ -88,6 +89,7 @@ export class PanelPageComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('Panel Page: OnChanges');
     if(!this.nested && !changes.id.firstChange && changes.id.previousValue !== changes.id.currentValue) {
       this.fetchPage();
     }

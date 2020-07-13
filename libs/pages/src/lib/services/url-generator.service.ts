@@ -4,15 +4,9 @@ import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { Store, select } from '@ngrx/store';
 import { Param } from '../models/datasource.models';
 import { ContextResolverService } from './context-resolver.service';
-import { Observable, of, forkJoin, Subject } from 'rxjs';
-import { map, switchMap, tap, defaultIfEmpty, filter } from 'rxjs/operators';
-import { Rest } from '../models/datasource.models';
-import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
-import { selectDataset } from '../features/page-builder/page-builder.selectors';
-import { PageBuilderPartialState } from '../features/page-builder/page-builder.reducer';
-import { TokenizerService } from '@classifieds-ui/token';
+import { Observable, of, forkJoin } from 'rxjs';
+import { map, switchMap, tap, defaultIfEmpty } from 'rxjs/operators';
 import * as qs from 'qs';
-import * as uuid from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +15,7 @@ export class UrlGeneratorService {
 
   constructor(
     private routerStore: Store<RouterReducerState>,
-    private contextResolver: ContextResolverService,
-    private pageBuilderFacade: PageBuilderFacade,
-    private store: Store<PageBuilderPartialState>,
-    private tokenizerService: TokenizerService
+    private contextResolver: ContextResolverService
   ) {}
 
   generateUrl(url, params: Array<Param>, metadata: Map<string, any>): Observable<string> {
@@ -64,7 +55,7 @@ export class UrlGeneratorService {
           )
         ]).pipe(
           map(r => r.join('?')),
-          tap(u => console.log(u))
+          tap(r => console.log(`generated url: ${r}`))
         );
       })
     );
@@ -83,25 +74,8 @@ export class UrlGeneratorService {
     return paramNames;
   }
 
-  executeRestContext(rest: Rest, metadata: Map<string, any>): Observable<any> {
-    const subject = new Subject();
-    const meta = new Map<string, any>([ ...metadata, [ 'tag', uuid.v4() ] ]);
-    this.generateUrl(rest.url, rest.params, metadata).subscribe(url => {
-      this.pageBuilderFacade.loadRestData(`${meta.get('tag')}`, new Rest({ ...rest, url }));
-      this.store.pipe(
-        select(selectDataset(`${meta.get('tag')}`)),
-        filter(dataset => dataset !== undefined),
-      ).subscribe(dataset => {
-        subject.next(dataset);
-        subject.complete();
-      });
-    });
-    return subject;
-  }
-
   paramValue(param: Param, metadata: Map<string, any>): Observable<string> {
     const route = metadata.get('_route') as ActivatedRoute;
-    console.log(param);
     if(param.flags.findIndex(f => f.enabled) > -1 && metadata.has('page')) {
       return of(`${metadata.get('page')}`);
     } else if(param.flags.findIndex(f => f.enabled) > -1 && metadata.has('searchString')) {
@@ -112,14 +86,7 @@ export class UrlGeneratorService {
       return of(route.queryParams[param.mapping.value]);
     } else if(param.mapping.type === 'context') {
       const ctx = metadata.get('contexts').find(c => c.name === param.mapping.context);
-      if(ctx.adaptor === 'rest') {
-        return this.executeRestContext(ctx.rest, metadata).pipe(
-          map(d => this.tokenizerService.generateGenericTokens(d.results[0])),
-          map(tokens => this.tokenizerService.replaceTokens(`[${param.mapping.value}]`, tokens)),
-        );
-      } else {
-        return this.contextResolver.resolve(ctx);
-      }
+      return this.contextResolver.resolve(ctx, new Map<string, any>([ ...metadata, [ '_field', param.mapping.value ] ]), this);
     } else {
       return of(param.mapping.value);
     }

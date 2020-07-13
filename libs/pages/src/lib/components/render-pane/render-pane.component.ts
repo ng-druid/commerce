@@ -77,6 +77,7 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
   }
 
   ngOnInit(): void {
+    console.log('Render Pane: OnInit');
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
     this.paneForm.get('contentPlugin').setValue(this.contentPlugin.name);
     this.paneForm.get('name').setValue(this.name);
@@ -89,6 +90,7 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('Render Pane: OnChanges');
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
     this.paneForm.get('contentPlugin').setValue(this.contentPlugin.name);
     this.paneForm.get('name').setValue(this.name);

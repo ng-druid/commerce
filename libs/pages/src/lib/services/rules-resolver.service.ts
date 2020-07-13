@@ -33,7 +33,7 @@ export class RulesResolverService {
   buildFacts(contexts: Array<InlineContext> = []): Observable<any> {
     const resolvers$ = contexts.reduce<Array<Observable<[string, any]>>>((p, c) => {
       const plugin = this.contextManager.lookupContext(c.name);
-      if(plugin !== undefined) {
+      if(plugin !== undefined && plugin.resolver !== undefined) {
         return [ ...p, plugin.resolver.resolve().pipe(
           map(data => [c.name, data])
         )];

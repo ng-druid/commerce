@@ -68,6 +68,7 @@ export class RestContentHandler implements ContentHandler {
     return subject;
   }
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
+    console.log('build dynamic items');
     const subject = new Subject<Array<AttributeValue>>();
     const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
     this.toObject(settings).pipe(
@@ -118,7 +119,8 @@ export class RestContentHandler implements ContentHandler {
           if(r.renderer.type === 'pane') {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);
-              const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
+              // const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
+              const contexts = [];
               const mergedContexts = [ ...(attachedPane !== undefined && attachedPane.contexts !== undefined ? attachedPane.contexts : []), ...contexts ];
               const name = uuid.v4();
               return new Pane({ ...attachedPane, rule: undefined, label: name, contexts: [ ...mergedContexts, new InlineContext({ name: "_root", adaptor: 'data', data: row })] });

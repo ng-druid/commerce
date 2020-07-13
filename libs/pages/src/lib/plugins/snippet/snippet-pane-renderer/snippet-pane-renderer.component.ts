@@ -72,7 +72,6 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   }
 
   resolveContexts(contexts: Array<InlineContext>): Observable<undefined | Map<string, any>> {
-    console.log(contexts);
     return forkJoin([
       ...this.contextManager.getAll(true).map(c => c.resolver.resolve().pipe(map(d => [c, d], take(1)))),
       ...(contexts === undefined || contexts.length === 0 ? [] : contexts.map(c => of(c).pipe(map(c => [c, c.data]), take(1))))

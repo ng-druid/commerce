@@ -97,9 +97,10 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
   }
 
   ngOnInit(): void {
+    console.log('Render Panel: OnInit');
     this.stylePlugin = this.panel.stylePlugin !== undefined && this.panel.stylePlugin !== '' ? this.stylePlugins.find(p => p.name === this.panel.stylePlugin) : undefined;
     if(this.panel !== undefined && this.panelHost !== undefined) {
-      this.resolvePanes();
+      //this.resolvePanes();
       if(!this.refreshSubscription$) {
         this.handlePanelRefresh();
       }
@@ -107,6 +108,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('Render Panel: OnChanges');
     this.stylePlugin = this.panel.stylePlugin !== undefined && this.panel.stylePlugin !== '' ? this.stylePlugins.find(p => p.name === this.panel.stylePlugin) : undefined;
     if(this.panel !== undefined && this.panelHost !== undefined) {
       this.resolvePanes();
