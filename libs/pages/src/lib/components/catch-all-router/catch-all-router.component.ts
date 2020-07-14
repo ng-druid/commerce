@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { Store, select } from '@ngrx/store';
-import { take, map, switchMap, catchError } from 'rxjs/operators';
+import { take, map, switchMap, catchError, tap } from 'rxjs/operators';
 import { PanelPageListItem } from '../../models/page.models';
 import * as qs from 'qs';
 import { of } from 'rxjs';
@@ -17,8 +17,6 @@ export class CatchAllRouterComponent implements OnInit {
 
   panelPageListItemsService: EntityCollectionService<PanelPageListItem>;
 
-  panelPageId: string;
-
   constructor(
     private routerStore: Store<RouterReducerState>,
     private router: Router,
@@ -28,13 +26,15 @@ export class CatchAllRouterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const { selectCurrentRoute } = getSelectors((state: any) => state.router);
+    /*const { selectCurrentRoute } = getSelectors((state: any) => state.router);
+    console.log('routing page...');
     this.routerStore.pipe(
       select(selectCurrentRoute),
-      map(route => [(route as ActivatedRouteSnapshot).url.reduce<Array<string>>((p, c) => [ ...p, `${p.join('/')}/${c.path}` ], []), route]),
+      map(route => [(route as ActivatedRouteSnapshot).url.reduce<Array<string>>((p, c, i) => [ ...p, i === 0 ? `/${c.path}` : `${p[i - 1]}/${c.path}` ], []), route]),
       map(([paths, route])  => ['path=' + paths.join('&path='), route]),
       switchMap(([qs, route]) => this.panelPageListItemsService.getWithQuery(qs).pipe(
         catchError(e => of<Array<PanelPageListItem>>([])),
+        tap(pages => console.log(pages)),
         map(pages => [pages.reduce<PanelPageListItem>((p, c) => p === undefined ? c : p.path.split('/').length < c.path.split('/').length ? c : p , undefined), route])
       )),
       take(1)
@@ -43,7 +43,7 @@ export class CatchAllRouterComponent implements OnInit {
         const argPath = (route as ActivatedRouteSnapshot).url.map(s => s.path).slice(panelPage.path.split('/').length - 1).join('/');
         this.router.navigateByUrl(`/pages/panelpage/${panelPage.id}/${argPath}?${qs.stringify(route.queryParams)}`, {skipLocationChange: true, queryParams: { ...((route as ActivatedRouteSnapshot).queryParams) }, fragment: (route as ActivatedRouteSnapshot).fragment });
       }
-    });
+    });*/
   }
 
 }

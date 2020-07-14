@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlMatcher, UrlSegment, UrlSegmentGroup, UrlTree } from '@angular/router';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
-import { NEVER } from 'rxjs';
-import { map, switchMap, catchError, tap } from 'rxjs/operators';
-import { PanelPageListItem } from '../models/page.models';
+import { of, forkJoin , iif } from 'rxjs';
+import { map, switchMap, catchError, tap, filter } from 'rxjs/operators';
+import { PanelPageListItem, PanelPage } from '../models/page.models';
+import { PanelPageRouterComponent } from '../components/panel-page-router/panel-page-router.component';
+import * as qs from 'qs';
 
 @Injectable()
 export class CatchAllGuard implements CanActivate {
+
+  routesLoaded = false;
 
   panelPageListItemsService: EntityCollectionService<PanelPageListItem>;
 
@@ -17,22 +21,66 @@ export class CatchAllGuard implements CanActivate {
     this.panelPageListItemsService = es.getEntityCollectionService('PanelPageListItem');
   }
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+
     return new Promise(res => {
-      const qs = 'path=' + state.url.substr(1).split('/').reduce<Array<string>>((p, c, i) => [ ...p, i === 0 ?  `/${c}`  :  `${p[i-1]}/${c}` ], []).join('&path=');
-      this.panelPageListItemsService.getWithQuery(qs).pipe(
-        catchError(e => {
-          res(false);
-          return NEVER;
-        }),
-        map(pages => pages.reduce<PanelPageListItem>((p, c) => p === undefined ? c : p.path.split('/').length < c.path.split('/').length ? c : p , undefined)),
-        tap(panelPage => {
-          const argPath = state.url.substr(1).split('/').slice(panelPage.path.split('/').length - 1).join('/');
-          this.router.navigateByUrl(`/pages/panelpage/${panelPage.id}/${argPath}`, {skipLocationChange: true});
-        })
-      ).subscribe(success => {
-        res(true);
+      const matchPathQuery = 'path=' + state.url.substr(1).split('/').reduce<Array<string>>((p, c, i) => [ ...p, i === 0 ?  `/${c}`  :  `${p[i-1]}/${c}` ], []).join('&path=');
+      forkJoin([
+        iif(
+          () => !this.routesLoaded,
+          this.panelPageListItemsService.getAll().pipe(
+            map(pp => pp.filter(p => p.path !== undefined && p.path !== '')),
+            tap(pp => {
+              const target = this.router.config.find(r => r.path === '');
+              target.children = [];
+              pp.forEach(p => {
+                target.children.push({ matcher: this.createMatcher(p), component: PanelPageRouterComponent });
+              });
+              this.routesLoaded = true;
+            }),
+            map(() => [])
+          ),
+          of([])
+        ),
+        this.panelPageListItemsService.getWithQuery(matchPathQuery).pipe(
+          catchError(e => {
+            return of([]);
+          }),
+          map(pages => pages.reduce((p, c) => p === undefined ? c : p.path.split('/').length < c.path.split('/').length ? c : p , undefined)),
+          map(panelPage => {
+            const argPath = state.url.substr(1).split('/').slice(panelPage.path.split('/').length - 1).join('/');
+            return [panelPage, argPath];
+          })
+        )
+      ]).pipe(
+        map(([pp, [panelPage, argPath]]) => [panelPage, argPath])
+      ).subscribe(([panelPage, argPath]) => {
+        res(false);
+        this.router.navigateByUrl(`/${panelPage.path}${argPath === '' ? '' : `/${argPath}`}?${qs.stringify(route.queryParams)}`, {queryParams: { ...((route as ActivatedRouteSnapshot).queryParams) }, fragment: (route as ActivatedRouteSnapshot).fragment });
       });
     });
   }
+
+  createMatcher(panelPage: PanelPage): UrlMatcher    {
+    return (url: UrlSegment[]) => {
+      if(('/' + url.map(u => u.path).join('/')).indexOf(panelPage.path) === 0) {
+        const pathLen = panelPage.path.substr(1).split('/').length;
+        return {
+          consumed: url,
+          posParams: url.reduce<{}>((p, c, index) => {
+            if(index === 1) {
+              return { ...p, panelPageId: new UrlSegment(panelPage.id , {}) }
+            } else if(index > pathLen - 1) {
+              return { ...p, [`arg${index - pathLen}`]: new UrlSegment(c.path, {}) };
+            } else {
+              return { ...p };
+            }
+          }, {})
+        };
+      } else {
+        return null;
+      }
+    };
+  }
+
 }

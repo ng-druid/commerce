@@ -4,6 +4,7 @@ import { Snippet } from './plugin.models';
 export class InlineContext {
   name: string;
   adaptor: string;
+  plugin?: string;
   rest?: Rest;
   snippet?: Snippet;
   data?: any;
@@ -11,6 +12,9 @@ export class InlineContext {
   constructor(data?: InlineContext) {
     this.name = data.name;
     this.adaptor = data.adaptor;
+    if(data.plugin) {
+      this.plugin = data.plugin;
+    }
     if(this.adaptor === 'rest') {
       this.rest = new Rest(data.rest);
     } else if(this.adaptor === 'snippet' || this.adaptor === 'json') {

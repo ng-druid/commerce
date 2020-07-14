@@ -360,7 +360,6 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   onRulesPane(index: number, index2: number) {
     const pane = new Pane(this.panelPane(index, index2).value);
     const rule = this.panelPane(index, index2).get('rule').value !== '' ? this.panelPane(index, index2).get('rule').value as NgRule : undefined;
-    const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
 
     const bindings$: Array<Observable<[number, Array<ContentBinding>]>> = [];
     this.panelPanes(index).controls.forEach((c, i) => {
@@ -385,7 +384,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
           of(new Dataset())
         ))
       ).subscribe(dataset => {
-        const contexts = [ ...(dataset.results.length > 0 ? [ ...globalContexts, new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })] : [ ...globalContexts ]) ];
+        const contexts = [ ...(dataset.results.length > 0 ? [ ...this.contexts, new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })] : this.contexts) ];
         this.dialog
           .open(RulesDialogComponent, { data: { rule, contexts } })
           .afterClosed()
@@ -394,9 +393,8 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
           });
       });
     } else {
-      // const contexts = [ ...globalContexts, new InlineContext({ name: '_root', adaptor: 'data', data: { test: 0 } })];
       this.dialog
-      .open(RulesDialogComponent, { data: { rule, contexts: (pane.contexts !== undefined ? [ ...globalContexts, pane.contexts ] : globalContexts)  } })
+      .open(RulesDialogComponent, { data: { rule, contexts: this.contexts } })
       .afterClosed()
       .subscribe(r => {
         this.panelPane(index, index2).get('rule').setValue(r ? r : rule ? rule : undefined);

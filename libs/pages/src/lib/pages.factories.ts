@@ -21,6 +21,7 @@ import { SliceEditorComponent } from './plugins/slice/slice-editor/slice-editor.
 import { PageContextResolver } from './contexts/page-context.resolver';
 import { Dataset } from './models/datasource.models';
 import { ContextEditorComponent } from './components/context-editor/context-editor.component';
+import { RestContextResolver } from './contexts/rest-context.resolver';
 
 export const snippetContentPluginFactory = (handler: SnippetContentHandler) => {
   return new ContentPlugin({
@@ -92,12 +93,12 @@ export const pageContextFactory = (resolver: PageContextResolver) => {
   const baseObject = {
     path: '',
   };
-  return new ContextPlugin({ name: '_page', global: true, title: 'Page', adaptor: 'default', baseObject, resolver });
+  return new ContextPlugin({ name: 'page', title: 'Page', global: true, group: 'pages', baseObject, resolver });
 };
 
-export const restContextFactory = () => {
+export const restContextFactory = (resolver: RestContextResolver) => {
   const baseObject = {
     dataset: new Dataset(),
   };
-  return new ContextPlugin({ name: '_rest', title: 'Rest', global: false, adaptor: 'rest', baseObject, resolver: undefined, editorComponent: ContextEditorComponent });
+  return new ContextPlugin({ name: 'rest', title: 'Rest', baseObject, resolver, editorComponent: ContextEditorComponent });
 };

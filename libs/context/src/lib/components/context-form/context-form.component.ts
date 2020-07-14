@@ -27,8 +27,7 @@ export class ContextFormComponent implements OnInit, ControlValueAccessor, Valid
 
   contextForm = this.fb.group({
     name: this.fb.control('', Validators.required),
-    adaptor: this.fb.control('', Validators.required),
-    context: this.fb.control('', Validators.required)
+    plugin: this.fb.control('', Validators.required)
   });
 
   public onTouched: () => void = () => {};
@@ -36,7 +35,7 @@ export class ContextFormComponent implements OnInit, ControlValueAccessor, Valid
   @ViewChild(ContextEditorHostDirective, { static: true }) editorHost: ContextEditorHostDirective;
 
   get contextPlugin(): ContextPlugin {
-    return this.contextManager.lookupContext(this.contextForm.get('context').value);
+    return this.contextManager.lookupContext(this.contextForm.get('plugin').value);
   }
 
   constructor(
@@ -46,9 +45,8 @@ export class ContextFormComponent implements OnInit, ControlValueAccessor, Valid
   ) { }
 
   ngOnInit(): void {
-    this.contextPlugins = this.contextManager.getAll();
-    this.contextForm.get('context').valueChanges.subscribe(v => {
-      this.contextForm.get('adaptor').setValue(this.contextPlugin.adaptor);
+    this.contextPlugins = this.contextManager.getAll(false);
+    this.contextForm.get('plugin').valueChanges.subscribe(v => {
       if(this.contextPlugin.editorComponent) {
         this.renderEditor();
       } else {

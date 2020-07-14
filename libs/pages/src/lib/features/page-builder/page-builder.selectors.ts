@@ -14,4 +14,6 @@ export const selectDataset = (tag: string) => createSelector(selectPageBuilderSt
   } else {
     return undefined;
   }
-})
+});
+
+export const selectPageInfo = createSelector(selectPageBuilderState, state => state.pageInfo);

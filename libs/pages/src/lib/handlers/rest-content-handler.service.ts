@@ -70,7 +70,7 @@ export class RestContentHandler implements ContentHandler {
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     console.log('build dynamic items');
     const subject = new Subject<Array<AttributeValue>>();
-    const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
+    //const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
     this.toObject(settings).pipe(
       switchMap(r => this.urlGeneratorService.generateUrl(r.url, r.params, metadata).pipe(
         map<string, [Rest, string]>(url => [r, url])
@@ -91,7 +91,7 @@ export class RestContentHandler implements ContentHandler {
                 map(binding => (metadata.get('panes') as Array<Pane>).find(p => p.name === binding.id)),
                 switchMap(pane => iif(
                   () => pane.rule && pane.rule !== null && pane.rule.condition !== '',
-                  this.rulesResolver.evaluate(pane.rule,[ ...globalContexts, ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
+                  this.rulesResolver.evaluate(pane.rule,[ ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
                     map<boolean, [Pane, boolean]>(res => [pane, res])
                   ),
                   of(false).pipe(

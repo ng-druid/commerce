@@ -7,6 +7,7 @@ import { Snippet } from '../../../models/plugin.models';
 import { InlineContext } from '../../../models/context.models';
 import { Observable, forkJoin, of } from 'rxjs';
 import { switchMap, map, take } from 'rxjs/operators';
+import { InlineContextResolverService } from '../../../services/inline-context-resolver.service';
 
 @Component({
   selector: 'classifieds-ui-snippet-pane-renderer',
@@ -30,7 +31,8 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   constructor(
     private handler: SnippetContentHandler,
     private tokenizerService: TokenizerService,
-    private contextManager: ContextManagerService
+    private contextManager: ContextManagerService,
+    private inlineContextResolver: InlineContextResolverService
   ) { }
 
   ngOnInit(): void {
@@ -72,15 +74,16 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   }
 
   resolveContexts(contexts: Array<InlineContext>): Observable<undefined | Map<string, any>> {
-    return forkJoin([
-      ...this.contextManager.getAll(true).map(c => c.resolver.resolve().pipe(map(d => [c, d], take(1)))),
+    /*return forkJoin([
+      ...this.contextManager.getAll(true).map(c => c.resolver.resolve(c).pipe(map(d => [c, d], take(1)))),
       ...(contexts === undefined || contexts.length === 0 ? [] : contexts.map(c => of(c).pipe(map(c => [c, c.data]), take(1))))
-    ]).pipe(
+    ])*/
+    return this.inlineContextResolver.resolveMerged(contexts).pipe(
       map(resolved => {
         let tokens = new Map<string, any>();
-        resolved.forEach(([c, r]) => {
-          tokens = new Map<string, any>([ ...tokens, ...this.tokenizerService.generateGenericTokens(r, c.name === '_root' ? '' : c.name) ]);
-        });
+        for(const name in resolved) {
+          tokens = new Map<string, any>([ ...tokens, ...this.tokenizerService.generateGenericTokens(resolved[name], name === '_root' ? '' : name) ]);
+        }
         return tokens;
       })
     );

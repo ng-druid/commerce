@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ContentInstance } from '@classifieds-ui/content';
 import { Rest, Dataset } from '../../models/datasource.models';
+import { PanelPageStateSlice } from '../../models/page.models';
 
 export const addContentInstance = createAction(
   '[PageBuilder] Add Content Instance',
@@ -20,6 +21,11 @@ export const loadRestDataSuccess = createAction(
 export const loadRestDataError = createAction(
   '[PageBuilder] Load Rest Data Error',
   props<{ tag: string }>()
+);
+
+export const setPageInfo = createAction(
+  '[PageBuilder] Set Page Info',
+  props<{ info: PanelPageStateSlice }>()
 );
 
 

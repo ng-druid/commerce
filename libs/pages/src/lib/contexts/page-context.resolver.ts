@@ -1,25 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ContextResolver } from '@classifieds-ui/context';
+import { ContextResolver, ContextPlugin } from '@classifieds-ui/context';
 import { Observable } from 'rxjs';
-import { getSelectors, RouterReducerState } from '@ngrx/router-store';
-import { Store, select } from '@ngrx/store';
-import { map, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
+import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
 
 @Injectable()
 export class PageContextResolver implements ContextResolver {
 
-  constructor(private routerStore: Store<RouterReducerState>) { }
+  constructor(private pageBuilderFacade: PageBuilderFacade) { }
 
-  resolve(): Observable<any> {
-    const { selectCurrentRoute } = getSelectors((state: any) => state.router);
-    return this.routerStore.pipe(
-      select(selectCurrentRoute),
-      map(route => {
-        const obj = {
-          path: `<route>`
-        };
-        return obj;
-      }),
+  resolve(ctx: ContextPlugin, data?: any): Observable<any> {
+    return this.pageBuilderFacade.getPageInfo$.pipe(
       take(1)
     );
   }

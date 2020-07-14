@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { Store, select } from '@ngrx/store';
 import { Param } from '../models/datasource.models';
-import { ContextResolverService } from './context-resolver.service';
-import { Observable, of, forkJoin } from 'rxjs';
-import { map, switchMap, tap, defaultIfEmpty } from 'rxjs/operators';
+import { Observable, of, forkJoin, iif } from 'rxjs';
+import { map, switchMap, tap, defaultIfEmpty, take } from 'rxjs/operators';
+import { InlineContextResolverService } from './inline-context-resolver.service';
+import { TokenizerService } from '@classifieds-ui/token';
 import * as qs from 'qs';
 
 @Injectable({
@@ -15,7 +16,8 @@ export class UrlGeneratorService {
 
   constructor(
     private routerStore: Store<RouterReducerState>,
-    private contextResolver: ContextResolverService
+    private inlineContextResolver: InlineContextResolverService,
+    private tokenizerService: TokenizerService
   ) {}
 
   generateUrl(url, params: Array<Param>, metadata: Map<string, any>): Observable<string> {
@@ -86,7 +88,19 @@ export class UrlGeneratorService {
       return of(route.queryParams[param.mapping.value]);
     } else if(param.mapping.type === 'context') {
       const ctx = metadata.get('contexts').find(c => c.name === param.mapping.context);
-      return this.contextResolver.resolve(ctx, new Map<string, any>([ ...metadata, [ '_field', param.mapping.value ] ]), this);
+      return this.inlineContextResolver.resolve(ctx).pipe(
+        switchMap(d => iif(
+          () => param.mapping.value && param.mapping.value !== '',
+          of(d).pipe(
+            map(d => this.tokenizerService.generateGenericTokens(d[0])),
+            map(tokens => this.tokenizerService.replaceTokens(`[${param.mapping.value}]`, tokens)),
+            take(1)
+          ),
+          of(d[0]).pipe(
+            take(1)
+          )
+        ))
+      );
     } else {
       return of(param.mapping.value);
     }

@@ -84,6 +84,7 @@ import { CatchAllGuard } from './guards/catchall.guard';
 import { PageContextResolver } from './contexts/page-context.resolver';
 import { ContextDialogComponent } from './components/context-dialog/context-dialog.component';
 import { ContextEditorComponent } from './components/context-editor/context-editor.component';
+import { RestContextResolver } from './contexts/rest-context.resolver';
 
 const panePageMatcher = (url: UrlSegment[]) => {
   if(url[0] !== undefined && url[0].path === 'panelpage') {
@@ -104,6 +105,26 @@ const panePageMatcher = (url: UrlSegment[]) => {
   }
 }
 
+const testPageMatcher = (url: UrlSegment[]) => {
+  console.log(url.map(u => u.path).join('/'));
+  if(url[0] !== undefined && ('/' + url.map(u => u.path).join('/')).indexOf('/page/with/links') === 0) {
+    return {
+      consumed: url,
+      posParams: url.reduce<{}>((p, c, index) => {
+        if(index === 1) {
+          return { ...p, panelPageId: new UrlSegment('89ab1489-c5eb-11ea-8729-46c9d8c8867b' , {}) }
+        } else if(index > 2) {
+          return { ...p, [`arg${index - 3}`]: new UrlSegment(c.path, {}) };
+        } else {
+          return { ...p };
+        }
+      }, {})
+    };
+  } else {
+    return null;
+  }
+}
+
 const routes = [
   { path: 'pages', children: [
     { path: 'create-grid-layout', component: CreateGridLayoutComponent },
@@ -113,7 +134,8 @@ const routes = [
     { matcher: panePageMatcher, component: PanelPageRouterComponent },
     { path: 'panelpage/:panelPageId/manage', component: EditPanelPageComponent },
   ]},
-  { path: '**', component: CatchAllRouterComponent /*, canActivate: [ CatchAllGuard ]*/ }
+  //{ matcher: testPageMatcher, component: PanelPageRouterComponent },
+  { path: '**', component: CatchAllRouterComponent, canActivate: [ CatchAllGuard ] }
   // { path: '**', component: PageControllerComponent, pathMatch: 'full' }
 ];
 
@@ -146,6 +168,7 @@ const routes = [
   providers: [
     CatchAllGuard,
     PageContextResolver,
+    RestContextResolver,
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },
@@ -172,10 +195,11 @@ export class PagesModule {
   constructor(
     eds: EntityDefinitionService,
     contextManager: ContextManagerService,
-    pageContextResolver: PageContextResolver
+    pageContextResolver: PageContextResolver,
+    restContextResolver: RestContextResolver
   ) {
     eds.registerMetadataMap(entityMetadata);
     contextManager.register(pageContextFactory(pageContextResolver));
-    contextManager.register(restContextFactory());
+    contextManager.register(restContextFactory(restContextResolver));
   }
 }

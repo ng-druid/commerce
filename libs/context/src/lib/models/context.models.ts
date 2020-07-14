@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Type } from '@angular/core';
 
 export interface ContextResolver {
-  resolve(): Observable<any>
+  resolve(ctx: ContextPlugin, data?: any): Observable<any>
 }
 
 export class ContextPlugin {
@@ -10,17 +10,17 @@ export class ContextPlugin {
   title: string;
   baseObject: any;
   resolver: ContextResolver;
-  adaptor: string;
   editorComponent?: Type<any>;
   global? = false;
+  group?: string;
   constructor(data?: ContextPlugin) {
     if (data) {
       this.name = data.name;
       this.title = data.title;
-      this.adaptor = data.adaptor;
       this.baseObject = data.baseObject;
       this.resolver = data.resolver;
       this.global = data.global === undefined ? false: data.global;
+      this.group = data.group !== undefined ? data.group : undefined;
       if(data.editorComponent) {
         this.editorComponent = data.editorComponent;
       }

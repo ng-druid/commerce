@@ -150,7 +150,9 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
 
   resolvePanes() {
 
-    const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
+    // const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
+
+    console.log(this.contexts);
 
     const staticPanes = this.panel.panes.reduce<Array<Pane>>((p, c) => {
       const plugin = this.contentPlugins.find(cp => cp.name === c.contentPlugin);
@@ -185,7 +187,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
             return [ ...p , of([ new Pane({ ...c, contexts: this.mergeContexts(c.contexts) }) ]).pipe(
               switchMap(panes => iif(
                 () => panes[0].rule !== undefined && panes[0].rule !== null && panes[0].rule.condition !== '',
-                this.rulesResolver.evaluate(panes[0].rule, [ ...globalContexts, ...(panes[0].contexts !== undefined ? panes[0].contexts : []) ]).pipe(
+                this.rulesResolver.evaluate(panes[0].rule, [ ...this.contexts /*...globalContexts, ...(panes[0].contexts !== undefined ? panes[0].contexts : [])*/ ]).pipe(
                   map(res => res ? panes: [])
                 ),
                 of(panes)
@@ -241,7 +243,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     this.panel.panes.forEach(p => {
       if(p.rule !== undefined && p.rule !== null && p.rule.condition !== '') {
         this.rulesParser.extractConditions(p.rule).forEach(c => {
-          if((c as any).fact === '_route') {
+          if((c as any).fact === '_route' || (c as any).fact === '_page') {
             facts.set(
               (c as any).fact,
               [ ...(facts.has((c as any).fact) ? facts.get((c as any).fact) : []), (c as any).path.substr(2) ]
@@ -251,7 +253,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
       }
     });
 
-    if(facts.has('_route')) {
+    if(facts.has('_route') || facts.has('_page')) {
       this.refreshSubscription$ = this.route.paramMap.pipe(
         //map(p => facts.get('_route').findIndex(r => r === p)),
         distinctUntilChanged()
