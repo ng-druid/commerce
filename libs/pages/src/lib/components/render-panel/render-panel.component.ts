@@ -3,19 +3,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, Fo
 import { ActivatedRoute } from '@angular/router';
 import { Panel } from '../../models/page.models';
 import * as uuid from 'uuid';
-import { AttributeValue } from '@classifieds-ui/attributes';
-import { ContextManagerService } from '@classifieds-ui/context';
 import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
 import { STYLE_PLUGIN, StylePlugin } from '@classifieds-ui/style';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { Pane } from '../../models/page.models';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
-import { switchMap, map, tap, take, filter, distinctUntilChanged } from 'rxjs/operators';
-import { of, forkJoin, Observable, iif, Subscription } from 'rxjs';
+import { switchMap, map, tap, take, filter, distinctUntilChanged, mergeAll } from 'rxjs/operators';
+import { of, forkJoin, Observable, iif, Subscription, Subject, merge } from 'rxjs';
 import { InlineContext } from '../../models/context.models';
-import { RuleSet } from 'angular2-query-builder';
 import { RulesResolverService } from '../../services/rules-resolver.service';
 import { RulesParserService } from '../../services/rules-parser.service';
+import { InlineContextResolverService } from '../../services/inline-context-resolver.service';
 
 @Component({
   selector: 'classifieds-ui-render-panel',
@@ -61,6 +59,9 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
 
   resolvedPanes: Array<Pane>;
   originMappings: Array<number> = [];
+  resolvedContexts: Array<any> = [];
+
+  resolveContexts$ = new Subject();
 
   stylePlugins: Array<StylePlugin> = [];
   stylePlugin: StylePlugin;
@@ -68,6 +69,15 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
   contentPlugins: Array<ContentPlugin> = [];
 
   refreshSubscription$: Subscription;
+  resolveContextSubscription = this.resolveContexts$.pipe(
+    switchMap(() => merge(...this.resolvedPanes.map((p, i) => this.inlineContextResolver.resolveMerged(p.contexts).pipe(
+        map((res => [res, i])
+      ))))
+    ),
+    filter(([res, i]) => this.resolvedContexts[i] !== undefined)
+  ).subscribe(([res, i]) => {
+    this.resolvedContexts[i] = res;
+  });
 
   public onTouched: () => void = () => {};
 
@@ -88,7 +98,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
     private fb: FormBuilder,
     private rulesResolver: RulesResolverService,
     private rulesParser: RulesParserService,
-    private contextManager: ContextManagerService,
+    private inlineContextResolver: InlineContextResolverService,
     private route: ActivatedRoute
   ) {
     this.counter = RenderPanelComponent.COUNTER++;
@@ -201,14 +211,18 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
         tap(paneGroups => {
           this.resolvedPanes = [];
           this.originMappings = [];
+          this.resolvedContexts = [];
           paneGroups.forEach((panes, index) => {
             this.resolvedPanes = [ ...(this.resolvedPanes === undefined ? [] : this.resolvedPanes), ...panes ];
             this.originMappings = [ ...(this.originMappings ? [] : this.originMappings), ...panes.map(() => index)];
+            this.resolvedContexts = [ ...(this.resolvedContexts === undefined ? [] : this.resolvedContexts), ...panes.map(() => ({})) ];
             if(this.paneContainer && this.stylePlugin === undefined) {
               setTimeout(() => this.heightChange.emit(this.paneContainer.nativeElement.offsetHeight));
             }
           });
           this.populatePanesFormArray();
+          console.log('this.resolveContexts$.next()');
+          this.resolveContexts$.next();
         }),
         filter(() => this.stylePlugin !== undefined)
       ))
@@ -218,6 +232,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
   }
 
   renderPanelContent() {
+
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.stylePlugin.renderComponent);
 
     const viewContainerRef = this.panelHost.viewContainerRef;

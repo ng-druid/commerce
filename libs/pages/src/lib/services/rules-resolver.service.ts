@@ -18,15 +18,8 @@ export class RulesResolverService {
   ) { }
 
   evaluate(ngRule: RuleSet, contexts: Array<InlineContext> = []): Observable<boolean> {
-    return this.inlineContextResolver.resolveAll(contexts).pipe(
-      map(res => {
-        for(const n in res) {
-          if(Array.isArray(res[n])) {
-            res[n] = res[n].length > 0 ? res[n][0] : undefined;
-          }
-        }
-        return res;
-      }),
+    return this.inlineContextResolver.resolveMerged(contexts).pipe(
+      take(1),
       map(facts => [facts, new Engine()]),
       tap(([facts, engine]) => engine.addRule(this.rulesParser.toEngineRule(ngRule))),
       switchMap(([facts, engine]) => new Observable<boolean>(obs => {

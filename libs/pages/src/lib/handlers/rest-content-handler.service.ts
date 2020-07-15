@@ -116,6 +116,7 @@ export class RestContentHandler implements ContentHandler {
           })
         )),
         map(([dataset, paneMappings]) => {
+          console.log(dataset);
           if(r.renderer.type === 'pane') {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);

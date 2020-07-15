@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, ViewChild, ComponentFactoryResolver, forwardRef } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, Inject, ViewChild, ComponentFactoryResolver, forwardRef, ComponentRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormBuilder, FormGroup,FormControl, Validator, Validators, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
@@ -50,9 +50,14 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
   @Input()
   label: string;
 
+  @Input()
+  resolvedContext: any;
+
   contentPlugin: ContentPlugin;
 
   panelPage: PanelPage;
+
+  componentRef: ComponentRef<any>;
 
   paneForm = this.fb.group({
     contentPlugin: this.fb.control('', Validators.required),
@@ -91,6 +96,7 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
 
   ngOnChanges(changes: SimpleChanges) {
     console.log('Render Pane: OnChanges');
+    console.log(this.resolvedContext);
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
     this.paneForm.get('contentPlugin').setValue(this.contentPlugin.name);
     this.paneForm.get('name').setValue(this.name);
@@ -140,12 +146,13 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
     const viewContainerRef = this.contentPaneHost.viewContainerRef;
     viewContainerRef.clear();
 
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-    (componentRef.instance as any).settings = this.settings;
-    (componentRef.instance as any).name = this.name;
-    (componentRef.instance as any).label = this.label;
-    (componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
-    (componentRef.instance as any).displayType = this.displayType;
+    this.componentRef = viewContainerRef.createComponent(componentFactory);
+    (this.componentRef.instance as any).settings = this.settings;
+    (this.componentRef.instance as any).name = this.name;
+    (this.componentRef.instance as any).label = this.label;
+    (this.componentRef.instance as any).contexts = this.contexts.map(c => new InlineContext(c));
+    (this.componentRef.instance as any).displayType = this.displayType;
+    (this.componentRef.instance as any).resolvedContext = this.resolvedContext;
   }
 
 }

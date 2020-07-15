@@ -30,13 +30,13 @@ export class PanelPageRouterComponent implements OnInit {
   ngOnInit(): void {
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
     this.route.paramMap.pipe(
+      tap(() => console.log('router call')),
       map(p => p.get('panelPageId')),
       filter(id => id !== undefined),
       distinctUntilChanged(),
       switchMap(id => this.panelPageService.getByKey(id)),
       withLatestFrom(this.routerStore.pipe(
         select(selectCurrentRoute),
-        tap(r => console.log(r)),
         map(route => route.params),
         take(1)
       ))
@@ -45,8 +45,17 @@ export class PanelPageRouterComponent implements OnInit {
       this.pageBuilderFacade.setPageInfo(new PanelPageStateSlice({ id: panelPage.id, realPath, path: panelPage.path, args }));
       this.panelPageId = panelPage.id;
     });
-    this.route.data.subscribe(v => {
-      console.log(v);
+    this.route.paramMap.pipe(
+      withLatestFrom(this.pageBuilderFacade.getPageInfo$),
+      filter(([p, pageInfo]) => pageInfo !== undefined && p.get('panelPageId') !== undefined && p.get('panelPageId') === pageInfo.id),
+      switchMap(([p, pageInfo]) => this.routerStore.pipe(
+        select(selectCurrentRoute),
+        map(route => [pageInfo, route.params]),
+        take(1)
+      ))
+    ).subscribe(([pageInfo, args]) => {
+      console.log(new PanelPageStateSlice({ ...pageInfo, args }));
+      this.pageBuilderFacade.setPageInfo(new PanelPageStateSlice({ ...pageInfo, args }));
     });
   }
 

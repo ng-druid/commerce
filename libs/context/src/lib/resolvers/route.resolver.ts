@@ -16,7 +16,6 @@ export class RouteResolver implements ContextResolver {
     return this.routerStore.pipe(
       select(selectCurrentRoute),
       map(route => {
-        console.log(route);
         const obj = {
           path: `/pages/panelpage/${route.params.panelPageId}`
         };
@@ -27,8 +26,8 @@ export class RouteResolver implements ContextResolver {
           }
         }*/
         return obj;
-      }),
-      take(1)
+      })
+      //take(1)
     );
   }
 }

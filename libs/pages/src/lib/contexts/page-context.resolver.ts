@@ -10,8 +10,9 @@ export class PageContextResolver implements ContextResolver {
   constructor(private pageBuilderFacade: PageBuilderFacade) { }
 
   resolve(ctx: ContextPlugin, data?: any): Observable<any> {
-    return this.pageBuilderFacade.getPageInfo$.pipe(
+    return this.pageBuilderFacade.getPageInfo$;
+    /*return this.pageBuilderFacade.getPageInfo$.pipe(
       take(1)
-    );
+    );*/
   }
 }
