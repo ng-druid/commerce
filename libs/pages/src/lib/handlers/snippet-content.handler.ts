@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
 import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
+import { TokenizerService } from '@classifieds-ui/token';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Snippet } from '../models/plugin.models';
 import { Dataset } from '../models/datasource.models';
 
@@ -11,7 +12,10 @@ export class SnippetContentHandler implements ContentHandler {
 
   types = ['text/markdown', 'text/html'];
 
-  constructor(private attributeSerializer: AttributeSerializerService) { }
+  constructor(
+    private attributeSerializer: AttributeSerializerService,
+    private tokenizrService: TokenizerService
+  ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
     return new Observable(obs => {
@@ -40,8 +44,17 @@ export class SnippetContentHandler implements ContentHandler {
     return false;
   }
 
-  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
-    return of([]);
+  getBindings(settings: Array<AttributeValue>, type: string, metadata?: Map<string, any>): Observable<Array<ContentBinding>> {
+    if(type === 'context') {
+      return this.toObject(settings).pipe(
+        map(snippet => {
+          const tokens = this.tokenizrService.discoverTokens(snippet.content);
+          return tokens.map(t => new ContentBinding({ id: t, type: 'context' }));
+        })
+      );
+    } else {
+      return of([]);
+    }
   }
 
   fetchDynamicData(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<any> {

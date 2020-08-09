@@ -47,16 +47,14 @@ export class RulesDialogComponent implements OnInit {
       const fieldMap: FieldMap = {}
       for(const name in res) {
         this.rulesParser.buildFields(res[name], name).forEach((f, k) => {
-          console.log(f);
-          console.log(k);
           fieldMap[k] = f;
         });
       }
       this.config = { ...this.config, fields: fieldMap };
+      if(this.data.rule !== undefined) {
+        this.rulesForm.get('rules').setValue(this.data.rule);
+      }
     })
-    if(this.data.rule !== undefined) {
-      this.rulesForm.get('rules').setValue(this.data.rule);
-    }
   }
 
   submit() {

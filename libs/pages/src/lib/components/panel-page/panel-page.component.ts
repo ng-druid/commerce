@@ -1,14 +1,17 @@
 import { Component, OnInit, Input, ViewChild, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
+import { ContextManagerService } from '@classifieds-ui/context';
 import { PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType, GridsterItem } from 'angular-gridster2';
 import { GridLayoutComponent } from '../grid-layout/grid-layout.component';
 import { InlineContext } from '../../models/context.models';
-import { fromEvent } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { fromEvent, Subscription, BehaviorSubject, Subject, iif, of } from 'rxjs';
+import { filter, tap, debounceTime, take, skip, scan } from 'rxjs/operators';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { Store, select } from '@ngrx/store';
+import { InlineContextResolverService } from '../../services/inline-context-resolver.service';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'classifieds-ui-panel-page',
@@ -29,9 +32,14 @@ export class PanelPageComponent implements OnInit, OnChanges {
   @Input()
   contexts: Array<InlineContext>;
 
+  resolvedContext: any;
+  contextChanged: string;
+
   pageForm = this.fb.group({
     panels: this.fb.array([])
   });
+
+  resolveSub: Subscription;
 
   options: GridsterConfig = {
     gridType: GridType.Fit,
@@ -58,7 +66,9 @@ export class PanelPageComponent implements OnInit, OnChanges {
     es: EntityServices,
     private routerStore: Store<RouterReducerState>,
     private fb: FormBuilder,
-    private el: ElementRef
+    private el: ElementRef,
+    private inlineContextResolver: InlineContextResolverService,
+    private contextManager: ContextManagerService
   ) {
     this.panelPageService = es.getEntityCollectionService('PanelPage');
   }
@@ -71,7 +81,6 @@ export class PanelPageComponent implements OnInit, OnChanges {
         tap(() => alert('Hello'))
       );
     }*/
-    console.log('Panel Page: OnInit');
     if(this.id !== undefined) {
       this.fetchPage();
     } else if(this.panelPage !== undefined) {
@@ -86,10 +95,12 @@ export class PanelPageComponent implements OnInit, OnChanges {
           //this.panelPage = new PanelPage({ ...this.panelPage });
       });
     }
+    if(this.nested && this.id === undefined) {
+      this.hookupContextChange();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('Panel Page: OnChanges');
     if(!this.nested && !changes.id.firstChange && changes.id.previousValue !== changes.id.currentValue) {
       this.fetchPage();
     }
@@ -105,6 +116,9 @@ export class PanelPageComponent implements OnInit, OnChanges {
       this.contexts = p.contexts ? p.contexts.map(c => new InlineContext(c)) : [];
       this.panelPage = p;
       this.populatePanelsFormArray();
+      if(!this.nested) {
+        this.hookupContextChange();
+      }
     });
   }
 
@@ -116,6 +130,24 @@ export class PanelPageComponent implements OnInit, OnChanges {
     this.panelsArray.clear();
     this.panelPage.panels.forEach((p, i) => {
       this.panelsArray.push(this.fb.control(''));
+    });
+  }
+
+  hookupContextChange() {
+    if(this.resolveSub !== undefined) {
+      this.resolveSub.unsubscribe();
+    }
+    this.inlineContextResolver.resolveMerged(this.contexts, `panelpage:${uuid.v4()}`).pipe(
+      take(1)
+    ).subscribe(resolvedContext => {
+      this.resolvedContext = resolvedContext;
+      this.resolveSub = this.inlineContextResolver.resolveMergedSingle(this.contexts).pipe(
+        skip(this.contextManager.getAll(true).length + (this.contexts ? this.contexts.length : 0))
+      ).subscribe(([cName, cValue]) => {
+        //console.log(`context changed: ${cName}`);
+        this.contextChanged = cName;
+        this.resolvedContext = { ...this.resolvedContext, [cName]: cValue };
+      });
     });
   }
 

@@ -73,4 +73,30 @@ export class TokenizerService {
     return v;
   }
 
+  matchTokens(v: string, tokens: Array<string>): Array<string> {
+    const matched: Array<string> = [];
+    const len = tokens.length;
+    for(let i = 0; i < len; i++) {
+      if(v.indexOf(`[${tokens[i]}]`) > -1) {
+        matched.push(tokens[i]);
+      }
+    }
+    return matched;
+  }
+
+  discoverTokens(v: string): Array<string> {
+    const matches = v.match(/(\[(?:\[??[^\[]*?\]))/g).reduce<Array<string>>((p, c) => {
+      if(c.indexOf(' ') !== -1 || c.indexOf('.') === -1) {
+        return p;
+      }
+      // const [ firstPiece ] = c.indexOf('.') === 1 ? c.substr(2, c.length - 1).split('.') : c.substr(1, c.length - 2).split('.');
+      const [ firstPiece ] = c.indexOf('.') === 1 ? ['.'] : c.substr(1, c.length - 2).split('.');
+      if(p.findIndex(p => firstPiece) !== -1) {
+        return p;
+      }
+      return [ ...p, firstPiece ];
+    }, []);
+    return matches;
+  }
+
 }

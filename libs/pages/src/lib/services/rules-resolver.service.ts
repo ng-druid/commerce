@@ -6,6 +6,7 @@ import { InlineContext } from '../models/context.models';
 import { Engine } from 'json-rules-engine';
 import { map, tap, switchMap, take } from 'rxjs/operators';
 import { InlineContextResolverService } from './inline-context-resolver.service';
+import * as uuid from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,9 @@ export class RulesResolverService {
   ) { }
 
   evaluate(ngRule: RuleSet, contexts: Array<InlineContext> = []): Observable<boolean> {
-    return this.inlineContextResolver.resolveMerged(contexts).pipe(
+    return this.inlineContextResolver.resolveMerged(contexts, `rules:${uuid.v4()}`).pipe(
       take(1),
-      map(facts => [facts, new Engine()]),
+      map(facts => [{ ...facts }, new Engine()]),
       tap(([facts, engine]) => engine.addRule(this.rulesParser.toEngineRule(ngRule))),
       switchMap(([facts, engine]) => new Observable<boolean>(obs => {
         engine.run(facts).then(res => {

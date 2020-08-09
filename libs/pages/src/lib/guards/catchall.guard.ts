@@ -5,6 +5,7 @@ import { of, forkJoin , iif } from 'rxjs';
 import { map, switchMap, catchError, tap, filter } from 'rxjs/operators';
 import { PanelPageListItem, PanelPage } from '../models/page.models';
 import { PanelPageRouterComponent } from '../components/panel-page-router/panel-page-router.component';
+import { EditPanelPageComponent } from '../components/edit-panel-page/edit-panel-page.component';
 import * as qs from 'qs';
 
 @Injectable()
@@ -30,10 +31,17 @@ export class CatchAllGuard implements CanActivate {
           () => !this.routesLoaded,
           this.panelPageListItemsService.getAll().pipe(
             map(pp => pp.filter(p => p.path !== undefined && p.path !== '')),
+            map(pp => pp.map(o => new PanelPage(o)).sort((a, b) => {
+              if(a.path.split('/').length === b.path.split('/').length) {
+                return a.path.split('/')[a.path.split('/').length - 1] > b.path.split('/')[b.path.split('/').length - 1] ? -1 : 1;
+              }
+              return a.path.split('/').length > b.path.split('/').length ? -1 : 1;
+            })),
             tap(pp => {
               const target = this.router.config.find(r => r.path === '');
               target.children = [];
               pp.forEach(p => {
+                target.children.push({ matcher: this.createEditMatcher(p), component: EditPanelPageComponent });
                 target.children.push({ matcher: this.createMatcher(p), component: PanelPageRouterComponent });
               });
               this.routesLoaded = true;
@@ -68,10 +76,30 @@ export class CatchAllGuard implements CanActivate {
         return {
           consumed: url,
           posParams: url.reduce<{}>((p, c, index) => {
-            if(index === 1) {
+            if(index === 0) {
               return { ...p, panelPageId: new UrlSegment(panelPage.id , {}) }
             } else if(index > pathLen - 1) {
               return { ...p, [`arg${index - pathLen}`]: new UrlSegment(c.path, {}) };
+            } else {
+              return { ...p };
+            }
+          }, {})
+        };
+      } else {
+        return null;
+      }
+    };
+  }
+
+  createEditMatcher(panelPage: PanelPage): UrlMatcher {
+    return (url: UrlSegment[]) => {
+      if(('/' + url.map(u => u.path).join('/')).indexOf(panelPage.path) === 0 && url.map(u => u.path).join('/').indexOf('/manage') > -1) {
+        const pathLen = panelPage.path.substr(1).split('/').length;
+        return {
+          consumed: url,
+          posParams: url.reduce<{}>((p, c, index) => {
+            if(index === 0) {
+              return { ...p, panelPageId: new UrlSegment(panelPage.id , {}) }
             } else {
               return { ...p };
             }

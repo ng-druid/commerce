@@ -41,7 +41,7 @@ export class PanelContentHandler implements ContentHandler {
     return of(new Dataset());
   }
 
-  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
+  getBindings(settings: Array<AttributeValue>, type: string): Observable<Array<ContentBinding>> {
     return of([]);
   }
 

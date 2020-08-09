@@ -82,12 +82,12 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
   }
 
   ngOnInit(): void {
-    console.log('Render Pane: OnInit');
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
     this.paneForm.get('contentPlugin').setValue(this.contentPlugin.name);
     this.paneForm.get('name').setValue(this.name);
     this.paneForm.get('label').setValue(this.label);
     if(this.pluginName === 'panel') {
+      //console.log('resolve nested panel page');
       this.resolveNestedPanelPage();
     } else  {
       this.renderPaneContent();
@@ -95,13 +95,12 @@ export class RenderPaneComponent implements OnInit, OnChanges, ControlValueAcces
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('Render Pane: OnChanges');
-    console.log(this.resolvedContext);
     this.contentPlugin = this.contentPlugins.find(p => p.name === this.pluginName);
     this.paneForm.get('contentPlugin').setValue(this.contentPlugin.name);
     this.paneForm.get('name').setValue(this.name);
     this.paneForm.get('label').setValue(this.label);
     if(this.pluginName === 'panel') {
+      //console.log('resolve nested panel page');
       this.resolveNestedPanelPage();
     } else {
       this.renderPaneContent();

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { Store, select } from '@ngrx/store';
 import { Param } from '../models/datasource.models';
+import { InlineContext } from '../models/context.models';
 import { Observable, of, forkJoin, iif } from 'rxjs';
 import { map, switchMap, tap, defaultIfEmpty, take } from 'rxjs/operators';
 import { InlineContextResolverService } from './inline-context-resolver.service';
@@ -57,7 +58,6 @@ export class UrlGeneratorService {
           )
         ]).pipe(
           map(r => r.join('?')),
-          tap(r => console.log(`generated url: ${r}`))
         );
       })
     );
@@ -87,10 +87,21 @@ export class UrlGeneratorService {
     } else if(param.mapping.type === 'querystring') {
       return of(route.queryParams[param.mapping.value]);
     } else if(param.mapping.type === 'context') {
-      const ctx = metadata.get('contexts').find(c => c.name === param.mapping.context);
+      const ctx = new InlineContext(metadata.get('contexts').find(c => c.name === param.mapping.context));
       return this.inlineContextResolver.resolve(ctx).pipe(
+        take(1),
         switchMap(d => iif(
           () => param.mapping.value && param.mapping.value !== '',
+          /*new Observable<any>(obs => {
+            const tokens = this.tokenizerService.generateGenericTokens(d[0]);
+            const v = this.tokenizerService.replaceTokens(`[${param.mapping.value}]`, tokens)
+            obs.next(v);
+            obs.complete();
+          }),
+          new Observable<any>(obs => {
+            obs.next(d[0]);
+            obs.complete();
+          })*/
           of(d).pipe(
             map(d => this.tokenizerService.generateGenericTokens(d[0])),
             map(tokens => this.tokenizerService.replaceTokens(`[${param.mapping.value}]`, tokens)),

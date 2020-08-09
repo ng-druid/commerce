@@ -43,7 +43,7 @@ export class MediaContentHandler implements ContentHandler {
     return of(new Dataset());
   }
 
-  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
+  getBindings(settings: Array<AttributeValue>, type: string, metadata?: Map<string, any>): Observable<Array<ContentBinding>> {
     return of([]);
   }
 

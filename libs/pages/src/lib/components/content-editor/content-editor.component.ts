@@ -200,6 +200,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
       this.panelPageId = changes.panelPage.currentValue.panelPageId;
       this.dashboard = [ ...changes.panelPage.currentValue.gridItems ];
       this.layoutType.setValue(this.panelPage.layoutType);
+      this.contexts = changes.panelPage.currentValue.contexts;
       changes.panelPage.currentValue.panels.forEach((p, i) => {
         this.panels.push(this.fb.group({
           stylePlugin: this.fb.control(p.stylePlugin),
@@ -367,7 +368,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
         const pane = new Pane({ ...c.value });
         const plugin = this.contentPlugins.find(p => p.name === pane.contentPlugin);
         if(plugin.handler !== undefined && plugin.handler.isDynamic(pane.settings)) {
-          bindings$.push(plugin.handler.getBindings(pane.settings).pipe(
+          bindings$.push(plugin.handler.getBindings(pane.settings, 'pane').pipe(
             map(bindings => [i, bindings])
           ));
         }
@@ -410,8 +411,10 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   onAddContextClick() {
     this.dialog.open(ContextDialogComponent, { data: { } })
     .afterClosed()
-    .subscribe((context: InlineContext) => {
-      this.contexts.push(context);
+    .subscribe((context?: InlineContext) => {
+      if(context) {
+        this.contexts.push(context);
+      }
     });
   }
 

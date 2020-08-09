@@ -24,7 +24,11 @@ export class ContextDialogComponent implements OnInit {
   }
 
   submit() {
-    this.dialogRef.close(new InlineContext(this.contextForm.get('context').value));
+    if(this.contextForm.get('context').value.name !== '') {
+      this.dialogRef.close(new InlineContext(this.contextForm.get('context').value));
+    } else {
+      this.dialogRef.close();
+    }
   }
 
 }

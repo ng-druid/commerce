@@ -37,7 +37,9 @@ const pageBuilderReducer = createReducer(
     }
   }),
   on(PageBuilderActions.addContentInstance, (state, action) => ({ ...state, contentInstance: action.contentInstance })),
-  on(PageBuilderActions.setPageInfo, (state, action ) => ({ ...state, pageInfo: action.info !== undefined ? new PanelPageStateSlice(action.info) : undefined }))
+  on(PageBuilderActions.setPageInfo, (state, action ) => {
+    return ({ ...state, pageInfo: action.info !== undefined ? new PanelPageStateSlice(action.info) : undefined });
+  })
 );
 
 export function reducer(state: State | undefined, action: Action) {

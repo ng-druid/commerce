@@ -34,7 +34,7 @@ export class AttributeContentHandler implements ContentHandler {
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     return of([]);
   }
-  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
+  getBindings(settings: Array<AttributeValue>, type: string, metadata?: Map<string, any>): Observable<Array<ContentBinding>> {
     return of([]);
   }
   valueSettings(attributeValues: Array<AttributeValue>): Array<AttributeValue> {

@@ -68,7 +68,6 @@ export class RestContentHandler implements ContentHandler {
     return subject;
   }
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
-    console.log('build dynamic items');
     const subject = new Subject<Array<AttributeValue>>();
     //const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
     this.toObject(settings).pipe(
@@ -80,7 +79,7 @@ export class RestContentHandler implements ContentHandler {
       this.store.pipe(
         select(selectDataset(`${metadata.get('tag')}`)),
         filter(dataset => dataset !== undefined),
-        switchMap(dataset => this.getBindings(settings).pipe(
+        switchMap(dataset => this.getBindings(settings, 'pane').pipe(
           map<Array<ContentBinding>, [Dataset, Array<ContentBinding>]>(bindings => [dataset, bindings])
         )),
         switchMap(([dataset, bindings]) => iif(
@@ -116,15 +115,14 @@ export class RestContentHandler implements ContentHandler {
           })
         )),
         map(([dataset, paneMappings]) => {
-          console.log(dataset);
           if(r.renderer.type === 'pane') {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);
               // const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
-              const contexts = [];
-              const mergedContexts = [ ...(attachedPane !== undefined && attachedPane.contexts !== undefined ? attachedPane.contexts : []), ...contexts ];
+              // const contexts = [];
+              // const mergedContexts = [ ...(attachedPane !== undefined && attachedPane.contexts !== undefined ? attachedPane.contexts : []), ...contexts ];
               const name = uuid.v4();
-              return new Pane({ ...attachedPane, rule: undefined, label: name, contexts: [ ...mergedContexts, new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
+              return new Pane({ ...attachedPane, rule: undefined, label: name, contexts: [ new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
             }) as Array<Pane>;
           } else {
             //const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
@@ -158,14 +156,22 @@ export class RestContentHandler implements ContentHandler {
       map(([d, tokens, mapping]) => tokens.map((t,i) => new SelectOption({ dataItem: d.results[i], value: mapping.value === '[.]'  ? this.attributeSerializer.serialize(d.results[i], 'value') : this.attributeSerializer.serialize(this.tokenizerService.replaceTokens(mapping.value, t), 'value'), label: this.tokenizerService.replaceTokens(mapping.label, t) })))
     );
   }
-  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>> {
-    return this.toObject(settings).pipe(
-      switchMap(rest => iif(
-        () => rest.renderer.type === 'pane',
-        of(rest.renderer.bindings),
-        of([])
-      ))
-    );
+  getBindings(settings: Array<AttributeValue>, type: string, metadata?: Map<string, any>): Observable<Array<ContentBinding>> {
+    if(type === 'context') {
+      /*return this.toObject(settings).pipe(
+        switchMap(r => this.getBindings(settings, 'pane')),
+        map(pb => (metadata.get('panes') as Array<Pane>).find(p => p.name === ))
+      );*/
+      return of([]);
+    } else {
+      return this.toObject(settings).pipe(
+        switchMap(rest => iif(
+          () => rest.renderer.type === type,
+          of(rest.renderer.bindings),
+          of([])
+        ))
+      );
+    }
   }
   toObject(settings: Array<AttributeValue>): Observable<Rest> {
     return of(this.attributeSerializer.deserializeAsObject(settings));

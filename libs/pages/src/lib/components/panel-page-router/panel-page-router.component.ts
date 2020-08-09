@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { getSelectors, RouterReducerState } from '@ngrx/router-store';
 import { EntityServices, EntityCollectionService } from '@ngrx/data';
-import { map, filter, distinctUntilChanged, switchMap, withLatestFrom, tap, take } from 'rxjs/operators';
+import { map, filter, distinctUntilChanged, switchMap, withLatestFrom, tap, take, delay } from 'rxjs/operators';
 import { PageBuilderFacade } from '../../features/page-builder/page-builder.facade';
 import { PanelPageStateSlice, PanelPage } from '../../models/page.models';
 
@@ -28,9 +28,9 @@ export class PanelPageRouterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //console.log(`route page page: ${this.panelPageId}`);
     const { selectCurrentRoute } = getSelectors((state: any) => state.router);
     this.route.paramMap.pipe(
-      tap(() => console.log('router call')),
       map(p => p.get('panelPageId')),
       filter(id => id !== undefined),
       distinctUntilChanged(),
@@ -41,6 +41,7 @@ export class PanelPageRouterComponent implements OnInit {
         take(1)
       ))
     ).subscribe(([panelPage, args]) => {
+      console.log('route page');
       const realPath = '/pages/panelpage/' + panelPage.id;
       this.pageBuilderFacade.setPageInfo(new PanelPageStateSlice({ id: panelPage.id, realPath, path: panelPage.path, args }));
       this.panelPageId = panelPage.id;
@@ -54,7 +55,7 @@ export class PanelPageRouterComponent implements OnInit {
         take(1)
       ))
     ).subscribe(([pageInfo, args]) => {
-      console.log(new PanelPageStateSlice({ ...pageInfo, args }));
+      //console.log('update page info');
       this.pageBuilderFacade.setPageInfo(new PanelPageStateSlice({ ...pageInfo, args }));
     });
   }

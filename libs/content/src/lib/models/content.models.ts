@@ -8,7 +8,7 @@ export interface ContentHandler {
   implementsRendererOverride(): boolean
   hasRendererOverride(settings: Array<AttributeValue>): Observable<boolean>
   isDynamic(settings: Array<AttributeValue>): boolean
-  getBindings(settings: Array<AttributeValue>): Observable<Array<ContentBinding>>;
+  getBindings(settings: Array<AttributeValue>, type: string, metadata?: Map<string, any>): Observable<Array<ContentBinding>>;
   fetchDynamicData(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<any>;
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>>
 }

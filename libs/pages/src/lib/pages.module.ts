@@ -85,6 +85,7 @@ import { PageContextResolver } from './contexts/page-context.resolver';
 import { ContextDialogComponent } from './components/context-dialog/context-dialog.component';
 import { ContextEditorComponent } from './components/context-editor/context-editor.component';
 import { RestContextResolver } from './contexts/rest-context.resolver';
+import { PanelResolverService } from './services/panel-resolver.service';
 
 const panePageMatcher = (url: UrlSegment[]) => {
   if(url[0] !== undefined && url[0].path === 'panelpage') {
@@ -95,26 +96,6 @@ const panePageMatcher = (url: UrlSegment[]) => {
           return { ...p, panelPageId: new UrlSegment(c.path, {}) }
         } else if(index > 1) {
           return { ...p, [`arg${index - 2}`]: new UrlSegment(c.path, {}) };
-        } else {
-          return { ...p };
-        }
-      }, {})
-    };
-  } else {
-    return null;
-  }
-}
-
-const testPageMatcher = (url: UrlSegment[]) => {
-  console.log(url.map(u => u.path).join('/'));
-  if(url[0] !== undefined && ('/' + url.map(u => u.path).join('/')).indexOf('/page/with/links') === 0) {
-    return {
-      consumed: url,
-      posParams: url.reduce<{}>((p, c, index) => {
-        if(index === 1) {
-          return { ...p, panelPageId: new UrlSegment('89ab1489-c5eb-11ea-8729-46c9d8c8867b' , {}) }
-        } else if(index > 2) {
-          return { ...p, [`arg${index - 3}`]: new UrlSegment(c.path, {}) };
         } else {
           return { ...p };
         }
@@ -164,11 +145,12 @@ const routes = [
     StoreModule.forFeature(fromPageBuilder.pageBuilderFeatureKey, fromPageBuilder.reducer),
     EffectsModule.forFeature([PageBuilderEffects])
   ],
-  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, RenderPanelComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent, SplitLayoutComponent, FlexLayoutComponent, TabsPanelRendererComponent, PropertiesDialogComponent, CatchAllRouterComponent, ContextDialogComponent, ContextEditorComponent],
+  declarations: [GridLayoutComponent, CreateGridLayoutComponent, ContentSelectorComponent, ContentSelectionHostDirective, PaneContentHostDirective, EditablePaneComponent, SnippetFormComponent, SnippetPaneRendererComponent, PageBuilderComponent, ContentEditorComponent, SnippetEditorComponent, GridLayoutFormComponent, GridLayoutMasterComponent, PanelPageComponent, RenderPanelComponent, RenderPaneComponent, PanelPageRouterComponent, CreatePanelPageComponent, EditPanelPageComponent, AttributeSelectorComponent, AttributeEditorComponent, AttributePaneRendererComponent, MediaEditorComponent, MediaPaneRendererComponent, RenderingEditorComponent, PanelSelectorComponent, PanelEditorComponent, StyleSelectorComponent, GalleryEditorComponent, GalleryPanelRendererComponent, DatasourceSelectorComponent, RestEditorComponent, RestFormComponent, RestPaneRendererComponent, VirtualListPanelRendererComponent, SliceEditorComponent, SliceFormComponent, GridlessLayoutComponent, RestSourceFormComponent, SelectionComponent, RulesDialogComponent, SplitLayoutComponent, FlexLayoutComponent, TabsPanelRendererComponent, PropertiesDialogComponent, CatchAllRouterComponent, ContextDialogComponent, ContextEditorComponent],
   providers: [
     CatchAllGuard,
     PageContextResolver,
     RestContextResolver,
+    PanelResolverService,
     { provide: EMBEDDABLE_COMPONENT, useValue: PageRouterLinkComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: MarkdownComponent, multi: true },
     { provide: EMBEDDABLE_COMPONENT, useValue: PanelPageComponent, multi: true },

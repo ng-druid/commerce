@@ -4,8 +4,8 @@ import { TokenizerService } from '@classifieds-ui/token';
 import { SnippetContentHandler } from '../../../handlers/snippet-content.handler';
 import { Snippet } from '../../../models/plugin.models';
 import { InlineContext } from '../../../models/context.models';
-import { Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { switchMap, map, tap , take} from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-snippet-pane-renderer',
@@ -26,6 +26,8 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   @Input()
   resolvedContext: any;
 
+  // private contextDiscovery$ = new BehaviorSubject<Array<string>>([]);
+
   contentType: string;
   content: string;
 
@@ -45,6 +47,7 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
       }
       this.contentType = snippet.contentType;
       this.content = this.replaceTokens(snippet.content);
+      // this.refreshDiscoveredContexts(snippet.content, tokens);
     });
   }
 
@@ -56,12 +59,11 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
       ))
     ).subscribe(([snippet, tokens]) => {
       if(tokens !== undefined) {
-        console.log('tokens');
-        console.log(tokens);
         this.tokens = tokens;
       }
       this.contentType = snippet.contentType;
       this.content = this.replaceTokens(snippet.content);
+      // this.refreshDiscoveredContexts(snippet.content, tokens);
     });
   }
 
@@ -104,8 +106,22 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
     });
   }
 
-  mergeContexts(contexts: Array<InlineContext>): Array<InlineContext> {
-    return [ ...( this.contexts !== undefined ? this.contexts : [] ), ...( contexts !== undefined ? contexts : [] ) ];
-  }
+  /*refreshDiscoveredContexts(v: string, tokens: Map<string, any>) {
+    const usedTokens = this.tokenizerService.matchTokens(v, Array.from(tokens.keys()));
+    const usedContexts = usedTokens.reduce<Array<string>>((p, c) => {
+      const [ piece ] = c.split('.', 1);
+      return p.findIndex(i => i === piece) !== -1 ? p : [ ...p, piece ];
+    }, []);
+    this.contextDiscovery$.next(usedContexts);
+  }*/
+
+  /*discoverUsedContexts(v: string, tokens: Map<string, any>): Array<string> {
+    const usedTokens = this.tokenizerService.matchTokens(v, Array.from(tokens.keys()));
+    const usedContexts = usedTokens.reduce<Array<string>>((p, c) => {
+      const [ piece ] = c.split('.', 1);
+      return p.findIndex(i => i === piece) !== -1 ? p : [ ...p, piece ];
+    }, []);
+    return usedContexts;
+  }*/
 
 }
