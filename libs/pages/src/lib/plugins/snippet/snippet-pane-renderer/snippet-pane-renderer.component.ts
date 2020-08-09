@@ -4,8 +4,8 @@ import { TokenizerService } from '@classifieds-ui/token';
 import { SnippetContentHandler } from '../../../handlers/snippet-content.handler';
 import { Snippet } from '../../../models/plugin.models';
 import { InlineContext } from '../../../models/context.models';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { switchMap, map, tap , take} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'classifieds-ui-snippet-pane-renderer',
@@ -26,8 +26,6 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   @Input()
   resolvedContext: any;
 
-  // private contextDiscovery$ = new BehaviorSubject<Array<string>>([]);
-
   contentType: string;
   content: string;
 
@@ -47,7 +45,6 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
       }
       this.contentType = snippet.contentType;
       this.content = this.replaceTokens(snippet.content);
-      // this.refreshDiscoveredContexts(snippet.content, tokens);
     });
   }
 
@@ -63,14 +60,12 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
       }
       this.contentType = snippet.contentType;
       this.content = this.replaceTokens(snippet.content);
-      // this.refreshDiscoveredContexts(snippet.content, tokens);
     });
   }
 
   replaceTokens(v: string): string {
     if(this.tokens !== undefined) {
       this.tokens.forEach((value, key) => {
-        //v = v.replaceAll(`[${key}]`, `${value}`);
         v = v.split(`[${key}]`).join(`${value}`)
       });
     }
@@ -78,22 +73,6 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
   }
 
   resolveContexts(): Observable<undefined | Map<string, any>> {
-    /*return forkJoin([
-      ...this.contextManager.getAll(true).map(c => c.resolver.resolve(c).pipe(map(d => [c, d], take(1)))),
-      ...(contexts === undefined || contexts.length === 0 ? [] : contexts.map(c => of(c).pipe(map(c => [c, c.data]), take(1))))
-    ])*/
-    /*console.log('resolve contexts');
-    return this.inlineContextResolver.resolveMerged(contexts).pipe(
-      tap(v => console.log(v)),
-      //take(1),
-      map(resolved => {
-        let tokens = new Map<string, any>();
-        for(const name in resolvedContext) {
-          tokens = new Map<string, any>([ ...tokens, ...this.tokenizerService.generateGenericTokens(resolved[name], name === '_root' ? '' : name) ]);
-        }
-        return tokens;
-      })
-    );*/
     return new Observable(obs => {
       let tokens = new Map<string, any>();
       if(this.resolvedContext) {
@@ -105,23 +84,5 @@ export class SnippetPaneRendererComponent implements OnInit, OnChanges {
       obs.complete();
     });
   }
-
-  /*refreshDiscoveredContexts(v: string, tokens: Map<string, any>) {
-    const usedTokens = this.tokenizerService.matchTokens(v, Array.from(tokens.keys()));
-    const usedContexts = usedTokens.reduce<Array<string>>((p, c) => {
-      const [ piece ] = c.split('.', 1);
-      return p.findIndex(i => i === piece) !== -1 ? p : [ ...p, piece ];
-    }, []);
-    this.contextDiscovery$.next(usedContexts);
-  }*/
-
-  /*discoverUsedContexts(v: string, tokens: Map<string, any>): Array<string> {
-    const usedTokens = this.tokenizerService.matchTokens(v, Array.from(tokens.keys()));
-    const usedContexts = usedTokens.reduce<Array<string>>((p, c) => {
-      const [ piece ] = c.split('.', 1);
-      return p.findIndex(i => i === piece) !== -1 ? p : [ ...p, piece ];
-    }, []);
-    return usedContexts;
-  }*/
 
 }

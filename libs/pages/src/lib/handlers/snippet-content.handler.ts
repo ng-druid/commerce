@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
-import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { TokenizerService } from '@classifieds-ui/token';
 import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Snippet } from '../models/plugin.models';
 import { Dataset } from '../models/datasource.models';
 
@@ -66,36 +66,11 @@ export class SnippetContentHandler implements ContentHandler {
   }
 
   toObject(settings: Array<AttributeValue>): Observable<Snippet> {
-    /*const snippet = new Snippet({
-        content: settings.find(s => s.name === 'content').value,
-        contentType: settings.find(s => s.name === 'contentType').value,
-    });
-    return of(snippet);*/
     return of(new Snippet(this.attributeSerializer.deserializeAsObject(settings)));
   }
 
   buildSettings(snippet: Snippet): Array<AttributeValue> {
     return this.attributeSerializer.serialize(snippet, 'root').attributes;
-    /*return [
-      new AttributeValue({
-        name: 'contentType',
-        type: AttributeTypes.Text,
-        displayName: 'Content Type',
-        value: snippet.contentType,
-        computedValue: snippet.contentType,
-        intValue: 0,
-        attributes: []
-      }),
-      new AttributeValue({
-        name: 'content',
-        type: AttributeTypes.Number,
-        displayName: 'Content',
-        value: snippet.content,
-        computedValue: snippet.content,
-        intValue: 0,
-        attributes: []
-      }),
-    ];*/
   }
 
 }

@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
-import { ContextManagerService } from '@classifieds-ui/context';
 import { SnippetContentHandler } from './snippet-content.handler';
 import { Observable, of, Subject, iif, forkJoin, from } from 'rxjs';
 import * as uuid from 'uuid';
-import { map, filter, switchMap, tap, take, defaultIfEmpty } from 'rxjs/operators';
-import { Rest, Param, Mapping, Dataset } from '../models/datasource.models';
+import { map, filter, switchMap, take, defaultIfEmpty } from 'rxjs/operators';
+import { Rest, Dataset } from '../models/datasource.models';
 import { PageBuilderFacade } from '../features/page-builder/page-builder.facade';
 import { selectDataset } from '../features/page-builder/page-builder.selectors';
 import { PageBuilderPartialState } from '../features/page-builder/page-builder.reducer';
@@ -30,8 +29,7 @@ export class RestContentHandler implements ContentHandler {
     private panelHandler: PanelContentHandler,
     private urlGeneratorService: UrlGeneratorService,
     private attributeSerializer: AttributeSerializerService,
-    private rulesResolver: RulesResolverService,
-    private contextManager: ContextManagerService
+    private rulesResolver: RulesResolverService
   ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
@@ -69,7 +67,6 @@ export class RestContentHandler implements ContentHandler {
   }
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     const subject = new Subject<Array<AttributeValue>>();
-    //const globalContexts = this.contextManager.getAll().map(c => new InlineContext({ name: c.name, adaptor: 'data', data: c.baseObject  }));
     this.toObject(settings).pipe(
       switchMap(r => this.urlGeneratorService.generateUrl(r.url, r.params, metadata).pipe(
         map<string, [Rest, string]>(url => [r, url])
@@ -118,14 +115,10 @@ export class RestContentHandler implements ContentHandler {
           if(r.renderer.type === 'pane') {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);
-              // const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
-              // const contexts = [];
-              // const mergedContexts = [ ...(attachedPane !== undefined && attachedPane.contexts !== undefined ? attachedPane.contexts : []), ...contexts ];
               const name = uuid.v4();
               return new Pane({ ...attachedPane, rule: undefined, label: name, contexts: [ new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
             }) as Array<Pane>;
           } else {
-            //const contexts = (metadata.get('contexts') as Array<InlineContext>) ? (metadata.get('contexts') as Array<InlineContext>) : [];
             const contexts = [];
             return dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [ ...contexts,new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>;
           }
@@ -175,140 +168,9 @@ export class RestContentHandler implements ContentHandler {
   }
   toObject(settings: Array<AttributeValue>): Observable<Rest> {
     return of(this.attributeSerializer.deserializeAsObject(settings));
-    /*const snip = settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'data').attributes;
-    return this.snippetHandler.toObject(snip).pipe(
-      map(data => new Rest({
-        url: settings.find(s => s.name === 'url').value,
-        params: settings.find(s => s.name === 'params').attributes.map(a => a.attributes.reduce<Param>((p, c) => new Param({ ...p, [c.name]: c.name === 'mapping' ? c.attributes.reduce<Mapping>((p, c) => new Mapping({ ...p, [c.name]: c.value }), new Mapping()) : c.name === 'flags' ? c.attributes.map(f => ({ enabled: true, name: f.value }) ) : c.value }), new Param())),
-        renderer: {
-          type: settings.find(s => s.name === 'renderer').attributes.find(a => a.name === 'type').value,
-          data
-        }
-      }))
-    );*/
   }
   buildSettings(rest: Rest): Array<AttributeValue> {
     return this.attributeSerializer.serialize(rest, 'root').attributes;
-    /*return [
-      new AttributeValue({
-        name: 'url',
-        type: AttributeTypes.Text,
-        displayName: 'Url',
-        value: rest.url,
-        computedValue: rest.url,
-        intValue: 0,
-        attributes: []
-      }),
-      new AttributeValue({
-        name: 'params',
-        type: AttributeTypes.Complex,
-        displayName: 'Params',
-        value: undefined,
-        computedValue: undefined,
-        intValue: 0,
-        attributes: rest.params.map((p, i) => new AttributeValue({
-          name: `${i}`,
-          type: AttributeTypes.Complex,
-          displayName: `${i}`,
-          value: undefined,
-          computedValue: undefined,
-          intValue: 0,
-          attributes: [
-            new AttributeValue({
-              name: 'mapping',
-              type: AttributeTypes.Complex,
-              displayName: 'Mapping',
-              value: undefined,
-              computedValue: undefined,
-              intValue: 0,
-              attributes: [
-                new AttributeValue({
-                  name: 'type',
-                  type: AttributeTypes.Text,
-                  displayName: 'Type',
-                  value: p.mapping.type,
-                  computedValue: p.mapping.type,
-                  intValue: 0,
-                  attributes: []
-                }),
-                new AttributeValue({
-                  name: 'context',
-                  type: AttributeTypes.Text,
-                  displayName: 'Context',
-                  value: p.mapping.context,
-                  computedValue: p.mapping.context,
-                  intValue: 0,
-                  attributes: []
-                }),
-                new AttributeValue({
-                  name: 'value',
-                  type: AttributeTypes.Text,
-                  displayName: 'Value',
-                  value: p.mapping.value,
-                  computedValue: p.mapping.value,
-                  intValue: 0,
-                  attributes: []
-                }),
-                new AttributeValue({
-                  name: 'testValue',
-                  type: AttributeTypes.Text,
-                  displayName: 'Test Value',
-                  value: p.mapping.testValue,
-                  computedValue: p.mapping.testValue,
-                  intValue: 0,
-                  attributes: []
-                })
-              ]
-            }),
-            new AttributeValue({
-              name: 'flags',
-              type: AttributeTypes.Complex,
-              displayName: 'Flags',
-              value: undefined,
-              computedValue: undefined,
-              intValue: 0,
-              attributes: p.flags.reduce<Array<AttributeValue>>((f, c) => c.enabled ? [...f, new AttributeValue({
-                name: 'flag',
-                type: AttributeTypes.Text,
-                displayName: 'Flag',
-                value: c.name,
-                computedValue: c.name,
-                intValue: 0,
-                attributes: []
-              })] : f, [])
-            })
-          ]
-        }))
-      }),
-      new AttributeValue({
-        name: 'renderer',
-        type: AttributeTypes.Complex,
-        displayName: 'Renderer',
-        value: undefined,
-        computedValue: undefined,
-        intValue: 0,
-        attributes: [
-          new AttributeValue({
-            name: 'type',
-            type: AttributeTypes.Text,
-            displayName: 'Type',
-            value: rest.renderer.type,
-            computedValue: rest.renderer.type,
-            intValue: 0,
-            attributes: []
-          }),
-          new AttributeValue({
-            name: 'data',
-            type: AttributeTypes.Complex,
-            displayName: 'Data',
-            value: undefined,
-            computedValue: undefined,
-            intValue: 0,
-            attributes: this.snippetHandler.buildSettings(rest.renderer.data)
-          })
-        ]
-      })
-    ];*/
   }
   getRenderType(settings: Array<AttributeValue>) : string {
     const renderType = [settings.find(s => s.name === 'renderer')].map(r => r.attributes.find(s => s.name === 'type'));

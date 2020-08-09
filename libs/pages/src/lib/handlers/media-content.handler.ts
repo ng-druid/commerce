@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContentHandler, ContentBinding } from '@classifieds-ui/content';
-import { AttributeValue, AttributeTypes, AttributeSerializerService } from '@classifieds-ui/attributes';
+import { AttributeValue, AttributeSerializerService } from '@classifieds-ui/attributes';
 import { FilesService, MediaFile } from '@classifieds-ui/media';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -48,15 +48,6 @@ export class MediaContentHandler implements ContentHandler {
   }
 
   toObject(settings: Array<AttributeValue>): Observable<MediaFile> {
-    /*const mediaFile = new MediaFile({
-        path: settings.find(s => s.name === 'path').value,
-        contentType: settings.find(s => s.name === 'contentType').value,
-        contentDisposition: settings.find(s => s.name === 'contentDisposition').value,
-        id: settings.find(s => s.name === 'id').value,
-        length: parseInt(settings.find(s => s.name === 'length').value),
-        fileName: settings.find(s => s.name === 'fileName').value
-    });
-    return of(mediaFile);*/
     return of(this.attributeSerializer.deserializeAsObject(settings));
   }
 
@@ -64,62 +55,6 @@ export class MediaContentHandler implements ContentHandler {
     console.log(mediaFile);
     mediaFile.fileName = 'placeholdername';
     return this.attributeSerializer.serialize(mediaFile, 'root').attributes;
-    /*return [
-      new AttributeValue({
-        name: 'id',
-        type: AttributeTypes.Text,
-        displayName: 'Id',
-        value: mediaFile.id,
-        computedValue: mediaFile.id,
-        intValue: 0,
-        attributes: []
-      }),
-      new AttributeValue({
-        name: 'length',
-        type: AttributeTypes.Number,
-        displayName: 'Length',
-        value: `${mediaFile.length}`,
-        computedValue: `${mediaFile.length}`,
-        intValue: mediaFile.length,
-        attributes: []
-      }),
-      new AttributeValue({
-        name: 'contentDisposition',
-        type: AttributeTypes.Text,
-        displayName: 'Content Disposition',
-        value: mediaFile.contentDisposition,
-        computedValue: mediaFile.contentDisposition,
-        intValue: 0,
-        attributes: []
-      }),
-      new AttributeValue({
-        name: 'path',
-        type: AttributeTypes.Text,
-        displayName: 'Path',
-        value: mediaFile.path,
-        computedValue: mediaFile.path,
-        intValue: 0,
-        attributes: []
-      }),
-      new AttributeValue({
-        name: 'contentType',
-        type: AttributeTypes.Text,
-        displayName: 'Content Type',
-        value: mediaFile.contentType,
-        computedValue: mediaFile.contentType,
-        intValue: 0,
-        attributes: []
-      }),
-      new AttributeValue({
-        name: 'fileName',
-        type: AttributeTypes.Text,
-        displayName: 'File Name',
-        value: mediaFile.fileName,
-        computedValue: mediaFile.fileName,
-        intValue: 0,
-        attributes: []
-      })
-    ];*/
   }
 
 }

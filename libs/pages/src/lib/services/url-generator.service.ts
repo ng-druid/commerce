@@ -5,7 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { Param } from '../models/datasource.models';
 import { InlineContext } from '../models/context.models';
 import { Observable, of, forkJoin, iif } from 'rxjs';
-import { map, switchMap, tap, defaultIfEmpty, take } from 'rxjs/operators';
+import { map, switchMap, defaultIfEmpty, take } from 'rxjs/operators';
 import { InlineContextResolverService } from './inline-context-resolver.service';
 import { TokenizerService } from '@classifieds-ui/token';
 import * as qs from 'qs';
@@ -92,16 +92,6 @@ export class UrlGeneratorService {
         take(1),
         switchMap(d => iif(
           () => param.mapping.value && param.mapping.value !== '',
-          /*new Observable<any>(obs => {
-            const tokens = this.tokenizerService.generateGenericTokens(d[0]);
-            const v = this.tokenizerService.replaceTokens(`[${param.mapping.value}]`, tokens)
-            obs.next(v);
-            obs.complete();
-          }),
-          new Observable<any>(obs => {
-            obs.next(d[0]);
-            obs.complete();
-          })*/
           of(d).pipe(
             map(d => this.tokenizerService.generateGenericTokens(d[0])),
             map(tokens => this.tokenizerService.replaceTokens(`[${param.mapping.value}]`, tokens)),
