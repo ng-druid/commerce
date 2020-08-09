@@ -122,7 +122,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
         )),
         filter(([ctx, contextChanged]) => Array.isArray(ctx) && ctx.findIndex(c => c === contextChanged) !== -1),
         debounceTime(100)
-      ).subscribe(() => {
+      ).subscribe(([ctx, contextChanged]) => {
         this.scheduleRender.next([this.panel.panes, this.contexts, this.resolvedContext]);
       });
     }

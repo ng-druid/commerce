@@ -144,7 +144,6 @@ export class PanelPageComponent implements OnInit, OnChanges {
       this.resolveSub = this.inlineContextResolver.resolveMergedSingle(this.contexts).pipe(
         skip(this.contextManager.getAll(true).length + (this.contexts ? this.contexts.length : 0))
       ).subscribe(([cName, cValue]) => {
-        //console.log(`context changed: ${cName}`);
         this.contextChanged = cName;
         this.resolvedContext = { ...this.resolvedContext, [cName]: cValue };
       });

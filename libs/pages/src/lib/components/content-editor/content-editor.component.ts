@@ -201,6 +201,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
       this.dashboard = [ ...changes.panelPage.currentValue.gridItems ];
       this.layoutType.setValue(this.panelPage.layoutType);
       this.contexts = changes.panelPage.currentValue.contexts;
+      this.pageProperties = new PropertiesFormPayload({ name: changes.panelPage.currentValue.name, title: changes.panelPage.currentValue.title, path: changes.panelPage.currentValue.path })
       changes.panelPage.currentValue.panels.forEach((p, i) => {
         this.panels.push(this.fb.group({
           stylePlugin: this.fb.control(p.stylePlugin),
@@ -351,7 +352,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
 
   onPropertiesClick() {
     this.dialog
-      .open(PropertiesDialogComponent, { data: { panelPage: this.panelPage } })
+      .open(PropertiesDialogComponent, { data: { props: this.pageProperties } })
       .afterClosed()
       .subscribe((props: PropertiesFormPayload) => {
         this.pageProperties = new PropertiesFormPayload({ ...props });

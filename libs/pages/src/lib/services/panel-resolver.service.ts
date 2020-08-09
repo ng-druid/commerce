@@ -70,10 +70,10 @@ export class PanelResolverService {
               take(1)
             )];
           } else if(c.name === '' || bindings.findIndex(n => n === c.name) === -1) {
-            return [ ...p , of([ new Pane({ ...c }) ]).pipe(
+            return [ ...p , of([ new Pane({ ...c, contexts: [ ...contexts, ...(c.contexts ? c.contexts: []) ] }) ]).pipe(
               switchMap(panes => iif(
                 () => panes[0].rule !== undefined && panes[0].rule !== null && panes[0].rule.condition !== '',
-                this.rulesResolver.evaluate(panes[0].rule, [ ...contexts ]).pipe(
+                this.rulesResolver.evaluate(panes[0].rule, [ ...contexts, ...(c.contexts ? c.contexts: []) ]).pipe(
                   map(res => res ? panes: [])
                 ),
                 of(panes)

@@ -87,7 +87,7 @@ export class RestContentHandler implements ContentHandler {
                 map(binding => (metadata.get('panes') as Array<Pane>).find(p => p.name === binding.id)),
                 switchMap(pane => iif(
                   () => pane.rule && pane.rule !== null && pane.rule.condition !== '',
-                  this.rulesResolver.evaluate(pane.rule,[ ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
+                  this.rulesResolver.evaluate(pane.rule,[ ...(metadata.get('contexts') as Array<InlineContext>), ...(pane.contexts !== undefined ? pane.contexts : []), new InlineContext({ name: "_root", adaptor: 'data', data: row }) ]).pipe(
                     map<boolean, [Pane, boolean]>(res => [pane, res])
                   ),
                   of(false).pipe(
@@ -116,11 +116,10 @@ export class RestContentHandler implements ContentHandler {
             return dataset.results.map((row, rowIndex) => {
               const attachedPane = (metadata.get('panes') as Array<Pane>).find(p => p.name === paneMappings[rowIndex]);
               const name = uuid.v4();
-              return new Pane({ ...attachedPane, rule: undefined, label: name, contexts: [ new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
+              return new Pane({ ...attachedPane, rule: undefined, label: name, contexts: [ ...(metadata.get('contexts') as Array<InlineContext>) ,new InlineContext({ name: "_root", adaptor: 'data', data: row })] });
             }) as Array<Pane>;
           } else {
-            const contexts = [];
-            return dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [ ...contexts,new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>;
+            return dataset.results.map(row => new Pane({ contentPlugin: 'snippet', name: uuid.v4(), label: undefined, contexts: [ ...(metadata.get('contexts') as Array<InlineContext>), new InlineContext({ name: "_root", adaptor: 'data', data: row })], settings: this.snippetHandler.buildSettings({ ...r.renderer.data, content: r.renderer.data.content }) })) as Array<Pane>;
           }
         }),
         map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),

@@ -12,13 +12,13 @@ import { PropertiesFormPayload } from '../../models/form.models';
 export class PropertiesDialogComponent implements OnInit {
 
   propertiesForm = this.fb.group({
-    name: this.fb.control(''),
-    title: this.fb.control(''),
-    path: this.fb.control(''),
+    name: this.fb.control(this.data.props.name),
+    title: this.fb.control(this.data.props.title),
+    path: this.fb.control(this.data.props.path),
   });
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { panelPage?: PanelPage },
+    @Inject(MAT_DIALOG_DATA) private data: { props: PropertiesFormPayload },
     private dialogRef: MatDialogRef<PropertiesDialogComponent>,
     private fb: FormBuilder,
   ) { }
