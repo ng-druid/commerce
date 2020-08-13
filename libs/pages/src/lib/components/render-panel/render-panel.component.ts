@@ -5,7 +5,7 @@ import { CONTENT_PLUGIN, ContentPlugin } from '@classifieds-ui/content';
 import { STYLE_PLUGIN, StylePlugin } from '@classifieds-ui/style';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { Pane } from '../../models/page.models';
-import { switchMap, map, filter, debounceTime } from 'rxjs/operators';
+import { switchMap, map, filter, debounceTime, tap } from 'rxjs/operators';
 import { Subscription, Subject } from 'rxjs';
 import { InlineContext } from '../../models/context.models';
 import { PanelResolverService } from '../../services/panel-resolver.service';
@@ -62,7 +62,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
   scheduleRenderSub = this.scheduleRender.pipe(
     switchMap(([panes, contexts, resolvedContext]) => this.panelResolverService.resolvePanes(panes, contexts, resolvedContext))
   ).subscribe(([resolvedPanes, originMappings, resolvedContexts]) => {
-    console.log('render panel');
+    console.log(`render panel: ${this.panel.name}`);
     this.resolvedPanes = resolvedPanes;
     this.originMappings = originMappings;
     this.resolvedContexts = resolvedContexts;
@@ -115,6 +115,7 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
   ngOnInit(): void {
     this.stylePlugin = this.panel.stylePlugin !== undefined && this.panel.stylePlugin !== '' ? this.stylePlugins.find(p => p.name === this.panel.stylePlugin) : undefined;
     if(this.panel !== undefined && this.panelHost !== undefined) {
+      console.log(`panel render init [${this.panel.name}`);
       this.panelResolverService.usedContexts(this.panel.panes).pipe(
         map(ctx => ctx.filter(c => c !== '_page' && c !== '_root' && c !== '.')),
         switchMap(ctx => this.schduleContextChange.pipe(
@@ -123,6 +124,8 @@ export class RenderPanelComponent implements OnInit, OnChanges, ControlValueAcce
         filter(([ctx, contextChanged]) => Array.isArray(ctx) && ctx.findIndex(c => c === contextChanged) !== -1),
         debounceTime(100)
       ).subscribe(([ctx, contextChanged]) => {
+        console.log(`Context changed [${this.panel.name}]: ${contextChanged}`);
+        console.log(`contexts detected [${this.panel.name}]: ${(ctx as Array<string>).join('.')}`);
         this.scheduleRender.next([this.panel.panes, this.contexts, this.resolvedContext]);
       });
     }

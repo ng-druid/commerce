@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { AttributeValue } from '@classifieds-ui/attributes';
 import { FormGroup, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { RestContentHandler } from '../../../handlers/rest-content-handler.service';
 import { Rest } from '../../../models/datasource.models';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -23,7 +24,7 @@ export class RestEditorComponent implements OnInit {
   contexts: Array<InlineContext> = [];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number; contexts: Array<InlineContext> },
+    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; panelIndex: number; paneIndex: number; contexts: Array<InlineContext>; contentAdded: Subject<[number, number]> },
     private dialogRef: MatDialogRef<RestEditorComponent>,
     private fb: FormBuilder,
     private handler: RestContentHandler
@@ -41,13 +42,23 @@ export class RestEditorComponent implements OnInit {
   }
 
   submitted(rest: Rest) {
-    (this.data.panelFormGroup.get('panes') as FormArray).push(this.fb.group({
-      contentPlugin: 'rest',
-      name: new FormControl(''),
-      label: new FormControl(''),
-      rule: new FormControl(''),
-      settings: this.fb.array(this.handler.buildSettings(rest).map(s => this.convertToGroup(s)))
-    }));
+    const panes = (this.data.panelFormGroup.get('panes') as FormArray);
+    if(this.data.paneIndex === undefined) {
+      panes.push(this.fb.group({
+        contentPlugin: 'rest',
+        name: new FormControl(''),
+        label: new FormControl(''),
+        rule: new FormControl(''),
+        settings: this.fb.array(this.handler.buildSettings(rest).map(s => this.convertToGroup(s)))
+      }));
+      this.data.contentAdded.next([this.data.panelIndex, panes.length - 1]);
+    } else {
+      const paneForm = panes.at(this.data.paneIndex);
+      (paneForm.get('settings') as FormArray).clear();
+      this.handler.buildSettings(rest).forEach(s => {
+        (paneForm.get('settings') as FormArray).push(this.convertToGroup(s))
+      });
+    }
     this.dialogRef.close();
   }
 

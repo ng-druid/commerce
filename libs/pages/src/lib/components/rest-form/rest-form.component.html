@@ -2,7 +2,7 @@
   <mat-dialog-content>
     <as-split direction="vertical" class="content-inner">
       <div as-split-area size="50">
-        <classifieds-ui-rest-source-form formControlName="source" (dataChange)="onDataChange($event)" [contexts]="contexts"></classifieds-ui-rest-source-form>
+        <classifieds-ui-rest-source-form formControlName="source" (dataChange)="onDataChange($event)" [contexts]="contexts" [restSource]="restSource"></classifieds-ui-rest-source-form>
       </div>
       <as-split-area size="50" formGroupName="renderer">
         <mat-form-field>

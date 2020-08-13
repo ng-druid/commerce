@@ -54,13 +54,14 @@
     </ng-template>
     <ng-template #gridItemActions let-i="i">
       <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
+      <button type="button" (mousedown)="editPanelProps(i)" (touchstart)="editPanelProps(i)" >Props</button>
       <button *ngIf="!hasPanelStyle(i)" type="button" (mousedown)="applyStyle(i)" (touchstart)="applyStyle(i)" >Apply Style</button>
       <span *ngIf="hasPanelStyle(i)">Style: {{ panelStyleTitle(i) }}</span>
     </ng-template>
     <ng-template #innerGridItem let-i="i">
       <ngx-dropzone [cdkDropListData]="i" class="panel-dropzone" [multiple]="true" [disableClick]="true" (change)="onFileChange($event, i)" cdkDropList (cdkDropListDropped)="onDrop($event)">
         <div #panes>
-          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (rules)="onRulesPane(i, j)" (delete)="onDeletePane(i, j)" (heightChange)="onPaneHeightChange(i)" (nestedUpdate)="onNestedUpdate($event, i, j)" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [locked]="panelPaneLocked(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
+          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (rules)="onRulesPane(i, j)" (delete)="onDeletePane(i, j)" (heightChange)="onPaneHeightChange(i)" (nestedUpdate)="onNestedUpdate($event, i, j)" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [locked]="panelPaneLocked(i, j)" [contexts]="contexts" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
             <div class="custom-placeholder" *cdkDragPlaceholder></div>
           </classifieds-ui-editable-pane>
         </div>
@@ -78,6 +79,7 @@
       <button *ngIf="nested" type="button" (click)="onDeleteClick()">Delete</button>
       <button *ngIf="nested" type="button" (click)="onRulesClick()">Rules</button>
       <button type="button" (mousedown)="addContent(0)" (touchstart)="addContent(0)">Add Content</button>
+      <button type="button" (mousedown)="editPanelProps(0)" (touchstart)="editPanelProps(0)" >Props</button>
       <span *ngIf="hasPanelStyle(0)">Style: {{ panelStyleTitle(0) }}</span>
       <button *ngIf="!hasPanelStyle(0)" type="button" (mousedown)="applyStyle(0)" (touchstart)="applyStyle(0)">Apply Style</button>
       <div class="layout-type">
@@ -95,7 +97,7 @@
     <ng-template #innerGridItem let-i="i">
       <ngx-dropzone [cdkDropListData]="i" class="panel-dropzone" [multiple]="true" [disableClick]="true" (change)="onFileChange($event, i)" cdkDropList (cdkDropListDropped)="onDrop($event)">
         <div #panes>
-          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (delete)="onDeletePane(i, j)" (nestedUpdate)="onNestedUpdate($event, i, j)" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [locked]="panelPaneLocked(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
+          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (delete)="onDeletePane(i, j)" (rules)="onRulesPane(i, j)" (nestedUpdate)="onNestedUpdate($event, i, j)" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [locked]="panelPaneLocked(i, j)" [contexts]="contexts" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
             <div class="custom-placeholder" *cdkDragPlaceholder></div>
           </classifieds-ui-editable-pane>
         </div>
@@ -133,13 +135,14 @@
     </ng-template>
     <ng-template #gridItemActions let-i="i">
       <button type="button" (mousedown)="addContent(i)" (touchstart)="addContent(i)">Add Content</button>
+      <button type="button" (mousedown)="editPanelProps(i)" (touchstart)="editPanelProps(i)" >Props</button>
       <button *ngIf="!hasPanelStyle(i)" type="button" (mousedown)="applyStyle(i)" (touchstart)="applyStyle(i)" >Apply Style</button>
       <span *ngIf="hasPanelStyle(i)">Style: {{ panelStyleTitle(i) }}</span>
     </ng-template>
     <ng-template #innerGridItem let-i="i">
       <ngx-dropzone [cdkDropListData]="i" class="panel-dropzone" [multiple]="true" [disableClick]="true" (change)="onFileChange($event, i)" cdkDropList (cdkDropListDropped)="onDrop($event)">
         <div #panes>
-          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (rules)="onRulesPane(i, j)" (delete)="onDeletePane(i, j)" (heightChange)="onPaneHeightChange(i)" (nestedUpdate)="onNestedUpdate($event, i, j)" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [locked]="panelPaneLocked(i, j)" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
+          <classifieds-ui-editable-pane *ngFor="let pane of panelPanes(i).controls; let j = index" class="editable-pane" (rules)="onRulesPane(i, j)" (delete)="onDeletePane(i, j)" (heightChange)="onPaneHeightChange(i)" (nestedUpdate)="onNestedUpdate($event, i, j)" (rendererOverride)="onOverrideRenderer(i, j)" (removeRendererOverride)="onRemoveOverrideRenderer(i, j)" (edit)="onPaneEdit(i, j)" (delete)="onPaneDelete(i, j)" [panelIndex]="i" [paneIndex]="j" [name]="panelPaneName(i, j)" [label]="panelPaneLabel(i, j)" [locked]="panelPaneLocked(i, j)" [contexts]="contexts" [pluginName]="panelPanePlugin(i, j)" [settings]="panelPaneSettings(i, j)" cdkDrag>
             <div class="custom-placeholder" *cdkDragPlaceholder></div>
           </classifieds-ui-editable-pane>
         </div>

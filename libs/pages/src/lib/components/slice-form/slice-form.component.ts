@@ -1,6 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DataSlice } from '../../models/plugin.models';
+import { InlineContext } from '../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-slice-form',
@@ -8,6 +9,9 @@ import { DataSlice } from '../../models/plugin.models';
   styleUrls: ['./slice-form.component.scss']
 })
 export class SliceFormComponent implements OnInit {
+
+  @Input()
+  contexts: Array<InlineContext> = [];
 
   @Output()
   submitted = new EventEmitter<DataSlice>();

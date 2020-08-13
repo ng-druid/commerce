@@ -10,3 +10,14 @@ export class PropertiesFormPayload {
     }
   }
 }
+
+export class PanelPropsFormPayload {
+  label: string;
+  name: string;
+  constructor(data?: PanelPropsFormPayload) {
+    if(data) {
+      this.label = data.label;
+      this.name = data.name;
+    }
+  }
+}

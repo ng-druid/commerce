@@ -5,6 +5,7 @@ import { NEVER, Subject, Subscription, of } from 'rxjs';
 import { debounceTime, filter, map, switchMap, catchError, tap, takeUntil } from 'rxjs/operators';
 import { DatasourceApiService } from '../../services/datasource-api.service';
 import { InlineContext } from '../../models/context.models';
+import { Param } from '../../models/datasource.models';
 import * as qs from 'qs';
 
 @Component({
@@ -28,6 +29,14 @@ export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueA
 
   @Output()
   dataChange = new EventEmitter<any>();
+
+  @Input()
+  set restSource(restSource: { url: string; params: Array<Param> }) {
+    if(restSource !== undefined) {
+      this.sourceForm.get('url').setValue(restSource.url);
+      setTimeout(() => this.sourceForm.get('params').setValue(restSource.params), 500);
+    }
+  };
 
   @Input()
   contexts: Array<InlineContext> = [];
@@ -179,6 +188,9 @@ export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueA
     let pathParams = 0;
     for(let i = 0; i < len; i++) {
       if(pathPieces[i].indexOf(':') > -1) {
+        if(!this.params.at(pathParams)) {
+          return '';
+        }
         const mapping = this.params.at(pathParams).get('mapping');
         rebuildUrl.push(mapping.value.type === 'static' ? mapping.value.value : mapping.value.testValue);
         pathParams++;
@@ -188,6 +200,9 @@ export class RestSourceFormComponent implements OnInit, OnDestroy, ControlValueA
     }
     for(const prop in qsParsed) {
       if(qsParsed[prop].indexOf(':') > -1) {
+        if(!this.params.at(pathParams)) {
+          return '';
+        }
         const mapping = this.params.at(pathParams).get('mapping');
         qsOverrides[prop] = mapping.value.type === 'static' ? mapping.value.value : mapping.value.testValue;
         pathParams++;

@@ -52,7 +52,6 @@ export class MediaContentHandler implements ContentHandler {
   }
 
   buildSettings(mediaFile: MediaFile): Array<AttributeValue> {
-    console.log(mediaFile);
     mediaFile.fileName = 'placeholdername';
     return this.attributeSerializer.serialize(mediaFile, 'root').attributes;
   }

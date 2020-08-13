@@ -5,6 +5,7 @@ import { SliceContentHandler } from '../../../handlers/slice-content.handler';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Pane } from '../../../models/page.models';
 import { DataSlice } from '../../../models/plugin.models';
+import { InlineContext } from '../../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-slice-editor',
@@ -15,12 +16,16 @@ export class SliceEditorComponent implements OnInit {
 
   panelFormGroup: FormGroup;
 
+  contexts: Array<InlineContext> = [];
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number;  },
+    @Inject(MAT_DIALOG_DATA) private data: { panelFormGroup: FormGroup; pane: Pane; paneIndex: number; contexts: Array<InlineContext> },
     private dialogRef: MatDialogRef<SliceEditorComponent>,
     private fb: FormBuilder,
     private handler: SliceContentHandler
-  ) { }
+  ) {
+    this.contexts = this.data.contexts;
+   }
 
   ngOnInit(): void {
   }

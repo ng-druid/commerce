@@ -4,6 +4,7 @@ import { ContentPlugin, CONTENT_PLUGIN } from '@classifieds-ui/content';
 import { PaneContentHostDirective } from '../../directives/pane-content-host.directive';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { PanelPage } from '../../models/page.models';
+import { InlineContext } from '../../models/context.models';
 
 @Component({
   selector: 'classifieds-ui-editable-pane',
@@ -32,6 +33,12 @@ export class EditablePaneComponent implements OnInit, OnChanges {
 
   @Input()
   locked = false;
+
+  @Input()
+  rootContext: InlineContext;
+
+  @Input()
+  contexts: Array<InlineContext> = [];
 
   @Output()
   edit = new EventEmitter();

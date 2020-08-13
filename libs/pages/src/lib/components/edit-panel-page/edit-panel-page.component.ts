@@ -26,6 +26,7 @@ export class EditPanelPageComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(id => this.panelPageService.getByKey(id))
     ).subscribe(panelPage => {
+      console.log(panelPage);
       this.panelPage = panelPage;
     });
   }

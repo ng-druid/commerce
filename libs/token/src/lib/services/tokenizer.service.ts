@@ -85,7 +85,11 @@ export class TokenizerService {
   }
 
   discoverTokens(v: string): Array<string> {
-    const matches = v.match(/(\[(?:\[??[^\[]*?\]))/g).reduce<Array<string>>((p, c) => {
+    const m = v.match(/(\[(?:\[??[^\[]*?\]))/g);
+    if(m === null) {
+      return [];
+    }
+    const matches = m.reduce<Array<string>>((p, c) => {
       if(c.indexOf(' ') !== -1 || c.indexOf('.') === -1) {
         return p;
       }

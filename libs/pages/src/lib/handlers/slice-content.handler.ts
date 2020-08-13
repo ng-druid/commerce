@@ -11,6 +11,7 @@ import { MediaContentHandler } from './media-content.handler';
 import { PanelContentHandler } from './panel-content.handler';
 import { Pane, Panel, PanelPage } from '../models/page.models';
 import { Dataset } from '../models/datasource.models';
+import { InlineContextResolverService } from '../services/inline-context-resolver.service';
 
 @Injectable()
 export class SliceContentHandler implements ContentHandler {
@@ -19,7 +20,8 @@ export class SliceContentHandler implements ContentHandler {
     private tokenizerService: TokenizerService,
     private panelHandler: PanelContentHandler,
     private mediaHandler: MediaContentHandler,
-    private attributeSerializer: AttributeSerializerService
+    private attributeSerializer: AttributeSerializerService,
+    private inlineContextResolver: InlineContextResolverService
   ) { }
 
   handleFile(file: File): Observable<Array<AttributeValue>> {
@@ -49,7 +51,9 @@ export class SliceContentHandler implements ContentHandler {
   buildDynamicItems(settings: Array<AttributeValue>, metadata: Map<string, any>): Observable<Array<AttributeValue>> {
     return this.toObject(settings).pipe(
       map(slice => [slice, metadata.get('contexts').find((c: InlineContext)  => c.name === slice.context)]),
-      map(([slice, context]) => [slice, context, this.extractDataArray(context, slice.query)]),
+      switchMap(([slice, context]) => this.extractDataArray(context, slice.query).pipe(
+        map(data => [slice, context, data])
+      )),
       switchMap(([slice, context, dataArray]) => this.transformDataArray(dataArray, slice.plugin)),
       map(panes => new Panel({ stylePlugin: undefined, settings: [], panes })),
       map(panel => this.panelHandler.buildSettings(new PanelPage({ id: undefined, layoutType: 'grid', displayType: 'page', gridItems: [], panels: [ panel ] }))),
@@ -58,7 +62,13 @@ export class SliceContentHandler implements ContentHandler {
   }
 
   getBindings(settings: Array<AttributeValue>, type: string, metadata?: Map<string, any>): Observable<Array<ContentBinding>> {
-    return of([]);
+    if(type === 'context') {
+      return this.toObject(settings).pipe(
+        map(slice => [new ContentBinding({ id: slice.context, type: 'context' })])
+      );
+    } else {
+      return of([]);
+    }
   }
 
   toObject(settings: Array<AttributeValue>): Observable<DataSlice> {
@@ -69,20 +79,24 @@ export class SliceContentHandler implements ContentHandler {
     return this.attributeSerializer.serialize(dataSlice, 'root').attributes;
   }
 
-  extractDataArray(context: InlineContext, query: string): Array<any> {
-    const pieces = query.split('.');
-    const len = pieces.length;
-    if(context === undefined) {
-      return [];
-    }
-    let current = context.data;
-    for(let i = 0; i < len; i++) {
-      if(pieces[i] === '') {
-        continue;
-      }
-      current = current[pieces[i]];
-    }
-    return current;
+  extractDataArray(context: InlineContext, query: string): Observable<Array<any>> {
+    return this.inlineContextResolver.resolve(context).pipe(
+      map(data => {
+        const pieces = query.split('.');
+        const len = pieces.length;
+        if(context === undefined) {
+          return of([]);
+        }
+        let current = Array.isArray(data) ? data[0] : data;
+        for(let i = 0; i < len; i++) {
+          if(pieces[i] === '') {
+            continue;
+          }
+          current = current[pieces[i]];
+        }
+        return current;
+      })
+    );
   }
 
   transformDataArray(dataArray: Array<any>, plugin: string): Observable<Array<Pane>> {

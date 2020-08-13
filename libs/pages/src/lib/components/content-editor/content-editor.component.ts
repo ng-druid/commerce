@@ -14,7 +14,7 @@ import { Pane, PanelPage } from '../../models/page.models';
 import { DisplayGrid, GridsterConfig, GridType, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RenderingEditorComponent } from '../rendering-editor/rendering-editor.component';
-import { Observable, forkJoin, iif, of } from 'rxjs';
+import { Observable, forkJoin, iif, of, BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, delay, filter, map, tap, switchMap, take } from 'rxjs/operators';
 import { PanelContentHandler } from '../../handlers/panel-content.handler';
 import { EditablePaneComponent } from '../editable-pane/editable-pane.component';
@@ -25,8 +25,10 @@ import { InlineContext } from '../../models/context.models';
 import { Rule as NgRule } from 'angular2-query-builder';
 import { SplitLayoutComponent } from '../split-layout/split-layout.component';
 import { PropertiesDialogComponent } from '../properties-dialog/properties-dialog.component';
-import { PropertiesFormPayload } from '../../models/form.models';
+import { PropertiesFormPayload, PanelPropsFormPayload } from '../../models/form.models';
 import { ContextDialogComponent } from '../context-dialog/context-dialog.component';
+import { PanelPropsDialogComponent } from '../panel-props-dialog/panel-props-dialog.component';
+import { timeStamp } from 'console';
 
 @Component({
   selector: 'classifieds-ui-content-editor',
@@ -97,10 +99,19 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   @Input()
   pageBuilder = false;
 
+  @Input()
+  contexts: Array<InlineContext> = [];
+
+  @Input()
+  rootContext: InlineContext;
+
+  contentAdded = new Subject<[number, number]>();
+  contentAdddedSub = this.contentAdded.subscribe(([panelIndex, paneIndex]) => {
+    this.resolvePaneContexts(panelIndex, paneIndex);
+  });
+
   panelPageId: string;
   dashboard = [];
-
-  contexts: Array<InlineContext> = [];
 
   pageProperties = new PropertiesFormPayload();
 
@@ -179,6 +190,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
       filter(() => this.nested),
       debounceTime(500)
     ).subscribe(() => {
+      //console.log('nested update');
       this.nestedUpdate.emit(this.packageFormData());
     });
     this.contentForm.get('layoutType').valueChanges.pipe(
@@ -186,6 +198,8 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     ).subscribe(v => {
       if(this.panels.length === 0) {
         this.panels.push(this.fb.group({
+          name: new FormControl(''),
+          label: new FormControl(''),
           stylePlugin: new FormControl(''),
           settings: new FormArray([]),
           panes: this.fb.array([])
@@ -200,10 +214,14 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
       this.panelPageId = changes.panelPage.currentValue.panelPageId;
       this.dashboard = [ ...changes.panelPage.currentValue.gridItems ];
       this.layoutType.setValue(this.panelPage.layoutType);
-      this.contexts = changes.panelPage.currentValue.contexts;
-      this.pageProperties = new PropertiesFormPayload({ name: changes.panelPage.currentValue.name, title: changes.panelPage.currentValue.title, path: changes.panelPage.currentValue.path })
+      if(!this.nested) {
+        this.pageProperties = new PropertiesFormPayload({ name: changes.panelPage.currentValue.name, title: changes.panelPage.currentValue.title, path: changes.panelPage.currentValue.path });
+        this.contexts = changes.panelPage.currentValue.contexts;
+      }
       changes.panelPage.currentValue.panels.forEach((p, i) => {
         this.panels.push(this.fb.group({
+          name: new FormControl(p.name),
+          label: new FormControl(p.label),
           stylePlugin: this.fb.control(p.stylePlugin),
           settings: this.fb.array(p.settings !== undefined ? p.settings.map(s => this.convertToGroup(s)): []),
           panes: this.fb.array([])
@@ -226,16 +244,33 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
             contentPlugin: pp.contentPlugin,
             name: new FormControl(pp.name),
             label: new FormControl(pp.label),
+            locked: new FormControl(pp.locked),
+            linkedPageId: new FormControl(pp.linkedPageId),
             rule: new FormControl(''),
             settings: new FormArray(pp.settings.map(s => this.convertToGroup(s)))
           }));
+          setTimeout(() => this.resolvePaneContexts(i, i2));
         });
       });
     }
   }
 
   addContent(index: number) {
-    this.bs.open(ContentSelectorComponent, { data: { panelForm: this.panels.controls[index], contexts: this.contexts } });
+    this.bs.open(ContentSelectorComponent, { data: { panelForm: this.panels.controls[index], panelIndex: index, contexts: this.contexts } });
+  }
+
+  editPanelProps(panelIndex: number) {
+    const name = this.panels.at(panelIndex).get('name');
+    const label = this.panels.at(panelIndex).get('label');
+    this.dialog
+      .open(PanelPropsDialogComponent, { data: { props: new PanelPropsFormPayload({ name: name.value, label: label.value }) } })
+      .afterClosed()
+      .subscribe((props: PanelPropsFormPayload) => {
+        if(props) {
+          name.setValue(props.name);
+          label.setValue(props.label);
+        }
+      });
   }
 
   applyStyle(index: number) {
@@ -246,6 +281,8 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     console.log('item added');
 
     this.panels.push(this.fb.group({
+      name: new FormControl(''),
+      label: new FormControl(''),
       stylePlugin: new FormControl(''),
       settings: new FormArray([]),
       panes: this.fb.array([])
@@ -336,7 +373,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   }
 
   onPaneHeightChange(panelIndex: number) {
-    if(this.nested) {
+    if(this.nested && this.gridLayout) {
       const container = this.paneContainers.find((i, index) => index === panelIndex);
       this.gridLayout.setItemContentHeight(panelIndex, container.nativeElement.offsetHeight);
     }
@@ -355,7 +392,9 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
       .open(PropertiesDialogComponent, { data: { props: this.pageProperties } })
       .afterClosed()
       .subscribe((props: PropertiesFormPayload) => {
-        this.pageProperties = new PropertiesFormPayload({ ...props });
+        if(props) {
+          this.pageProperties = new PropertiesFormPayload({ ...props });
+        }
       });
   }
 
@@ -382,7 +421,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
         map(indexes => indexes.length === 0 ? undefined : indexes[0]),
         switchMap(i => iif(
           () => i !== undefined,
-          this.contentPlugins.find(c => c.name === new Pane({ ...this.panelPane(index, i).value }).contentPlugin).handler.fetchDynamicData(new Pane({ ...this.panelPane(index, i).value }).settings, new Map<string, any>([ ['tag', uuid.v4()] ])),
+          this.contentPlugins.find(c => c.name === new Pane({ ...this.panelPane(index, i).value }).contentPlugin).handler.fetchDynamicData(new Pane({ ...this.panelPane(index, i).value }).settings, new Map<string, any>([ ['tag', uuid.v4()], ['contexts', [ ...this.contexts ]] ])),
           of(new Dataset())
         ))
       ).subscribe(dataset => {
@@ -395,8 +434,9 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
           });
       });
     } else {
+      console.log(this.contexts);
       this.dialog
-      .open(RulesDialogComponent, { data: { rule, contexts: this.contexts } })
+      .open(RulesDialogComponent, { data: { rule, contexts: [ ...(this.rootContext ? [ this.rootContext ] : [] ), ...this.contexts ] } })
       .afterClosed()
       .subscribe(r => {
         this.panelPane(index, index2).get('rule').setValue(r ? r : rule ? rule : undefined);
@@ -414,7 +454,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     .afterClosed()
     .subscribe((context?: InlineContext) => {
       if(context) {
-        this.contexts.push(context);
+        this.contexts = [ ...this.contexts, context ];
       }
     });
   }
@@ -424,7 +464,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   }
 
   packageFormData(): PanelPage {
-    this.syncNestedPanelPages();
+    //this.syncNestedPanelPages();
     let gridItems = [];
     switch(this.layoutType.value) {
       case 'grid':
@@ -451,6 +491,7 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
   }
 
   syncNestedPanelPages() {
+    console.log('sync nested');
     this.editablePanes.forEach(p => {
       if(p.contentEditor !== undefined) {
         const settings = this.panelHandler.buildSettings((p.contentEditor as ContentEditorComponent).packageFormData());
@@ -459,6 +500,26 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
         settings.forEach(s => formArray.push(this.convertToGroup(s)))
       }
     });
+  }
+
+  resolvePaneContexts(panelIndex: number, paneIndex: number) {
+    const pane = new Pane(this.panelPane(panelIndex, paneIndex).value);
+    const controls = this.panelPanes(panelIndex).controls;
+    const plugin = this.contentPlugins.find(p => p.name === pane.contentPlugin);
+    if(plugin.handler !== undefined && plugin.handler.isDynamic(pane.settings)) {
+      plugin.handler.fetchDynamicData(pane.settings, new Map<string, any>([ ['tag', uuid.v4()], ['contexts', [ ...this.contexts ]] ])).pipe(
+        map(dataset => new InlineContext({ name: '_root', adaptor: 'data', data: dataset.results[0] })),
+        switchMap(context => plugin.handler.getBindings(pane.settings, 'pane').pipe(
+          map<Array<ContentBinding>, [InlineContext, Array<number>]>(bindings => [context, bindings.map(b => controls.findIndex(p => new Pane(p.value).name === b.id))])
+        ))
+      ).subscribe(([context, paneIndexes]) => {
+        this.editablePanes.forEach((p, i) => {
+          if(paneIndexes.findIndex(pi => pi === i) > -1) {
+            p.rootContext = context;
+          }
+        });
+      })
+    }
   }
 
   panelPanes(index: number): FormArray {
@@ -518,7 +579,11 @@ export class ContentEditorComponent implements OnInit, OnChanges, ControlValueAc
     const plugin = this.panelPanePlugin(index, index2);
     const contentPlugin = this.contentPlugins.find(p => p.name === plugin);
     if(contentPlugin.editorComponent !== undefined) {
-      const dialogRef = this.dialog.open(contentPlugin.editorComponent, { data: { panelFormGroup: this.panels.at(index), paneIndex: index2, pane } });
+      const dialogRef = this.dialog.open(contentPlugin.editorComponent, { data: { panelFormGroup: this.panels.at(index), panelIndex: index, paneIndex: index2, contexts: this.contexts, contentAdded: this.contentAdded, pane } })
+        .afterClosed()
+        .subscribe(() => {
+          this.resolvePaneContexts(index, index2);
+        })
     }
   }
 

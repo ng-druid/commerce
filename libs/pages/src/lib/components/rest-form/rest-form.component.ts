@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormArray, Validators } from '@angular/forms';
 import { TokenizerService } from '@classifieds-ui/token';
-import { Rest } from '../../models/datasource.models';
+import { Rest, Param } from '../../models/datasource.models';
 import { RestSourceFormComponent } from '../rest-source-form/rest-source-form.component';
 import { InlineContext } from '../../models/context.models';
 
@@ -24,6 +24,7 @@ export class RestFormComponent implements OnInit, AfterViewInit {
   @Input()
   set rest(rest: Rest) {
     if(rest!== undefined) {
+      this._rest = rest;
       const defaultSelect = { value: '', label: '', id: '', multiple: '', limit: '' };
       this.restForm.setValue({
         renderer: {
@@ -33,8 +34,8 @@ export class RestFormComponent implements OnInit, AfterViewInit {
           bindings: []
         },
         source: {
-          url: rest.url,
-          params: rest.params
+          url: '', // rest.url,
+          params: [] // rest.params
         }
       });
       if(rest.renderer.type === 'pane') {
@@ -53,9 +54,14 @@ export class RestFormComponent implements OnInit, AfterViewInit {
       } else {
         this.restForm.get('renderer').get('data').enable();
       }
-      setTimeout(() => this.sourceForm.refreshData$.next());
+      setTimeout(() => {
+        this.restSource = { url: rest.url, params: rest.params };
+        this.sourceForm.refreshData$.next();
+      });
     }
   }
+
+  restSource: { url: string, params: Array<Param> };
 
   @ViewChild(RestSourceFormComponent, {static: true}) sourceForm: RestSourceFormComponent;
 
@@ -81,6 +87,8 @@ export class RestFormComponent implements OnInit, AfterViewInit {
     })
   });
 
+  private _rest: Rest;
+
   get rendererType() {
     return this.restForm.get('renderer').get('type');
   }
@@ -104,6 +112,7 @@ export class RestFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    console.log(this.contexts);
     this.restForm.get('renderer').get('type').valueChanges.subscribe(v => {
       if(this.rendererType.value === 'pane') {
         this.restForm.get('renderer').get('data').disable();
